@@ -6,10 +6,6 @@ class CfxMain {
         return shallow;
     }
 
-    method() {
-        
-    }
-
     empty = function() {
         return this.session === undefined;
     }
