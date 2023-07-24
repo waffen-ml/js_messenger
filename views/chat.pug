@@ -1,13 +1,16 @@
 extends index
-include units
 
-block header
+include units
+include ../cfx_modules/popup/index
+
+append header 
     script(src="/socket.io/socket.io.js")
-    style 
-        include css/popup.css
-        include css/chat.css
-        include css/content.css
-        
+append style 
+    include css/chat.css
+    include css/content.css
+append script 
+    include js/chat.js
+
 block main
     h1.page-header= chat.name
     .holder.block
@@ -21,13 +24,7 @@ block main
         input#file.thin(type="button", value="📁")
         input#send.thin(type="button", value="📨")
 
-block body 
-    include utils/popup
-
+append body 
     hidden
         ul.attached
         <a class="button attach">Добавить файлы</a>
-
-    script 
-        include js/popup.js
-        include js/chat.js

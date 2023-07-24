@@ -12,9 +12,9 @@
 }
 
 .popup .window {
-    margin-top:-10%;
+    margin-top:-2%;
     position:relative;
-    min-width:300px;
+    min-width:100px;
     width:max-content;
     height: max-content;
     overflow:hidden;

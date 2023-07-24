@@ -6,22 +6,177 @@
         <link rel="stylesheet" href="views/css/style.css">
         <link rel="stylesheet" href="views/css/popup.css">
         <title>Document</title>
+        <style>
+            .inspect {
+                position:relative;
+                overflow:hidden;
+                border-radius:15px;
+                display:flex;
+            }
+
+            .inspect .trans {
+                position:absolute;
+                height:100%;
+                width:35px;
+                max-width:10%;
+                border-radius: 0;
+                opacity: 0;
+                transition:opacity .1s ease-in-out;
+                display:none;
+            }
+
+            .inspect .trans:hover {
+                opacity: 1;
+            }
+
+            .inspect .right {   
+                right:0;
+            }
+
+            .inspect .left {
+                left:0;
+            }
+
+            .inspect.next .right {
+                display:block;
+            }
+
+            .inspect.prev .left {
+                display:block;
+            }
+
+            .inspect .media {
+                max-width:70vw;
+                max-height:70vh;
+                user-select:none;
+                background:#00000016;
+                outline:none;
+            }
+
+            .inspect.prev video.media {
+                padding-left:35px;
+            }
+
+            .inspect.next video.media {
+                padding-right:35px;
+            }
+    
+        </style>
     </head>
     <body>
+        <div inspect-group>
+            <img src="https://img.freepik.com/free-photo/people-making-hands-heart-shape-silhouette-sunset_53876-15987.jpg">
+            <img src="https://img.freepik.com/free-photo/colorful-heart-air-balloon-shape-collection-concept-isolated-color-background-beautiful-heart-ball-event_90220-1047.jpg">
+            <img src="https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg">
+            <video src="w.mp4"></video>
+        </div>
+
         <div class="popup">
             <div class="window block">
                 <div class="inner">
                     <input type="button" value="X" class="thin close-btn">
-                    <h1 class="header">HEADER</h1>
+                    <h1 class="header"></h1>
                     <div class="content">hey</div>
-                    <div class="buttons">
-                        <input type="button" value="OK">
-                        <input type="button" value="OK">
-                        <input type="button" value="OK">
-                    </div>
+                    <div class="buttons"></div>
                 </div>
             </div>
         </div>
+
+        <hidden id="h-inspect">
+            <div class="inspect">
+                <input type="button" class="trans left">
+                <input type="button" class="trans right">
+            </div>
+        </hidden>
+
         <script src="views/js/popup.js"></script>
+        <script>
+
+            function constructMediaHTML(media) {
+                switch(media.type) {
+                    case 'image':
+                        return `<img class="media" src="${media.src}" alt="inspect-img">`;
+                    case 'video':
+                        return `<video class="media" controls><source src="${media.src}"></video>`;
+                    default:
+                        return '';
+                }
+            }
+
+            function _getSrc(obj, tag) {
+                if (obj.tagName == tag)
+                    return obj.src;
+                const inner = obj.querySelector(tag);
+                return inner? inner.src : null;
+            }
+
+            function getElementMedia(obj) {
+                const imgSrc = _getSrc(obj, 'IMG');
+                if (imgSrc) return {type: 'image', src: imgSrc};
+                const vidSrc = _getSrc(obj, 'VIDEO');
+                if (vidSrc) return {type: 'video', src: vidSrc};
+                return {};
+            }
+
+            function inspectMedia(data) {
+                openPopup({
+                    closable: true,
+                    html: getHidden('h-inspect'),
+                    onload: (d) => {
+                        const inspect = d.obj.querySelector('.inspect');
+                        inspect.innerHTML += constructMediaHTML(data.media);
+
+                        const lb = d.obj.querySelector('.left');
+                        const rb = d.obj.querySelector('.right');
+                        
+                        rb.onclick = data.next;
+                        lb.onclick = data.prev;
+
+                        if (data.next) inspect.classList.add('next');
+                        if (data.prev) inspect.classList.add('prev');
+                    }
+                });
+            }
+
+            function getGroupElement(groupid, index) {
+                return document.querySelector(`[inspect-parent="${groupid}"][inspect-index="${index}"]`);
+            }
+
+            function createTransFunc(groupid, index) {
+                if(!getGroupElement(groupid, index)) return null;
+                return () => inspectGroup(groupid, index);
+            }
+
+            function inspectSingle(obj) {
+                inspectMedia({
+                    media: getElementMedia(obj)
+                })
+            }
+
+            function inspectGroup(groupid, index) {
+                const obj = getGroupElement(groupid, index);
+
+                inspectMedia({
+                    next: createTransFunc(groupid, index + 1),
+                    prev: createTransFunc(groupid, index - 1),
+                    media: getElementMedia(obj)
+                });
+            }
+
+
+            document.querySelectorAll('[inspect]').forEach(obj => {
+                obj.addEventListener('click', () => inspectSingle(obj));
+            });
+
+            document.querySelectorAll('[inspect-group]').forEach((group, i) => {
+                group.setAttribute('inspect-group', i);
+                [...group.children].forEach((child, j) => {
+                    child.setAttribute('inspect-parent', i);
+                    child.setAttribute('inspect-index', j);
+                    child.addEventListener('click', () => inspectGroup(i, j));
+                });
+            });
+
+        </script>
     </body>
 </html>

@@ -4,6 +4,12 @@ const inner = popupWindow.querySelector('.inner');
 const animlength = 300;
 let popupMeta = null;
 
+function callFunc(name) {
+    const func = popupMeta[name];
+    if (!func) return;
+    func(popupMeta.data);
+}
+
 function isPopupActive() {
     return popupMeta !== null;
 }
@@ -29,6 +35,7 @@ function hidePopup() {
 
     animTimeout(() => {
         popup.style.display = 'none';
+        setWindowContent('');
     })
 }
 
@@ -88,11 +95,9 @@ function setupPopup(data) {
     toggleCloseButton(data.closable);
 
     data.data = { obj: getPopupContent() };
-
-    if (data.onload)
-        data.onload(data.data);
-
     popupMeta = data;
+
+    callFunc('onload');
 }
 
 function openPopup(data) {
