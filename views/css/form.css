@@ -1,0 +1,54 @@
+[error]:not([error='']) {
+    outline: red 1px solid;
+}
+
+.form-units {
+    margin:0;
+}
+
+.form-unit {
+    margin:0;
+}
+
+.form-unit:not(:first-child) {
+    margin-top:18px;
+}
+
+.form-unit * {
+    display:block;
+    margin:0;
+}
+
+.form-unit .title {
+    font-size:18px;
+    margin-bottom:7px;
+}
+
+.form-unit .error {
+    display:none;
+    margin-left:3px;
+    margin-top:4px;
+    margin-bottom:-7px;
+    color:#ff0000b4;
+    font-weight: bold;
+}
+
+.form-unit .incorrect {
+    outline: 1px solid red;
+}
+
+.hints {
+    font-size:18px;
+    margin-top:20px;
+    margin-bottom:-10px;
+    list-style-position:inside;
+    padding-left:5px;
+}
+
+.hints a {
+    margin-left:-8px;
+}
+
+input[type=submit] {
+    margin-top:30px;
+}

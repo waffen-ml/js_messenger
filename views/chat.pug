@@ -1,0 +1,33 @@
+extends index
+include units
+
+block header
+    script(src="/socket.io/socket.io.js")
+    style 
+        include css/popup.css
+        include css/chat.css
+        include css/content.css
+        
+block main
+    h1.page-header= chat.name
+    .holder.block
+        each data in chat.getMessages(0, -100)
+            if data.system 
+                +system-message(data.text)
+            else 
+                +user-message(data, (data.sender.id == observer.id))
+    .input-bar
+        input.entry(type="text", placeholder="Сообщение")
+        input#file.thin(type="button", value="📁")
+        input#send.thin(type="button", value="📨")
+
+block body 
+    include utils/popup
+
+    hidden
+        ul.attached
+        <a class="button attach">Добавить файлы</a>
+
+    script 
+        include js/popup.js
+        include js/chat.js

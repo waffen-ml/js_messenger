@@ -1,0 +1,170 @@
+body {
+    padding:0;
+    margin:0;
+    color:#3b2f2f;
+}
+
+.main-grid {
+    margin-left:50%;
+    transform:translate(-50%);
+    max-width:100%;
+    width:900px;
+    min-height:100px;
+    display:grid;
+    grid-template-columns: 22% 1fr;
+    grid-template-rows: 55px 1fr 30px;
+    gap: 8px;
+}
+
+.main-grid > * {
+    outline: solid 1px #3b2f2f;
+}
+
+a.clean, a.button {
+    text-decoration: none;
+    color:inherit;
+    cursor:pointer;
+}
+
+a.clean:hover {
+    text-decoration: underline;
+}
+
+a.button {
+    padding:.12em .3em;
+    border-radius: .3em;
+}
+
+a.button:hover {
+    background:#3b2f2f33;
+}
+
+header {
+    grid-column: span 2;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 0px 2%;
+    align-items: center;
+}
+
+.logo a {
+    font-size:30px;
+}
+
+.current {
+    display:flex;
+    gap:8px;
+    align-items: center;
+    font-size:18px;
+}
+
+nav {
+    grid-row:span 2;
+    box-sizing: border-box;
+    padding:10px 7px;
+    display:flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+nav a {
+    font-size:19px;
+}
+
+main {
+    box-sizing: border-box;
+    padding:10px;
+    min-height:200px;
+    display:flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap:8px;
+}
+
+.page-header {
+    font-weight: bold;
+    font-size:30px;
+    margin-top:3px;
+    margin-bottom:10px;
+}
+
+footer {
+    padding:3px;
+    font-size:17px;
+    text-align: center;
+}
+
+input, .block, textarea {
+    color:inherit;
+    font-size:17px;
+    box-sizing: border-box;
+    padding:13px;
+    border-radius: 12px;
+    background:#3b2f2f20;
+    overflow:hidden;
+}
+
+input, textarea {
+    padding:7px 11px;
+    display:block;
+    outline:none;
+    border:none;
+}
+
+textarea {
+    min-width:200px;
+    min-height:65px;
+    max-width:350px;
+    max-height:150px;
+}
+
+input[type=button], input[type=submit] {
+    cursor:pointer;
+}
+
+input[type=button], input[type=submit] {
+    padding:6px 18px;
+}
+
+input.thin {
+    padding:5px 8px;
+}
+
+input:not([type="button"]):focus, textarea:focus, input[type=button]:hover, input[type=submit]:hover, .block.responsible:hover {
+    background:#3b2f2f30;
+}
+
+input[type=file] {
+    font-size:15px;
+    width:250px;
+}
+
+.finite {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow:hidden;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes disappear {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+hidden {
+    display:none;
+}

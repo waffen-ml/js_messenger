@@ -1,0 +1,59 @@
+extends index
+
+
+mixin entry(data, subtype)
+    input(type=subtype, name=data.name, placeholder=data.placeholder, required=data.required)
+
+mixin textarea(data)
+    textarea(name=data.name, placeholder=data.placeholder, required=data.required)
+
+mixin file(data)
+    input(type="file" name=data.name, required=data.required, multiple=data.multiple)
+
+mixin text(data)
+    +entry(data, 'text')
+
+mixin tel(data)
+    +entry(data, 'tel')
+
+mixin password(data)
+    +entry(data, 'password')
+    
+mixin email(data)
+    +entry(data, 'email')
+
+mixin date(data)
+    +entry(data, 'date')
+
+mixin unit(data)
+    .form-unit(id=data.name)
+        - let c = data.required? ' *' : '';
+        span.title= data.title + c
+        +#{data.type}(data)
+        span.error
+
+mixin hints(hints)
+    ul.hints
+        each link, hint in hints
+            li 
+                a.clean(href=link)= hint
+
+block header 
+    style 
+        include css/form.css
+    title= form.title
+
+block main
+    h1.page-header= form.title
+    form(name=form.name)
+        .form-units 
+            each data in form.units
+                +unit(data)
+        if form.hints !== undefined
+            +hints(form.hints)
+        input(value="Отправить", type="submit")
+    script 
+        include js/form.js
+
+
+

@@ -1,0 +1,70 @@
+.holder {
+    width:100%;
+    height:550px;
+    display: flex;
+    flex-direction: column;
+    font-size:18px;
+    gap:13px;
+    overflow-y:auto;
+}
+
+.input-bar {
+    display:flex;
+    gap:7px;
+    width: 100%;
+}
+
+.entry {
+    width: 100%;
+}
+
+.system-message {
+    font-style: italic;
+    text-align: center;
+}
+
+.message.mine {
+    background-color: #e4d8bd;
+    align-self:flex-end;
+}
+
+.message {
+    flex-shrink: 0;
+    background: #e2ccb9d7;
+    max-width: 500px;
+    width: max-content;
+}
+
+
+.message .top-bar {
+    margin:0;
+    display:flex;
+    gap:13px;
+}
+
+.message .text {
+    margin:0;
+}
+
+.message .content {
+    margin-top:15px;
+}
+
+ul.attached {
+    margin:0;
+    padding:0;
+    list-style-type: none;
+    width:260px;
+}
+
+.attached li {
+    display:flex;
+    align-items: center;
+    gap:10px;
+    max-width: 100%;
+}
+
+.attach {
+    display:inline-block;
+    margin-top:10px; 
+}

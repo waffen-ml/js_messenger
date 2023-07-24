@@ -1,0 +1,26 @@
+doctype html 
+html 
+    head 
+        title CoffeeTox
+        style 
+            include css/style.css
+        block header
+    body
+        .main-grid 
+            header 
+                .logo 
+                    a.button(href="/") ☕tox
+                .current 
+                    if user !== null
+                        a.clean(href="#")= user.name
+                        a.button(href="/logout") 🚪
+                    else
+                        a.clean(href="/form?name=login") Вход
+            nav 
+                each link, text in nav
+                    a.button(href=link)=text
+            main
+                block main 
+            footer 
+                span CoffeeTox: Ilya Kostin & Yaroslav Glukhanov ☕
+        block body 

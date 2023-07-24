@@ -1,0 +1,55 @@
+mixin content(data)
+    - const c = (n) => '/file?id=' + n;
+
+    .content 
+        p.text= data.text
+        - const imgc = data.image.length;
+        - const vidc = data.video.length;
+        - const totc = imgc + vidc;
+
+        if totc > 1
+            - let nlarge = totc % 3;
+            - nlarge = nlarge == 1? 4 : nlarge;
+            - let i = 0;
+
+            .visual
+                while i < totc
+                    - let isimg = i < imgc;
+                    - let cls = (i < nlarge? 'large' : 'small') + (isimg? '': ' video');
+                    .tile(class=cls)
+                        if isimg
+                            img(src=c(data.image[i]))
+                        else
+                            video(preload='metadata')
+                                source(src=c(data.video[i - imgc]))
+                    - i++;
+            
+        else if imgc == 1
+            image.semi-image(src=c(data.image[0]))
+        
+        else if vidc == 1
+            video.semi-video(controls)
+                source(src=c(data.video[0]))
+        
+        if data.audio.length
+            .audio 
+                each audio in data.audio 
+                    audio(controls)
+                        source(src=c(audio))
+
+        if data.other.length
+            ul.other
+                each other in data.other 
+                    <li class="finite"><a class="clean" href=c(other)>other</a></li>
+
+
+mixin system-message(text)
+    span.system-message= text
+
+
+mixin user-message(data, mine)
+    .message.block(class=(mine? "mine": ""))
+        .top-bar
+            a.finite.clean.name(href="#")= data.sender.name
+            span.date= `(${data.date})`
+        +content(data.content)
