@@ -12,7 +12,7 @@ mixin content(data)
             - nlarge = nlarge == 1? 4 : nlarge;
             - let i = 0;
 
-            .visual
+            .visual(inspect-group)
                 while i < totc
                     - let isimg = i < imgc;
                     - let cls = (i < nlarge? 'large' : 'small') + (isimg? '': ' video');
@@ -20,8 +20,7 @@ mixin content(data)
                         if isimg
                             img(src=c(data.image[i]))
                         else
-                            video(preload='metadata')
-                                source(src=c(data.video[i - imgc]))
+                            video(src=c(data.video[i - imgc]), preload='metadata')
                     - i++;
             
         else if imgc == 1

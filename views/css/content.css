@@ -21,7 +21,7 @@
     overflow:hidden;
 }
 
-.visual .tile img, video {
+.visual .tile img, .tile video {
     width:100%;
     height:100%;
     object-fit: cover;

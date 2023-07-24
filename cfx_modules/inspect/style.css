@@ -1,0 +1,53 @@
+.inspect {
+    position:relative;
+    overflow:hidden;
+    border-radius:15px;
+    display:flex;
+}
+
+.inspect .trans {
+    position:absolute;
+    height:100%;
+    width:35px;
+    max-width:10%;
+    border-radius: 0;
+    opacity: 0;
+    transition:opacity .1s ease-in-out;
+    display:none;
+}
+
+.inspect .trans:hover {
+    opacity: 1;
+}
+
+.inspect .right {   
+    right:0;
+}
+
+.inspect .left {
+    left:0;
+}
+
+.inspect.next .right {
+    display:block;
+}
+
+.inspect.prev .left {
+    display:block;
+}
+
+.inspect .media {
+    max-width:70vw;
+    max-height:70vh;
+    user-select:none;
+    background:#00000016;
+    outline:none;
+}
+
+.inspect.prev video.media {
+    padding-left:35px;
+}
+
+.inspect.next video.media {
+    padding-right:35px;
+}

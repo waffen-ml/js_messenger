@@ -1,7 +1,9 @@
 extends index
 
 include units
+
 include ../cfx_modules/popup/index
+include ../cfx_modules/inspect/index
 
 append header 
     script(src="/socket.io/socket.io.js")
@@ -25,6 +27,6 @@ block main
         input#send.thin(type="button", value="📨")
 
 append body 
-    hidden
+    hidden#files
         ul.attached
         <a class="button attach">Добавить файлы</a>

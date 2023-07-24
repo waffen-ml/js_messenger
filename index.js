@@ -67,6 +67,10 @@ app.get('/', (req, res) => {
     render(req, res, 'index');
 });
 
+app.get('/test', (req, res) => {
+    render(req, res, 'test');
+});
+
 app.get('/chat', (req, res) => {
     const chat = cfx.chats.getChat(req.query.id);
     const user = login(req, res, true);

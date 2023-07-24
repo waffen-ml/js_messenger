@@ -8,11 +8,6 @@ function scrollDown() {
     holder.scrollTo({top: holder.scrollHeight, behavior: 'smooth'});
 }
 
-function appendChatHTML(html) {
-    holder.innerHTML += html;
-    scrollDown();
-}
-
 function send() {
     if (input.value == '' && !attachedFiles.length) return;
 
@@ -95,7 +90,7 @@ document.querySelector('#send').onclick = send;
 document.querySelector('#file').onclick = () => {
     openPopup({
         header: 'Файлы',
-        html: getHidden(),
+        html: getHidden('files'),
         onload: (p) => {
             p.list = p.obj.querySelector('.attached');
             updateFileList(p.list);
@@ -105,7 +100,7 @@ document.querySelector('#file').onclick = () => {
             'Ок': null
         }
     });
-};
+};  
 
 input.addEventListener('keydown', (e) => {
     if (e.key != 'Enter') return;
@@ -116,5 +111,12 @@ input.addEventListener('keydown', (e) => {
 socket.emit('join', {id: chatid});
 
 socket.on('message', html => {
-    appendChatHTML(html);
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    setupInspectObjects(div);
+    [...div.children].forEach(child => holder.appendChild(child));
+    scrollDown();
 });
+
+
+scrollDown();

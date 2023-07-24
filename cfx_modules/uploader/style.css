@@ -1,0 +1,66 @@
+.uploader {
+    position: relative;
+    width:300px;
+    overflow: hidden;
+    display:flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap:15px;
+}
+
+.uploader::before {
+    top:50%;
+    left:0;
+    width:100%;
+    line-height: 0;
+    content: 'Сохранить 📁';
+    position: absolute;
+    text-align: center;
+    font-size:21px;
+    font-weight: bold;
+    color:#585858;
+    display:none;
+}
+
+.uploader ul {
+    margin:0;
+    padding:0;
+    list-style-type: none;
+    width:100%;
+}
+
+.uploader li {
+    display:flex;
+    align-items: center;
+    gap:10px;
+    max-width: 100%;
+}
+
+.uploader .error-message {
+    user-select:none;
+    display: none;
+}
+
+.uploader.disabled:not(.single) .error-message {
+    display:block;
+}
+
+.uploader.disabled .attach {
+    display:none;
+}
+
+.uploader.disabled::before {
+    content: 'Лимит достигнут 🚫';
+}
+
+.uploader.drag {
+    border:grey dashed 3px;
+}
+
+.uploader.drag > * {
+    opacity: 0;
+}
+
+.uploader.drag::before {
+    display:block;
+}

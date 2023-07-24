@@ -33,6 +33,7 @@ a.clean:hover {
 a.button {
     padding:.12em .3em;
     border-radius: .3em;
+    user-select:none;
 }
 
 a.button:hover {
@@ -97,6 +98,7 @@ footer {
 }
 
 input, .block, textarea {
+    display: block;
     color:inherit;
     font-size:17px;
     box-sizing: border-box;
