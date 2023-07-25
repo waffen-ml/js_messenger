@@ -56,7 +56,7 @@ const regForm = new Form(
         if (data['pw'].length < 1)
             erf('pw', 'Как минимум 4 символа');
         if (data['pw'] != data['pw-rep'])
-            erf('pw-rep', 'Пароли не совпадают');    
+            erf('pw-rep', 'Пароли не совпадают');
     }, (data, cfx) => {
         const user = new User(data['id'], data['name'], data['pw']);
         cfx.auth.addUser(user);
