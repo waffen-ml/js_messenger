@@ -35,72 +35,38 @@ function send() {
     updateFileCount();
 }
 
-function detachFile(obj, i) {
-    attachedFiles.splice(i, 1);
-    updateFileList(obj);
-}
-
 function updateFileCount() {
     const btn = document.querySelector('.input-bar #file');
     const count = attachedFiles.length;
     btn.value = (count? count + ' ' : '') + '📁';
 }
 
-function updateFileList(obj) {
-    obj.innerHTML = '';
-    attachedFiles.forEach((file, i) => {
-        const li = document.createElement('li');
-        const filebtn = document.createElement('a');
-        filebtn.setAttribute('class', 'clean finite file');
-        filebtn.textContent = file.name;
-        filebtn.onclick = () => {
-            const blobData = new Blob([file], { type: file.type });
-            const blobUrl = URL.createObjectURL(blobData);
-            window.open(blobUrl, '_blank');
-        }
-        
-        const removebtn = document.createElement('a');
-        removebtn.setAttribute('class', 'remove button');
-        removebtn.textContent = '🗑️';
-        removebtn.onclick = () => detachFile(obj, i);
-        
-        li.appendChild(removebtn);
-        li.appendChild(filebtn);
-
-        obj.appendChild(li);
-    });
-    if (!obj.innerHTML)
-        obj.innerHTML = '<li>Нет прикрепленных файлов 🚫</li>';
-    updateFileCount();
-}
-
-function attachFiles(obj) {
-    const input = document.createElement('input');
-    input.setAttribute('type', 'file');
-    input.setAttribute('multiple', true);
-    input.click();
-    input.addEventListener('change', (e) => {
-        const files = e.target.files;
-        attachedFiles.push(...files);
-        updateFileList(obj);
-    });
-}
-
-document.querySelector('#send').onclick = send;
-document.querySelector('#file').onclick = () => {
+function openFilePopup() {
     openPopup({
         header: 'Файлы',
-        html: getHidden('files'),
+        html: '',
         onload: (p) => {
-            p.list = p.obj.querySelector('.attached');
-            updateFileList(p.list);
-            p.obj.querySelector('.attach').onclick = () => attachFiles(p.list);
+            p.uploader = uplManager.createUploader({
+                files: attachedFiles,
+                onInspect: (file) => inspectFile(file, {
+                    options: { 'Назад': openFilePopup }
+                })
+            });
+            p.obj.appendChild(p.uploader.element);
+        },
+        ondestroy: (p) => {
+            attachedFiles = p.uploader.files;
+            updateFileCount();
         },
         options: {
             'Ок': null
         }
     });
-};  
+    return true;
+}
+
+document.querySelector('#send').onclick = send;
+document.querySelector('#file').onclick = openFilePopup;
 
 input.addEventListener('keydown', (e) => {
     if (e.key != 'Enter') return;

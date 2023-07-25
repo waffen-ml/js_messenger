@@ -8,7 +8,7 @@ class Form {
         this.ok = ok;
 
         this.units.forEach(u => {
-            u.required = !u.optional;
+            u.optional = u.optional? '1' : '';
         })
     }
 

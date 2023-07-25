@@ -1,14 +1,22 @@
 extends index
 
+include ../cfx_modules/popup/index
+include ../cfx_modules/inspect/index
+include ../cfx_modules/uploader/index
+
+append style 
+    include css/form.css
+append script 
+    include js/form.js
 
 mixin entry(data, subtype)
-    input(type=subtype, name=data.name, placeholder=data.placeholder, required=data.required)
+    input(type=subtype, name=data.name, placeholder=data.placeholder, optional=data.optional)
 
 mixin textarea(data)
-    textarea(name=data.name, placeholder=data.placeholder, required=data.required)
+    textarea(name=data.name, placeholder=data.placeholder, optional=data.optional)
 
 mixin file(data)
-    input(type="file" name=data.name, required=data.required, multiple=data.multiple)
+    .uploader(id=data.name, name=data.name, limit=data.limit, optional=data.optional)
 
 mixin text(data)
     +entry(data, 'text')
@@ -27,7 +35,7 @@ mixin date(data)
 
 mixin unit(data)
     .form-unit(id=data.name)
-        - let c = data.required? ' *' : '';
+        - let c = data.optional? '' : ' *';
         span.title= data.title + c
         +#{data.type}(data)
         span.error
@@ -39,8 +47,6 @@ mixin hints(hints)
                 a.clean(href=link)= hint
 
 block header 
-    style 
-        include css/form.css
     title= form.title
 
 block main
@@ -52,8 +58,6 @@ block main
         if form.hints !== undefined
             +hints(form.hints)
         input(value="Отправить", type="submit")
-    script 
-        include js/form.js
 
 
 

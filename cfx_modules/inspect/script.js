@@ -28,6 +28,7 @@ function inspectMedia(data) {
     openPopup({
         closable: true,
         html: getHidden('h-inspect'),
+        options: data.options ?? {},
         onload: (d) => {
             const inspect = d.obj.querySelector('.inspect');
             inspect.innerHTML += constructMediaHTML(data);

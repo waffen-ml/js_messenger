@@ -101,12 +101,15 @@ function setupPopup(data) {
 }
 
 function openPopup(data) {
-    if (!isPopupActive())
+    if (isPopupActive())
+        callFunc('ondestroy');
+    else    
         showPopup();
     setupPopup(data);
 }
 
 function closePopup() {
+    callFunc('ondestroy');
     popupMeta = null;
     hidePopup();
 }

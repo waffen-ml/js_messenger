@@ -9,15 +9,17 @@ function attachFiles(cb, single) {
     });
 }
 
-function inspectFile(file) {
+function inspectFile(file, cfg) {
+    cfg ??= {};
     const type = file.type.split('/')[0];
 
-    if (['image', 'video'].includes(type)) {
+    if (['image', 'video'].includes(type) && !cfg.disablePopup) {
         const reader = new FileReader();
         reader.addEventListener('load', () => {
             inspectMedia({
                 type: type,
-                src: reader.result
+                src: reader.result,
+                options: cfg.options
             })
         });
         reader.readAsDataURL(file);
@@ -37,18 +39,20 @@ function preventDefault(e) {
 
 
 class Uploader {
-    constructor(element, files) {
+    constructor(element, cfg) {
+        this.cfg = cfg ??= {};
         this.element = element;
 
         element.setAttribute('class', 'block uploader');
         element.innerHTML = getHidden('uploader');
 
         this.list = element.querySelector('ul');
-        this.files = files ?? [];
+        this.files = cfg.files ?? [];
         
-        let limit = element.getAttribute('limit') ?? 10;
-        this.limit = parseInt(limit);
+        this.limit = cfg.limit ?? 10;
         if(this.limit == 1) this.element.classList.add('single');
+
+        cfg.onInspect ??= (file) => inspectFile(file);
 
         element.addEventListener('dragleave', e => {
             preventDefault(e);
@@ -108,7 +112,7 @@ class Uploader {
             const filebtn = document.createElement('a');
             filebtn.setAttribute('class', 'clean finite file');
             filebtn.textContent = file.name;
-            filebtn.onclick = () => inspectFile(file);
+            filebtn.onclick = () => this.cfg.onInspect(file);
             
             const removebtn = document.createElement('a');
             removebtn.setAttribute('class', 'remove button');
@@ -143,19 +147,26 @@ const uplManager = new class {
         return this.uploaders[id];
     }
 
+    identifyUploader(obj) {
+        return this.getUploader(obj.getAttribute('id'));
+    }
+
     setupContainer(container) {
         container.querySelectorAll('.uploader').forEach(obj => {
             const id = obj.getAttribute('id') ?? ('upl' + (this.i++));
             obj.setAttribute('id', id);
-            const upl = new Uploader(obj);
+
+            let limit = parseInt(obj.getAttribute('limit'));
+            limit = isNaN(limit)? null : limit;
+
+            const upl = new Uploader(obj, {limit: limit});
             this.uploaders[id] = upl;
         });
     }
 
-    createUploader(data, files) {
+    createUploader(data) {
         const div = document.createElement('div');
-        if (data.limit) div.setAttribute('limit', data.limit);
-        return new Uploader(div, files);
+        return new Uploader(div, data ?? {});
     }
 }
 

@@ -14,12 +14,12 @@
     margin-top:18px;
 }
 
-.form-unit * {
-    display:block;
+.form-unit > * {
     margin:0;
 }
 
 .form-unit .title {
+    display:block;
     font-size:18px;
     margin-bottom:7px;
 }
