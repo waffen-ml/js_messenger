@@ -1,0 +1,22 @@
+extends index
+
+append script 
+    include js/chatlist.js
+
+mixin chat(data)
+    - const displayedName = data.privateName ?? data.obj.name;
+    a(href=`chat?id=${data.id}`)= displayedName
+
+mixin chatlist(data)
+    ol
+        each cdata in data 
+            li 
+                +chat(cdata)
+
+block main
+    .new-chat 
+        h3 написать пользователю
+        input(type="text", placeholder="userid", id="userid")
+        input(type="button", value="Добавить", id="add")
+
+    +chatlist(chats)

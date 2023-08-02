@@ -10,7 +10,6 @@ const server = require('http').createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const session = require('express-session');
-const store = new session.MemoryStore();
 const cors = require('cors');
 const multer = require('multer');
 
@@ -27,13 +26,16 @@ const upload = multer({storage: storage});
 
 app.set('view engine', 'pug');
 app.use(cors());
-app.use(session({
+
+const sessionMiddleware = session({
     secret: 'coffee tox',
     cookie: {maxAge: 1000 * 60 * 60},
     saveUninitialized: false,
-    resave: false,
-    store
-}));
+    resave: false
+});
+
+app.use(sessionMiddleware);
+io.engine.use(sessionMiddleware);
 
 cfx.chats.createChat('Coffee chat')
 
@@ -45,11 +47,7 @@ function render(req, res, page, params) {
     res.render(page, {
         nav: {
             'Кофейный чат 🗨️': '/chat?id=0',
-            'Новости': '/feed',
-            'Сообщения': '/messenger',
-            'Моя страница': '/profile',
-            'Друзья': '/friends',
-            'Мини-приложения': '/miniapps'
+            'Сообщения': '/chatlist'
         },
         user: user,
         ...params
@@ -63,6 +61,41 @@ function login(req, res, requireLogin) {
     return user;
 }
 
+app.get('/createchat', (req, res) => {
+    const user = login(req, res, true);
+    const user2id = req.query.userid;
+    const user2 = cfx.auth.getUser(user2id);
+
+    if (!user || !user2 || user.id == user2id) {
+        res.send({success: false});
+        return;
+    }
+
+    const chatid = cfx.chats.createChat('', false);
+    cfx.chats.addUserToChat(user.id, chatid, true, user2.name);
+    cfx.chats.addUserToChat(user2.id, chatid, false, user.name);
+
+    res.send({success: true});
+
+});
+
+app.get('/chatlist', (req, res) => {
+    const user = login(req, res, true);
+    if(!user) return;
+
+    chatsData = Object.values(user.chats).map((cw) => {
+        return {
+            id: cw.id,
+            privateName: cw.privateName,
+            obj: cfx.chats.getChat(cw.id)
+        }
+    });
+
+    render(req, res, 'chatlist', {
+        chats: chatsData
+    })
+});
+
 app.get('/', (req, res) => {
     render(req, res, 'index');
 });
@@ -74,12 +107,16 @@ app.get('/test', (req, res) => {
 app.get('/chat', (req, res) => {
     const chat = cfx.chats.getChat(req.query.id);
     const user = login(req, res, true);
-    if (!user) return;
 
-    render(req, res, 'chat', {
-        observer: user,
-        chat: chat
-    });
+    if (!user) return;
+    else if (!chat.containsUser(user.id)) {
+        res.redirect('/');
+    }
+    else 
+        render(req, res, 'chat', {
+            observer: user,
+            chat: chat
+        });
 });
 
 app.get('/form', (req, res) => {
@@ -103,7 +140,7 @@ app.post('/form', upload.any(), (req, res) => {
         req.files.forEach(f => fs.unlink(f.path, () => {}));
 
     res.json(out);
-});
+});     
 
 app.get('/logout', (req, res) => {
     req.session.destroy();
@@ -125,7 +162,7 @@ app.post('/sendmsg', upload.array('files'), (req, res) => {
     const sender = login(req, res, true);
 
     if (!sender || !chat) return;
-
+    
     const msg = {
         sender: sender,
         system: false,
@@ -133,28 +170,41 @@ app.post('/sendmsg', upload.array('files'), (req, res) => {
     };
 
     const msgid = chat.addMessage(msg);
-
-    res.json({msgid: msgid});
+    res.send({msgid : msgid});
 });
 
+
+async function getSocketByUserId(userid) {
+    const sockets = await io.in('u:' + userid).fetchSockets();
+    if (sockets.length < 1) return null;
+    return sockets[0];
+}
+
+async function displayMessage(msg, chatid) {
+    const u = pug.compileFile('msg.pug');
+    const senderSocket = msg.sender? 
+        await getSocketByUserId(msg.sender.id) : null;
+    const standardHTML = u({data: msg, own: false});
+
+    if (senderSocket) {
+        senderSocket.emit('message', u({data: msg, own: true}));
+        senderSocket.broadcast.in('c:' + chatid).emit('message', standardHTML);
+    } else
+        io.in('c:' + chatid).emit('message', standardHTML);
+    
+}
+
+cfx.chats.displayMessage = displayMessage;
+
 io.on('connection', (socket) => {
-    console.log('A user connected');
-
     socket.on('join', j => {
-        socket.join(j.id);
+        const userid = socket.request.session.userid;
+        if (userid) socket.join('u:' + userid);
+        socket.join('c:' + j.chatid);
     });
-
     socket.on('message', r => {
-        const u = pug.compileFile('msg.pug');
-        const chat = cfx.chats.getChat(r.chatid);
-        const msg = chat.getMessage(r.msgid);
-
-        const toSender = u({data: msg, own: true});
-        const toOthers = u({data: msg, own: false});
-
-        socket.send(toSender);
-        socket.broadcast.emit('message', toOthers);
-    });
+        console.log(r);
+    })
 });
 
 server.listen(3000, () => {

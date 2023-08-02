@@ -1,14 +1,25 @@
 const utils = require('./cfx-utils');
 
 class Chat {
-    constructor(name) {
+    constructor(cfx, id, name, ispublic) {
+        this.cfx = cfx;
+        this.id = id;
         this.name = name;
+        this.ispublic = ispublic ?? true;
         this.users = {};
         this.messages = new utils.IndexedDict();
+        this.listeners = {};
+    }
+
+    displayMessage(msg) { 
+        this.cfx.chats.displayMessage(msg, this.id);
     }
 
     addUser(userid) {
         this.users[userid] = false;
+        const user = this.cfx.auth.getUser(userid);
+        if (user.onMessage)
+            this.listeners[user.id] = user.onMessage;
     }
 
     removeUser(userid) {
@@ -25,7 +36,7 @@ class Chat {
     }
 
     containsUser(userid) {
-        return userid in this.users;
+        return this.ispublic || userid in this.users;
     }
 
     containsAdmin(userid) {
@@ -47,21 +58,35 @@ class Chat {
         return this.messages.values().slice(a, b + 1);
     }
 
+    updateListeners(msg) {
+        Object.keys(this.listeners).forEach(k => {
+            if (msg.sender && msg.sender.id == k) return;
+            this.listeners[k](msg, this);
+        })
+    }
+
     addMessage(msg) {
-        //if (!msg.system && !this.containsUser(msg.sender)) return false;
-        return this.messages.add(msg);
+        const id = this.messages.add(msg);
+        this.displayMessage(msg);
+        this.updateListeners(msg);
+        return id;
     }
 
     system(msg) {
-        return this.addMessage({text: msg, system: true});
+        return this.addMessage({text: msg});
     }
 }
 
 class ChatSystem {
     chats = new utils.IndexedDict();
 
-    createChat(name) {
-        return this.chats.add(new Chat(name));
+    constructor(cfx) {
+        this.cfx = cfx;
+    }
+
+    createChat(name, ispublic) {
+        return this.chats.add((id) => 
+            new Chat(this.cfx, id, name, ispublic), true);
     }
 
     removeChat(id) {
@@ -71,10 +96,26 @@ class ChatSystem {
     getChat(id) {
         return this.chats.get(id);
     }
+
+    addUserToChat(userid, chatid, isadmin, privateName) {
+        const chat = this.getChat(chatid);
+        const user = this.cfx.auth.getUser(userid);
+        if (!chat || !user) return;
+        if (isadmin) chat.addAdmin(userid);
+        else chat.addUser(userid);
+        user.addChat(chatid, privateName);
+    }
+
+    removeUserFromChat(userid, chatid) {
+        const chat = this.getChat(chatid);
+        if (chat) chat.removeUser(userid);
+        const user = this.cfx.auth.getUser(userid);
+        if (user) user.removeChat(chatid); 
+    }
 }
 
 const init = (cfx) => {
-    cfx.chats = new ChatSystem();
+    cfx.chats = new ChatSystem(cfx);
 }
 
 module.exports = { Chat, init };

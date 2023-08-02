@@ -20,15 +20,10 @@ function send() {
         method: 'POST',
         credentials: 'same-origin',
         body: data
-    })
-    .then((r) => r.json())
-    .then((r) => {
+    }).then(r => r.json())
+    .then(r => {
         console.log(r);
-        socket.send({
-            msgid: r.msgid,
-            chatid: chatid
-        });
-    });
+    })
 
     input.value = '';
     attachedFiles = [];
@@ -74,7 +69,7 @@ input.addEventListener('keydown', (e) => {
     send();
 })
 
-socket.emit('join', {id: chatid});
+socket.emit('join', {chatid: chatid});
 
 socket.on('message', html => {
     const div = document.createElement('div');

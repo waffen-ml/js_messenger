@@ -3,6 +3,16 @@ class User {
         this.id = id;
         this.name = name;
         this.password = password;
+        this.chats = {};
+    }
+
+    addChat(id, privateName) {
+        const obj = {id: id, privateName: privateName};
+        this.chats[id] = obj;
+    }
+
+    removeChat(id) {
+        delete this.chats[id];
     }
 }
 
@@ -72,7 +82,7 @@ const loginForm = new Form(
         const user = cfx.auth.getUser(data['id']);
         if (user == null)
             erf('id', 'Не найдено');
-        else if (user.password != data['pw'])
+        else if (user.password !== data['pw'])
             erf('pw', 'Неверный пароль');
     }, (data, cfx) => {
         cfx.takeid(data.id);
@@ -85,6 +95,15 @@ const init = (cfx) => {
     cfx.auth = new Auth();
     cfx.forms.addForm(loginForm);
     cfx.forms.addForm(regForm);
+
+    const saveliy = new User('nn_saveliy', 'Савелий', null)
+    saveliy.onMessage = (msg, chat) => setTimeout(() => {
+        console.log('Saveliy sees: ' + msg);
+        let text = 'Пошел нахуй!';
+        if (msg.content) text = 'Лох говорит:' + msg.content.text;
+        chat.addMessage({sender: saveliy, content: cfx.utils.createContent(text, [])});
+    }, 1000);
+    cfx.auth.addUser(saveliy);
 }
 
 module.exports = {init, User};
