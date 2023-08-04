@@ -1,14 +1,16 @@
 const utils = require('./cfx-utils');
 
 class Chat {
+    messages = new utils.IndexedDict();
+    users = new Set();
+    bots = {};
+    lastMessage = null;
+
     constructor(cfx, id, name, ispublic) {
         this.cfx = cfx;
         this.id = id;
         this.name = name;
         this.ispublic = ispublic ?? true;
-        this.users = {};
-        this.messages = new utils.IndexedDict();
-        this.listeners = {};
     }
 
     displayMessage(msg) { 
@@ -16,31 +18,19 @@ class Chat {
     }
 
     addUser(userid) {
-        this.users[userid] = false;
+        this.users.add(userid);
         const user = this.cfx.auth.getUser(userid);
-        if (user.onMessage)
-            this.listeners[user.id] = user.onMessage;
+        if (user.isBot())
+            this.bots[userid] = user.botscript;
     }
 
     removeUser(userid) {
-        delete this.users[userid];
-    }
-
-    addAdmin(userid) {
-        this.users[userid] = true;
-    }
-
-    removeAdmin(userid) {
-        if (!this.containsAdmin(userid)) return;
-        this.users[userid] = false;
+        this.users.delete(userid);
+        delete this.bots[userid];
     }
 
     containsUser(userid) {
-        return this.ispublic || userid in this.users;
-    }
-
-    containsAdmin(userid) {
-        return Boolean(this.users[userid]);
+        return this.ispublic || this.users.has(userid);
     }
 
     _normIndex(i) {
@@ -58,22 +48,55 @@ class Chat {
         return this.messages.values().slice(a, b + 1);
     }
 
-    updateListeners(msg) {
-        Object.keys(this.listeners).forEach(k => {
-            if (msg.sender && msg.sender.id == k) return;
-            this.listeners[k](msg, this);
+    updateBots(msg) {
+        Object.keys(this.bots).forEach(botid => {
+            const botscript = this.bots[botid];
+            botscript.onMessage(msg, (text, files) => this.sendMessage(botid, text, files));
         })
     }
 
-    addMessage(msg) {
-        const id = this.messages.add(msg);
+    appendMessage(msg) {
         this.displayMessage(msg);
-        this.updateListeners(msg);
-        return id;
+        this.updateBots(msg);
+        this.lastMessage = msg;
+        return this.messages.add(msg);
     }
 
-    system(msg) {
-        return this.addMessage({text: msg});
+    system(text) {
+        const msg = {
+            system: true,
+            text: text
+        };
+        return this.appendMessage(msg);
+    }
+
+    sendMessage(senderid, text, files) {
+        const content = utils.createContent(text, files);
+        let sended = [];
+
+        utils.splitContent(content).forEach(contPiece => {
+
+            const msg = {
+                sender: this.cfx.auth.getUser(senderid),
+                content: contPiece,
+                date: new Date()
+            };
+    
+            if (!this.lastMessage || !this.lastMessage.system &&
+                this.lastMessage.date.getDay() != msg.date.getDay())
+            {
+                this.system(utils.getDayAndMonth(msg.date, 'ru'));
+            }
+            else if (!this.lastMessage.system) {
+                const sameSender = this.lastMessage.sender.id == senderid;
+                const diffMinutes = (msg.date - this.lastMessage.date) / 1000 / 60;
+                msg.minor = sameSender && (diffMinutes < 5);
+            }
+            sended.push(this.appendMessage(msg));
+
+        });
+
+        return sended;
     }
 }
 
@@ -97,11 +120,10 @@ class ChatSystem {
         return this.chats.get(id);
     }
 
-    addUserToChat(userid, chatid, isadmin, privateName) {
+    addUserToChat(userid, chatid, privateName) {
         const chat = this.getChat(chatid);
         const user = this.cfx.auth.getUser(userid);
         if (!chat || !user) return;
-        if (isadmin) chat.addAdmin(userid);
         else chat.addUser(userid);
         user.addChat(chatid, privateName);
     }
@@ -111,6 +133,32 @@ class ChatSystem {
         if (chat) chat.removeUser(userid);
         const user = this.cfx.auth.getUser(userid);
         if (user) user.removeChat(chatid); 
+    }
+
+    createChatbot(botname, botid, events) {
+        const bot = new Chatbot(botid, events);
+        this.cfx.auth.addUser(botid, botname, null, bot);
+        return bot;
+    }
+}
+
+class Chatbot {
+    eventHandler = new utils.EventHandler()
+
+    constructor(userid, events) {
+        this.userid = userid;
+        this.eventHandler.addListeners(events);
+    }
+
+    addListener(name, f) {
+        this.eventHandler.addListener(name, f);
+    }
+
+    onMessage(msg, sendf) {
+        if (msg.sender.id == this.userid) return;
+        setTimeout(() => {
+            this.eventHandler.fire('message', msg, sendf)
+        }, 1000);
     }
 }
 

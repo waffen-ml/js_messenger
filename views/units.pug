@@ -1,8 +1,11 @@
 mixin content(data)
     - const c = (n) => '/file?id=' + n;
+    - data.image ??= [];
+    - data.video ??= [];
+    - data.audio ??= [];
+    - data.other ??= [];
 
     .content 
-        p.text= data.text
         - const imgc = data.image.length;
         - const vidc = data.video.length;
         - const totc = imgc + vidc;
@@ -29,6 +32,9 @@ mixin content(data)
         else if vidc == 1
             video.semi-video(controls)
                 source(src=c(data.video[0]))
+
+        if data.text
+            p.text= data.text
         
         if data.audio.length
             .audio 
@@ -45,10 +51,13 @@ mixin content(data)
 mixin system-message(text)
     span.system-message= text
 
-
 mixin user-message(data, mine)
-    .message.block(class=(mine? "mine": ""))
-        .top-bar
-            a.finite.clean.name(href="#")= data.sender.name
-            span.date= `(${data.date})`
+    .message.block(class=mine && 'mine', class=data.minor && 'minor')
+        if !data.minor
+            - const timeComp = (n) => (n < 10 ? '0' : '') + n;
+            - const hourLabel = timeComp(data.date.getHours());
+            - const minuteLabel = timeComp(data.date.getMinutes()); 
+            .top-bar
+                a.finite.clean.name(href="#")= data.sender.name
+                span.date= `(${hourLabel}:${minuteLabel})`
         +content(data.content)

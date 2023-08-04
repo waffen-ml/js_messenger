@@ -1,3 +1,6 @@
 include views/units.pug
 
-+user-message(data, own)
+if data.system
+    +system-message(data.text)
+else 
+    +user-message(data, own)

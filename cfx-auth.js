@@ -1,9 +1,14 @@
 class User {
-    constructor(id, name, password) {
+    constructor(id, name, password, botscript) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.chats = {};
+        this.botscript = botscript;
+    }
+
+    isBot() {
+        return this.botscript && this.botscript.userid == this.id;
     }
 
     addChat(id, privateName) {
@@ -27,10 +32,12 @@ class Auth {
         return id in this.users;
     }
 
-    addUser(user) {
+    addUser(...args) {
+        const user = new User(...args);
         if (this.isIdTaken(user.id))
             throw Error('This userid is already taken.');
         this.users[user.id] = user;
+        return user;
     }
 
     getUser(id) {
@@ -68,8 +75,7 @@ const regForm = new Form(
         if (data['pw'] != data['pw-rep'])
             erf('pw-rep', 'Пароли не совпадают');
     }, (data, cfx) => {
-        const user = new User(data['id'], data['name'], data['pw']);
-        cfx.auth.addUser(user);
+        const user = cfx.auth.addUser(data['id'], data['name'], data['pw']);
         cfx.takeid(user.id);
         return '/';
     });
@@ -91,19 +97,8 @@ const loginForm = new Form(
         'Забыли пароль?': '#'}
 ) 
 
-const init = (cfx) => {
+exports.init = (cfx) => {
     cfx.auth = new Auth();
     cfx.forms.addForm(loginForm);
     cfx.forms.addForm(regForm);
-
-    const saveliy = new User('nn_saveliy', 'Савелий', null)
-    saveliy.onMessage = (msg, chat) => setTimeout(() => {
-        console.log('Saveliy sees: ' + msg);
-        let text = 'Пошел нахуй!';
-        if (msg.content) text = 'Лох говорит:' + msg.content.text;
-        chat.addMessage({sender: saveliy, content: cfx.utils.createContent(text, [])});
-    }, 1000);
-    cfx.auth.addUser(saveliy);
 }
-
-module.exports = {init, User};

@@ -81,6 +81,10 @@
     margin-left:-6px;
 }
 
+.content .text {
+    margin:0;
+}
+
 .semi-image, .semi-video {
     width:100%;
     max-height:500px;

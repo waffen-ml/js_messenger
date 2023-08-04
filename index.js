@@ -38,6 +38,7 @@ app.use(sessionMiddleware);
 io.engine.use(sessionMiddleware);
 
 cfx.chats.createChat('Coffee chat')
+require('./saveliy').init(cfx);
 
 
 function render(req, res, page, params) {
@@ -72,8 +73,8 @@ app.get('/createchat', (req, res) => {
     }
 
     const chatid = cfx.chats.createChat('', false);
-    cfx.chats.addUserToChat(user.id, chatid, true, user2.name);
-    cfx.chats.addUserToChat(user2.id, chatid, false, user.name);
+    cfx.chats.addUserToChat(user.id, chatid, user2.name);
+    cfx.chats.addUserToChat(user2.id, chatid, user.name);
 
     res.send({success: true});
 
@@ -162,14 +163,8 @@ app.post('/sendmsg', upload.array('files'), (req, res) => {
     const sender = login(req, res, true);
 
     if (!sender || !chat) return;
-    
-    const msg = {
-        sender: sender,
-        system: false,
-        content: cfx.utils.createContent(req.body.text, req.files)
-    };
 
-    const msgid = chat.addMessage(msg);
+    const msgid = chat.sendMessage(sender.id, req.body.text, req.files);
     res.send({msgid : msgid});
 });
 
