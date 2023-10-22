@@ -52,3 +52,25 @@
 input[type=submit] {
     margin-top:30px;
 }
+
+.option-list {
+    margin:0;
+    padding-left:10px;
+    list-style-type: none;
+    width:100%;
+    font-size:17px;
+}
+
+.option-tuple {
+    height:1.25em;
+}
+
+.option-tuple > * {
+    display: inline;
+    margin:0;
+    cursor:pointer;
+}
+
+.option-tuple input {
+    margin-right:7px;
+}

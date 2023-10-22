@@ -1,4 +1,4 @@
-const utils = require('./cfx-utils');
+const utils = require('./utils');
 
 class Chat {
     messages = new utils.IndexedDict();
@@ -155,7 +155,7 @@ class Chatbot {
     }
 
     onMessage(msg, sendf) {
-        if (msg.sender.id == this.userid) return;
+        if (msg.system || msg.sender.id == this.userid) return;
         setTimeout(() => {
             this.eventHandler.fire('message', msg, sendf)
         }, 1000);

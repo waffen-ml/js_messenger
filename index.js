@@ -1,6 +1,4 @@
 // engine
-const cfx = require('./cfx-main').cfx;
-
 const express = require('express');
 const app = express();
 const fs = require('fs');
@@ -37,10 +35,6 @@ const sessionMiddleware = session({
 app.use(sessionMiddleware);
 io.engine.use(sessionMiddleware);
 
-cfx.chats.createChat('Coffee chat')
-require('./saveliy').init(cfx);
-
-
 function render(req, res, page, params) {
     console.log("RENDER " + req.sessionID);
     const user = cfx.as(req.session).user();
@@ -56,11 +50,26 @@ function render(req, res, page, params) {
 }
 
 function login(req, res, requireLogin) {
-    const userid = req.session.userid;
+    const userid = 0; //req.session.userid;
     const user = cfx.auth.getUser(userid);
-    if (!user && requireLogin) res.redirect('/login');
+    if (!user && requireLogin)
+        res.redirect('/login');
     return user;
 }
+
+const cfx = require('./cfx-main.js').cfx;
+cfx.init({
+    fs: fs,
+    app: app,
+    pug: pug,
+    upload: upload,
+    session: session,
+    render: render,
+    login: login
+});
+cfx.chats.createChat('Coffee chat');
+cfx.auth.addUser(0, 'hey', '1234');
+
 
 app.get('/createchat', (req, res) => {
     const user = login(req, res, true);
@@ -166,6 +175,24 @@ app.post('/sendmsg', upload.array('files'), (req, res) => {
 
     const msgid = chat.sendMessage(sender.id, req.body.text, req.files);
     res.send({msgid : msgid});
+});
+
+app.get('/getform', (req, res) => {
+    const name = req.query.name;
+    const form = cfx.forms.getForm(name);
+
+    if(!form) {
+        res.send({});
+        return;
+    }
+
+    res.send({
+        title: form.title,
+        html: pug.renderFile('./utils/form.pug', {
+            form: form,
+            values: {name: 'reg', test: ['bye']}
+        })
+    })
 });
 
 

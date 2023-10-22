@@ -114,7 +114,10 @@ exports.splitContent = (content) => {
             other: content.other
         }   
     ];
-}   
+}
 
 exports.clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
+exports.init = (cfx) => {
+    cfx.utils = this;
+}

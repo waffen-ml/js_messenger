@@ -1,5 +1,6 @@
 extends index
 
+include ../utils/form.pug
 
 include ../client_modules/popup/index
 include ../client_modules/inspect/index
@@ -7,14 +8,18 @@ include ../client_modules/uploader/index
 include ../client_modules/form/index
 
 append script 
-    include js/form.js
+    include js/game.js
+
+append style 
+    include css/game.css
 
 block header 
-    title= form.title
+    title Игра
 
 append main
-    h1.page-header
-    form(name=form.name)
-
+    .game-content!= _content
+    
+    form(name="game-input")
+        +form(_form)
 
 

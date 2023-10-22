@@ -1,0 +1,66 @@
+mixin entry(data, subtype, v)
+    - v ??= '';
+    input(type=subtype, name=data.name, placeholder=data.placeholder, value=v)
+
+mixin textarea(data, v)
+    - v ??= '';
+    textarea(name=data.name, placeholder=data.placeholder)= v
+
+mixin file(data, v)
+    .uploader(id=data.name, name=data.name, limit=data.limit)
+
+mixin text(data, v)
+    +entry(data, 'text', v)
+
+mixin tel(data, v)
+    +entry(data, 'tel', v)
+
+mixin password(data, v)
+    +entry(data, 'password', v)
+    
+mixin email(data, v)
+    +entry(data, 'email', v)
+
+mixin date(data, v)
+    +entry(data, 'date', v)
+
+mixin checkbox(data, v)
+    ul.option-list
+        each val, key in data.options
+            - let attr = v && v.includes(key)? 'checked' : '';
+            - let id = data.name + '_' + key;
+            li.option-tuple
+                input(type="checkbox", name=data.name, id=id, value=key, addattr=attr)
+                label(for=id)= val
+
+mixin radio(data, v)
+    ul.option-list
+        each val, key in data.options
+            - let attr = v === key? 'checked' : '';
+            - let id = data.name + '_' + key;
+            li.option-tuple
+                input(type="radio", name=data.name, id=id, value=key, addattr=attr)
+                label(for=id)= val
+
+mixin formunit(unit, values)
+    .form-unit(id=unit.name, optional=unit.optional)
+        if unit.title
+            - let c = unit.optional? '' : ' *';
+            span.title= unit.title + c
+        - let v = values? values[unit.name] : undefined;
+        +#{unit.type}(unit, v)
+        span.error
+
+mixin hints(hints)
+    ul.hints
+        each link, hint in hints
+            li 
+                a.clean(href=link)= hint
+
+mixin form(form, values)
+    .form-units 
+        each data in form.units
+            +formunit(data, values)
+
+    if form.hints !== undefined
+        +hints(form.hints)

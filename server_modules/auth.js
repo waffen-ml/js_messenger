@@ -51,15 +51,18 @@ class Auth {
     }
 }
 
-const Form = require('./cfx-forms').Form;
+let Form = require('./forms').Form;
 
 const regForm = new Form(
-    'reg', 'Регистрация', [
+    null, [
         {type: 'text', title: 'Имя аккаунта', name: 'id', placeholder: 'user108'},
         {type: 'text', title: 'Имя пользователя', name: 'name', placeholder: 'Илья Костин'},
         {type: 'password', title: 'Пароль', name: 'pw'},
-        {type: 'password', title: 'Повторите пароль', name: 'pw-rep'}
+        {type: 'password', title: 'Повторите пароль', name: 'pw-rep'},
+        {type: 'checkbox', title: null, name: 'test', options: {'hey': 'Привет!', 'bye': 'Пока!'}, checked: ['bye']},
+        {type: 'radio', title: 'random radio', name: 'test2', options: ['aadfadsf', 'badfasdf', 'cfasdfasdf'], checked: 1}
     ], (data, erf, cfx) => {
+
         if (!(/^[a-z0-9_]*$/.test(data['id'])))
             erf('id', 'Допустимые символы: a-z, 0-9, _');
         else if (data['id'].length < 1)
@@ -77,11 +80,10 @@ const regForm = new Form(
     }, (data, cfx) => {
         const user = cfx.auth.addUser(data['id'], data['name'], data['pw']);
         cfx.takeid(user.id);
-        return '/';
     });
 
 const loginForm = new Form(
-    'login', 'Вход', [
+    null, [
         {type: 'text', title: 'Имя аккаунта', name: 'id'},
         {type: 'password', title: 'Пароль', name: 'pw'}
     ], (data, erf, cfx) => {
@@ -92,13 +94,14 @@ const loginForm = new Form(
             erf('pw', 'Неверный пароль');
     }, (data, cfx) => {
         cfx.takeid(data.id);
-        return '/';
     }, {'Создать аккаунт': '/form?name=reg',
         'Забыли пароль?': '#'}
 ) 
 
 exports.init = (cfx) => {
+    if (!cfx.forms)
+        return true;
     cfx.auth = new Auth();
-    cfx.forms.addForm(loginForm);
-    cfx.forms.addForm(regForm);
+    cfx.forms.addForm(loginForm, 'login', 'Вход');
+    cfx.forms.addForm(regForm, 'reg', 'Регистрация');
 }
