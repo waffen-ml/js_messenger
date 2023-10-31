@@ -15,8 +15,8 @@ mixin chatlist(data)
 
 block main
     .new-chat 
-        h3 написать пользователю
+        h3 Написать пользователю
         input(type="text", placeholder="userid", id="userid")
-        input(type="button", value="Добавить", id="add")
+        input(type="button", value="Добавить", id="add", style="margin-top:20px;")
 
     +chatlist(chats)

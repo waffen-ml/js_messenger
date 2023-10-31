@@ -22,18 +22,18 @@ class CfxMain {
         }
         return f(this.session);
     }
-    
+
     user = function() {
-        return this.auth.getUser(this.sdata('userid'));
+        if(!this.session)
+            return null;
+        return this.session.user ?? null;
     }
 
-    takeid = function(id) {
+    authSession = function(data) {
         if (this.empty()) return;
-        this.auth.authSession(id, this.session);
-        console.log(this.session);
+        this.session.user = data;
+        this.session.authenticated = true;
     }
-
-    
 
     loadModule = function(file) {
         if (!/.*\.js/.test(file)) {

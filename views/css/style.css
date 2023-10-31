@@ -18,6 +18,7 @@ body {
 
 .main-grid > * {
     outline: solid 1px #3b2f2f;
+    overflow:hidden;
 }
 
 a.clean, a.button {

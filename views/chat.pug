@@ -16,13 +16,13 @@ append script
     include js/chat.js
 
 block main
-    h1.page-header= chat.name
+    h1.page-header= chatname
     .holder.block
-        each data in chat.getMessages(0, -100)
-            if data.system 
+        each data in messages.reverse()
+            if !data.sender_id
                 +system-message(data.text)
             else 
-                +user-message(data, (data.sender.id == observer.id))
+                +user-message(data, observer.id == data.sender_id)
     .input-bar
         input.entry(type="text", placeholder="Сообщение")
         input#file.thin(type="button", value="📁")

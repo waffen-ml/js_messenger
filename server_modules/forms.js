@@ -14,24 +14,31 @@ class Form {
     passData(data, ...args) {
         let output = {};
 
-        this.val(data, (field, err) => {
-            if (output[field] === undefined)
+        return this.val(data, (field, err) => {
+            if (field === undefined)
+                return Object.keys(output).length;
+            else if (output[field] === undefined)
                 output[field] = err;
-        }, ...args);
-
-        if (Object.keys(output).length == 0)
-            output['_out'] = this.ok(data, ...args);
-        
-        return output;
+        }, ...args)
+        .then((valdata) => {
+            if (Object.keys(output).length > 0)
+                return;
+            return this.ok(data, valdata, ...args);
+        })
+        .then((out) => {
+            output['_out'] = out;
+            return output;
+        })
     }
 
     val(data, erf, ...args) {
-        if (this.onVal)
-            this.onVal(data, erf, ...args);
+        return Promise.resolve(
+            this.onVal? this.onVal(data, erf, ...args) : null)
     }
 
     ok(data, ...args) {
-        return this.onOk(data, ...args);
+        return Promise.resolve(this.onOk(data, ...args))
+            .then((data) => data ?? null)
     }
 }
 

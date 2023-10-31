@@ -43,8 +43,10 @@ class Player {
 }
 
 class Game {
-    constructor(name, startScene, scenes) {
-        this.name = name;
+    constructor(title, descr, startScene, scenes) {
+        this.title = title;
+        this.descr = descr;
+        this.id = null;
 
         this.scenes = {};
         (scenes ?? []).forEach(scene => 
@@ -52,6 +54,10 @@ class Game {
 
         this.startScene = startScene;
         this.players = {};
+    }
+
+    setId(id) {
+        this.id = id;
     }
 
     addScene(scene) {
@@ -73,7 +79,7 @@ class Game {
 
     render(id) {
         let player = this.getPlayer(id);
-        return new RenderData(this.name, 
+        return new RenderData(this.id, 
             player.scene.template, player.render,
             player.scene.form);
     }
@@ -94,28 +100,49 @@ class Game {
 }
 
 class GameCenter {
-    constructor() {
+    constructor(exports) {
         this.games = {};
+        this.exports = exports;
     }
     
     addGame(game) {
-        this.games[game.name] = game;
+        this.games[game.id] = game;
     }
 
-    getGame(name) {
-        return this.games[name];
+    getGame(id) {
+        return this.games[id];
     }
 
-    render(game, id) {
-        return this.getGame(game).render(id);
+    render(gameid, playerid) {
+        return this.getGame(gameid).render(playerid);
     }
 
-    input(game, id, data) {
-        return this.getGame(game).input(id, data);
+    input(gameid, playerid, data) {
+        return this.getGame(gameid).input(playerid, data);
     }
 
     init(cfx) {
+        let folders = [];
 
+        try {
+            folders = cfx.core.fs.readdirSync('./games');
+        } catch(ex) {
+            console.log('Unable to load any games!');
+        }
+
+        folders.forEach(folder => {
+            if (folder.includes('.'))
+                return;
+            try {
+                let gameModule = require('../games/' + folder + '/index');
+                let game = gameModule.init(...this.exports);
+                game.setId(folder);
+                this.addGame(game);
+            } catch(ex) {
+                throw ex;
+            }
+        });
+        
     }
 }
 
@@ -128,36 +155,12 @@ exports.init = (cfx) => {
     if(!cfx.forms)
         return true;
 
-    let gameCenter = new GameCenter();
+    let gameCenter = new GameCenter([Game, Scene, SceneCall]);
     gameCenter.init(cfx);
-
-    let game = new Game('one', 'first');
-
-    game.addScene(new Scene('first', 'index',
-        [{type: 'text', name:'msg', placeholder: 'хуй'}],
-        {
-            run: (player, params) => {
-                params ??= {};
-                player.count = (player.count ?? 0) + 1;
-                let message = params.text + ' ' + player.count;
-                return {msg: message};
-            },
-
-            val: (data, erf) => {
-            },
-
-            ok: (data, player, params) => {
-                return new SceneCall(null, {text: data.msg})
-            }
-        }
-    ));
-
-
-    gameCenter.addGame(game);
 
     cfx.core.app.get('/game', (req, res) => {
         let user = cfx.core.login(req, res, true);
-        let game = gameCenter.getGame(req.query.name);
+        let game = gameCenter.getGame(req.query.id);
         let renderData = game.render(user.id);
         let path = `./games/${renderData.game}/view/${renderData.template}.pug`; 
         let content = cfx.core.pug.renderFile(path, renderData.data);
@@ -166,9 +169,13 @@ exports.init = (cfx) => {
 
     cfx.core.app.post('/game-input', cfx.core.upload.none(), (req, res) => {
         let user = cfx.core.login(req, res, true);
-        let game = gameCenter.getGame(req.query.name);
+        let game = gameCenter.getGame(req.query.id);
         let output = game.input(user.id, req.body);
         res.send(output ?? {'_out': true});
+    })
+
+    cfx.core.app.get('/gamelist', (req, res) => {
+        cfx.core.render(req, res, 'gamelist', {games: gameCenter.games});
     })
 
 

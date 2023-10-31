@@ -1,5 +1,5 @@
 const formName = (new URLSearchParams(window.location.search)).get('name');
-const mainForm = new Form(formName, (r) => {
+const mainForm = new Form(formName, null, (r) => {
 
     document.querySelector('.page-header').textContent = r.title;
 

@@ -1,73 +1,46 @@
 const utils = require('./utils');
 
 class Chat {
-    messages = new utils.IndexedDict();
-    users = new Set();
-    bots = {};
-    lastMessage = null;
-
-    constructor(cfx, id, name, ispublic) {
+    constructor(cfx, id, name) {
         this.cfx = cfx;
         this.id = id;
         this.name = name;
-        this.ispublic = ispublic ?? true;
     }
 
-    displayMessage(msg) { 
-        this.cfx.chats.displayMessage(msg, this.id);
+    addUser(id) {
+        return this.cfx.query(`insert into chat_member(user_id, chat_id) values (${id}, ${this.id})`);
     }
 
-    addUser(userid) {
-        this.users.add(userid);
-        const user = this.cfx.auth.getUser(userid);
-        if (user.isBot())
-            this.bots[userid] = user.botscript;
+    removeUser(id) {
+        return this.cfx.query(`delete from chat_member where user_id=${id} and chat_id=${this.id}`);
     }
 
-    removeUser(userid) {
-        this.users.delete(userid);
-        delete this.bots[userid];
-    }
-
-    containsUser(userid) {
-        return this.ispublic || this.users.has(userid);
-    }
-
-    _normIndex(i) {
-        return utils.clamp(i, 0, this.messages.length() - 1);
-    }
-
-    getMessage(id) {
-        return this.messages.get(id);
-    }
-
-    getMessages(start, dir) {
-        let a = this._normIndex(this.messages.length() - start - 1);
-        let b = this._normIndex(a + dir);
-        if (a > b) [a, b] = [b, a];
-        return this.messages.values().slice(a, b + 1);
-    }
-
-    updateBots(msg) {
-        Object.keys(this.bots).forEach(botid => {
-            const botscript = this.bots[botid];
-            botscript.onMessage(msg, (text, files) => this.sendMessage(botid, text, files));
+    containsUser(id) {
+        return Promise.resolve(true);
+        return this.cfx.query(`select id from chat_member where user_id=${id} and chat_id=${this.id}`)
+        .then((r) => {
+            return r.length > 0;
         })
     }
 
-    appendMessage(msg) {
-        this.displayMessage(msg);
-        this.updateBots(msg);
-        this.lastMessage = msg;
-        return this.messages.add(msg);
+    addMessage(sender_id, text) {
+        return this.cfx.query(`insert into message(sender_id, chat_id, text, datetime) values(${sender_id}, ${this.id}, "${text}", now())`)
+        .then(() => {
+            return this.getLastMessages(1);
+        })
+        .then(msg => {
+            this.displayMessage(msg[0]);
+        })
     }
 
-    system(text) {
-        const msg = {
-            system: true,
-            text: text
-        };
-        return this.appendMessage(msg);
+    getLastMessages(n) {
+        return this.cfx.query(`select m.id as message_id, m.sender_id, m.text, m.datetime, ` +
+            `u.name as sender_name, u.tag as sender_tag from message m join user u on m.sender_id = u.id ` +
+            `where m.chat_id=${this.id} order by m.id desc limit ${n}`)
+    }
+
+    displayMessage(msg) {
+        this.cfx.chats.displayMessage(msg, this.id);
     }
 
     sendMessage(senderid, text, files) {
@@ -101,44 +74,34 @@ class Chat {
 }
 
 class ChatSystem {
-    chats = new utils.IndexedDict();
-
     constructor(cfx) {
         this.cfx = cfx;
-    }
-
-    createChat(name, ispublic) {
-        return this.chats.add((id) => 
-            new Chat(this.cfx, id, name, ispublic), true);
-    }
-
-    removeChat(id) {
-        this.chats.remove(id);
+        this.chats = {};
     }
 
     getChat(id) {
-        return this.chats.get(id);
+        if(id in this.chats)
+            return Promise.resolve(this.chats[id]);
+        return this.cfx.query(`select * from chat where id=${id}`)
+        .then(data => {
+            if(!data.length)
+                return null;
+            this.chats[id] = new Chat(this.cfx, data[0].id, data[0].name)
+            return this.chats[id];
+        })
     }
 
-    addUserToChat(userid, chatid, privateName) {
-        const chat = this.getChat(chatid);
-        const user = this.cfx.auth.getUser(userid);
-        if (!chat || !user) return;
-        else chat.addUser(userid);
-        user.addChat(chatid, privateName);
+    createChat(name) {
+        return this.cfx.query(`insert into chat(name) values("${name}")`)
+        .then((p) => {
+            this.chats[p.insertId] = new Chat(this.cfx, p.insertId, name);
+            return this.chats[p.insertId];
+        })
     }
 
-    removeUserFromChat(userid, chatid) {
-        const chat = this.getChat(chatid);
-        if (chat) chat.removeUser(userid);
-        const user = this.cfx.auth.getUser(userid);
-        if (user) user.removeChat(chatid); 
-    }
-
-    createChatbot(botname, botid, events) {
-        const bot = new Chatbot(botid, events);
-        this.cfx.auth.addUser(botid, botname, null, bot);
-        return bot;
+    removeChat(id) {
+        delete this.chats[id];
+        return this.cfx.query(`delete from chat where id=${id}`);
     }
 }
 
