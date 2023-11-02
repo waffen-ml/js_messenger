@@ -7,23 +7,26 @@ html
         block header
         title CoffeeTox
     body
-        .main-grid 
-            header 
-                .logo 
-                    a.button(href="/") ☕tox
-                .current 
-                    if user !== null
-                        a.clean(href="#")= user.name
-                        a.button(href="/logout") 🚪
-                    else
-                        a.clean(href="/form?name=login") Вход
-            nav 
-                each link, text in nav
-                    a.button(href=link)=text
-            main
-                block main 
-            footer 
-                span CoffeeTox ☕
-        block body 
-        script 
-            block script 
+        .global-wrapper 
+            .main-grid 
+                header 
+                    .logo 
+                        a.button(href="/") ☕tox
+                    .current 
+                        if user !== null
+                            a.clean(href="#")= user.name
+                            a.button(href="/logout", recurrent) 🚪
+                        else
+                            a.clean(href="/form?name=login", recurrent) Вход
+                nav 
+                    each link, text in nav
+                        a.button(href=link)=text
+                main.styled-scroll
+                    block main 
+                footer 
+                    span CoffeeTox ☕
+        block body
+        script
+            include js/script.js
+            block script
+            block scripthead 

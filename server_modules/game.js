@@ -152,7 +152,7 @@ exports.Scene = Scene;
 exports.Game = Game;
 
 exports.init = (cfx) => {
-    if(!cfx.forms)
+    if(!cfx.forms || !cfx.files)
         return true;
 
     let gameCenter = new GameCenter([Game, Scene, SceneCall]);

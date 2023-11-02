@@ -20,19 +20,73 @@ function processAddAttr(parent) {
     })
 }
 
+const generic = {
+    check: (inp, type, name) => {
+        switch(type) {
+            case 'entry':
+            case 'textarea':
+            case 'text':
+            case 'tel':
+            case 'password':
+            case 'email':
+            case 'date':
+                return Boolean(inp.value);
+            case 'checkbox':
+                return true;
+            case 'radio':
+                return inp.querySelectorAll('input')
+                .some((w) => w.checked);
+            case 'file':
+                return uplManager.getUploader(name).files.length > 0;
+            default:
+                return true;
+        }
+    },
+    submit: (fd, inp, type, name) => {
+        switch(type) {
+            case 'entry':
+            case 'textarea':
+            case 'text':
+            case 'tel':
+            case 'password':
+            case 'email':
+            case 'date':
+                fd.append(name, inp.value);
+                break;
+            case 'checkbox':
+            case 'radio':
+                inp.querySelectorAll('input')
+                .forEach(w => {
+                    if (w.checked)
+                        fd.append(name, w.value)
+                })
+                break;
+            case 'file':
+                uplManager.getUploader(name)
+                .files.forEach(f => fd.append(name, f));
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 class Form {
     constructor(name, addr, onCreate, onError) {
         this.name = name;
         this.addr = addr ?? '/form?name=' + name;
         this.form = document.querySelector(`form[name="${name}"]`);
+        this.custom = {};
 
         if(!this.form) {
-            if(onError) onError();
+            if(onError)
+                onError();
             return;
         }
         else if (this.form.innerHTML) {
-            if(onCreate) onCreate();
-            processAddAttr(this.form);
+            if(onCreate)
+                onCreate();
+            this.process();
             return;
         }
         
@@ -40,25 +94,46 @@ class Form {
         .then(r => r.json())
         .then(r => {
             if (!r.html) {
-                if(onError) onError();
+                if(onError)
+                    onError();
                 console.log('Form ' + name + ' has not been loaded');
                 return;
             }
 
             this.form.innerHTML = r.html + this.form.innerHTML;
             delete r.html;
-            if(onCreate) onCreate(r);
-            processAddAttr(this.form);
+            if(onCreate)
+                onCreate(r);
+            this.process();
         });
         
     }
 
+    process() {
+        processAddAttr(this.form);
+        uplManager.setupContainer(this.form);
+    }
+
+    setupCustomUnit(name, unit, submit, check) {
+        let fu = this.form.querySelector('.form-unit#' + name);
+        
+        if(!fu || fu.getAttribute('type') != 'custom')
+            return false;
+        
+        unit.setAttribute('name', name);
+        fu.querySelector('.custom').appendChild(unit);
+        this.custom[name] = {submit: submit, check: check};
+
+        return true;
+    }
+
     addSubmitButton(text, f) {
-        if(this.submitBtn) return;
+        if(this.submitBtn)
+            return;
 
         let btn = document.createElement('input');
         btn.setAttribute('type', 'submit');
-        btn.setAttribute('value', text);
+        btn.setAttribute('value', text ?? 'Отправить');
         btn.classList.add('button');
         this.submitBtn = btn;
 
@@ -84,13 +159,7 @@ class Form {
         Object.keys(err).forEach((k, i) => {
             const fu = this.form.querySelector(`.form-unit#${k}`);
             const inp = fu.querySelector('[name]');
-            let tgt = inp;
-    
-            if (isBinaryInput(inp))
-                tgt = fu.querySelector('.option-list')
-            
-            tgt.classList.add('incorrect');
-    
+            inp.classList.add('incorrect');
             if (err[k]) {
                 const lbl = fu.querySelector('.error');
                 lbl.style.display = 'block';
@@ -99,41 +168,32 @@ class Form {
         });
     }
 
-    loopThroughInputs(func) {
+    loopThroughUnits(func) {
         this.form.querySelectorAll('.form-unit').forEach(fu => {
-    
-            fu.querySelectorAll('[name]').forEach(inp => {
-                const name = inp.getAttribute('name');
-                const type = inp.getAttribute('type');
-                func(fu, inp, name, type);
-            });
-    
+            let inp = fu.querySelector('[name]');
+            let name = inp.getAttribute('name');
+            let type = fu.getAttribute('type');
+            func(fu, inp, name, type);
         });
     }
 
     checkRequired() {
         let keys = [];
-        let binary = {};
-    
-        this.loopThroughInputs((fu, inp, name) => {
-            if (isOptional(fu)) return;
-            else if (isUploader(inp)) {
-                if (uplManager.getUploader(name).files.length)
-                    return;
-            } else if(isBinaryInput(inp)) {
-                binary[name] = binary[name] | inp.checked;
+
+        this.loopThroughUnits((fu, inp, name, type) => {
+            if(isOptional(fu))
                 return;
-            } else if(inp.value)
+            else if(type == 'custom' && (!this.custom[name].check
+                    || this.custom[name].check(inp, name)))
                 return;
-    
+            else if (type != 'custom' && generic.check(inp, type, name))
+                return;
+            
             keys.push(name);
-        });
-    
-        Object.keys(binary).forEach(k => {
-            if (!binary[k]) keys.push(k);
         })
     
-        if (!keys.length) return null;
+        if (!keys.length)
+            return null;
     
         let err = {};
         keys.forEach(key => err[key] = '');
@@ -152,19 +212,12 @@ class Form {
     
         let fd = new FormData();
     
-        this.loopThroughInputs((fu, inp, name) => {
-            if(isUploader(inp)) {
-                uplManager.identifyUploader(inp)
-                .files.forEach(f => fd.append(name, f));
-                return;
-            }
-            else if (isBinaryInput(inp) && !inp.checked)
-                return;
-
-            console.log(name + ' ' + inp.value);
-            
-            fd.append(name, inp.value);
-        });
+        this.loopThroughUnits((fu, inp, name, type) => {
+            if(type == 'custom')
+                this.custom[name].submit(fd, inp, name);
+            else
+                generic.submit(fd, inp, type, name);
+        })
         
         fetch(this.addr, {
             method: 'POST',

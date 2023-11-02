@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #editor {
+            width:300px;
+            height:200px;
+        }
+        .ace_gutter .ace_gutter-cell {
+            padding-left:8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="editor"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.31.1/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        let editor = ace.edit(document.querySelector('div'));
+        editor.session.setUseWorker(false);
+        editor.setOptions({
+            fontSize: "13pt"
+        });
+        editor.setTheme("ace/theme/github_dark");
+        editor.getSession().setMode("ace/mode/html");
+    </script>
+
+</body>
+</html>

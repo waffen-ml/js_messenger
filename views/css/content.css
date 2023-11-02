@@ -1,7 +1,7 @@
 .content {
     display:flex;
     flex-direction: column;
-    gap:15px;
+    gap:12px;
 }
 
 .visual {
@@ -84,6 +84,14 @@
 
 .content .text {
     margin:0;
+}
+
+.content .html {
+    width: min-content;
+    padding:11px;
+    max-width: 100%;
+    max-height:400px;
+    overflow:auto;
 }
 
 .semi-image, .semi-video {

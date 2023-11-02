@@ -1,0 +1,39 @@
+.post:not(:first-child) {
+    margin-top:12px;
+}
+
+.post {
+    padding:13px;
+}
+
+.post .top-bar {
+    display:flex;
+}
+
+.post .top-bar > * {
+    white-space:nowrap;
+}
+
+.post .top-bar .prefix {
+    margin-right:5px;
+}
+
+.post .top-bar .datetime {
+    margin-left:10px;
+}
+
+.post .title {
+    font-weight: bold;
+    font-size:1.25em;
+    margin-top:5px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    line-clamp: 2; 
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient: vertical;
+}
+
+.post .content {
+    margin-top:8px;
+}

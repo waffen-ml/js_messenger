@@ -1,0 +1,20 @@
+extends index
+
+include ../client_modules/form/index
+
+append header 
+    title Банк CoffeTox
+append style 
+    include css/ebank.css
+append script 
+    include js/ebank.js
+
+block main
+    h1.page-header Банк CoffeeTox
+    span.balance Ваш баланс:
+        span.value= balance 
+    h2 Перевести человеку
+    form(name="ebank")
+    
+        
+    

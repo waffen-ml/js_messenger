@@ -9,6 +9,7 @@
     align-items: center;
     background:#0000007d;
     display:none;
+    z-index:10;
 }
 
 .popup .window {
@@ -20,12 +21,13 @@
     overflow:hidden;
     background:#e2ccb9;
     box-shadow: 0px 0px 3px 0px #5c534b;
+    padding:10px;
 }
 
 .popup .inner {
     display:flex;
     flex-direction: column; 
-    gap:10px;
+    gap:5px;
 }
 
 

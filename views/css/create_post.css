@@ -1,0 +1,24 @@
+#editor {
+    border-radius:10px;
+    min-width:300px;
+    min-height:150px;
+    max-width: max(100%, 500px);
+    max-height:300px;
+    resize:both;
+}
+
+.html-editor {
+}
+
+.html-editor .preview {
+    display:block;
+    margin-top:5px; 
+}
+
+iframe#preview {
+    border-radius:10px;
+    background:white;
+    border:2px solid grey;
+    width:500px;
+    height:300px;
+}

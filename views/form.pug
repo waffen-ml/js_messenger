@@ -8,9 +8,12 @@ include ../client_modules/form/index
 
 append script 
     include js/form.js
+append scripthead 
+    | loadForm();
 
 block header 
-    title= form.title
+    - let titleText = form.meta.title ?? 'Форма'
+    title= titleText 
 
 append main
     h1.page-header

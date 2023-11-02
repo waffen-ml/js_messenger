@@ -1,0 +1,12 @@
+doctype html 
+html 
+    head
+        style
+            include css/style.css
+        title Ошибка!
+    body
+        .global-wrapper
+            .error 
+                h1 Ошибка!
+                p.block(style="width:min-content")!= error.replace(/\n/g, '<br>')
+                a(href="/") Вернуться на сайт

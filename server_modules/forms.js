@@ -45,11 +45,10 @@ class Form {
 class FormSystem {
     forms = {};
 
-    addForm(form, name, title) {
-        if (name in this.forms)
-            throw new Error(`Form name "${name}" is already taken.`);
-        form.meta = {name: name, title: title}
-        this.forms[name] = form;
+    addForm(form) {
+        if (form.meta.name in this.forms)
+            throw new Error(`Form name "${form.meta.name}" is already taken.`);
+        this.forms[form.meta.name] = form;
     }
 
     removeForm(name) {

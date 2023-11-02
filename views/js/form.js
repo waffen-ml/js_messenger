@@ -1,10 +1,15 @@
-const formName = (new URLSearchParams(window.location.search)).get('name');
-const mainForm = new Form(formName, null, (r) => {
+function loadForm(onCreate) {
+    let formName = document.querySelector('form').getAttribute('name');
+    let mainForm = new Form(formName, null, (r) => {
+        document.querySelector('.page-header').textContent = r.title;
 
-    document.querySelector('.page-header').textContent = r.title;
-
-    mainForm.addSubmitButton('Отправить', (res) => {
-        location.href = '/';
-    })
-
-}, () => { alert('error!') });
+        if (onCreate)
+            onCreate(mainForm);
+    
+        mainForm.addSubmitButton('Отправить', (res) => {
+            let params = new URLSearchParams(window.location.search);
+            location.href = params.get('next') || '/';
+        })
+    
+    }, () => { alert('error!') });
+}

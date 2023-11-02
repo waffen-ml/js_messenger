@@ -23,53 +23,64 @@ class Chat {
         })
     }
 
-    addMessage(sender_id, text) {
-        return this.cfx.query(`insert into message(sender_id, chat_id, text, datetime) values(${sender_id}, ${this.id}, "${text}", now())`)
+    addMessage(sender_id, text, bundle) {
+        bundle ??= null;
+        return this.cfx.query(`insert into message (sender_id, chat_id, text, datetime, bundle_id) values (${sender_id}, ${this.id}, "${text}", now(), ${bundle})`)
         .then(() => {
-            return this.getLastMessages(1);
+            return this.getLastFormattedMessages(1);
         })
-        .then(msg => {
-            this.displayMessage(msg[0]);
+        .then(msgs => {
+            this.displayMessages(msgs);
         })
     }
 
-    getLastMessages(n) {
-        return this.cfx.query(`select m.id as message_id, m.sender_id, m.text, m.datetime, ` +
-            `u.name as sender_name, u.tag as sender_tag from message m join user u on m.sender_id = u.id ` +
-            `where m.chat_id=${this.id} order by m.id desc limit ${n}`)
+    getLastRawMessages(n) {
+        return this.cfx.query('select m.id as message_id, m.sender_id, m.text, m.datetime,'
+            + 'u.name as sender_name, u.tag as sender_tag, f.name as file_name, f.mimetype'
+            + ` as file_mimetype from (select * from message order by id desc limit ${n}) m`
+            + ' left join file f on m.bundle_id = f.bundle_id left join user u on m.sender_id = u.id');
     }
 
-    displayMessage(msg) {
-        this.cfx.chats.displayMessage(msg, this.id);
+    getLastFormattedMessages(n) {
+        return this.getLastRawMessages(n + 1)
+        .then((arr) => {
+            let result = [];
+            let message = utils.createMessage(arr[arr.length - 1], false);
+            let current_id = message.message_id;
+
+            for(let i = arr.length - 1; i >= 0; i--) {
+                if (arr[i].message_id != current_id) {
+                    result.push(message);
+                    
+                    let minor = message.sender_id === arr[i].sender_id
+                        && (arr[i].datetime - message.datetime) / 1000 / 60 < 5
+
+                    if(!message.datetime || arr[i].datetime.getDay() != message.datetime.getDay()
+                        || arr[i].datetime.getMonth() != message.datetime.getMonth())
+                        result.push({
+                            sender_id: null,
+                            text: utils.getDateLabel(arr[i].datetime, 'ru')
+                        })
+
+                    current_id = arr[i].message_id;
+                    message = utils.createMessage(arr[i], minor);
+                }
+                if(arr[i].file_name) {
+                    message.content[arr[i].file_mimetype].push(arr[i].file_name);
+                }
+            }
+            result.push(message);
+            if (result.length > n)
+                result.shift();
+
+            return result;
+        })
     }
 
-    sendMessage(senderid, text, files) {
-        const content = utils.createContent(text, files);
-        let sended = [];
-
-        utils.splitContent(content).forEach(contPiece => {
-
-            const msg = {
-                sender: this.cfx.auth.getUser(senderid),
-                content: contPiece,
-                date: new Date()
-            };
-    
-            if (!this.lastMessage || !this.lastMessage.system &&
-                this.lastMessage.date.getDay() != msg.date.getDay())
-            {
-                this.system(utils.getDayAndMonth(msg.date, 'ru'));
-            }
-            else if (!this.lastMessage.system) {
-                const sameSender = this.lastMessage.sender.id == senderid;
-                const diffMinutes = (msg.date - this.lastMessage.date) / 1000 / 60;
-                msg.minor = sameSender && (diffMinutes < 5);
-            }
-            sended.push(this.appendMessage(msg));
-
-        });
-
-        return sended;
+    displayMessages(msgs) {
+        msgs.forEach(msg => {
+            this.cfx.chats.displayMessage(msg, this.id);
+        })
     }
 }
 
@@ -105,29 +116,8 @@ class ChatSystem {
     }
 }
 
-class Chatbot {
-    eventHandler = new utils.EventHandler()
-
-    constructor(userid, events) {
-        this.userid = userid;
-        this.eventHandler.addListeners(events);
-    }
-
-    addListener(name, f) {
-        this.eventHandler.addListener(name, f);
-    }
-
-    onMessage(msg, sendf) {
-        if (msg.system || msg.sender.id == this.userid) return;
-        setTimeout(() => {
-            this.eventHandler.fire('message', msg, sendf)
-        }, 1000);
-    }
-}
-
-const init = (cfx) => {
+exports.init = (cfx) => {
     cfx.chats = new ChatSystem(cfx);
-}
 
-module.exports = { Chat, init };
+}
 

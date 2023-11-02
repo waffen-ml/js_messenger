@@ -3,29 +3,55 @@ class Auth {
         this.cfx = cfx;
     }
 
-    getUser(tag) {
-        return this.cfx.query(`select * from user where tag="${tag}"`)
+    _getUserByQuery(query) {
+        return this.cfx.query(`select * from user where ${query}`)
         .then((result) => {
-            if (!result.length)
+            if(!result.length)
                 return null;
             return result[0];
-        })
+        })   
     }
 
-    doesUserExist(tag) {
-        return this.getUser(tag)
+    getUserById(id) {
+        return this._getUserByQuery('id=' + id)
+    }
+
+    getUserByTag(tag) {
+        return this._getUserByQuery(`tag="${tag}"`)
+    }
+
+    selQuery(selector, prefix) {
+        let body = selector.substring(1);
+        prefix ??= '';
+
+        switch(sel[0]) {
+            case '$':
+                return prefix + `tag="${body}"`;
+            case '@':
+                return prefix + 'id=' + body;
+            default:
+                return null;
+        }  
+    }
+
+    getUser(sel) {
+        return this._getUserByQuery(this.selQuery(sel));
+    }
+
+    doesUserExist(sel) {
+        return this.getUser(sel)
         .then((u) => {
             return u != null;
         })
     }
 
     addUser(name, tag, password) {
-        return this.getUser(tag)
+        return this.getUserByTag(tag)
         .then(u => {
             if (u) return;
             return this.cfx.query(`insert into user(name, tag, password) values ("${name}", "${tag}", "${password}")`)
             .then(() => {
-                return this.getUser(tag);
+                return this.getUserByTag(tag);
             });
         })
     }
@@ -34,7 +60,7 @@ class Auth {
 let Form = require('./forms').Form;
 
 const regForm = new Form(
-    null, [
+    {name: 'reg', title: 'Регистрация'}, [
         {type: 'text', title: 'Имя аккаунта', name: 'tag', placeholder: 'user108'},
         {type: 'text', title: 'Имя пользователя', name: 'name', placeholder: 'Илья Костин'},
         {type: 'password', title: 'Пароль', name: 'pw'},
@@ -57,7 +83,7 @@ const regForm = new Form(
         if (erf())
             return;
 
-        return cfx.auth.getUser(data.tag)
+        return cfx.auth.getUserByTag(data.tag)
         .then((user) => {
             if (user)
                 erf('tag', 'Это ID занято')
@@ -71,11 +97,11 @@ const regForm = new Form(
     });
 
 const loginForm = new Form(
-    null, [
+    {name: 'login', title: 'Вход'}, [
         {type: 'text', title: 'Имя аккаунта', name: 'tag'},
         {type: 'password', title: 'Пароль', name: 'pw'}
     ], (data, erf, cfx) => {
-        return cfx.auth.getUser(data.tag)
+        return cfx.auth.getUserByTag(data.tag)
         .then(user => {
             if(!user)
                 erf('tag', 'Не найдено');
@@ -94,6 +120,6 @@ exports.init = (cfx) => {
     if (!cfx.forms || !cfx.db)
         return true;
     cfx.auth = new Auth(cfx);
-    cfx.forms.addForm(loginForm, 'login', 'Вход');
-    cfx.forms.addForm(regForm, 'reg', 'Регистрация');
+    cfx.forms.addForm(loginForm);
+    cfx.forms.addForm(regForm);
 }

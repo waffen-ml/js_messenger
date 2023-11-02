@@ -25,25 +25,28 @@ mixin date(data, v)
     +entry(data, 'date', v)
 
 mixin checkbox(data, v)
-    ul.option-list
+    ul.option-list(name=data.name)
         each val, key in data.options
             - let attr = v && v.includes(key)? 'checked' : '';
             - let id = data.name + '_' + key;
             li.option-tuple
-                input(type="checkbox", name=data.name, id=id, value=key, addattr=attr)
+                input(type="checkbox", id=id, value=key, addattr=attr)
                 label(for=id)= val
 
 mixin radio(data, v)
-    ul.option-list
+    ul.option-list(name=data.name)
         each val, key in data.options
             - let attr = v === key? 'checked' : '';
             - let id = data.name + '_' + key;
             li.option-tuple
-                input(type="radio", name=data.name, id=id, value=key, addattr=attr)
+                input(type="radio", id=id, value=key, addattr=attr)
                 label(for=id)= val
 
+mixin custom(data)
+    .custom
+
 mixin formunit(unit, values)
-    .form-unit(id=unit.name, optional=unit.optional)
+    .form-unit(id=unit.name, type=unit.type, optional=unit.optional)
         if unit.title
             - let c = unit.optional? '' : ' *';
             span.title= unit.title + c

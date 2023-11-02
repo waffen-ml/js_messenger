@@ -12,6 +12,7 @@
 }
 
 .input-bar {
+    margin-top:10px;
     display:flex;
     gap:7px;
     width: 100%;

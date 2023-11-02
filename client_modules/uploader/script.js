@@ -31,7 +31,6 @@ function inspectFile(file, cfg) {
     window.open(blobUrl, '_blank');
 }
 
-
 function preventDefault(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -138,7 +137,6 @@ class Uploader {
     }
 }
 
-
 const uplManager = new class {
     uploaders = {};
     i = 0;
@@ -169,5 +167,4 @@ const uplManager = new class {
         return new Uploader(div, data ?? {});
     }
 }
-
-uplManager.setupContainer(document);    
+ 

@@ -18,7 +18,7 @@ append script
 block main
     h1.page-header= chatname
     .holder.block
-        each data in messages.reverse()
+        each data in messages
             if !data.sender_id
                 +system-message(data.text)
             else 

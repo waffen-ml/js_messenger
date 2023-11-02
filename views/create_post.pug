@@ -1,0 +1,14 @@
+extends form
+
+append header 
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.31.1/ace.js")
+append style 
+    include css/create_post.css
+block scripthead
+    include js/create_post.js
+
+append main 
+    hidden
+        .html-editor 
+            #editor
+            a.clean.preview(href="#") Предпросмотр

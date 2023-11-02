@@ -1,63 +1,91 @@
-mixin content(data)
+mixin visual(content)
     - const c = (n) => '/file?id=' + n;
-    - data.image ??= [];
-    - data.video ??= [];
-    - data.audio ??= [];
-    - data.other ??= [];
+    - let imgc = content.image.length;
+    - let vidc = content.video.length;
+    - let totc = imgc + vidc;
 
-    .content 
-        - const imgc = data.image.length;
-        - const vidc = data.video.length;
-        - const totc = imgc + vidc;
+    if totc > 1
+        - let nlarge = totc % 3;
+        - nlarge = nlarge == 1? 4 : nlarge;
+        - let i = 0;
 
-        if totc > 1
-            - let nlarge = totc % 3;
-            - nlarge = nlarge == 1? 4 : nlarge;
-            - let i = 0;
-
-            .visual(inspect-group)
-                while i < totc
-                    - let isimg = i < imgc;
-                    - let cls = (i < nlarge? 'large' : 'small') + (isimg? '': ' video');
-                    .tile(class=cls)
-                        if isimg
-                            img(src=c(data.image[i]))
-                        else
-                            video(src=c(data.video[i - imgc]), preload='metadata')
-                    - i++;
-            
-        else if imgc == 1
-            image.semi-image(src=c(data.image[0]))
+        .visual(inspect-group)
+            while i < totc
+                - let isimg = i < imgc;
+                - let cls = (i < nlarge? 'large' : 'small') + (isimg? '': ' video');
+                .tile(class=cls)
+                    if isimg
+                        img(src=c(content.image[i]))
+                    else
+                        video(src=c(content.video[i - imgc]), preload='metacont')
+                - i++;
         
-        else if vidc == 1
-            video.semi-video(controls)
-                source(src=c(data.video[0]))
+    else if imgc == 1
+        image.semi-image(src=c(content.image[0]))
+    
+    else if vidc == 1
+        video.semi-video(controls)
+            source(src=c(content.video[0]))
 
-        if data.text
-            p.text= data.text
-        
-        if data.audio.length
-            .audio 
-                each audio in data.audio 
-                    audio(controls)
-                        source(src=c(audio))
+mixin text(content)
+    if content.text
+        p.text= content.text
 
-        if data.other.length
-            ul.other
-                each other in data.other 
-                    li.finite
-                        a.clean(href=c(other), download)= other 
+mixin audio(content)
+    if content.audio.length
+        .audio 
+            each audio in content.audio 
+                audio(controls)
+                    source(src='/file?id=' + audio)
 
+mixin other(content)
+    if content.other.length
+        ul.other
+            each other in content.other 
+                li.finite
+                    a.clean(href='/file?id=' + other, download)= other 
+
+mixin html(content)
+    if content.html
+        .html.block.styled-scroll!= content.html
+
+mixin msg-content(content)
+    .content
+        +visual(content)
+        +audio(content)
+        +other(content)
+        +text(content)
+
+mixin post-content(content)
+    .content
+        +text(content)
+        +html(content)
+        +visual(content)
+        +audio(content)
+        +other(content)
 
 mixin system-message(text)
     span.system-message= text
 
 mixin user-message(data, mine)
-    .message.block(class=mine && 'mine')
-        - const timeComp = (n) => (n < 10 ? '0' : '') + n;
-        - const hourLabel = timeComp(data.datetime.getHours());
-        - const minuteLabel = timeComp(data.datetime.getMinutes()); 
+    .message.block(class=mine && 'mine', class=data.minor && 'minor')
+        if !data.minor
+            - const timeComp = (n) => (n < 10 ? '0' : '') + n;
+            - const hourLabel = timeComp(data.datetime.getHours());
+            - const minuteLabel = timeComp(data.datetime.getMinutes()); 
+            .top-bar
+                a.finite.clean.name(href="#")= data.sender_name
+                span.date= `(${hourLabel}:${minuteLabel})`
+
+        +msg-content(data.content)
+
+mixin post(data)
+    .post.block(id="post" + data.post_id)
         .top-bar
-            a.finite.clean.name(href="#")= data.sender_name
-            span.date= `(${hourLabel}:${minuteLabel})`
-        +content(data)
+            span.prefix Новость от 
+            a.finite.clean.name(href="#")= data.author_name
+            span.datetime= utils.getDatetimeLabel(data.datetime, true)
+        if data.title 
+            span.title= data.title
+        +post-content(data.content)
+        

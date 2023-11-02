@@ -1,123 +1,118 @@
-exports.IndexedDict = class {
-    current = 0;
-    data = {};
+class Utils {
 
-    next() {
-        return this.current++;
+    strweight(s) {
+        for(let i = 0; i < s.length; i++)
+            if(!'\n '.includes(s[i]))
+                return true;
+        return false;
     }
 
-    add(obj, isfunc) {
-        isfunc ??= false;
-        const id = this.next();
-        obj = isfunc? obj(id) : obj;
-        this.data[id] = obj;
-        return id;
+    simplifyMimetype(mt) {
+        mt = mt.split('/')[0];
+        if (mt != 'image' && mt != 'video' && mt != 'audio')
+            return 'other'
+        return mt
     }
 
-    length() {
-        return this.keys().length;
+    createContent(text, html) {
+        return {
+            text: text,
+            html: html,
+            image: [], video: [],
+            audio: [], other: []
+        };
     }
 
-    keys() {
-        return Object.keys(this.data)
+    getDateLabel(date, ll) {
+        return date.toLocaleString(ll ?? 'default', { month: 'long', day: 'numeric'})
+            + (date.getFullYear() == (new Date()).getFullYear()? '' : ', ' + date.getFullYear());
     }
 
-    values() {
-        return Object.values(this.data);
+    areDatesEqual(d1, d2) {
+        return d1.getFullYear() == d2.getFullYear()
+            && d1.getMonth() == d2.getMonth()
+            && d1.getDate() == d2.getDate()
     }
 
-    getNthKey(n) {
-        const keys = this.keys();
-        return keys[n < 0? keys.length + n : n];
+    formatTimeUnit(n) {
+        return (n < 10 ? '0' : '') + n
     }
 
-    getNthValue(n) {
-        const values = this.values();
-        return values[n < 0? values.length + n : n];
+    getTimeLabel(datetime) {
+        let hourLabel = this.formatTimeUnit(datetime.getHours());
+        let minuteLabel = this.formatTimeUnit(datetime.getMinutes()); 
+        return hourLabel + ':' + minuteLabel;
     }
 
-    get(id) {
-        return this.data[id];
+    getDatetimeLabel(datetime, fancy) {
+        let now = new Date();
+        let time = datetime.getFullYear() == now.getFullYear()?
+            ' в ' + this.getTimeLabel(datetime) : '';
+        
+        if (fancy) {
+            if(this.areDatesEqual(datetime, now))
+                return 'Сегодня' + time;
+        
+            now.setDate(now.getDate() - 1);
+        
+            if (this.areDatesEqual(datetime, now))
+                return 'Вчера' + time;
+        }
+    
+        return this.getDateLabel(datetime) + time;
     }
 
-    remove(id) {
-        delete this.data[id];
-    }
-}
-
-exports.EventHandler = class {
-    listeners = {};
-
-    clearAll() {
-        this.listeners = {};
-    }
-
-    clearListeners(name) {
-        delete this.listeners[name];
-    }
-
-    addListener(name, func) {
-        if (!this.listeners[name])
-            this.listeners[name] = [];
-        this.listeners[name].push(func);
-    }
-
-    addListeners(...args) {
-        if (args.length == 1 && args[0])
-            Object.keys(args[0]).forEach(k => {
-                this.addListeners(k, args[0][k]);
-            });
-        else if (args.length == 2) {
-            const ithrough = Array.isArray(args[1])? args[1] : [args[1]];
-            ithrough.forEach(efunc => this.addListener(args[0], efunc))   
+    createMessage(msg, minor) {
+        return {
+            message_id: msg.message_id,
+            sender_id: msg.sender_id,
+            sender_tag: msg.sender_tag,
+            sender_name: msg.sender_name,
+            datetime: msg.datetime,
+            content: exports.createContent(msg.text),
+            minor: minor
         }
     }
 
-    fire(name, ...args) {
-        if(!this.listeners[name]) return;
-        this.listeners[name].forEach(l => l(...args))
+    clamp(num, min, max) {
+        return Math.min(Math.max(num, min), max);
     }
-};
 
-exports.getDayAndMonth = (date, ll) => {
-    return date.toLocaleString(ll ?? 'default', { month: 'long', day: 'numeric'});
+    mysql_escape (str) {
+        return str.replace(/[\0\x08\x09\x1a\n\r"'\\\%]/g, function (char) {
+            switch (char) {
+                case "\0":
+                    return "\\0";
+                case "\x08":
+                    return "\\b";
+                case "\x09":
+                    return "\\t";
+                case "\x1a":
+                    return "\\z";
+                case "\n":
+                    return "\\n";
+                case "\r":
+                    return "\\r";
+                case "\"":
+                case "'":
+                case "\\":
+                case "%":
+                    return "\\"+char;
+                                     
+                default:
+                    return char;
+            }
+        });
+    }
+
 }
 
-exports.createContent = (text, files) => {
-    let content = {
-        'image': [], 'video': [],
-        'audio': [], 'other': []
-    };
-
-    (files ?? []).forEach(file => {
-        const type = file.mimetype.split('/')[0];
-        const sel = type in content? type : 'other';
-        content[sel].push(file.filename);
-    });
-
-    content.text = text ?? '';
-
-    return content;
-}
-
-exports.splitContent = (content) => {
-    if (!(content.image.length + content.video.length
-        && content.other.length + content.audio.length)) return [content];
-    return [
-        {
-            text: content.text,
-            image: content.image,
-            video: content.video,
-        },
-        {
-            audio: content.audio,
-            other: content.other
-        }   
-    ];
-}
-
-exports.clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+const utils = new Utils();
+Object.getOwnPropertyNames(Utils.prototype).slice(1)
+.forEach(method => {
+    exports[method] = (...args) => utils[method](...args);
+})
 
 exports.init = (cfx) => {
-    cfx.utils = this;
+    cfx.utils = utils;
 }

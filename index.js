@@ -2,25 +2,12 @@
 const express = require('express');
 const app = express();
 const fs = require('fs');
-const path = require('path');
 const pug = require('pug');
 const server = require('http').createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const session = require('express-session');
 const cors = require('cors');
-const multer = require('multer');
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'data');
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({storage: storage});
 
 app.set('view engine', 'pug');
 app.use(cors());
@@ -36,14 +23,15 @@ app.use(sessionMiddleware);
 io.engine.use(sessionMiddleware);
 
 function render(req, res, page, params) {
-    console.log("RENDER " + req.sessionID);
     const user = cfx.as(req.session).user();
 
     res.render(page, {
         nav: {
-            'Кофейный чат 🗨️': '/chat?id=0',
+            'Кофейный чат 🗨️': '/chat?id=1',
             'Сообщения': '/chatlist',
-            'Игры 🎮': '/gamelist'
+            'Игры 🎮': '/gamelist',
+            'Виртуальный банк': '/ebank',
+            'Создать пост': '/create_post'
         },
         user: user,
         ...params
@@ -51,9 +39,10 @@ function render(req, res, page, params) {
 }
 
 function login(req, res, requireLogin) {
-    const user = {id: 25, tag: '1234', password:'1234'};//req.session.user;
+    let user = req.session.user;
     if (!user && requireLogin)
-        res.redirect('/form?name=login');
+        res.redirect('/form?name=login&next='
+            + encodeURIComponent(req.url));
     return user;
 }
 
@@ -62,7 +51,6 @@ cfx.init({
     fs: fs,
     app: app,
     pug: pug,
-    upload: upload,
     session: session,
     render: render,
     login: login
@@ -107,10 +95,6 @@ app.get('/chatlist', (req, res) => {
     })
 });
 
-app.get('/', (req, res) => {
-    render(req, res, 'index');
-});
-
 app.get('/test', (req, res) => {
     render(req, res, 'test');
 });
@@ -129,7 +113,7 @@ app.get('/chat', (req, res) => {
         return chat.containsUser(user.id)
         .then(r => {
             if(!r) throw new Error('User is not in the chat.');
-            return chat.getLastMessages(30);
+            return chat.getLastFormattedMessages(100);
         }).then((messages) => {
             render(req, res, 'chat', {
                 observer: user,
@@ -149,7 +133,7 @@ app.get('/form', (req, res) => {
     render(req, res, 'form', { form: form});
 });
 
-app.post('/form', upload.any(), (req, res) => {
+app.post('/form', cfx.core.upload.any(), (req, res) => {
     let data = req.body;
 
     req.files.forEach(file => {
@@ -172,7 +156,8 @@ app.post('/form', upload.any(), (req, res) => {
 
 app.get('/logout', (req, res) => {
     req.session.destroy();
-    res.redirect('/');
+    let next = req.query.next || '/';
+    res.redirect(next);
 });
 
 app.get('/login', (req, res) => {
@@ -184,16 +169,18 @@ app.get('/file', (req, res) => {
     res.sendFile(__dirname + '/data/' + id);
 });
 
-app.post('/sendmsg', upload.array('files'), (req, res) => {
+app.post('/sendmsg', cfx.core.upload.array('files'), (req, res) => {
     let sender = login(req, res, true);
     if(!sender) return;
 
     cfx.chats.getChat(req.query.id)
     .then(chat => {
-        if(!chat)
-            return;
-        chat.addMessage(sender.id, req.body.text);
-        res.send({msgid : 0});
+        if(!chat) return;
+        cfx.files.addFilesInBundle(req.files)
+        .then(b => {
+            chat.addMessage(sender.id, req.body.text, b);
+            res.send({success: true});
+        })
     })
 });
 
@@ -214,6 +201,16 @@ app.get('/getform', (req, res) => {
     })
 });
 
+app.use((req, res, next) => {
+    next(new Error('Not found'))
+})
+
+app.use((err, req, res, next) => {
+    res.status(500);
+    render(req, res, 'error', {
+        error: err.message
+    })
+})
 
 async function getSocketByUserId(userid) {
     let sockets = await io.in('u:' + userid).fetchSockets();
