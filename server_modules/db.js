@@ -1,5 +1,5 @@
 class Database {
-    constructor(config, cfx) {
+    constructor(config, cfx, onconnected) {
         const mysql = require('mysql');
         this.cfx = cfx;
         this.conn = mysql.createConnection(config);
@@ -9,6 +9,9 @@ class Database {
                 return;
             }
             console.log('Connected to DB successfully!');
+
+            if(onconnected)
+                onconnected()
         })
         this.queryLib = {}
     }
@@ -59,28 +62,35 @@ class Database {
 }
 
 exports.init = (cfx) => {
-    cfx.db = new Database({
-        host: 'localhost',
-        user: 'root',
-        database: 'coffetox',
-        password: 'admin'
-    }, cfx);
-    cfx.query = (q, values) => cfx.db.query(q, values);
+    //cfx.db = new Database({
+    //    host: 'localhost',
+    //    user: 'root',
+    //    database: 'coffetox',
+    //    password: 'admin'
+    //}, cfx);
 
-    //const mysql = require('mysql');
-    //let conn = mysql.createConnection({
-    //    host: 'ilyaspqx.beget.tech',
-    //    user: 'ilyaspqx_db',
-    //    database: 'ilyaspqx_db',
-    //    password: 'Pig66666'
-    //});
-    //conn.connect(err => {
-    //    if (err) {
-    //        console.log('FAILED: ' + err);
-    //        return;
-    //    }
-    //    conn.query('select 1', (r) => {
-    //        console.log(r)
-    //    })
-    //})
+    cfx.db = new Database({
+        host: 'ilyaspqx.beget.tech',
+        user: 'ilyaspqx_db',
+        database: 'ilyaspqx_db',
+        password: 'Pig66666'
+    }, () => {
+        keepConnection()
+    })
+
+    let keepCycleCount = 0
+
+    function keepConnection() {
+        keepCycleCount++
+
+        if (keepCycleCount % 200)
+            console.log('Keep cycle count: ' + keepCycleCount)
+
+        cfx.query('select 1')
+        .then(r => {
+            setTimeout(keepConnection, 20 * 1000)
+        })
+    }
+
+    cfx.query = (q, values) => cfx.db.query(q, values);
 }

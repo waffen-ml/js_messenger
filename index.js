@@ -4,8 +4,8 @@ const app = express();
 const fs = require('fs');
 const pug = require('pug');
 const server = require('https').createServer({
-    key: fs.readFileSync(`cert/key.pem`),
-    cert: fs.readFileSync(`cert/cert.pem`)
+    key: fs.readFileSync(`../sslcert/key.pem`),
+    cert: fs.readFileSync(`../sslcert/csr.pem`)
 }, app);
 const { Server } = require("socket.io");
 const io = new Server(server);
