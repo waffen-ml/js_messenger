@@ -4,28 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="./node_modules/cropperjs/src/index.css">
     <style>
-        #editor {
-            width:300px;
-            height:200px;
-        }
-        .ace_gutter .ace_gutter-cell {
-            padding-left:8px;
-        }
+
     </style>
 </head>
 <body>
-    <div id="editor"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.31.1/ace.js" type="text/javascript" charset="utf-8"></script>
-    <script>
-        let editor = ace.edit(document.querySelector('div'));
-        editor.session.setUseWorker(false);
-        editor.setOptions({
-            fontSize: "13pt"
-        });
-        editor.setTheme("ace/theme/github_dark");
-        editor.getSession().setMode("ace/mode/html");
-    </script>
 
+    <div class="container"> 
+        <div>
+            <img class="original" src="avatar.jpg" alt="">
+        </div>
+        <img src="" alt="" class="output">
+    </div>
+
+    <script src="./node_modules/cropperjs/src/index.js"></script> 
+    <script>
+        const image = document.querySelector('.original')
+        const cropper = new Cropper(image, {
+            aspectRatio: 1,
+            viewMode:0
+        })
+    </script>
 </body>
 </html>

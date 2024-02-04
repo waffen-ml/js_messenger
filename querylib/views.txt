@@ -1,0 +1,16 @@
+select v.id, v.user_id as owner_id, v.focus, v.last_read, v.chat_id, c.name as chat_name,
+c.is_direct as is_chat_direct, c.voice, w.*, b.user_id as member_id,
+u.name as member_name, u.tag as member_tag from chat_member v left join
+(select m.chat_id as lm_cid, m.id as lm_id, m.local_id as lm_local_id,
+	m.sender_id as lm_sender_id, m.text as lm_text, m.datetime as lm_datetime,
+    u.name as lm_sender_name, u.tag as lm_sender_tag,
+	(select count(*) from file f where f.bundle_id=m.bundle_id) as lm_file_count
+	from message m 
+	join (select max(id) as max_id from message group by chat_id) w on w.max_id=m.id
+    left join user u on u.id = m.sender_id
+) w on w.lm_cid=v.chat_id
+left join chat c on c.id=v.chat_id
+left join (select (select count(*) from chat_member b2 where b1.chat_id=b2.chat_id and b2.id<b1.id) 
+	as rnk, b1.* from chat_member b1) b on b.chat_id=c.id
+left join user u on u.id=b.user_id
+where v.user_id={id} and b.rnk < {max_members} order by w.lm_datetime desc

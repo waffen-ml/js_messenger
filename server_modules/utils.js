@@ -14,18 +14,25 @@ class Utils {
         return mt
     }
 
-    createContent(text, html) {
-        return {
+    createContent(text, html, files, mmt) {
+        mmt ??= 'file_mimetype'
+        let w = {
             text: text,
             html: html,
             image: [], video: [],
             audio: [], other: []
         };
+        (files ?? []).forEach(f => w[f[mmt]].push(f))
+        return w
     }
 
     getDateLabel(date, ll) {
-        return date.toLocaleString(ll ?? 'default', { month: 'long', day: 'numeric'})
-            + (date.getFullYear() == (new Date()).getFullYear()? '' : ', ' + date.getFullYear());
+        if (ll) 
+            return date.toLocaleString(ll, { month: 'long', day: 'numeric'})
+                + (this.hasCurrentYear(date)? '' : ' ' + date.getFullYear());
+        let day = this.addLeadingZeros(date.getDay(), 2)
+        let month = this.addLeadingZeros(date.getMonth() + 1, 2)
+        return day + ":" + month + (this.hasCurrentYear(date)? '' : '.' + date.getFullYear())
     }
 
     areDatesEqual(d1, d2) {
@@ -34,44 +41,53 @@ class Utils {
             && d1.getDate() == d2.getDate()
     }
 
-    formatTimeUnit(n) {
-        return (n < 10 ? '0' : '') + n
+    addLeadingZeros(n, z) {
+        n = n.toString();
+        return '0'.repeat(Math.max(0, z - n.length)) + n
     }
 
     getTimeLabel(datetime) {
-        let hourLabel = this.formatTimeUnit(datetime.getHours());
-        let minuteLabel = this.formatTimeUnit(datetime.getMinutes()); 
+        let hourLabel = this.addLeadingZeros(datetime.getHours(), 2);
+        let minuteLabel = this.addLeadingZeros(datetime.getMinutes(), 2); 
         return hourLabel + ':' + minuteLabel;
     }
 
-    getDatetimeLabel(datetime, fancy) {
+    isToday(datetime) {
         let now = new Date();
-        let time = datetime.getFullYear() == now.getFullYear()?
+        return this.areDatesEqual(datetime, now)
+    }
+
+    isYesterday(datetime) {
+        let now = new Date();
+        now.setDate(now.getDate() - 1);
+        return this.areDatesEqual(datetime, now)
+    }
+
+    hasCurrentYear(datetime) {
+        let now = new Date();
+        return datetime.getFullYear() == now.getFullYear()
+    }
+
+    getPostDatetimeLabel(datetime, fancy) {
+        let time = this.hasCurrentYear(datetime)?
             ' в ' + this.getTimeLabel(datetime) : '';
         
         if (fancy) {
-            if(this.areDatesEqual(datetime, now))
+            if(this.isToday(datetime))
                 return 'Сегодня' + time;
-        
-            now.setDate(now.getDate() - 1);
-        
-            if (this.areDatesEqual(datetime, now))
+            else if (this.isYesterday(datetime))
                 return 'Вчера' + time;
         }
     
-        return this.getDateLabel(datetime) + time;
+        return this.getDateLabel(datetime, 'ru') + time;
     }
 
-    createMessage(msg, minor) {
-        return {
-            message_id: msg.message_id,
-            sender_id: msg.sender_id,
-            sender_tag: msg.sender_tag,
-            sender_name: msg.sender_name,
-            datetime: msg.datetime,
-            content: exports.createContent(msg.text),
-            minor: minor
-        }
+    getMessageDatetimeLabel(datetime) {
+        if (this.isToday(datetime))
+            return this.getTimeLabel(datetime);
+        else if (this.isYesterday(datetime))
+            return 'вчера'
+        return this.getDateLabel(datetime)
     }
 
     clamp(num, min, max) {
@@ -103,6 +119,41 @@ class Utils {
                     return char;
             }
         });
+    }
+
+    getRandomUniform(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    parseArrayOutput(raw, arrname, cols, mainIdCol, elementIdCol) {
+        let result = []
+        let obj = {}
+        obj[mainIdCol] = -1
+
+        for(let i = 0; i < raw.length; i++) {
+            let w = {}
+            cols.forEach(c => {
+                w[c] = raw[i][c]
+            })
+            if (raw[i][mainIdCol] != obj[mainIdCol]) {
+                result.push(obj)
+                obj = raw[i]
+                cols.forEach(c => {
+                    delete obj[c]
+                })
+                obj[arrname] = []
+            }
+            if (w[elementIdCol] !== null) {
+                obj[arrname].push(w)
+            }
+        }
+        result.push(obj)
+        result.shift()
+        return result
     }
 
 }

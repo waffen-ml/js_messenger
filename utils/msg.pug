@@ -3,4 +3,4 @@ include ../views/units.pug
 if !data.sender_id
     +system-message(data.text)
 else 
-    +user-message(data, own)
+    +user-message(data)

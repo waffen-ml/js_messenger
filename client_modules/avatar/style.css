@@ -1,0 +1,66 @@
+.hover-wrapper {
+    width:300px;
+    max-width: 100%;
+}
+
+.hover-area {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    border:2px dashed grey;
+}
+
+.hover-area.incorrect {
+    outline:none;
+}
+
+.hover-area.active {
+    border:2px solid #686868;
+}
+
+.hover-area::after {
+    display: block;
+    content: 'Перетащите изображение';
+    font-size:17px;
+    position:absolute;
+    top:50%;
+    line-height: 0;
+    left:0;
+    width: 100%;
+    text-align: center;
+}
+
+.hover-area.active::after {
+    content: 'Отпустите'
+}
+
+.grid-wrapper {
+    display:grid;
+    grid-template-rows:1fr 1fr;
+    grid-template-columns:auto auto;
+    row-gap:10px;
+    column-gap:10px;
+}
+
+.grid-wrapper .cropper-wrapper {
+    max-height:500px;
+    max-width: 600px;
+    grid-row:1/span 2;
+}
+
+.grid-wrapper .cropper-container img {
+    max-width: 100%;
+}
+
+.grid-wrapper .original {
+    max-width: 100%;
+}
+
+.grid-wrapper .output {
+    height: 150px;
+    aspect-ratio: 1;
+}   
+
+.grid-wrapper .round {
+    border-radius:50%;
+}

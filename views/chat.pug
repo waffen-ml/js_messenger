@@ -5,10 +5,13 @@ include units
 include ../client_modules/popup/index
 include ../client_modules/inspect/index
 include ../client_modules/uploader/index
+include ../client_modules/templates/index
+include ../client_modules/utils/index
 
 
 append header 
     script(src="/socket.io/socket.io.js")
+    script(src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js")
 append style 
     include css/chat.css
     include css/content.css
@@ -16,13 +19,33 @@ append script
     include js/chat.js
 
 block main
-    h1.page-header= chatname
-    .holder.block
-        each data in messages
-            if !data.sender_id
-                +system-message(data.text)
-            else 
-                +user-message(data, observer.id == data.sender_id)
+    .chat-header.block 
+        .info.detailed(onclick='alert("options")')
+            img.avatar(src="/file?id=169904737598173031.jpg")
+            span.chat-name.finite= chatname
+            span.subinfo.finite heyheyhehyeh
+        .actions 
+            button.join-call Звонить
+            button.leave-call Отключиться
+
+    .voice-chat.block
+        .preview
+            span.list.finite В звонке:
+            span.count (
+                b.num 0
+                | 
+                span участников
+                |)
+        .voice-controls
+            .personal
+                span Ваш микрофон
+                button.mute Включен
+            .wrapper.styled-scroll
+                ul.members
+
+    .holder-wrapper.block.styled-scroll
+        .load-zone
+        .holder 
     .input-bar
         input.entry(type="text", placeholder="Сообщение")
         input#file.thin(type="button", value="📁")

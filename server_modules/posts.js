@@ -14,31 +14,35 @@ class Posts {
             + `values (${author_id}, ${bundle_id}, "${text}", "${html}", "${title}", now())`)
     }
 
-    getLastPosts(n) {
-        return this.cfx.query('select p.id as post_id, p.author_id, p.text, p.html, p.title, '
-            + 'p.datetime, u.name as author_name, u.tag as author_tag, f.name as file_name,'
-            + `f.mimetype as file_mimetype from (select * from post order by id desc limit ${n}) `
-            + 'p left join user u on p.author_id = u.id left join file f on f.bundle_id = p.bundle_id')
+    getLastPosts(n, author_id) {
+        return this.cfx.db.executeFile('getlastposts', {
+            limit: n,
+            author: author_id? `where author_id=${author_id}` : ''
+        })
         .then((arr) => {
             if(!arr.length)
                 return [];
             
             let result = [];
-            let post = arr[0];
-            post.content = utils.createContent(post.text, post.html);
+            let post = {id:-1}
     
             for(let i = 0; i < arr.length; i++) {
-                if(arr[i].post_id != post.post_id) {
+                if(arr[i].id != post.id) {
                     result.push(post);
                     post = arr[i];
                     post.content = utils.createContent(post.text, post.html);
                 }
-                if(arr[i].file_name) {
-                    post.content[arr[i].file_mimetype].push(arr[i].file_name);
+                if(arr[i].file_id) {
+                    post.content[arr[i].file_mimetype].push({
+                        file_id: arr[i].file_id,
+                        file_name: arr[i].file_name,
+                        file_fullname: arr[i].file_name + '.' + arr[i].file_extension
+                    });
                 }
             }
 
             result.push(post);
+            result.shift()
             
             return result;
         })
@@ -67,10 +71,10 @@ exports.init = (cfx) => {
         (data, _, cfx) => {
             if(!cfx.user())
                 return;
-            cfx.files.addFilesInBundle(data.files)
-            .then(b => {
+            cfx.files.saveFiles(data.files, null, -1)
+            .then(r => {
                 return cfx.posts.addPost(cfx.user().id, 
-                    b, data.text, data.html, data.title);
+                    r.bundle, data.text, data.html, data.title);
             })
         }
     ))

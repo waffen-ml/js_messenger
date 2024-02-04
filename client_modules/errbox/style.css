@@ -1,0 +1,14 @@
+.error-span {
+    display:block;
+    color:#c90000;
+    margin-top:6px;
+    margin-bottom:0;
+}
+
+.error-span.const-size {
+    height: 1em;
+}
+
+.error-box .incorrect {
+    outline: 1px solid red;
+}

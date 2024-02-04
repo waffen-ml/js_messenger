@@ -1,6 +1,9 @@
 doctype html 
 html 
     head
+        meta(charset="utf-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(rel="icon" href="/file?id=icon.png")
         style
             include css/style.css
             block style
@@ -14,7 +17,7 @@ html
                         a.button(href="/") ☕tox
                     .current 
                         if user !== null
-                            a.clean(href="#")= user.name
+                            a.clean(href="/user?id=" + user.id)= user.name
                             a.button(href="/logout", recurrent) 🚪
                         else
                             a.clean(href="/form?name=login", recurrent) Вход
@@ -22,7 +25,7 @@ html
                     each link, text in nav
                         a.button(href=link)=text
                 main.styled-scroll
-                    block main 
+                    block main
                 footer 
                     span CoffeeTox ☕
         block body

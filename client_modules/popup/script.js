@@ -36,6 +36,9 @@ function hidePopup() {
     animTimeout(() => {
         popup.style.display = 'none';
         setWindowContent('');
+
+        callFunc('onhidden');
+        popupMeta = null;
     })
 }
 
@@ -110,7 +113,6 @@ function openPopup(data) {
 
 function closePopup() {
     callFunc('ondestroy');
-    popupMeta = null;
     hidePopup();
 }
 
@@ -131,6 +133,13 @@ popup.addEventListener('click', (e) => {
 popupWindow.querySelector('.close-btn').addEventListener('click', (e) => {
     if(isPopupActive()) closePopup();
 });
+
+document.addEventListener('keydown', (e) => {
+    if (e.key == 'Escape' && isPopupActive() && popupMeta.closable) {
+        e.preventDefault();
+        closePopup();
+    }
+})
 
 /*
 openPopup({

@@ -1,0 +1,4 @@
+select k.* from (
+    select chat_id, count(*) as w from chat_member m left join chat c 
+    on c.id=m.chat_id where c.is_direct=1 and m.user_id in ({user1}, {user2}) group by chat_id
+) k where k.w=2

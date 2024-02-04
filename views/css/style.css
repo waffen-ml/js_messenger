@@ -7,7 +7,7 @@ body {
 .global-wrapper {
     margin:auto;
     max-width:100%;
-    width:900px;
+    width:1000px;
     height: 100vh;
 }
 
@@ -111,10 +111,11 @@ main {
 }
 
 .page-header {
+    display:block;
     font-weight: bold;
     font-size:30px;
     margin-top:3px;
-    margin-bottom:20px;
+    margin-bottom:10px;
 }
 
 footer {
@@ -130,7 +131,7 @@ input, .block, textarea {
     box-sizing: border-box;
     padding:13px;
     border-radius: 12px;
-    background:#3b2f2f20;
+    background-color:#3b2f2f20;
     overflow:hidden;
 }
 
@@ -195,4 +196,11 @@ input[type=file] {
 
 hidden {
     display:none;
+}
+
+.lotsman-banner {
+    position:absolute;
+    right:50px;
+    top:10vh;
+    height:80vh
 }

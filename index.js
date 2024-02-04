@@ -3,7 +3,10 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 const pug = require('pug');
-const server = require('http').createServer(app);
+const server = require('https').createServer({
+    key: fs.readFileSync(`cert/key.pem`),
+    cert: fs.readFileSync(`cert/cert.pem`)
+}, app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const session = require('express-session');
@@ -23,27 +26,71 @@ app.use(sessionMiddleware);
 io.engine.use(sessionMiddleware);
 
 function render(req, res, page, params) {
-    const user = cfx.as(req.session).user();
-
     res.render(page, {
         nav: {
             'Кофейный чат 🗨️': '/chat?id=1',
             'Сообщения': '/chatlist',
             'Игры 🎮': '/gamelist',
             'Виртуальный банк': '/ebank',
-            'Создать пост': '/create_post'
+            'Создать пост': '/create_post',
+            'Друзья': '/friends'
         },
-        user: user,
+        user: cfx.as(req.session).user(),
+        utils: cfx.utils,
         ...params
     });
+}
+
+function redirectToLogin(req, res) {
+    res.redirect('/form?name=login&next='
+    + encodeURIComponent(req.url));
+}
+
+function pageRequest(func, pattern, requireLogin) {
+    app.get(pattern, (req, res, next) => {
+        let user = req.session.user
+        if (!user && requireLogin)
+            redirectToLogin(req, res)
+        try {
+            func(req, res, user)
+        } catch(ex) {
+            if (!res.headersSent)
+                next(ex)
+        }
+    })
+}
+function ilogin(req) {
+    return req.session.user
+}
+
+function tlogin(req) {
+    let user = req.session.user
+    if (!user)
+        throw Error('Unknown user')
+    return user
+}
+
+function rlogin(req, res) {
+    let user = req.session.user
 }
 
 function login(req, res, requireLogin) {
     let user = req.session.user;
     if (!user && requireLogin)
-        res.redirect('/form?name=login&next='
-            + encodeURIComponent(req.url));
+        redirectToLogin(req, res)
     return user;
+}
+
+function plogin(req, res, requireLogin) {
+
+    return new Promise((resolve, reject) => {
+        let user = login(req, res, requireLogin)
+
+        if(!user && requireLogin)
+            reject()
+
+        resolve(user)
+    })
 }
 
 const cfx = require('./cfx-main.js').cfx;
@@ -51,14 +98,24 @@ cfx.init({
     fs: fs,
     app: app,
     pug: pug,
+    io: io,
     session: session,
     render: render,
-    login: login
+    login: login,
+    plogin: plogin
 });
 //cfx.chats.createChat('Coffee chat');
 cfx.auth.addUser('t1', 'Ilya Kostin', '1');
 cfx.auth.addUser('t2', 'Another guy', '1');
 
+app.get('/auth', (req, res) => {
+    plogin(req, res, false)
+    .then(user => {
+        res.send(user)
+    })
+})
+
+app.use('/node_modules', express.static(__dirname + '/node_modules/'));
 
 app.get('/createchat', (req, res) => {
     const user = login(req, res, true);
@@ -78,54 +135,8 @@ app.get('/createchat', (req, res) => {
 
 });
 
-app.get('/chatlist', (req, res) => {
-    const user = login(req, res, true);
-    if(!user) return;
-
-    chatsData = Object.values(user.chats).map((cw) => {
-        return {
-            id: cw.id,
-            privateName: cw.privateName,
-            obj: cfx.chats.getChat(cw.id)
-        }
-    });
-
-    render(req, res, 'chatlist', {
-        chats: chatsData
-    })
-});
-
 app.get('/test', (req, res) => {
     render(req, res, 'test');
-});
-
-app.get('/chat', (req, res) => {
-    const user = login(req, res, true);
-
-    if (!user)
-        return;
-
-    cfx.chats.getChat(req.query.id)
-    .then((chat) => {
-        if(!chat)
-            throw new Error('Chat was not found.')
-
-        return chat.containsUser(user.id)
-        .then(r => {
-            if(!r) throw new Error('User is not in the chat.');
-            return chat.getLastFormattedMessages(100);
-        }).then((messages) => {
-            render(req, res, 'chat', {
-                observer: user,
-                messages: messages,
-                chatname: chat.name
-            });
-        })
-    })
-    .catch((err) => {
-        console.log(err)
-        res.redirect('/');
-    });
 });
 
 app.get('/form', (req, res) => {
@@ -147,9 +158,7 @@ app.post('/form', cfx.core.upload.any(), (req, res) => {
         req.query.name,
         data, cfx.as(req.session))
     .then(out => {
-        if (out._out === undefined)
-            req.files.forEach(f => fs.unlink(f.path, () => {}));
-        console.log(out);
+        //console.log(out);
         res.send(out);
     })
 });     
@@ -162,26 +171,6 @@ app.get('/logout', (req, res) => {
 
 app.get('/login', (req, res) => {
     res.redirect('/form?name=login');
-});
-
-app.get('/file', (req, res) => {
-    const id = req.query.id;
-    res.sendFile(__dirname + '/data/' + id);
-});
-
-app.post('/sendmsg', cfx.core.upload.array('files'), (req, res) => {
-    let sender = login(req, res, true);
-    if(!sender) return;
-
-    cfx.chats.getChat(req.query.id)
-    .then(chat => {
-        if(!chat) return;
-        cfx.files.addFilesInBundle(req.files)
-        .then(b => {
-            chat.addMessage(sender.id, req.body.text, b);
-            res.send({success: true});
-        })
-    })
 });
 
 app.get('/getform', (req, res) => {
@@ -201,6 +190,12 @@ app.get('/getform', (req, res) => {
     })
 });
 
+app.get('/croptest', (req, res) => {
+    let user = login(req, res, true)
+    if(!user) return
+    render(req, res, 'croptest')
+})
+
 app.use((req, res, next) => {
     next(new Error('Not found'))
 })
@@ -211,39 +206,6 @@ app.use((err, req, res, next) => {
         error: err.message
     })
 })
-
-async function getSocketByUserId(userid) {
-    let sockets = await io.in('u:' + userid).fetchSockets();
-    if (sockets.length < 1) return null;
-    return sockets[0];
-}
-
-async function displayMessage(msg, chatid) {
-    let u = pug.compileFile('utils/msg.pug');
-    let senderSocket = msg.sender_id?
-        await getSocketByUserId(msg.sender_id) : null;
-    let standardHTML = u({data: msg, own: false});
-
-    if (senderSocket) {
-        senderSocket.emit('message', u({data: msg, own: true}));
-        senderSocket.broadcast.in('c:' + chatid).emit('message', standardHTML);
-    } else
-        io.in('c:' + chatid).emit('message', standardHTML);
-    
-}
-
-cfx.chats.displayMessage = displayMessage;
-
-io.on('connection', (socket) => {
-    socket.on('join', j => {
-        let userid = socket.request.session.user.id;
-        if (userid) socket.join('u:' + userid);
-        socket.join('c:' + j.chatid);
-    });
-    socket.on('message', r => {
-        console.log(r);
-    })
-});
 
 server.listen(3000, () => {
   console.log('listening on *:3000');

@@ -46,7 +46,7 @@ class CfxMain {
         let cb = module.init(this);
 
         if (!cb) {
-            console.log('Module ' + file + ' has been loaded successfully.');
+            //console.log('Module ' + file + ' has been loaded successfully.');
             return true;
         }
 

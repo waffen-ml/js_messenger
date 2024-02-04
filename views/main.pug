@@ -11,7 +11,9 @@ append style
     include css/posts.css
 
 block main
-    h1.page-header Бульвар Кофетокс
+    h1.page-header Новости Кофетокс
+
+    a(href='https://127.0.0.1:3000/file?id=111', download="1") heyy
 
     .posts
         each post in posts 

@@ -1,3 +1,7 @@
+.posts {
+    margin-top:15px;
+}
+
 .post:not(:first-child) {
     margin-top:12px;
 }
@@ -18,8 +22,11 @@
     margin-right:5px;
 }
 
+.post .top-bar .name {
+    margin-right:10px;
+}
+
 .post .top-bar .datetime {
-    margin-left:10px;
 }
 
 .post .title {

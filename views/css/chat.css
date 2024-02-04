@@ -1,18 +1,14 @@
-.holder {
-    width:100%;
-    height:550px;
+main {
     display: flex;
     flex-direction: column;
-    font-size:18px;
-    overflow-y:auto;
+    gap:5px;
 }
 
-.holder > * {
-    margin-bottom:0;
+.page-header {
+    margin-bottom:10px;
 }
 
 .input-bar {
-    margin-top:10px;
     display:flex;
     gap:7px;
     width: 100%;
@@ -22,19 +18,52 @@
     width: 100%;
 }
 
-.system-message {
-    margin-top:10px;
-    font-style: italic;
+.holder-wrapper {
+    width:100%;
+    height: 100%;
+    overflow-y:auto;
+    padding-right:5px;
+    padding-top:0;
+}
+
+.holder-wrapper.loaded-all {
+    padding-top:10px;
+}
+
+.load-zone {
+    height:15px;
+    width: 100%;
+    margin-bottom:30px;
+}
+
+.loaded-all .load-zone {
+    display:none;
+}
+
+.holder {
+    font-size:18px;
+}
+
+.message-wrapper {
+    margin-top:5px;
+}
+
+.date-label {
+    width: 100%;
     text-align: center;
+    margin-bottom:5px;
+}
+
+.system-message {
+    font-style: italic;
 }
 
 .message.mine {
-    background-color: #e4d8bd;
-    align-self:flex-end;
+    background-color: #ded3b5;
+    margin-left:auto;
 }
 
 .message {
-    margin-top:10px;
     flex-shrink: 0;
     background: #e2ccb9d7;
     max-width: 500px;
@@ -48,7 +77,7 @@
 
 .message .top-bar {
     margin-top:0;
-    margin-bottom:15px;
+    margin-bottom:8px;
     display:flex;
     gap:13px;
 }
@@ -78,4 +107,183 @@ ul.attached {
 .attach {
     display:inline-block;
     margin-top:10px; 
+}
+
+.chat-header {
+    display:flex;
+    align-items: center;
+    padding:4px;
+    height:60px;
+    gap:10px;
+    flex-shrink: 0;
+}
+
+.chat-header .info {
+    user-select: none;
+    cursor:pointer;
+    height: 100%;
+    width: 100%;
+    display:grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr;
+    column-gap:8px;
+    row-gap:0;
+}
+
+.chat-header .info.detailed {
+    grid-template-rows: 1fr 1fr;
+}
+
+.chat-header .avatar {
+    height:100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    grid-row:1/3;
+}
+
+.chat-header .chat-name {
+    grid-row:1/3;
+    font-size:21px;
+    align-self:center;
+    font-weight: bold;
+}
+
+.chat-header .info.detailed .chat-name{
+    grid-row:1;
+    font-size:19px;
+    align-self:end;
+}
+
+.chat-header .subinfo {
+    color:#545454;
+    display:none;
+}
+
+.chat-header .info.detailed .subinfo {
+    display: block;
+}
+
+.chat-header .actions {
+    display:flex;
+    gap:10px;
+    align-items: center;
+    margin-right:7px;
+}
+
+.chat-header button {
+    padding:6px 9px;
+    border-radius:10px;
+    border:none;
+    cursor:pointer;
+}
+
+.chat-header .leave-call {
+    background:#ff3434;
+}
+
+.chat-header .join-call {
+    background:#2aff2a;
+}
+
+
+.voice-chat.hidden {
+    display:none;
+}
+
+.voice-chat .preview {
+    display:flex;
+}
+
+.voice-chat .voice-controls {
+    display:none;
+}
+
+.voice-chat.active .preview {
+    display:none;
+}
+
+.voice-chat.active .voice-controls {
+    display:block;
+}
+
+.voice-chat {
+    height: min-content;
+    flex-shrink: 0;
+}
+
+.voice-chat.active {
+    min-height: 100px;
+    max-height: 50%;
+    height:150px;
+    resize:vertical;
+}
+
+.preview {
+    display:flex;
+    gap:5px;
+}
+
+.preview .list {
+}
+
+.preview .count {
+    white-space: nowrap;
+}
+
+.voice-controls {
+    display:flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.personal {
+    flex-shrink: 0;
+}
+.personal .mute {
+    margin-left:10px;
+}
+
+.wrapper {
+    height: 100%;
+    overflow-y:auto
+}
+
+.members {
+    margin-top:10px;
+    padding:0;
+    list-style-type: none;
+}
+
+.member:nth-child(2n+1) {
+    background:#a2a2a287;
+}
+
+.member {
+    border-radius:10px;
+    padding:3px 4px;
+    display:grid;
+    grid-template-columns:auto 1fr auto auto auto;
+    column-gap:10px;
+    align-items: center;
+}
+
+.member .avatar {
+    width:44px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+}
+
+.member .name {
+    font-size:17px;
+}
+
+.member .volume-range {
+    padding:0;
+}
+
+.member .volume-label {
+}
+
+.actions  {
+    align-self:center;
 }

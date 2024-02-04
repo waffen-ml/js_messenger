@@ -1,0 +1,2 @@
+insert into message(local_id, sender_id, chat_id, text, datetime, bundle_id) 
+select coalesce(max(local_id) + 1, 1), {sender_id}, {chat_id}, "{text}", now(), {bundle} from message where chat_id={chat_id}

@@ -1,0 +1,1 @@
+peerjs --port 3001 --sslkey cert/key.pem --sslcert cert/cert.pem

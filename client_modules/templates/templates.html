@@ -1,0 +1,179 @@
+<script>
+    function formatTime(dt) {
+        return String(dt.getHours()).padStart(2, "0") + ':'
+            + String(dt.getMinutes()).padStart(2, "0")
+    }
+
+    function getPostDatetimeLabel(datetime, fancy) {
+        let time = this.hasCurrentYear(datetime)?
+            ' в ' + this.getTimeLabel(datetime) : '';
+        
+        if (fancy) {
+            if(this.isToday(datetime))
+                return 'Сегодня' + time;
+            else if (this.isYesterday(datetime))
+                return 'Вчера' + time;
+        }
+
+        return this.getDateLabel(datetime, 'ru') + time;
+    }
+</script>
+
+
+<script template="text" type="text/x-ejs-template">
+    <% if (text) { %>
+        <p class="text">
+            <%- text.replace(/\n/g, '<br>') %>
+        </p>
+    <% }; %>
+</script>
+
+<script template="visual" type="text/x-ejs-template">
+    <% const c = (w, d) => '/file?' + (d? 'd=1&' : '') + 'id=' + w.file_id %>
+    <% const total = image.length + video.length %>
+    
+    <% if (total > 1) { %>
+        <% let nlarge = total % 3; %>
+        <% if (nlarge == 4) nlarge = 1; %>
+        <% let i = 0 %>
+        
+        <div class="visual" inspect-group>
+            <% while (i < total) { %>
+                <% let isimg = i < image.length %>
+                <% let cls = (i < nlarge? 'large' : 'small') + (isimg? '': ' video') %>
+
+                <div class="tile <%= cls %>" >
+
+                    <% if (isimg) { %>
+                        <img src="<%= c(image[i]) %>">
+                    <% } else { %>
+                        <video src="<%= c(video[i - imgc]) %>", preload="metacont">
+                    <% }; i++; %>
+
+                </div>
+
+            <% } %>
+        </div>
+    <% } else if (image.length) { %>
+        <img src="<%= c(image[0]) %>" class="semi-image" inspect>
+    <% } else if (video.length) { %>
+        <video controls class="semi-video">
+            source(src="<%= video[0] %>")
+        </video>
+    <% } %>
+</script>
+
+<script template="audio" type="text/x-ejs-template">
+    <% if (audio.length) { %>
+        <div class="audio">
+            <% audio.forEach(a => { %>
+                <audio controls>
+                    source(src="<%= c(a, true) %>")
+                </audio>
+            <% }) %>
+        </div>
+    <% } %>
+</script>
+
+<script template="other" type="text/x-ejs-template">
+    <% if (other.length) { %>
+        <ul class="other">
+            <% other.forEach(o => { %>
+                <li class="finite">
+                    <a href="/file?d=1&id=<%= o.file_id %>" class="clean">
+                        <%= o.file_name %>.<%= o.file_extension %>
+                    </a>
+                </li>
+            <% }) %>
+        </ul>
+    <% } %>
+</script>
+
+<script template="html" type="text/x-ejs-template">
+    <% if (html) { %>
+        <div class="html block styled-scroll">
+            <%- html %>
+        </div>
+    <% } %>
+</script>
+
+<script template="msg-content" type="text/x-ejs-template">
+    <div class="content">
+        <%- templateManager.apply("visual", content) %>
+        <%- templateManager.apply("audio", content) %>
+        <%- templateManager.apply("other", content) %>
+        <%- templateManager.apply("text", content) %>
+    </div>
+</script>
+
+<script template="post-content" type="text/x-ejs-template">
+    <div class="content">
+        {%- templateManager.apply("text", content) %}
+        {%- templateManager.apply("audio", content) %}
+        {%- templateManager.apply("html", content) %}
+        {%- templateManager.apply("visual", content) %}
+        {%- templateManager.apply("other", content) %}
+    </div>
+</script>
+
+<script template="system-message" type="text/x-ejs-template">
+    <span class="system-message"><%= text %></span>
+</script>
+
+<script template="user-message" type="text/x-ejs-template">
+    <% let cls = (data.minor? 'minor' : '') + ' ' + (myid == data.sender_id? 'mine' : '') %>
+    <div class="message block <%= cls %>">
+        <% if (!data.minor) { %>
+            <div class="top-bar">
+                <a href="/user?tag=<%= data.sender_tag %>" class="finite clean name">
+                    <%= data.sender_name %>
+                </a>
+                <span class="date">
+                    <%= formatTime(data.datetime) %>
+                </span>
+            </div>
+        <% } %>
+        <%- templateManager.apply("msg-content", data) %>
+    </div>
+</script>
+
+<script template="date-label" type="text/x-ejs-template">
+    <%- templateManager.apply("system-message", {text: utils.getLocalizedDateLabel(date, true)}) %>
+</script>
+
+<script template="universal-message" type="text/x-ejs-template">
+    <div class="message-wrapper" msg-id="<%= data.id %>">
+        <% if (data.dateLabel) { %>
+            <div class="date-label">
+                <%- templateManager.apply("date-label", {date: data.datetime}) %>
+            </div>
+        <% } %> 
+        <% if (data.sender_id !== null && data.sender_id !== undefined) { %>
+            <%- templateManager.apply("user-message", {data: data, myid: myid}) %>
+        <% } else { %>
+            <%- templateManager.apply("system-message", {text: data.text}) %>
+        <% } %>
+    </div>
+</script>
+
+<script template="post" type="text/x-ejs-template">
+    <div class="post block" id="post<%= data.post_id %>">
+        <div class="top-bar">
+            <% if (!data.hide_author) { %>
+                <span class="prefix">Новость от</span>
+                <a href="/user?tag=<%= data.author_tag %>" class="finite clean name">
+                    <%= data.author_name %>
+                </a>
+            <% } %>
+            <span class="datetime">
+                <%= getPostDatetimeLabel(data.datetime, true) %>
+            </span>
+        </div>
+        <% if (data.title) { %>
+            <span class="title">
+                <%= data.title%>
+            </span>
+        <% } %>
+        {%- templateManager.apply("post-content", data.content) %}
+    </div>
+</script>

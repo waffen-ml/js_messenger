@@ -1,0 +1,14 @@
+extends index
+
+include ../client_modules/popup/index
+include ../client_modules/errbox/index
+include ../client_modules/avatar/index
+
+append style 
+    include css/croptest.css
+
+append script
+    include js/croptest.js
+
+block main
+    button.set-avatar Назначить аватарку

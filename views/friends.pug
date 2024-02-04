@@ -1,0 +1,44 @@
+extends index
+
+include ../client_modules/popup/index
+include ../client_modules/form/index
+
+append script 
+    include js/friends.js
+
+block header 
+    title Друзья
+
+append main
+    h1.page-header Друзья
+    button.add-friend Добавить друга
+
+    if requests.incoming.length > 0
+        h3 Входящие запросы
+        ol.incoming 
+            each req in requests.incoming
+                li
+                    a(href="/user?id="+req.author_id)= req.name + ` (${req.tag})`
+                    button(onclick=`acceptRequest(${req.author_id})`) Принять
+                    button(onclick=`declineRequest(${req.author_id})`) Отклонить
+    
+    if requests.outgoing.length > 0
+        h3 Исходящие запросы
+        ol.outgoing 
+            each req in requests.outgoing 
+                li
+                    a(href="/user?id="+req.to_id)= req.name + ` (${req.tag})`
+                    button(onclick=`cancelRequest(${req.to_id})`) Отозвать
+    
+    h2 Друзья
+    if friends.length == 0
+        p Нет друзей :()
+    else 
+        ol.friends 
+            each friend in friends 
+                li
+                    a(href="/user?id="+friend.id)= friend.name + ` (${friend.tag})`
+                    button(onclick=`removeFriend(${friend.id})`) Удалить
+
+
+

@@ -1,0 +1,30 @@
+extends index 
+
+include units
+
+include ../client_modules/popup/index
+include ../client_modules/inspect/index
+include ../client_modules/uploader/index
+include ../client_modules/errbox/index
+include ../client_modules/avatar/index
+
+append style
+    include css/content.css
+    include css/posts.css
+
+append script 
+    include js/croptest.js
+
+block main
+    p1.page-header= `Пользователь ${target.name}`
+    img.avatar(style="display:block;height:100px;margin-top:10px;margin-bottom:20px;border-radius:50%" src='/file?id=' + target.avatar_id)
+    
+    if user && target.id == user.id 
+        a.button.set-avatar(style="display:block;margin-bottom:10px;width:max-content") Назначить аватарку
+    
+    .user-info
+        span.tag= '@' + target.tag
+        a.button(href="/direct?with=" + target.id) Сообщение 
+    .posts(style="margin-top:10px;")
+        each post in posts 
+            +post(post, true)

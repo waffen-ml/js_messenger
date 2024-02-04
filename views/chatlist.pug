@@ -3,20 +3,25 @@ extends index
 append script 
     include js/chatlist.js
 
+append style
+    include css/chatlist.css
+
 mixin chat(data)
     - const displayedName = data.privateName ?? data.obj.name;
     a(href=`chat?id=${data.id}`)= displayedName
 
-mixin chatlist(data)
-    ol
-        each cdata in data 
-            li 
-                +chat(cdata)
-
 block main
-    .new-chat 
-        h3 Написать пользователю
-        input(type="text", placeholder="userid", id="userid")
-        input(type="button", value="Добавить", id="add", style="margin-top:20px;")
-
-    +chatlist(chats)
+    h1.page-header Сообщения
+    ul.chatlist
+        each view in views
+            if view.visible
+                - let cls = (view.voice? 'voice' : '') + ' ' + (view.unread? 'unread' : '')
+                li.block.chat(chatid=view.chat_id, class=cls)
+                    img.avatar(src="/file?id=169904737598173031.jpg")
+                    span.finite.title= view.chat_name
+                    span.datetime= view.datetime_label 
+                    p.finite.last-msg-preview= (view.lm_sender_id==user.id? 'Вы: ' : view.lm_sender_name + ': ') + view.lm_preview
+                    a.button.dots ...
+                    .event-icons 
+                        span.new-msg(text=view.unread)
+                        span.call(text="📞")

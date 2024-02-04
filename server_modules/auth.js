@@ -57,6 +57,40 @@ class Auth {
     }
 }
 
+class Login {
+
+    redirectToLogin(req, res) {
+        res.redirect('/form?name=login&next='
+            + encodeURIComponent(req.url));
+    }
+
+    ignore(req) {
+        return req.session.user
+    }
+
+    throw(req) {
+        let user = req.session.user
+        if (!user)
+            throw 'User is not logged in'
+        return user
+    }
+
+    redirect(req, res) {
+        let user = req.session.user
+        if (!user)
+            this.redirectToLogin(req, res)
+        return user
+    }
+
+    pIgnore(req) {
+        return Promise.resolve(this.ignore(req))
+    }
+    
+    pThrow(req) {
+        return Promise.resolve(this.throw(req))
+    }
+}
+
 let Form = require('./forms').Form;
 
 const regForm = new Form(
@@ -117,9 +151,63 @@ const loginForm = new Form(
 ) 
 
 exports.init = (cfx) => {
-    if (!cfx.forms || !cfx.db)
+    if (!cfx.forms || !cfx.db || !cfx.files)
         return true;
+
     cfx.auth = new Auth(cfx);
     cfx.forms.addForm(loginForm);
     cfx.forms.addForm(regForm);
+
+    cfx.core.app.get('/user', (req, res, next) => {
+        return (req.query.id? cfx.auth.getUserById(req.query.id) : 
+        (req.query.tag? cfx.auth.getUserByTag(req.query.tag) : Promise.resolve(null)))
+        .then((user) => {
+            if(!user)
+                throw Error('Пользователь не найден')
+            return cfx.posts.getLastPosts(10, user.id)
+            .then(posts => {
+                cfx.core.render(req, res, 'user', {
+                    posts: posts,
+                    target: user
+                })
+            })
+        })
+        .catch(err => {
+            next(err);
+        })
+    })
+
+    cfx.core.app.get('/getuser', (req, res) => {
+        cfx.query('select id, name, tag from user where id='+req.query.id)
+        .then(data => {
+            if (data.length == 0)
+                throw Error('unknown user')
+            res.send({
+                id: data.id,
+                name: data.name,
+                tag: data.tag
+            })
+        })
+        .catch(err => {
+            res.send(null)
+        })
+    })
+
+    cfx.core.app.post('/setavatar', cfx.core.upload.single('avatar'), (req, res) => {
+        let user = cfx.core.login(req, res, false)
+        if(!user) {
+            res.send({success:false})
+            return
+        }
+        req.file.originalname = 'avatar.jpg'
+        cfx.files.saveFiles([req.file])
+        .then(r => {
+            let avatarId = r.ids[0]
+            return cfx.query('update user set avatar_id=? where id=?', [avatarId, user.id])
+        })
+        .then(r => {
+            res.send({success: true})
+        })
+    })
+
 }
