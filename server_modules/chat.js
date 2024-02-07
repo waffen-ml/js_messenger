@@ -71,10 +71,6 @@ class Chat {
         })
     }
 
-    getInfo() {
-        return this.cfx.query('select * from chat where id=?', this.id)
-    }
-
     makeMessageRead(ids) {
         return this.cfx.db.executeFile('readmessages', {
             ids: ids.join(','), chat_id: this.id})
@@ -93,8 +89,12 @@ class Chat {
     getInfo() {
         return this.cfx.db.executeFile('getchatinfo', {chatid: this.id})
         .then(info => {
-            return this.cfx.utils.parseArrayOutput(info, 'members', 
-                ['is_admin', 'user_name', 'user_id', 'user_tag'], 'id', 'user_id')
+            return this.cfx.utils.parseArrayOutput(info, 'members', {
+                'is_admin': null,
+                'member_name': 'name',
+                'member_tag': 'tag',
+                'member_id': 'id'
+            }, 'id', 'member_id')
         })
     }
 

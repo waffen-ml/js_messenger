@@ -129,25 +129,32 @@ class Utils {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    parseArrayOutput(raw, arrname, cols, mainIdCol, elementIdCol) {
+    parseArrayOutput(raw, arrname, rep, mainIdCol, elementIdCol) {
+        let table = rep
+
+        if (Array.isArray(rep)) {
+            table = {}
+            rep.forEach(w => table[w] = w)
+        }
+
         let result = []
         let obj = {}
         obj[mainIdCol] = -1
 
         for(let i = 0; i < raw.length; i++) {
             let w = {}
-            cols.forEach(c => {
-                w[c] = raw[i][c]
+            Object.keys(table).forEach(c => {
+                w[table[c]] = raw[i][c]
             })
             if (raw[i][mainIdCol] != obj[mainIdCol]) {
                 result.push(obj)
                 obj = raw[i]
-                cols.forEach(c => {
+                Object.keys(table).forEach(c => {
                     delete obj[c]
                 })
                 obj[arrname] = []
             }
-            if (w[elementIdCol] !== null) {
+            if (raw[i][elementIdCol] !== null) {
                 obj[arrname].push(w)
             }
         }
