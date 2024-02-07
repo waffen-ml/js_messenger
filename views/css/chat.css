@@ -48,6 +48,7 @@ main {
 }
 
 .system-message {
+    display:block;
     margin-top:8px;
     width: 100%;
     text-align: center;
