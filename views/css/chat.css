@@ -55,6 +55,11 @@ main {
     font-style: italic;
 }
 
+.date-label {
+    margin-top:5px;
+    width: 100%;
+}
+
 .user-message.mine {
     background-color: #ded3b5;
     margin-left:auto;
