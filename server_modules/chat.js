@@ -95,10 +95,9 @@ class Chat {
                 'member_tag': 'tag',
                 'member_id': 'id',
                 'member_avatar': 'avatar_id'
-            }, 'id', 'member_id')
+            }, 'id', 'member_id')[0]
         })
     }
-
 }
 
 class ChatSystem {

@@ -170,6 +170,7 @@ class ChatMessages {
 
         if (prepare) {
             msgs.forEach(m => {
+                console.log(m)
                 m.minor = false
                 m.datetime = new Date(m.datetime)
                 utils.distributeFiles(m, 'file_mimetype')
