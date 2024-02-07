@@ -42,6 +42,8 @@ class Chat {
         return this.cfx.query('select max(local_id) as lmlid from message where chat_id=' + this.id)
         .then((w) => {
             let lmlid = w.length? w[0].lmlid : 0
+            console.log(lmlid)
+            console.log(w)
             users.forEach(u => this.cfx.query(
                 `insert into chat_member(chat_id, user_id, last_read, focus) 
                 values(${this.id}, ${u}, ${lmlid}, ${lmlid + 1})`))
