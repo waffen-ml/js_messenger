@@ -137,16 +137,10 @@
     </div>
 </script>
 
-<script template="date-label" type="text/x-ejs-template">
-    <%- templateManager.apply("system-message", {text: utils.getLocalizedDateLabel(date, true)}) %>
-</script>
-
 <script template="universal-message" type="text/x-ejs-template">
     <div class="message-wrapper" msg-id="<%= data.id %>">
         <% if (data.dateLabel) { %>
-            <div class="date-label">
-                <%- templateManager.apply("date-label", {date: data.datetime}) %>
-            </div>
+            <%- templateManager.apply("system-message", {text: utils.getLocalizedDateLabel(date, true)}) %>
         <% } %> 
         <% if (data.sender_id !== null && data.sender_id !== undefined) { %>
             <%- templateManager.apply("user-message", {data: data, myid: myid}) %>

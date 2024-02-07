@@ -3,4 +3,4 @@ select m.id, m.local_id, m.sender_id, m.text, m.datetime,
  as file_mimetype from 
  (select * from message where chat_id={chatid} and local_id <= {start} order by id desc limit {count})
  m left join file f on m.bundle_id = f.bundle_id left 
- join user u on m.sender_id = u.id
+ join user u on m.sender_id = u.id order by id desc
