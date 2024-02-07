@@ -76,7 +76,7 @@ exports.init = (cfx) => {
         password: 'Pig66666'
     }, () => {
         keepConnection()
-    })
+    }, cfx)
 
     let keepCycleCount = 0
 

@@ -47,8 +47,6 @@ class CfxMain {
 
         if (!cb) {
             //console.log('Module ' + file + ' has been loaded successfully.');
-            console.log(file)
-            console.log(this.core)
             return true;
         }
 
