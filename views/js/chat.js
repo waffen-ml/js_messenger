@@ -109,6 +109,7 @@ class ChatInterface {
         msgs.forEach(msg => {
             html += templateManager.apply('universal-message', {data: msg, myid: myid})
         })
+        div.innerHTML = html
         setupInspectObjects(div)
         if (before) {
             [...div.children].reverse().forEach(child => {
