@@ -154,6 +154,17 @@ class ChatInterface {
         this.entry.value = ''
         this.attachedFiles = []
     }
+
+    setChatHeader(title, subtitle, avatarUrl) {
+        document.querySelector('.chat-header .chat-name').textContent = title ?? ''
+
+        if (subtitle) {
+            document.querySelector('.chat-header .subinfo').textContent = subtitle
+            document.querySelector('.chat-header .info').classList.add('detailed')
+        }
+
+        document.querySelector('.chat-header .avatar').src = avatarUrl
+    }
 }
 
 class ChatMessages {
@@ -170,7 +181,6 @@ class ChatMessages {
 
         if (prepare) {
             msgs.forEach(m => {
-                console.log(m)
                 m.minor = false
                 m.datetime = new Date(m.datetime)
                 utils.distributeFiles(m, 'file_mimetype')
@@ -228,7 +238,6 @@ class ChatMessages {
         this.messages.push(...batch)
         this.interface.addMessages(batch, this.me.id, false, scroll)
     }
-
 }
 
 class Chat {
@@ -251,7 +260,11 @@ class Chat {
         fetch('/getchatinfo?id='+this.chatid)
         .then(r => r.json())
         .then(r => {
-            console.log(r)
+            if (r.is_direct) {
+                let other = r.members[0].id == this.me.id?
+                    r.members[1] : r.members[0]
+                this.interface.setChatHeader(other.name, null, '/file?id=' + other.avatar_id)
+            }
         })
     }
 
