@@ -71,6 +71,10 @@ class Chat {
         })
     }
 
+    getInfo() {
+        return this.cfx.query('select * from chat where id=?', this.id)
+    }
+
     makeMessageRead(ids) {
         return this.cfx.db.executeFile('readmessages', {
             ids: ids.join(','), chat_id: this.id})
@@ -308,6 +312,22 @@ exports.init = (cfx) => {
         })
         .catch(err => {
             next(err)
+        })
+    })
+
+    cfx.core.app.get('/getchatinfo', (req, res) => {
+        cfx.core.plogin(req, res, false)
+        .then(user => {
+            cfx.chats.accessChat(user, req.query.id)
+            .then(chat => {
+                return chat.getInfo()
+            })
+            .then(info => {
+                res.send(info)
+            })
+        })
+        .catch(err => {
+            console.log(err)
         })
     })
 

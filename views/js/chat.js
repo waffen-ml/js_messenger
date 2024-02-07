@@ -241,8 +241,17 @@ class Chat {
         this.interface.initSendFunction(() => this.send())
         this.interface.initLoadMessagesFunction(() => this.loadMessageBatch())
         //this.interface.identifyMyMessages(null, me.id)
+        this.loadChatInfo()
         this.loadMessageBatch()
         this.setupSocket()
+    }
+
+    loadChatInfo() {
+        fetch('/getchatinfo?id='+this.chatid)
+        .then(r => r.json())
+        .then(r => {
+            console.log(r)
+        })
     }
 
     loadMessageBatch() {
