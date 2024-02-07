@@ -177,21 +177,19 @@ class ChatSystem {
     }
 
     getDirectChat(userid1, userid2) {
-        return new Promise((resolve, reject) => {
-            this.cfx.db.executeFile('getdirectchat', {
-                user1: userid1,
-                user2: userid2
-            }).then(r => {
-                if (r.length > 0)
-                    resolve(new Chat(this.cfx, r[0].chat_id, null))
-                return this.cfx.query('insert into chat(is_direct) values(1)')
-            }).then(r => {
+        return this.cfx.db.executeFile('getdirectchat', {
+            user1: userid1,
+            user2: userid2
+        }).then(r => {
+            if (r.length > 0)
+                return new Chat(this.cfx, r[0].chat_id, null)
+            return this.cfx.query('insert into chat(is_direct) values(1)')
+            .then(r => {
                 return new Chat(this.cfx, r.insertId, null)
             }).then(chat => {
-                chat.addMembers([userid1, userid2])
-                resolve(chat)
+                return chat.addMembers([userid1, userid2])
+                .then(() => chat)
             })
-            .catch(err => reject(err))
         })
     }
 
@@ -339,6 +337,7 @@ exports.init = (cfx) => {
             res.redirect('/chat?id=' + chat.id)
         })
         .catch(err => {
+            console.log(err)
         })
     })
 
