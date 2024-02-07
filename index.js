@@ -5,7 +5,7 @@ const fs = require('fs');
 const pug = require('pug');
 const server = require('https').createServer({
     key: fs.readFileSync(__dirname + `/../sslcert/privkey.pem`),
-    cert: fs.readFileSync(__dirname + `/../sslcert/fullchain.pem`)
+    cert: fs.readFileSync(__dirname + `/../sslcert/cert.pem`)
 }, app);
 const { Server } = require("socket.io");
 const io = new Server(server);
@@ -46,31 +46,6 @@ function redirectToLogin(req, res) {
     + encodeURIComponent(req.url));
 }
 
-function pageRequest(func, pattern, requireLogin) {
-    app.get(pattern, (req, res, next) => {
-        let user = req.session.user
-        if (!user && requireLogin)
-            redirectToLogin(req, res)
-        try {
-            func(req, res, user)
-        } catch(ex) {
-            if (!res.headersSent)
-                next(ex)
-        }
-    })
-}
-function ilogin(req) {
-    return req.session.user
-}
-
-function tlogin(req) {
-    let user = req.session.user
-    if (!user)
-        throw Error('Unknown user')
-    return user
-}
-
-
 function login(req, res, requireLogin) {
     let user = req.session.user;
     if (!user && requireLogin)
@@ -102,8 +77,8 @@ cfx.init({
     plogin: plogin
 });
 //cfx.chats.createChat('Coffee chat');
-cfx.auth.addUser('t1', 'Ilya Kostin', '1');
-cfx.auth.addUser('t2', 'Another guy', '1');
+//cfx.auth.addUser('t1', 'Ilya Kostin', '1');
+//cfx.auth.addUser('t2', 'Another guy', '1');
 
 app.get('/auth', (req, res) => {
     plogin(req, res, false)
@@ -204,6 +179,6 @@ app.use((err, req, res, next) => {
     })
 })
 
-server.listen(3000, () => {
-  console.log('listening on *:3000');
+server.listen(443, () => {
+  console.log('CFX is running');
 });
