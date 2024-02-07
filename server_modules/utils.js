@@ -129,7 +129,7 @@ class Utils {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    parseArrayOutput(raw, arrname, rep, mainIdCol, elementIdCol) {
+    parseArrayOutput(raw, arrname, rep, mainIdCol) {
         let table = rep
 
         if (Array.isArray(rep)) {
@@ -147,7 +147,10 @@ class Utils {
 
         for(let i = 0; i < raw.length; i++) {
             let w = {}
+            let isNullElement = true
             Object.keys(table).forEach(c => {
+                if (raw[i][c] !== null)
+                    isNullElement = false
                 w[table[c]] = raw[i][c]
             })
             if (raw[i][mainIdCol] != obj[mainIdCol]) {
@@ -158,7 +161,7 @@ class Utils {
                 })
                 obj[arrname] = []
             }
-            if (raw[i][elementIdCol] !== null) {
+            if (!isNullElement) {
                 obj[arrname].push(w)
             }
         }
