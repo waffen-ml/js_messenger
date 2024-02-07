@@ -71,7 +71,7 @@ class Chat {
         })
     }
 
-    makeMessageRead(...ids) {
+    makeMessageRead(ids) {
         return this.cfx.db.executeFile('readmessages', {
             ids: ids.join(','), chat_id: this.id})
     }
@@ -82,7 +82,7 @@ class Chat {
         this.cfx.socket.getSocketsInRoom('c:' + this.id)
         .then((sockets) => {
             let ids = sockets.map(s => (s.request.session.user ?? {}).id).filter(id => id)
-            return this.makeMessageRead(...ids)
+            return this.makeMessageRead(ids)
         })
     }
 
