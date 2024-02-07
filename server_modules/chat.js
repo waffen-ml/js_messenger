@@ -93,7 +93,8 @@ class Chat {
                 'is_admin': null,
                 'member_name': 'name',
                 'member_tag': 'tag',
-                'member_id': 'id'
+                'member_id': 'id',
+                'member_avatar': 'avatar_id'
             }, 'id', 'member_id')
         })
     }

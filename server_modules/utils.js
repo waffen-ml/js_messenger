@@ -137,6 +137,10 @@ class Utils {
             rep.forEach(w => table[w] = w)
         }
 
+        Object.keys(rep).forEach(k => {
+            rep[k] ??= k
+        })
+
         let result = []
         let obj = {}
         obj[mainIdCol] = -1

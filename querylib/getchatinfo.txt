@@ -1,2 +1,2 @@
-select c.*, b.is_admin, u.id as user_id, u.name as member_name, u.tag as member_tag from 
+select c.*, b.is_admin, u.id as member_id, u.name as member_name, u.tag as member_tag, u.avatar_id as member_avatar from 
 (select * from chat where id={chatid}) c left join chat_member b on b.chat_id=c.id left join user u on u.id=b.user_id
