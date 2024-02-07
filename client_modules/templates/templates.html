@@ -140,7 +140,7 @@
 <script template="universal-message" type="text/x-ejs-template">
     <div class="message-wrapper" msg-id="<%= data.id %>">
         <% if (data.dateLabel) { %>
-            <%- templateManager.apply("system-message", {text: utils.getLocalizedDateLabel(date, true)}) %>
+            <%- templateManager.apply("system-message", {text: utils.getLocalizedDateLabel(data.date, true)}) %>
         <% } %> 
         <% if (data.sender_id !== null && data.sender_id !== undefined) { %>
             <%- templateManager.apply("user-message", {data: data, myid: myid}) %>
