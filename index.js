@@ -4,8 +4,8 @@ const app = express();
 const fs = require('fs');
 const pug = require('pug');
 const server = require('https').createServer({
-    key: fs.readFileSync(__dirname + `/../sslcert/key.pem`),
-    cert: fs.readFileSync(__dirname + `/../sslcert/csr.pem`)
+    key: fs.readFileSync(__dirname + `/../sslcert/privkey.pem`),
+    cert: fs.readFileSync(__dirname + `/../sslcert/fullchain.pem`)
 }, app);
 const { Server } = require("socket.io");
 const io = new Server(server);
@@ -70,9 +70,6 @@ function tlogin(req) {
     return user
 }
 
-function rlogin(req, res) {
-    let user = req.session.user
-}
 
 function login(req, res, requireLogin) {
     let user = req.session.user;
