@@ -19,7 +19,7 @@ class Files {
 
     saveFiles(files, bundle) {
         if(!files || !files.length)
-            return Promise.resolve(null)
+            return Promise.resolve({bundle: null, ids: []})
 
         return new Promise((resolve) => {
             bundle = parseInt(bundle)
