@@ -74,9 +74,9 @@ exports.init = (cfx) => {
         user: 'ilyaspqx_db',
         database: 'ilyaspqx_db',
         password: 'Pig66666'
-    }, () => {
+    }, cfx, () => {
         keepConnection()
-    }, cfx)
+    })
 
     let keepCycleCount = 0
 
