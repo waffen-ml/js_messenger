@@ -122,7 +122,7 @@
 
 <script template="user-message" type="text/x-ejs-template">
     <% let cls = (data.minor? 'minor' : '') + ' ' + (myid == data.sender_id? 'mine' : '') %>
-    <div class="message block <%= cls %>">
+    <div class="user-message block <%= cls %>">
         <% if (!data.minor) { %>
             <div class="top-bar">
                 <a href="/user?tag=<%= data.sender_tag %>" class="finite clean name">

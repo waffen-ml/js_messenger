@@ -45,25 +45,22 @@ main {
 }
 
 .message-wrapper {
-    margin-top:5px;
-}
-
-.date-label {
-    width: 100%;
-    text-align: center;
-    margin-bottom:5px;
 }
 
 .system-message {
+    margin-top:8px;
+    width: 100%;
+    text-align: center;
     font-style: italic;
 }
 
-.message.mine {
+.user-message.mine {
     background-color: #ded3b5;
     margin-left:auto;
 }
 
-.message {
+.user-message {
+    margin-top:10px;
     flex-shrink: 0;
     background: #e2ccb9d7;
     max-width: 500px;
@@ -71,22 +68,22 @@ main {
     width: max-content;
 }
 
-.message.minor {
+.user-message.minor {
     margin-top:5px;
 }
 
-.message .top-bar {
+.user-message .top-bar {
     margin-top:0;
     margin-bottom:8px;
     display:flex;
     gap:13px;
 }
 
-.message .text {
+.user-message .text {
     margin:0;
 }
 
-.message .content {
+.user-message .content {
     margin:0;
 }
 
