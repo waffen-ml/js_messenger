@@ -83,7 +83,7 @@ exports.init = (cfx) => {
     function keepConnection() {
         keepCycleCount++
 
-        if (keepCycleCount % 200)
+        if (keepCycleCount % 200 == 0)
             console.log('Keep cycle count: ' + keepCycleCount)
 
         cfx.query('select 1')

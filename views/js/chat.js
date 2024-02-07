@@ -106,10 +106,12 @@ class ChatInterface {
     addMessages(msgs, myid, before, scroll) {
         const div = document.createElement('div');
         let html = ''
+        console.log(messages)
         msgs.forEach(msg => {
             html += templateManager.apply('universal-message', {data: msg, myid: myid})
         })
         div.innerHTML = html
+        console.log(html)
         setupInspectObjects(div)
         if (before) {
             [...div.children].reverse().forEach(child => {
