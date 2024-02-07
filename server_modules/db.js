@@ -62,6 +62,10 @@ class Database {
 }
 
 exports.init = (cfx) => {
+
+    if(!cfx.core.fs)
+        return true
+
     //cfx.db = new Database({
     //    host: 'localhost',
     //    user: 'root',
