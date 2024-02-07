@@ -305,6 +305,7 @@ exports.init = (cfx) => {
 
         cfx.chats.accessChat(user, req.query.id)
         .then(chat => {
+            chat.makeMessageRead([user.id])
             cfx.core.render(req, res, 'chat', {})
         })
         .catch(err => {
