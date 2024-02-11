@@ -66,7 +66,8 @@ exports.init = (cfx) => {
     //    host: 'localhost',
     //    user: 'root',
     //    database: 'coffetox',
-    //    password: 'admin'
+    //    password: 'admin',
+    //    charset : 'utf8mb4'
     //}, cfx);
 
     cfx.db = new Database({

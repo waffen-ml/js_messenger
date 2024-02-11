@@ -314,10 +314,7 @@ class Chat {
         fetch('/sendmsg?id=' + chatid, {
             method: 'POST',
             credentials: 'same-origin',
-            body: data,
-            headers: {
-                'Content-Type': 'text/plain; charset=UTF-8'
-            }
+            body: data
         }).then(r => r.json())
         .then(r => {
             console.log(r);
