@@ -310,11 +310,14 @@ class Chat {
         data.append('text', text);
         
         attachedFiles.forEach(f => data.append('files', f));
-    
+
         fetch('/sendmsg?id=' + chatid, {
             method: 'POST',
             credentials: 'same-origin',
-            body: data
+            body: data,
+            headers: {
+                'Content-Type': 'text/plain; charset=UTF-8'
+            }
         }).then(r => r.json())
         .then(r => {
             console.log(r);
