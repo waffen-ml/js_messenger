@@ -1,3 +1,5 @@
+const escape = require('mysql').escape;
+
 class Chat {
     constructor(cfx, id, name) {
         this.cfx = cfx;
@@ -25,7 +27,7 @@ class Chat {
         return this.cfx.db.executeFile('addmessage', {
             sender_id: sender_id,
             chat_id: this.id,
-            text: text,
+            text: escape(text),
             bundle: bundle ?? null
         })
         .then(() => {
