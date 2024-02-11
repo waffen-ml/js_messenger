@@ -204,3 +204,10 @@ hidden {
     top:10vh;
     height:80vh
 }
+
+.avatar {
+    height:60px;
+    aspect-ratio:1;
+    border-radius: 50%;
+    user-select: none;
+}

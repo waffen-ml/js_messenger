@@ -57,40 +57,6 @@ class Auth {
     }
 }
 
-class Login {
-
-    redirectToLogin(req, res) {
-        res.redirect('/form?name=login&next='
-            + encodeURIComponent(req.url));
-    }
-
-    ignore(req) {
-        return req.session.user
-    }
-
-    throw(req) {
-        let user = req.session.user
-        if (!user)
-            throw 'User is not logged in'
-        return user
-    }
-
-    redirect(req, res) {
-        let user = req.session.user
-        if (!user)
-            this.redirectToLogin(req, res)
-        return user
-    }
-
-    pIgnore(req) {
-        return Promise.resolve(this.ignore(req))
-    }
-    
-    pThrow(req) {
-        return Promise.resolve(this.throw(req))
-    }
-}
-
 let Form = require('./forms').Form;
 
 const regForm = new Form(
@@ -208,6 +174,18 @@ exports.init = (cfx) => {
         .then(r => {
             res.send({success: true})
         })
+    })
+
+    cfx.core.app.get('/getuseravatar', (req, res) => {
+        cfx.auth.getUserById(req.query.id)
+        .then(user => {
+            if (user.avatar_id)
+                res.redirect('/file?id=' + user.avatar_id)
+            else
+                res.redirect('/public/useravatar.jpg')
+        })
+
+
     })
 
 }

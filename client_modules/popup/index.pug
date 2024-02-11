@@ -3,10 +3,11 @@ append style
 append script 
     include script.js 
 append body 
-    .popup
-        .window.block
-            .inner 
-                input.thin.close-btn(type="button", value="X")
-                h1.header
-                .content 
-                .buttons 
+    script(template="popup", type="text/x-ejs-template")
+        .popup
+            .window.block
+                .inner 
+                    input.thin.close-btn(type="button", value="X")
+                    h1.title <%= title %>
+                    .content <%- html %>
+                    .buttons 

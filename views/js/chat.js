@@ -488,7 +488,7 @@ class Call {
         this.socket = socket
         this.chatid = chatid
 
-        this.getStream()
+        //this.getStream()
         this.setupSocketEvents()
         this.requestCallTable()
         this.interface.setupJoinLeaveButtons(this)

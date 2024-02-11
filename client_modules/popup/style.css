@@ -47,7 +47,7 @@
     opacity: 1;
 }
 
-.popup .header {
+.popup .title {
     margin-top:0;
     margin-bottom:10px;
     font-size:28px;
@@ -55,7 +55,7 @@
 }
 
 .popup .buttons {
-    display:flex;
+    display:none; /*flex*/
     justify-content: flex-end;
     gap: 5px;
 }

@@ -62,21 +62,21 @@ class Database {
 }
 
 exports.init = (cfx) => {
-    //cfx.db = new Database({
-    //    host: 'localhost',
-    //    user: 'root',
-    //    database: 'coffetox',
-    //    password: 'admin'
-    //}, cfx);
-
     cfx.db = new Database({
-        host: 'ilyaspqx.beget.tech',
-        user: 'ilyaspqx_db',
-        database: 'ilyaspqx_db',
-        password: 'Pig66666'
-    }, cfx, () => {
-        keepConnection()
-    })
+        host: 'localhost',
+        user: 'root',
+        database: 'coffetox',
+        password: 'admin'
+    }, cfx);
+
+    //cfx.db = new Database({
+    //    host: 'ilyaspqx.beget.tech',
+    //    user: 'ilyaspqx_db',
+    //    database: 'ilyaspqx_db',
+    //    password: 'Pig66666'
+    //}, cfx, () => {
+    //    keepConnection()
+    //})
 
     let keepCycleCount = 0
 

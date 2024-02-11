@@ -3,9 +3,13 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 const pug = require('pug');
+//const server1 = require('https').createServer({
+//    key: fs.readFileSync(__dirname + `/../sslcert/privkey.pem`),
+//    cert: fs.readFileSync(__dirname + `/../sslcert/cert.pem`)
+//}, app);
 const server = require('https').createServer({
-    key: fs.readFileSync(__dirname + `/../sslcert/privkey.pem`),
-    cert: fs.readFileSync(__dirname + `/../sslcert/cert.pem`)
+    key: fs.readFileSync(__dirname + '/cert/key.pem'),
+    cert: fs.readFileSync(__dirname + '/cert/cert.pem')
 }, app);
 const { Server } = require("socket.io");
 const io = new Server(server);
@@ -22,6 +26,9 @@ const sessionMiddleware = session({
     resave: false
 });
 
+app.use('/public', express.static('public'))
+app.use('/cmodules', express.static('client_modules'))
+
 app.use(sessionMiddleware);
 io.engine.use(sessionMiddleware);
 
@@ -36,6 +43,7 @@ function render(req, res, page, params) {
             'Друзья': '/friends'
         },
         user: cfx.as(req.session).user(),
+        cfx: cfx,
         utils: cfx.utils,
         ...params
     });
@@ -179,6 +187,6 @@ app.use((err, req, res, next) => {
     })
 })
 
-server.listen(443, () => {
+server.listen(3000, () => {
   console.log('CFX is running');
 });

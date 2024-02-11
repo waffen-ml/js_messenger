@@ -1,18 +1,5 @@
-document.querySelector('.set-avatar').addEventListener('click', () => {
-    avatarMaker.makeAvatar((blob) => {
-        let formData = new FormData()
-        formData.append('avatar', blob)
-    
-        fetch('/setavatar', {
-            method: 'POST',
-            credentials: 'same-origin',
-            body: formData
-        })
-        .then((r) => r.json())
-        .then((r) => {
-            if (!r.success)
-                alert('Ошибка...')
-            location.reload()
-        })
-    })
-})
+let uploadBox = document.querySelector('#upload')
+
+makeUploadArea(uploadBox, (files) => {
+    console.log(files.length)
+}, 'Перетащите сюда файлы или нажмите для обзора', true, 'image/jpeg')

@@ -72,6 +72,8 @@ class Chat {
     }
 
     makeMessageRead(ids) {
+        if (!ids.length)
+            return
         return this.cfx.db.executeFile('readmessages', {
             ids: ids.join(','), chat_id: this.id})
     }
@@ -197,8 +199,9 @@ class ChatSystem {
         })
     }
 
-    createGroup(name, is_public, members) {
-        return this.cfx.query(`insert into chat(name, is_public) values("${name}", ${is_public})`)
+    createChat(name, isPublic, avatarId, members) {
+        return this.cfx.query('insert into chat(name, is_public, avatar_id) values(?, ?, ?)',
+        [name, isPublic, avatarId])
         .then((r) => {
             let chat = new Chat(this.cfx, r.insertId, name)
             chat.addMembers(members??[])
@@ -288,6 +291,31 @@ exports.init = (cfx) => {
             })
         })
     });
+
+    cfx.core.app.post('/createchat', cfx.core.upload.single('avatar'), (req, res) => {
+        let creator = cfx.core.login(req, res, false)
+
+        if(!creator) {
+            res.send({success:false})
+            return
+        }
+
+        new Promise((resolve) => {
+            if (!req.avatar)
+                resolve(null)
+            else {
+                return cfx.files.saveFiles([req.file], null)
+                .then(r => r.ids[0])
+            }
+        }).then(avatarId => {
+            return cfx.chats.createChat(req.body.name, parseInt(req.body.ispublic), avatarId, req.body.members ?? [])
+        }).then(chat => {
+            chat.addMessage(null, creator.name + ' создал этот чат', null)
+        })
+        .then(() => {
+            res.send({success: true})
+        })
+    })
     
 
     cfx.core.app.get('/chatlist', (req, res) => {

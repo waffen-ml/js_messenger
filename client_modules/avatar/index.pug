@@ -1,7 +1,22 @@
+
 append header 
     style 
         include style.css
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.css")
 
-append body 
-    script
-        include script.js
+append body
+    script(template="load-avatar", type="text/x-ejs-template")
+        .hover-wrapper
+            .hover-area.block
+    
+    script(template="crop-avatar", type="text/x-ejs-template")
+        .grid-wrapper
+            .cropper-wrapper
+                img.original
+            img.output.square 
+            img.output.round
+    
+    script 
+        include script.js 
+    
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js")

@@ -2,21 +2,7 @@
 append header 
     style 
         include style.css
-    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.css")
 
-append body
-    hidden#load-avatar
-            .hover-wrapper
-                .hover-area.block
-    
-    hidden#crop-avatar 
-        .grid-wrapper
-            .cropper-wrapper
-                img.original
-            img.output.square 
-            img.output.round
-    
-    script 
-        include script.js 
-    
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js")
+append body 
+    script
+        include script.js

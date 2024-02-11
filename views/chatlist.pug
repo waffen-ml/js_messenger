@@ -1,23 +1,27 @@
 extends index
 
+include ../client_modules/utils/index
+include ../client_modules/popup/index
+include ../client_modules/inspect/index
+include ../client_modules/errbox/index
+include ../client_modules/dragndrop/index
+include ../client_modules/avatar/index
+
 append script 
     include js/chatlist.js
 
 append style
     include css/chatlist.css
 
-mixin chat(data)
-    - const displayedName = data.privateName ?? data.obj.name;
-    a(href=`chat?id=${data.id}`)= displayedName
-
 block main
     h1.page-header Сообщения
     ul.chatlist
+        button.create-chat Создать чат
         each view in views
             if view.visible
                 - let cls = (view.voice? 'voice' : '') + ' ' + (view.unread? 'unread' : '')
                 li.block.chat(chatid=view.chat_id, class=cls)
-                    img.avatar(src="/file?id=169904737598173031.jpg")
+                    img.avatar
                     span.finite.title= view.chat_name
                     span.datetime= view.datetime_label 
                     p.finite.last-msg-preview= (view.lm_sender_id==user.id? 'Вы: ' : view.lm_sender_name + ': ') + view.lm_preview
@@ -25,3 +29,20 @@ block main
                     .event-icons 
                         span.new-msg(text=view.unread)
                         span.call(text="📞")
+
+append body
+    script(template="friend", type="text/x-ejs-template")
+        li
+            img.avatar(src!="/getuseravatar?id=<%=id%>")
+            a.clean.finite.name <%= name %>
+            input(type="checkbox", class="include-friend")
+    
+    script(template="create-chat", type="text/x-ejs-template")
+        .create-info
+            img.avatar(src="/public/chatavatar.jpg")
+            input(type="text", class="name", placeholder="NAME", id="name")
+            .public 
+                input(type="checkbox", id="is-public", class="is-public")
+                label(for="is-public") Публичный
+        ul.block.styled-scroll.friendlist
+        

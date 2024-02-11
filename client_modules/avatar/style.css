@@ -14,26 +14,6 @@
     outline:none;
 }
 
-.hover-area.active {
-    border:2px solid #686868;
-}
-
-.hover-area::after {
-    display: block;
-    content: 'Перетащите изображение';
-    font-size:17px;
-    position:absolute;
-    top:50%;
-    line-height: 0;
-    left:0;
-    width: 100%;
-    text-align: center;
-}
-
-.hover-area.active::after {
-    content: 'Отпустите'
-}
-
 .grid-wrapper {
     display:grid;
     grid-template-rows:1fr 1fr;

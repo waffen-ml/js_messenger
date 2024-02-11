@@ -1,0 +1,18 @@
+.upload-area {
+    display:grid;
+    border:2px dashed grey;
+}
+
+.upload-area span {
+    color:#393939;
+    user-select: none;
+    pointer-events: none;
+    align-self: center;
+    justify-self: center;
+    display:block;
+    text-align: center;
+}
+
+.upload-area.active {
+    border:2px solid #686868;
+}

@@ -11,20 +11,13 @@
 </head>
 <body>
 
-    <div class="container"> 
-        <div>
-            <img class="original" src="avatar.jpg" alt="">
-        </div>
-        <img src="" alt="" class="output">
-    </div>
-
-    <script src="./node_modules/cropperjs/src/index.js"></script> 
-    <script>
-        const image = document.querySelector('.original')
-        const cropper = new Cropper(image, {
-            aspectRatio: 1,
-            viewMode:0
-        })
+    <script type="module">
+        import a from './test.js'
+        alert(a + 1)
+    </script>
+    <script type="module">
+        import a from './test.js'
+        alert(a + 2)
     </script>
 </body>
 </html>

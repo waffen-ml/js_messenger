@@ -49,6 +49,13 @@ class Utils {
         return Math.abs(d1 - d2) / 1000 / 60
     }
 
+    strweight(s) {
+        for (let i = 0; i < s.length; i++)
+            if (s[i] != ' ' && s[i] != '\n')
+                return true
+        return false
+    }
+
 
 }
 

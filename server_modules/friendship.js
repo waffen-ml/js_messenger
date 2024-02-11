@@ -116,6 +116,17 @@ exports.init = (cfx) => {
     if(!cfx.db || !cfx.forms)
         return true;
 
+    cfx.core.app.get('/getfriends', (req, res) => {
+        let user = cfx.core.login(req, res, false)
+        if(!user) {
+            res.send([])
+            return
+        }
+        cfx.friendship.getFriends(user.id)
+        .then(friends => res.send(friends))
+    })
+    
+
     cfx.core.app.get('/friends', (req, res) => {
         let user = cfx.core.login(req, res, true);
         
