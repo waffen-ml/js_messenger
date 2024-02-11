@@ -22,6 +22,7 @@ class Chat {
     }
 
     addMessage(sender_id, text, bundle) {
+        console.log(text)
         return this.cfx.db.executeFile('addmessage', {
             sender_id: sender_id,
             chat_id: this.id,
