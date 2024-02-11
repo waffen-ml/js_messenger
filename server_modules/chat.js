@@ -1,5 +1,3 @@
-const utils = require('./utils');
-
 class Chat {
     constructor(cfx, id, name) {
         this.cfx = cfx;

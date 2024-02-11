@@ -3,14 +3,14 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 const pug = require('pug');
-//const server1 = require('https').createServer({
-//    key: fs.readFileSync(__dirname + `/../sslcert/privkey.pem`),
-//    cert: fs.readFileSync(__dirname + `/../sslcert/cert.pem`)
-//}, app);
 const server = require('https').createServer({
-    key: fs.readFileSync(__dirname + '/cert/key.pem'),
-    cert: fs.readFileSync(__dirname + '/cert/cert.pem')
+    key: fs.readFileSync(__dirname + `/../sslcert/privkey.pem`),
+    cert: fs.readFileSync(__dirname + `/../sslcert/cert.pem`)
 }, app);
+//const server = require('https').createServer({
+//    key: fs.readFileSync(__dirname + '/cert/key.pem'),
+//    cert: fs.readFileSync(__dirname + '/cert/cert.pem')
+//}, app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const session = require('express-session');
@@ -187,6 +187,6 @@ app.use((err, req, res, next) => {
     })
 })
 
-server.listen(3000, () => {
+server.listen(443, () => {
   console.log('CFX is running');
 });
