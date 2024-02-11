@@ -306,6 +306,7 @@ exports.init = (cfx) => {
                 .then(r => r.ids[0])
             }
         }).then(avatarId => {
+            console.log(req.body.name)
             return cfx.chats.createChat(req.body.name, parseInt(req.body.ispublic), avatarId, req.body.members ?? [])
         }).then(chat => {
             chat.addMessage(null, creator.name + ' создал этот чат', null)
