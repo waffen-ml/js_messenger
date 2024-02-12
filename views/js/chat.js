@@ -269,7 +269,7 @@ class Chat {
             }
             else {
                 this.interface.setChatHeader(
-                    utils.generateChatName(r.members, me, 5),
+                    utils.generateChatName(r.members, this.me, 5),
                     r.members.length + ' участников',
                     '/getchatavatar?id=' + this.chatid,
                     () => alert('hey!!')
