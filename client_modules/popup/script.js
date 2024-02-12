@@ -7,7 +7,6 @@ class Popup {
     constructor(config) {
         this.closable = config.closable ?? false
         this.popup = templateManager.createElement('popup', {
-            title: config.title ?? '',
             html: config.html ?? ''
         })
         this.window =  this.popup.querySelector('.window')
@@ -16,6 +15,8 @@ class Popup {
         this.optionHolder = this.window.querySelector('.buttons');
         this.isOpened = false
         this.events = {}
+
+        this.setTitle(config.title)
 
         let cbtn = this.window.querySelector('.close-btn');
         cbtn.style.display = this.closable? 'block' : 'none';
@@ -28,6 +29,10 @@ class Popup {
 
         document.body.appendChild(this.popup)
 
+    }
+
+    querySelector(selector) {
+        return this.popup.querySelector(selector)
     }
 
     remove() {
@@ -70,7 +75,14 @@ class Popup {
     }
 
     setTitle(title) {
-        this.window.querySelector('.title').textContent = title
+        let element = this.window.querySelector('.title')
+        if(!title)
+            element.style.display='none'
+        else {
+            element.style.display='block'
+            element.textContent=title
+        }
+        
     }
 
     open(instantly) {

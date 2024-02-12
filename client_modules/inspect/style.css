@@ -36,7 +36,7 @@
     display:block;
 }
 
-.inspect .media {
+.inspect .media > * {
     max-width:70vw;
     max-height:70vh;
     user-select:none;
@@ -45,14 +45,14 @@
     outline:none;
 }
 
-.inspect img.media {
+.inspect .media img {
     min-width:380px;
 }
 
-.inspect.prev video.media {
+.inspect.prev media video {
     padding-left:35px;
 }
 
-.inspect.next video.media {
+.inspect.next media video {
     padding-right:35px;
 }
