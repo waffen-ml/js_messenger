@@ -29,6 +29,9 @@ class Inspect {
         this.rb.onclick = () => this.next()
         this.lb.onclick = () => this.prev()
 
+        console.log(start)
+        console.log(mediaCollection)
+
         this.updateCurrentMedia()
         this.updateTransitionButtons()
         
