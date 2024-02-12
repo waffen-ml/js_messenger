@@ -3,7 +3,7 @@ append style
 append script 
     include script.js 
 append body
-    hidden#h-inspect 
+    script(type="text/x-ejs-template", template="inspect")
         .inspect 
             input.trans.left(type="button")
             input.trans.right(type="button") 
