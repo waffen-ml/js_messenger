@@ -28,10 +28,7 @@ class Inspect {
         
         this.rb.onclick = () => this.next()
         this.lb.onclick = () => this.prev()
-
-        console.log(start)
-        console.log(mediaCollection)
-
+        
         this.updateCurrentMedia()
         this.updateTransitionButtons()
         
@@ -88,8 +85,8 @@ class Inspect {
     }
 }
 
-function inspectMediaCollection(mediaCollection) {
-    let inspect = new Inspect(mediaCollection)
+function inspectMediaCollection(mediaCollection, start) {
+    let inspect = new Inspect(mediaCollection, start)
     inspect.open()
     return inspect
 }
@@ -100,9 +97,9 @@ function inspectSingle(obj) {
 }
 
 function inspectGroup(groupid, start) {
-    let mediaCollection = Array.from(document.querySelector(`[inspect-group="${groupid}"]`))
+    let mediaCollection = Array.from(document.querySelectorAll(`[inspect-group="${groupid}"]`))
         .map(obj => getElementMedia(obj))
-    return inspectMediaCollection(mediaCollection)
+    return inspectMediaCollection(mediaCollection, start)
 }
 
 let i = 0;
