@@ -94,7 +94,7 @@ document.querySelector('.create-chat').addEventListener('click', () => {
             if(!autoName)
                 return
             updateMembers()
-            namefield.value = members.slice(0, 10).map(m => m.name).join(', ')
+            namefield.value = members.slice(1, 11).map(m => m.name).join(', ')
         }
 
         namefield.addEventListener('focusout', () => {
