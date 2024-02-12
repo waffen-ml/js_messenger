@@ -1,14 +1,3 @@
-function constructMediaHTML(media) {
-    switch(media.type) {
-        case 'image':
-            return `<img class="media" src="${media.src}" alt="inspect-img">`;
-        case 'video':
-            return `<video class="media" controls><source src="${media.src}"></video>`;
-        default:
-            return '';
-    }
-}
-
 function _getSrc(obj, tag) {
     if (obj.tagName == tag)
         return obj.src;
@@ -24,54 +13,99 @@ function getElementMedia(obj) {
     return {};
 }
 
-function inspectMedia(data) {
-    openPopup({
-        closable: true,
-        html: getHidden('h-inspect'),
-        options: data.options ?? {},
-        onload: (d) => {
-            const inspect = d.obj.querySelector('.inspect');
-            inspect.innerHTML += constructMediaHTML(data);
+class Inspect {
+    constructor(mediaCollection, start) {
+        this.popup = new Popup({
+            closable: true,
+            html: templateManager.createHTML('inspect')
+        })
+        this.mediaCollection = mediaCollection
+        this.current = start ?? 0
+        this.inspect = this.popup.querySelector('.inspect')
+        this.mediaWrapper = this.popup.querySelector('.media')
+        this.lb = this.popup.querySelector('.left')
+        this.rb = this.popup.querySelector('.right')
+        
+        this.rb.onclick = () => this.next()
+        this.lb.onclick = () => this.prev()
 
-            const lb = d.obj.querySelector('.left');
-            const rb = d.obj.querySelector('.right');
-            
-            rb.onclick = data.next;
-            lb.onclick = data.prev;
+        this.updateCurrentMedia()
+        this.updateTransitionButtons()
+        
+    }
 
-            if (data.next) inspect.classList.add('next');
-            if (data.prev) inspect.classList.add('prev');
+    constructMediaHTML(media) {
+        switch(media.type) {
+            case 'image':
+                return `<img src="${media.src}" alt="inspect-img">`;
+            case 'video':
+                return `<video controls><source src="${media.src}"></video>`;
+            default:
+                return '';
         }
-    });
+    }
+
+    updateCurrentMedia() {
+        let media = this.mediaCollection[this.current]
+        this.mediaWrapper.innerHTML = this.constructMediaHTML(media)
+    }
+
+    updateTransitionButtons() {
+        if (this.current == this.mediaCollection.length - 1)
+            this.inspect.classList.remove('next')
+        else
+            this.inspect.classList.add('next')
+
+        if (this.current == 0)
+            this.inspect.classList.remove('prev')
+        else
+            this.inspect.classList.add('prev')
+    }
+
+    next() {
+        if (this.current < this.mediaCollection.length - 1)
+            this.current++
+        updateCurrentMedia()
+        updateTransitionButtons()
+    }
+
+    prev() {
+        if (this.current > 0)
+            this.current--
+        updateCurrentMedia()
+        updateTransitionButtons()
+    }
+
+    show() {
+        this.popup.show()
+    }
+
+    close() {
+        this.popup.close()
+    }
 }
 
-function getGroupElement(groupid, index) {
-    return document.querySelector(`[inspect-parent="${groupid}"][inspect-index="${index}"]`);
-}
-
-function createTransFunc(groupid, index) {
-    if(!getGroupElement(groupid, index)) return null;
-    return () => inspectGroup(groupid, index);
+function inspectMediaCollection(mediaCollection) {
+    let inspect = new Inspect(mediaCollection)
+    inspect.open()
+    return inspect
 }
 
 function inspectSingle(obj) {
-    inspectMedia(getElementMedia(obj));
+    let media = getElementMedia(obj)
+    return inspectMediaCollection([media])
 }
 
-function inspectGroup(groupid, index) {
-    const obj = getGroupElement(groupid, index);
-
-    inspectMedia({
-        next: createTransFunc(groupid, index + 1),
-        prev: createTransFunc(groupid, index - 1),
-        ...getElementMedia(obj)
-    });
+function inspectGroup(groupid, start) {
+    let mediaCollection = document.querySelector(`[inspect-group="${groupid}"]`)
+        .map(obj => getElementMedia(obj))
+    return inspectMediaCollection([media])
 }
 
 let i = 0;
 
 function setupInspectObjects(container) {
-    console.log('setting up insp. objects...');
+    console.log('setting up inspect objects...');
 
     container.querySelectorAll('[inspect]').forEach(obj => {
         obj.addEventListener('click', () => inspectSingle(obj));
