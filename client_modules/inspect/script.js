@@ -97,9 +97,8 @@ function inspectSingle(obj) {
 }
 
 function inspectGroup(groupid, start) {
-    let mediaCollection = Array.from(document.querySelectorAll(`[inspect-group="${groupid}"]`))
+    let mediaCollection = Array.from(document.querySelectorAll(`[inspect-parent="${groupid}"]`))
         .map(obj => getElementMedia(obj))
-    console.log(mediaCollection)
     return inspectMediaCollection(mediaCollection, start)
 }
 
