@@ -68,7 +68,7 @@
         <div class="audio">
             <% audio.forEach(a => { %>
                 <audio controls>
-                    source(src="<%= c(a, false) %>")
+                    source(src="/file?id=<%= a.id %>")
                 </audio>
             <% }) %>
         </div>
