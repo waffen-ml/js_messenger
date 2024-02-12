@@ -36,14 +36,14 @@ mixin audio(content)
         .audio 
             each audio in content.audio 
                 audio(controls)
-                    source(src='/file?d=1&id=' + audio.file_id)
+                    source(src='/file?id=' + audio.file_id)
 
 mixin other(content)
     if content.other.length
         ul.other
             each other in content.other 
                 li.finite
-                    a.clean(href='/file?d=1&id=' + other.file_id)= other.file_name + '.' + other.file_extension
+                    a.clean(href='/file?d=1&id=' + other.file_id)= other.file_name
 
 mixin html(content)
     if content.html
