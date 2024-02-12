@@ -74,8 +74,7 @@ exports.init = (cfx) => {
         host: 'ilyaspqx.beget.tech',
         user: 'ilyaspqx_db',
         database: 'ilyaspqx_db',
-        password: 'Pig66666',
-        charset : 'utf8mb4'
+        password: 'Pig66666'
     }, cfx, () => {
         keepConnection()
     })
