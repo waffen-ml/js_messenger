@@ -71,7 +71,7 @@ exports.init = (cfx) => {
         (data, _, cfx) => {
             if(!cfx.user())
                 return;
-            cfx.files.saveFiles(data.files, null, -1)
+            cfx.files.saveFiles(data.files, -1)
             .then(r => {
                 return cfx.posts.addPost(cfx.user().id, 
                     r.bundle, data.text, data.html, data.title);
