@@ -99,7 +99,7 @@ function inspectSingle(obj) {
 function inspectGroup(groupid, start) {
     let mediaCollection = Array.from(document.querySelector(`[inspect-group="${groupid}"]`))
         .map(obj => getElementMedia(obj))
-    return inspectMediaCollection([media])
+    return inspectMediaCollection(mediaCollection)
 }
 
 let i = 0;
