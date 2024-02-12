@@ -77,7 +77,7 @@ class Inspect {
     }
 
     open() {
-        this.popup.show()
+        this.popup.open()
     }
 
     close() {
