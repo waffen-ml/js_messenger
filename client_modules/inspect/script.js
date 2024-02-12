@@ -76,7 +76,7 @@ class Inspect {
         updateTransitionButtons()
     }
 
-    show() {
+    open() {
         this.popup.show()
     }
 
@@ -99,6 +99,7 @@ function inspectSingle(obj) {
 function inspectGroup(groupid, start) {
     let mediaCollection = Array.from(document.querySelectorAll(`[inspect-group="${groupid}"]`))
         .map(obj => getElementMedia(obj))
+    console.log(mediaCollection)
     return inspectMediaCollection(mediaCollection, start)
 }
 
