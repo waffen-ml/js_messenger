@@ -70,6 +70,27 @@ class Utils {
         return out
     }
 
+    getOtherMember(chat, member) {
+        for(let i = 0; i < chat.members.length; i++)
+            if (chat.members[i].id != member.id)
+                return chat.members[i]
+        return null
+    }
+
+    getChatAvatarURL(chat, observer) {
+        if(chat.is_direct) {
+            let other = this.getOtherMember(chat, observer)
+            return '/getuseravatar?id=' + other.id
+        }
+        else {
+            return '/getchatavatar?id=' + chat.id
+        }
+    }
+
+    getChatName(chat, observer) {
+        return chat.name || this.generateChatName(chat.members, observer)
+    }
+
 }
 
 const utils = new Utils();

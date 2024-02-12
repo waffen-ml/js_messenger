@@ -68,7 +68,7 @@
         <div class="audio">
             <% audio.forEach(a => { %>
                 <audio controls>
-                    source(src="<%= c(a, true) %>")
+                    source(src="<%= c(a, true) %>" type="audio/mp3")
                 </audio>
             <% }) %>
         </div>
@@ -81,7 +81,7 @@
             <% other.forEach(o => { %>
                 <li class="finite">
                     <a href="/file?d=1&id=<%= o.file_id %>" class="clean">
-                        <%= o.file_name %>.<%= o.file_extension %>
+                        <%= o.file_name %>
                     </a>
                 </li>
             <% }) %>
