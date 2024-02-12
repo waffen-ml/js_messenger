@@ -316,6 +316,32 @@ exports.init = (cfx) => {
             res.send({success: true})
         })
     })
+
+    cfx.core.app.get('/getchatavatar', (req, res) => {
+
+        let observer = cfx.core.login(req, res, false)
+
+        cfx.chats.accessChat(observer, req.query.id)
+        .then(chat => {
+            return chat.getInfo()
+        })
+        .then(info => {
+            if (info.is_direct) {
+                let other = info.members[0].id == observer.id?
+                    info.members[1] : info.members[0]
+                res.redirect('/getuseravatar?id=' + other.id)
+            }
+            else if (info.avatar_id) {
+                res.redirect('/file?id=' + info.avatar_Id)
+            }
+            else {
+                res.redirect('/public/chatavatar.jpg')
+            }
+        })
+        .catch(() => {
+            console.log('LOX')
+        })
+    })
     
 
     cfx.core.app.get('/chatlist', (req, res) => {

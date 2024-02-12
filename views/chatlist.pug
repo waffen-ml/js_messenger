@@ -21,7 +21,7 @@ block main
             if view.visible
                 - let cls = (view.voice? 'voice' : '') + ' ' + (view.unread? 'unread' : '')
                 li.block.chat(chatid=view.chat_id, class=cls)
-                    img.avatar
+                    img.avatar(src="/getchatavatar?id=" + view.chat_id)
                     span.finite.title= view.chat_name
                     span.datetime= view.datetime_label 
                     p.finite.last-msg-preview= (view.lm_sender_id==user.id? 'Вы: ' : view.lm_sender_name + ': ') + view.lm_preview
