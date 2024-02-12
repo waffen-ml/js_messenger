@@ -30,6 +30,10 @@ class Popup {
 
     }
 
+    querySelector(selector) {
+        return this.popup.querySelector(selector)
+    }
+
     remove() {
         this.popup.remove()
     }
