@@ -57,7 +57,7 @@ document.querySelector('.create-chat').addEventListener('click', () => {
     popup.addOption('OK', () => {
         let fd = new FormData()
         members.forEach(m => fd.append('members', m.id))
-        fd.append('name', namefield.value)
+        fd.append('name', autoName? null : namefield.value)
         fd.append('avatar', avatarBlob)
         fd.append('ispublic', ispublic.checked? 1 : 0)
 

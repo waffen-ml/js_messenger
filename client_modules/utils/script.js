@@ -56,6 +56,19 @@ class Utils {
         return false
     }
 
+    generateChatName(members, exclude, maxmembers=10) {
+        let w = []
+        let i = 0
+        while(i < members.length && w.length < maxmembers) {
+            if (!exclude || members[i].id != exclude.id)
+                w.push(members[i])
+            i++
+        }
+        let out = w.map(k => k.name).join(', ')
+        if (members.length - (exclude != null) > w.length)
+            out += '...'
+        return out
+    }
 
 }
 

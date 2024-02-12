@@ -155,7 +155,7 @@ class ChatInterface {
         this.attachedFiles = []
     }
 
-    setChatHeader(title, subtitle, avatarUrl) {
+    setChatHeader(title, subtitle, avatarUrl, onclick) {
         document.querySelector('.chat-header .chat-name').textContent = title ?? ''
 
         if (subtitle) {
@@ -164,6 +164,7 @@ class ChatInterface {
         }
 
         document.querySelector('.chat-header .avatar').src = avatarUrl
+        document.querySelector('.chat-header .info').onclick = onclick
     }
 }
 
@@ -263,7 +264,16 @@ class Chat {
             if (r.is_direct) {
                 let other = r.members[0].id == this.me.id?
                     r.members[1] : r.members[0]
-                this.interface.setChatHeader(other.name, null, '/file?id=' + other.avatar_id)
+                this.interface.setChatHeader(other.name, null, '/getuseravatar?id=' + other.id,
+                    () => location.replace('/user?id=' + other.id))
+            }
+            else {
+                this.interface.setChatHeader(
+                    utils.generateChatName(r.members, me, 5),
+                    r.members.length + ' участников',
+                    '/getchatavatar?id=' + this.chatid,
+                    () => alert('hey!!')
+                )
             }
         })
     }
