@@ -65,15 +65,15 @@ class Inspect {
     next() {
         if (this.current < this.mediaCollection.length - 1)
             this.current++
-        updateCurrentMedia()
-        updateTransitionButtons()
+        this.updateCurrentMedia()
+        this.updateTransitionButtons()
     }
 
     prev() {
         if (this.current > 0)
             this.current--
-        updateCurrentMedia()
-        updateTransitionButtons()
+        this.updateCurrentMedia()
+        this.updateTransitionButtons()
     }
 
     open() {
