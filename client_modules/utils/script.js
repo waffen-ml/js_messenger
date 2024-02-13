@@ -39,6 +39,7 @@ class Utils {
         msg.content.other = [];
 
         (msg.files ?? []).forEach(f => {
+            console.log(f[mimetypeField])
             msg.content[f[mimetypeField]].push(f)
         })  
 
