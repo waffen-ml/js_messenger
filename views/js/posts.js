@@ -38,8 +38,10 @@ class FeedHolder {
             let htmlFrame = element.querySelector('.html iframe')
             if (htmlFrame) {
                 htmlFrame.onload = () => {
-                    htmlFrame.style.width = htmlFrame.contentDocument.body.clientWidth + 'px'
-                    htmlFrame.style.height = htmlFrame.contentDocument.body.clientHeight + 'px'
+                    setTimeout(() => {
+                        htmlFrame.style.width = htmlFrame.contentDocument.body.clientWidth + 'px'
+                        htmlFrame.style.height = htmlFrame.contentDocument.body.clientHeight + 'px'
+                    }, 500)
                 }
                 htmlFrame.srcdoc = templateManager.createHTML('html-srcdoc', {html: post.html})
             }
