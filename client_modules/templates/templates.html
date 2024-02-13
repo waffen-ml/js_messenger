@@ -88,11 +88,11 @@
 
 <script template="post-content" type="text/x-ejs-template">
     <div class="content">
-        {%- templateManager.apply("text", content) %}
-        {%- templateManager.apply("audio", content) %}
-        {%- templateManager.apply("html", content) %}
-        {%- templateManager.apply("visual", content) %}
-        {%- templateManager.apply("other", content) %}
+        <%- templateManager.apply("text", content) %>
+        <%- templateManager.apply("audio", content) %>
+        <%- templateManager.apply("html", content) %>
+        <%- templateManager.apply("visual", content) %>
+        <%- templateManager.apply("other", content) %>
     </div>
 </script>
 
