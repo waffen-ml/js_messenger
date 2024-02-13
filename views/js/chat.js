@@ -20,27 +20,26 @@ class ChatInterface {
     }
 
     openFilePopup() {
-        openPopup({
-            header: 'Файлы',
-            html: '',
-            onload: (p) => {
-                p.uploader = uplManager.createUploader({
-                    files: this.attachedFiles,
-                    onInspect: (file) => inspectFile(file, {
-                        options: { 'Назад': this.openFilePopup }
-                    })
-                });
-                p.obj.appendChild(p.uploader.element);
-            },
-            ondestroy: (p) => {
-                this.attachedFiles = p.uploader.files;
-                this.updateFileCount();
-            },
-            options: {
-                'Ок': null
+        let popup = new Popup({
+            'title': 'Файлы'
+        })
+
+        let uploader = uplManager.createUploader({
+            files: this.attachedFiles,
+            onInspect: (file) => {
+                inspectFile(file)
             }
-        });
-        return true;
+        })
+
+        popup.content.appendChild(uploader)
+
+        popup.on('hidden', () => {
+            this.attachedFiles = p.uploader.files
+            this.updateFileCount()
+        })
+
+        popup.addOption('OK', () => true)
+
     }    
 
     initSendFunction(send) {

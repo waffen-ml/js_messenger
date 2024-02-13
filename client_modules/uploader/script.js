@@ -9,18 +9,18 @@ function attachFiles(cb, single) {
     });
 }
 
-function inspectFile(file, cfg) {
-    cfg ??= {};
+function inspectFile(file) {
     const type = file.type.split('/')[0];
 
-    if (['image', 'video'].includes(type) && !cfg.disablePopup) {
+    if (['image', 'video'].includes(type)) {
         const reader = new FileReader();
         reader.addEventListener('load', () => {
-            inspectMedia({
+            media = {
                 type: type,
-                src: reader.result,
-                options: cfg.options
-            })
+                src: reader.result
+            }
+            let inspect = new Inspect([media])
+            inspect.open()
         });
         reader.readAsDataURL(file);
         return;
