@@ -130,12 +130,8 @@ exports.init = (cfx) => {
         .then((user) => {
             if(!user)
                 throw Error('Пользователь не найден')
-            return cfx.posts.getLastPosts(10, user.id)
-            .then(posts => {
-                cfx.core.render(req, res, 'user', {
-                    posts: posts,
-                    target: user
-                })
+            cfx.core.render(req, res, 'user', {
+                target: user
             })
         })
         .catch(err => {
