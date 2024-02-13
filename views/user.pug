@@ -16,9 +16,11 @@ include ../client_modules/avatar/index
 append style
     include css/content.css
 
-append script 
-    include js/croptest.js
-    include js/user.js
+append body 
+    script
+        include js/croptest.js
+    script 
+        include js/user.js
 
 block main
     p1.page-header= `Пользователь ${target.name}`
