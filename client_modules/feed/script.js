@@ -35,6 +35,10 @@ class FeedHolder {
                 hide_author: this.hideAuthor})
             setupInspectObjects(element)
 
+            let iframe = element.querySelector('.html iframe')
+            if (iframe)
+                iframe.srcdoc = templateManager.createHTML('html-srcdoc', {html: post.html})
+
             this.holder.appendChild(element)
         })
     }
