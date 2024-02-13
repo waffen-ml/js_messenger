@@ -64,7 +64,11 @@ class Chat {
         })
         .then(arr => {
             let messages = this.cfx.utils.parseArrayOutput(
-                arr, 'files', ['file_id', 'file_name', 'file_mimetype'], 'id', 'file_id')
+                arr, 'files', {
+                    file_id: 'id',
+                    file_mimetype: 'mimetype',
+                    file_name: 'name'
+                }, 'id', 'file_id')
             return messages
         })
     }
