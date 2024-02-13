@@ -28,6 +28,30 @@ class Utils {
             + (date.getFullYear() == (new Date()).getFullYear()? '' : ' ' + date.getFullYear());
     }
 
+    formatTime(dt) {
+        return String(dt.getHours()).padStart(2, "0") + ':'
+            + String(dt.getMinutes()).padStart(2, "0")
+    }
+
+    hasCurrentYear(datetime) {
+        let now = new Date();
+        return datetime.getFullYear() == now.getFullYear()
+    }
+
+    getPostDatetimeLabel(datetime, fancy) {
+        let time = this.hasCurrentYear(datetime)?
+            ' в ' + this.formatTime(datetime) : '';
+        
+        if (fancy) {
+            if(this.isToday(datetime))
+                return 'Сегодня' + time;
+            else if (this.isYesterday(datetime))
+                return 'Вчера' + time;
+        }
+
+        return this.getLocalizedDateLabel(datetime, 'ru') + time
+    }
+
     distributeFiles(msg, mimetypeField) {
         mimetypeField ??= 'mimetype'
 
