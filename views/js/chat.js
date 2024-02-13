@@ -104,22 +104,20 @@ class ChatInterface {
     }
 
     addMessages(msgs, myid, before, scroll) {
-        const div = document.createElement('div');
-        let html = ''
-        msgs.forEach(msg => {
-            html += templateManager.apply('universal-message', {data: msg, myid: myid})
+        let elements = msgs.map(msg => {
+            let element = templateManager.createElement('universal-message', {data: msg, myid: myid})
+            setupInspectObjects(element)
+            return element
         })
-        div.innerHTML = html
-        setupInspectObjects(div)
         if (before) {
-            [...div.children].reverse().forEach(child => {
+            [...elements].reverse().forEach(child => {
                 this.holder.insertBefore(child, this.holder.firstChild)
             })
             if (scroll)
                 this.scrollUp(true);
         }
         else {
-            this.holder.append(...div.children)
+            this.holder.append(...elements)
             if (scroll)
                 this.scrollDown(true);
         }
@@ -185,7 +183,6 @@ class ChatMessages {
                 m.minor = false
                 m.datetime = new Date(m.datetime)
                 utils.distributeFiles(m, 'file_mimetype')
-                m.content.text = m.text
             })
         }
         if (before)
