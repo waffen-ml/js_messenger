@@ -92,10 +92,7 @@ exports.init = (cfx) => {
     })
 
     cfx.core.app.get('/', (req, res) => {
-        cfx.posts.getLastPosts(100)
-        .then(posts => {
-            cfx.core.render(req, res, 'main', {})
-        })
+        cfx.core.render(req, res, 'main', {})
     })
 
 }
