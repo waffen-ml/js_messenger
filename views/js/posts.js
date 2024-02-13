@@ -20,7 +20,7 @@ class FeedHolder {
             
             console.log(reminder)
 
-            if (reminder < 50) {
+            if (reminder < 500) {
                 this.loadingMore = true
                 load().then(() => {
                     this.loadingMore = false
