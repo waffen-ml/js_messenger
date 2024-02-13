@@ -21,13 +21,16 @@ class ChatInterface {
 
     openFilePopup() {
         let popup = new Popup({
-            'title': 'Файлы'
+            title: 'Файлы',
+            closable: true
         })
 
         let uploader = uplManager.createUploader({
             files: this.attachedFiles,
             onInspect: (file) => {
-                inspectFile(file)
+                inspectFile(file, (inspect) => {
+                    inspect.popup.addOption('Назад', () => true)
+                })
             }
         })
 

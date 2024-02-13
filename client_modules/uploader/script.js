@@ -9,7 +9,7 @@ function attachFiles(cb, single) {
     });
 }
 
-function inspectFile(file) {
+function inspectFile(file, onInspectWindow) {
     const type = file.type.split('/')[0];
 
     if (['image', 'video'].includes(type)) {
@@ -20,6 +20,8 @@ function inspectFile(file) {
                 src: reader.result
             }
             let inspect = new Inspect([media])
+            if(onInspectWindow)
+                onInspectWindow(inspect)
             inspect.open()
         });
         reader.readAsDataURL(file);
