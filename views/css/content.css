@@ -87,11 +87,13 @@
 }
 
 .content .html {
-    width: min-content;
     padding:11px;
     max-width: 100%;
-    max-height:400px;
+    max-height:500px;
     overflow:auto;
+}
+
+.content .html iframe {
     border:none;
 }
 
