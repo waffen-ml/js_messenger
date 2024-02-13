@@ -1,4 +1,4 @@
 select p.id, p.author_id, p.text, p.html, p.title, p.datetime, u.name as author_name,
 u.tag as author_tag, f.id as file_id, f.name as file_name, f.mimetype as file_mimetype 
-from (select * from post {author} order by id desc limit {limit}) 
+from (select * from post id <= {start} and {author_query} order by id desc limit {count}) 
 p left join user u on p.author_id = u.id left join file f on f.bundle_id = p.bundle_id order by id desc

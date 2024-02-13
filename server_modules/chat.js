@@ -332,7 +332,7 @@ exports.init = (cfx) => {
                 res.redirect('/getuseravatar?id=' + other.id)
             }
             else if (info.avatar_id) {
-                res.redirect('/file?id=' + info.avatar_Id)
+                res.redirect('/file?id=' + info.avatar_id)
             }
             else {
                 res.redirect('/public/chatavatar.jpg')

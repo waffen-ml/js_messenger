@@ -14,37 +14,31 @@ class Posts {
             + `values (${author_id}, ${bundle_id}, "${text}", "${html}", "${title}", now())`)
     }
 
-    getLastPosts(n, author_id) {
-        return this.cfx.db.executeFile('getlastposts', {
-            limit: n,
-            author: author_id? `where author_id=${author_id}` : ''
-        })
-        .then((arr) => {
-            if(!arr.length)
-                return [];
-            
-            let result = [];
-            let post = {id:-1}
-    
-            for(let i = 0; i < arr.length; i++) {
-                if(arr[i].id != post.id) {
-                    result.push(post);
-                    post = arr[i];
-                    post.content = utils.createContent(post.text, post.html);
-                }
-                if(arr[i].file_id) {
-                    post.content[arr[i].file_mimetype].push({
-                        file_id: arr[i].file_id,
-                        file_name: arr[i].file_name,
-                        file_fullname: arr[i].file_name + '.' + arr[i].file_extension
-                    });
-                }
-            }
+    getFeed(start, count, author_id) {
+        let author_query = author_id? 'author_id=' + author_id : '1'
 
-            result.push(post);
-            result.shift()
-            
-            return result;
+        return new Promise((resolve) => {
+            if (start > -1) {
+                resolve()
+            }
+            this.cfx.query('select max(id) as mxid from posts where ' + author_query)
+            .then(r => {
+                start = r[0].mxid
+                resolve()
+            })
+        }).then(() => {
+            return this.cfx.db.executeFile('getfeed', {
+                start: start,
+                count: count,
+                author_query: author_id? 'author_id=' + author_id : '1'
+            })
+        })
+        .then(feed => {
+            return this.cfx.utils.parseArrayOutput(feed, 'files', {
+                file_id: 'id',
+                file_name: 'file_name',
+                file_mimetype: 'file_mimetype'
+            }, 'id')
         })
     }
 
@@ -79,6 +73,17 @@ exports.init = (cfx) => {
         }
     ))
 
+    cfx.core.app.get('/getfeed', (req, res) => {
+        let start = parseInt(req.query.start)
+        let count = parseInt(req.query.count)
+        let author_id = req.query.author_id
+        
+        cfx.posts.getFeed(start, count, author_id)
+        .then(feed => {
+            res.send(feed)
+        })
+    })
+
     cfx.core.app.get('/create_post', (req, res) => {
         if(!cfx.core.login(req, res, true)) return;
         cfx.core.render(req, res, 'create_post', {
@@ -89,10 +94,7 @@ exports.init = (cfx) => {
     cfx.core.app.get('/', (req, res) => {
         cfx.posts.getLastPosts(100)
         .then(posts => {
-            cfx.core.render(req, res, 'main', {
-                posts: posts,
-                utils: utils
-            })
+            cfx.core.render(req, res, 'main', {})
         })
     })
 

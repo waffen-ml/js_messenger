@@ -1,5 +1,4 @@
 class Utils {
-
     strweight(s) {
         for(let i = 0; i < s.length; i++)
             if(!'\n '.includes(s[i]))
@@ -129,7 +128,7 @@ class Utils {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    parseArrayOutput(raw, arrname, rep, mainIdCol) {
+    parseArrayOutput(raw, arrname, rep, mainIdCol='id') {
         let table = rep
 
         if (Array.isArray(rep)) {
@@ -177,6 +176,7 @@ Object.getOwnPropertyNames(Utils.prototype).slice(1)
 .forEach(method => {
     exports[method] = (...args) => utils[method](...args);
 })
+
 
 exports.init = (cfx) => {
     cfx.utils = utils;

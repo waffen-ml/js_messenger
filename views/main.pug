@@ -14,5 +14,9 @@ append style
 block main
     h1.page-header Новости Кофетокс
     .posts
-        each post in posts 
-            +post(post)
+
+append body 
+    script
+        include posts.js
+
+        
