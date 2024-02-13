@@ -1,12 +1,12 @@
-let urlParams = new URLSearchParams(window.location.search)
+let url = new URLSearchParams(window.location.search)
 
 new Promise((resolve) => {
-    if (urlParams.get('id')) {
-        resolve(urlParams.get('id'))
+    if (url.get('id')) {
+        resolve(url.get('id'))
         return
     }
 
-    fetch('/getuser?tag=' + urlParams.get('tag'))
+    fetch('/getuser?tag=' + url.get('tag'))
     .then(r => r.json())
     .then(r => resolve(r.id))
 }).then(id => {

@@ -20,29 +20,8 @@ class Auth {
         return this._getUserByQuery(`tag="${tag}"`)
     }
 
-    selQuery(selector, prefix) {
-        let body = selector.substring(1);
-        prefix ??= '';
-
-        switch(sel[0]) {
-            case '$':
-                return prefix + `tag="${body}"`;
-            case '@':
-                return prefix + 'id=' + body;
-            default:
-                return null;
-        }  
-    }
-
-    getUser(sel) {
-        return this._getUserByQuery(this.selQuery(sel));
-    }
-
-    doesUserExist(sel) {
-        return this.getUser(sel)
-        .then((u) => {
-            return u != null;
-        })
+    getUser(id, tag) {
+        return id? this.getUserById(id) : tag? this.getUserByTag(tag) : Promise.resolve(null)
     }
 
     addUser(name, tag, password) {
@@ -125,8 +104,7 @@ exports.init = (cfx) => {
     cfx.forms.addForm(regForm);
 
     cfx.core.app.get('/user', (req, res, next) => {
-        return (req.query.id? cfx.auth.getUserById(req.query.id) : 
-        (req.query.tag? cfx.auth.getUserByTag(req.query.tag) : Promise.resolve(null)))
+        return cfx.auth.getUser(req.query.id, req.query.tag)
         .then((user) => {
             if(!user)
                 throw Error('Пользователь не найден')
@@ -140,18 +118,16 @@ exports.init = (cfx) => {
     })
 
     cfx.core.app.get('/getuser', (req, res) => {
-        cfx.query('select id, name, tag from user where id='+req.query.id)
+        cfx.auth.getUser(req.query.id, req.query.tag)
         .then(data => {
-            if (data.length == 0)
+            if(!data)
                 throw Error('unknown user')
             res.send({
                 id: data.id,
                 name: data.name,
-                tag: data.tag
+                tag: data.tag,
+                avatar_id: data.avatar_id
             })
-        })
-        .catch(err => {
-            res.send(null)
         })
     })
 
