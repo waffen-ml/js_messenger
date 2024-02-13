@@ -342,7 +342,8 @@ exports.init = (cfx) => {
                 res.redirect('/public/chatavatar.jpg')
             }
         })
-        .catch(() => {
+        .catch((err) => {
+            console.log(err)
             console.log('LOX')
         })
     })

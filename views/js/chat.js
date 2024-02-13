@@ -265,7 +265,7 @@ class Chat {
 
             let name = utils.getChatName(r, this.me)
             let subtitle = r.is_direct? null : r.members.length + ' участников'
-            let avatar_url = utils.getChatAvatarURL(chat, this.me)
+            let avatar_url = utils.getChatAvatarURL(r, this.me)
             let onclick = r.is_direct? () => location.replace('/user?id=' + utils.getOtherMember(r, this.me).id)
                 : () => alert('hey!')
             
