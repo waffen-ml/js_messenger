@@ -3,6 +3,7 @@ const loadBatchSize = 15
 
 class FeedHolder {
     constructor(hideAuthor) {
+        this.scrollPage = document.querySelector('main')
         this.holder = document.querySelector('.posts')
         this.loadedAll = false
         this.loadingMore = false
@@ -10,12 +11,15 @@ class FeedHolder {
     }
 
     initLoadFeedFunction(load) {
-        this.holder.addEventListener('scroll', (e) => {
+        this.scrollPage.addEventListener('scroll', (e) => {
             if(this.loadedAll || this.loadingMore)
                 return
-
-            let reminder = this.holder.scrollHeight - this.holder.scrollTop - this.holder.clientWidth
+            
+            let reminder = this.scrollPage.scrollHeight - 
+                this.scrollPage.scrollTop - this.scrollPage.clientWidth
+            
             console.log(reminder)
+
             if (reminder < 50) {
                 this.loadingMore = true
                 load().then(() => {
