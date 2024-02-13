@@ -30,6 +30,7 @@ class FeedHolder {
             let element = templateManager.createElement('post', {
                 data: post,
                 hide_author: this.hideAuthor})
+            console.log(element)
             setupInspectObjects(element)
             this.holder.appendChild(element)
         })
@@ -54,7 +55,7 @@ class Feed {
         .then(posts => {
             if (posts.length < loadBatchSize)
                 this.holder.loadedAll = true
-            console.log(posts)
+
             posts.forEach(post => {
                 post.datetime = new Date(post.datetime)
                 utils.distributeFiles(post, 'mimetype')
