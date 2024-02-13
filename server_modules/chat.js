@@ -312,7 +312,7 @@ exports.init = (cfx) => {
         }).then(avatarId => {
             req.body.members ??= []
             let members = Array.isArray(req.body.members)? req.body.members : [req.body.members]
-            return cfx.chats.createChat(req.body.name, parseInt(req.body.ispublic), avatarId, members)
+            return cfx.chats.createChat(req.body.name || null, parseInt(req.body.ispublic), avatarId, members)
         }).then(chat => {
             chat.addMessage(null, creator.name + ' создал этот чат', null)
         })
@@ -347,7 +347,6 @@ exports.init = (cfx) => {
             console.log('LOX')
         })
     })
-    
 
     cfx.core.app.get('/chatlist', (req, res) => {
         cfx.core.plogin(req, res, true)

@@ -263,8 +263,6 @@ class Chat {
         .then(r => r.json())
         .then(r => {
 
-            console.log(r)
-
             let name = utils.getChatName(r, this.me)
             let subtitle = r.is_direct? null : r.members.length + ' участников'
             let avatar_url = utils.getChatAvatarURL(r, this.me)
