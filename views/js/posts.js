@@ -30,7 +30,6 @@ class FeedHolder {
             let element = templateManager.createElement('post', {
                 data: post,
                 hide_author: this.hideAuthor})
-            console.log(element)
             setupInspectObjects(element)
             this.holder.appendChild(element)
         })

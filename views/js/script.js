@@ -40,7 +40,7 @@ class TemplateManager {
     createElement(id, data) {
         let div = document.createElement('div')
         div.innerHTML = this.createHTML(id, data)
-        return div.firstChild
+        return div.lastChild
     }
 
     apply(id, data) {
