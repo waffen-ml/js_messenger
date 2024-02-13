@@ -54,7 +54,7 @@ class Feed {
         .then(posts => {
             if (posts.length < loadBatchSize)
                 this.holder.loadedAll = true
-
+            console.log(posts)
             posts.forEach(post => {
                 post.datetime = new Date(post.datetime)
                 utils.distributeFiles(post, 'mimetype')
