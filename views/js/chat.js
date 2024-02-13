@@ -31,7 +31,7 @@ class ChatInterface {
             }
         })
 
-        popup.content.appendChild(uploader)
+        popup.content.appendChild(uploader.element)
 
         popup.on('hidden', () => {
             this.attachedFiles = p.uploader.files
