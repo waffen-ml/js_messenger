@@ -1,4 +1,5 @@
 const loadBatchSize = 15
+const loadDistance = 500
 
 
 class FeedHolder {
@@ -17,10 +18,8 @@ class FeedHolder {
             
             let reminder = this.scrollPage.scrollHeight - 
                 this.scrollPage.scrollTop - this.scrollPage.clientWidth
-            
-            console.log(reminder)
 
-            if (reminder < 500) {
+            if (reminder < loadDistance) {
                 this.loadingMore = true
                 load().then(() => {
                     this.loadingMore = false
