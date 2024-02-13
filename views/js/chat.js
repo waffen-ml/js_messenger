@@ -40,6 +40,8 @@ class ChatInterface {
 
         popup.addOption('OK', () => true)
 
+        popup.open()
+
     }    
 
     initSendFunction(send) {
