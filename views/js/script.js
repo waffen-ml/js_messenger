@@ -41,7 +41,8 @@ class TemplateManager {
         let div = document.createElement('div')
         div.innerHTML = this.createHTML(id, data)
         console.log(div)
-        return div.lastChild
+        console.log(div.firstChild)
+        return div.firstChild
     }
 
     apply(id, data) {

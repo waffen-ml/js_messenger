@@ -148,6 +148,6 @@
                 <%= data.title%>
             </span>
         <% } %>
-        {%- templateManager.apply("post-content", data.content) %}
+        {%- templateManager.createHTML("post-content", data.content) %}
     </div>
 </script>
