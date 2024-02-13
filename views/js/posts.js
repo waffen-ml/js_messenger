@@ -58,7 +58,6 @@ class Feed {
             posts.forEach(post => {
                 post.datetime = new Date(post.datetime)
                 utils.distributeFiles(post, 'mimetype')
-                post.content.text = post.text
             })
 
             this.feed.push(...posts)
