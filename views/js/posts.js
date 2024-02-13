@@ -15,7 +15,7 @@ class FeedHolder {
                 return
 
             let reminder = this.holder.scrollHeight - this.holder.scrollTop - this.holder.clientWidth
-
+            console.log(reminder)
             if (reminder < 50) {
                 this.loadingMore = true
                 load().then(() => {
