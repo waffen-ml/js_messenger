@@ -81,6 +81,7 @@ exports.init = (cfx) => {
 
             let buffer = Buffer.from(file.data)
             res.setHeader('Content-Disposition', 'attachment; filename=' + file.name);
+            
             res.send(buffer)
         })
         .catch(err => {

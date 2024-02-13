@@ -7,14 +7,22 @@ const server = require('https').createServer({
     key: fs.readFileSync(__dirname + `/../sslcert/privkey.pem`),
     cert: fs.readFileSync(__dirname + `/../sslcert/cert.pem`)
 }, app);
+const unsecureServer = require('http').createServer((req, res) => {
+    res.writeHead(302, {
+      'Location': 'https://coffeetox.ru' + req.url
+    })
+    res.end()
+})
+
 //const server = require('https').createServer({
 //    key: fs.readFileSync(__dirname + '/cert/key.pem'),
 //    cert: fs.readFileSync(__dirname + '/cert/cert.pem')
 //}, app);
-const { Server } = require("socket.io");
-const io = new Server(server);
-const session = require('express-session');
-const cors = require('cors');
+
+const SocketServer = require("socket.io").Server
+const io = new SocketServer(server)
+const session = require('express-session')
+const cors = require('cors')
 
 app.set('view engine', 'pug');
 app.use(cors());
@@ -190,3 +198,5 @@ app.use((err, req, res, next) => {
 server.listen(443, () => {
   console.log('CFX is running');
 });
+
+unsecureServer.listen(80, () => {})
