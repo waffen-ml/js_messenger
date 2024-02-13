@@ -36,8 +36,8 @@ class Posts {
         .then(feed => {
             return this.cfx.utils.parseArrayOutput(feed, 'files', {
                 file_id: 'id',
-                file_name: 'file_name',
-                file_mimetype: 'file_mimetype'
+                file_name: 'name',
+                file_mimetype: 'mimetype'
             }, 'id')
         })
     }
