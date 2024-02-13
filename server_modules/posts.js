@@ -21,7 +21,7 @@ class Posts {
             if (start > -1) {
                 resolve()
             }
-            this.cfx.query('select max(id) as mxid from posts where ' + author_query)
+            this.cfx.query('select max(id) as mxid from post where ' + author_query)
             .then(r => {
                 start = r[0].mxid
                 resolve()
