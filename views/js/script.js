@@ -40,9 +40,7 @@ class TemplateManager {
     createElement(id, data) {
         let div = document.createElement('div')
         div.innerHTML = this.createHTML(id, data)
-        console.log(div)
-        console.log(div.firstChild)
-        return div.firstChild
+        return div.querySelector('*')
     }
 
     apply(id, data) {
