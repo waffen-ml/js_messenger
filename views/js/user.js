@@ -1,3 +1,4 @@
+let urlParams = new URLSearchParams(window.location.search)
 
 new Promise((resolve) => {
     if (urlParams.get('id')) {
