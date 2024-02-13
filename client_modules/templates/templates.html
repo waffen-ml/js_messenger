@@ -151,9 +151,9 @@
 </script>
 
 <script template="post" type="text/x-ejs-template">
-    <div class="post block" id="post<%= data.post_id %>">
+    <div class="post block" id="post<%= data.id %>">
         <div class="top-bar">
-            <% if (!data.hide_author) { %>
+            <% if (!hide_author) { %>
                 <span class="prefix">Новость от</span>
                 <a href="/user?tag=<%= data.author_tag %>" class="finite clean name">
                     <%= data.author_name %>

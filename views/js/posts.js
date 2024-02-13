@@ -2,10 +2,11 @@ const loadBatchSize = 15
 
 
 class FeedHolder {
-    constructor() {
+    constructor(hideAuthor) {
         this.holder = document.querySelector('.posts')
         this.loadedAll = false
         this.loadingMore = false
+        this.hideAuthor = hideAuthor
     }
 
     initLoadFeedFunction(load) {
@@ -26,7 +27,9 @@ class FeedHolder {
 
     addPosts(posts) {
         posts.forEach(post => {
-            let element = templateManager.createElement('post', post)
+            let element = templateManager.createElement('post', {
+                data: post,
+                hide_author: this.hideAuthor})
             setupInspectObjects(element)
             this.holder.appendChild(element)
         })
@@ -35,8 +38,8 @@ class FeedHolder {
 }
 
 class Feed {
-    constructor() {
-        this.holder = new FeedHolder()
+    constructor(hideAuthor) {
+        this.holder = new FeedHolder(hideAuthor)
         this.feed = []
 
         this.holder.initLoadFeedFunction(() => this.loadBatch())
@@ -51,6 +54,13 @@ class Feed {
         .then(posts => {
             if (posts.length < loadBatchSize)
                 this.holder.loadedAll = true
+
+            posts.forEach(post => {
+                post.datetime = new Date(post.datetime)
+                utils.distributeFiles(post, 'mimetype')
+                post.content.text = post.text
+            })
+
             this.feed.push(...posts)
             this.holder.addPosts(posts)
         })
