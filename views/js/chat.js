@@ -186,7 +186,7 @@ class ChatMessages {
             msgs.forEach(m => {
                 m.minor = false
                 m.datetime = new Date(m.datetime)
-                utils.distributeFiles(m, 'file_mimetype')
+                utils.distributeFiles(m, 'mimetype')
             })
         }
         if (before)
