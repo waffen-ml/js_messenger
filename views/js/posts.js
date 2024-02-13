@@ -35,9 +35,9 @@ class FeedHolder {
                 hide_author: this.hideAuthor})
             setupInspectObjects(element)
             
-            let html = element.querySelector('.html')
-            if (html) {
-                html.srcdoc = `<html><body>${post.html}</body></html>`
+            let htmlFrame = element.querySelector('.html')
+            if (htmlFrame) {
+                htmlFrame.srcdoc = templateManager.createHTML('html-srcdoc', {html: post.html})
             }
 
             this.holder.appendChild(element)
