@@ -95,6 +95,7 @@
 
 .content .html iframe {
     border:none;
+    overflow:hidden;
 }
 
 .semi-image, .semi-video {
