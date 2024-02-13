@@ -87,6 +87,7 @@
 }
 
 .content .html {
+    box-sizing: content-box;
     padding:11px;
     max-width: 100%;
     max-height:500px;
