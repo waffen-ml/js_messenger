@@ -52,6 +52,7 @@ class Feed {
             if (posts.length < loadBatchSize)
                 this.holder.loadedAll = true
             this.feed.push(...posts)
+            this.holder.addPosts(...posts)
         })
     }
 }
