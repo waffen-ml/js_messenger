@@ -9,7 +9,7 @@
 </script>
 
 <script template="visual" type="text/x-ejs-template">
-    <% const c = (w, d) => '/file?' + (d? 'd=1&' : '') + 'id=' + w.file_id %>
+    <% const c = (w, d) => '/file?' + (d? 'd=1&' : '') + 'id=' + w.id %>
     <% const total = files.image.length + files.video.length %>
     
     <% if (total > 1) { %>
