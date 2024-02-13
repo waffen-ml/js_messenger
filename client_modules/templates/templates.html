@@ -10,7 +10,7 @@
 
 <script template="visual" type="text/x-ejs-template">
     <% const c = (w, d) => '/file?' + (d? 'd=1&' : '') + 'id=' + w.file_id %>
-    <% const total = image.length + video.length %>
+    <% const total = files.image.length + files.video.length %>
     
     <% if (total > 1) { %>
         <% let nlarge = total % 3; %>
@@ -19,26 +19,26 @@
         
         <div class="visual" inspect-group>
             <% while (i < total) { %>
-                <% let isimg = i < image.length %>
+                <% let isimg = i < files.image.length %>
                 <% let cls = (i < nlarge? 'large' : 'small') + (isimg? '': ' video') %>
 
                 <div class="tile <%= cls %>" >
 
                     <% if (isimg) { %>
-                        <img src="<%= c(image[i]) %>">
+                        <img src="<%= c(files.image[i]) %>">
                     <% } else { %>
-                        <video src="<%= c(video[i - imgc]) %>", preload="metacont">
+                        <video src="<%= c(files.video[i - imgc]) %>", preload="metacont">
                     <% }; i++; %>
 
                 </div>
 
             <% } %>
         </div>
-    <% } else if (image.length) { %>
-        <img src="<%= c(image[0]) %>" class="semi-image" inspect>
-    <% } else if (video.length) { %>
+    <% } else if (files.image.length) { %>
+        <img src="<%= c(files.image[0]) %>" class="semi-image" inspect>
+    <% } else if (files.video.length) { %>
         <video controls class="semi-video">
-            source(src="<%= video[0] %>")
+            source(src="<%= files.video[0] %>")
         </video>
     <% } %>
 </script>
@@ -79,20 +79,20 @@
 
 <script template="msg-content" type="text/x-ejs-template">
     <div class="content">
-        <%- templateManager.apply("visual", content) %>
-        <%- templateManager.apply("audio", content) %>
-        <%- templateManager.apply("other", content) %>
-        <%- templateManager.apply("text", content) %>
+        <%- templateManager.apply("visual", {files: files}) %>
+        <%- templateManager.apply("audio", {audio: files.audio}) %>
+        <%- templateManager.apply("other", {other: files.other}) %>
+        <%- templateManager.apply("text", {text: text}) %>
     </div>
 </script>
 
 <script template="post-content" type="text/x-ejs-template">
     <div class="content">
-        <%- templateManager.apply("text", content) %>
-        <%- templateManager.apply("audio", content) %>
-        <%- templateManager.apply("html", content) %>
-        <%- templateManager.apply("visual", content) %>
-        <%- templateManager.apply("other", content) %>
+        <%- templateManager.apply("text", {text: text}) %>
+        <%- templateManager.apply("audio", {audio: files.audio}) %>
+        <%- templateManager.apply("html", {html: html}) %>
+        <%- templateManager.apply("visual", {files: files}) %>
+        <%- templateManager.apply("other", {other: files.other}) %>
     </div>
 </script>
 

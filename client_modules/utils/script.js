@@ -55,18 +55,17 @@ class Utils {
     distributeFiles(msg, mimetypeField) {
         mimetypeField ??= 'mimetype'
 
-        if(!msg.content)
-            msg.content = {}
-        msg.content.image = []
-        msg.content.video = []
-        msg.content.audio = []
-        msg.content.other = [];
+        let files = {}
+        files.image = []
+        files.video = []
+        files.audio = []
+        files.other = [];
 
         (msg.files ?? []).forEach(f => {
-            msg.content[f[mimetypeField]].push(f)
+            files[f[mimetypeField]].push(f)
         })  
-
-        delete msg.files
+        
+        msg.files = files
     }
 
     differenceInMinutes(d1, d2) {
