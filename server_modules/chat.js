@@ -94,12 +94,12 @@ class Chat {
         return this.cfx.db.executeFile('getchatinfo', {chatid: this.id})
         .then(info => {
             return this.cfx.utils.parseArrayOutput(info, 'members', {
-                'is_admin': null,
-                'member_name': 'name',
-                'member_tag': 'tag',
-                'member_id': 'id',
-                'member_avatar': 'avatar_id'
-            }, 'id', 'member_id')[0]
+                is_admin: null,
+                member_name: 'name',
+                member_tag: 'tag',
+                member_id: 'id',
+                member_avatar: 'avatar_id'
+            }, 'id')[0]
         })
     }
 }
