@@ -37,11 +37,9 @@ class FeedHolder {
             
             let htmlFrame = element.querySelector('.html iframe')
             if (htmlFrame) {
-                htmlFrame.onload = () => {
-                    htmlFrame.style.width = htmlFrame.contentDocument.body.scrollWidth + 'px'
-                    htmlFrame.style.height = htmlFrame.contentDocument.body.scrollHeight + 'px'
-                }
                 htmlFrame.srcdoc = templateManager.createHTML('html-srcdoc', {html: post.html})
+                htmlFrame.style.width = htmlFrame.contentDocument.body.scrollWidth + 'px'
+                htmlFrame.style.height = htmlFrame.contentDocument.body.scrollHeight + 'px'
             }
 
             this.holder.appendChild(element)
