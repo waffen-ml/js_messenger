@@ -47,7 +47,7 @@ mixin other(content)
 
 mixin html(content)
     if content.html
-        .html.block.styled-scroll!= content.html
+        iframe.html.block.styled-scroll!= content.html
 
 mixin msg-content(content)
     .content
