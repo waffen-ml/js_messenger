@@ -6,7 +6,7 @@ body {
 
 .global-wrapper {
     margin:auto;
-    max-width:100%;
+    max-width:99%;
     width:1000px;
     height: 100vh;
 }
