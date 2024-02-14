@@ -1,6 +1,3 @@
-
-
-
 .popup.menu {
   justify-content:flex-end;
 }
@@ -10,6 +7,11 @@
   max-width:100%;
   margin:0;
   border-radius:0;
+}
+
+.popup.menu ul {
+  padding-left:10px;
+  
 }
 
 @keyframes menu-appear {
