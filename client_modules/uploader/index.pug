@@ -1,9 +1,12 @@
-append script 
-    include script.js 
-append style 
-    include style.css 
+
+append header 
+    style 
+        include style.css 
 append body 
     hidden#uploader 
         ul
         a.button.attach Добавить ➕
         span.error-message Лимит достигнут 🚫
+
+    script 
+        include script.js 
