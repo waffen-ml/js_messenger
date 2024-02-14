@@ -54,7 +54,7 @@ class AvatarMaker {
         })
         cropPopup.addOption('Подтвердить', () => {
             fetch(output)
-            .then(res => res.blob)
+            .then(res => res.blob())
             .then(blob => this.onAvatar(blob, output))
             return true
         })
