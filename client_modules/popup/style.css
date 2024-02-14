@@ -7,7 +7,6 @@
     display:flex;
     justify-content: center;
     align-items: center;
-    background:#0000007d;
     display:none;
     z-index:10;
 }
@@ -58,6 +57,24 @@
     display:none; /*flex*/
     justify-content: flex-end;
     gap: 5px;
+}
+
+@keyframes popup-appear {
+    from {
+         background:transparent;
+    }
+    to {
+         background:#0000007d;
+    }
+}
+
+@keyframes popup-disappear {
+    from {
+        background:#0000007d;
+    }
+    to {
+        background:transparent;
+    }
 }
 
 @keyframes open-window {
