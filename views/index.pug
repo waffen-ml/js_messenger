@@ -35,14 +35,9 @@ html
 
         script(type="text/x-ejs-template", template="menu")
             ul
-                li
-                    a(href="") heyyy
-                li
-                    a(href="") heyyy
-                li
-                    a(href="") heyyy
-                li
-                    a(href="") heyyy
+                each link, text in nav
+                    li
+                        a.button(href=link)=text
 
         script
             include js/script.js
