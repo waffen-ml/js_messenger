@@ -4,6 +4,6 @@ const menuPopup = new Popup({
     removeOnClose: false
 })
 
-function callPopup() {
+function callMenu() {
     menuPopup.open()   
 }
