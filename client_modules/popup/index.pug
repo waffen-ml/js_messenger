@@ -4,7 +4,7 @@ append script
     include script.js 
 append body 
     script(template="popup", type="text/x-ejs-template")
-        .popup
+        .popup(class!="<% className %>")
             .window.block
                 .inner 
                     input.thin.close-btn(type="button", value="X")
