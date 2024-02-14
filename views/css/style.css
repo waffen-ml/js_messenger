@@ -22,6 +22,12 @@ body {
     gap: 8px;
 }
 
+@media(max-width:575px) {
+    .main-grid nav {
+        display:none;
+    }
+}
+
 .main-grid > * {
     outline: solid 1px #3b2f2f;
 }
