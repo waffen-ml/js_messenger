@@ -37,6 +37,10 @@ body {
     .main-grid header .burger {
         display:block;
     }
+
+    .main-grid footer {
+        grid-column: 1/3;
+    }
 }
 
 .main-grid > * {
