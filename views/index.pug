@@ -1,56 +1,13 @@
-doctype html 
-html 
-    head
-        meta(charset="utf-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        link(rel="icon" href="/public/coffee.png")
-        script(src="https://cdn.jsdelivr.net/npm/ejs@3.1.9/ejs.min.js")
-        style
-            include css/style.css
-            block style
-        block header
-        title CoffeeTox
-    body
-        .global-wrapper 
-            .main-grid 
-                header 
-                    .logo 
-                        a.button(href="/") ☕tox
-                    .current 
-                        if user !== null
-                            a.clean(href="/user?id=" + user.id)= user.name
-                            a.button(href="/logout", recurrent) 🚪
-                        else
-                            a.clean(href="/form?name=login", recurrent) Вход
-                        a.burger.clean(href="javascript:callMenu()") МЕНЮ
-                nav 
-                    each link, text in nav
-                        a.button(href=link)=text
-                main.styled-scroll
-                    block main
-                footer 
-                    span CoffeeTox ☕
-        block body
+extends index_raw 
 
-        script(type="text/x-ejs-template", template="menu")
-            ul
-                each link, text in nav
-                    li
-                        a.button(href=link)=text
-
-        script
-            include js/script.js
-            block script
-            block scripthead
-            
-        include ../client_modules/uploader/index
-        include ../client_modules/utils/index
-        include ../client_modules/form/index
-        include ../client_modules/dragndrop/index
-        include ../client_modules/errbox/index
-        include ../client_modules/templates/index
-        include ../client_modules/popup/index
-        include ../client_modules/inspect/index
-        include ../client_modules/menu/index
-        include ../client_modules/avatar/index
-        include ../client_modules/feed/index
+include ../client_modules/uploader/index
+include ../client_modules/utils/index
+include ../client_modules/form/index
+include ../client_modules/dragndrop/index
+include ../client_modules/errbox/index
+include ../client_modules/templates/index
+include ../client_modules/popup/index
+include ../client_modules/inspect/index
+include ../client_modules/menu/index
+include ../client_modules/avatar/index
+include ../client_modules/feed/index

@@ -1,0 +1,44 @@
+doctype html 
+html 
+    head
+        meta(charset="utf-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(rel="icon" href="/public/coffee.png")
+        script(src="https://cdn.jsdelivr.net/npm/ejs@3.1.9/ejs.min.js")
+        style
+            include css/style.css
+            block style
+        block header
+        title CoffeeTox
+    body
+        .global-wrapper 
+            .main-grid 
+                header 
+                    .logo 
+                        a.button(href="/") ☕tox
+                    .current 
+                        if user !== null
+                            a.clean(href="/user?id=" + user.id)= user.name
+                            a.button(href="/logout", recurrent) 🚪
+                        else
+                            a.clean(href="/form?name=login", recurrent) Вход
+                        a.burger.clean(href="javascript:callMenu()") МЕНЮ
+                nav 
+                    each link, text in nav
+                        a.button(href=link)=text
+                main.styled-scroll
+                    block main
+                footer 
+                    span CoffeeTox ☕
+        block body
+
+        script(type="text/x-ejs-template", template="menu")
+            ul
+                each link, text in nav
+                    li
+                        a.button(href=link)=text
+
+        script
+            include js/script.js
+            block script
+            block scripthead
