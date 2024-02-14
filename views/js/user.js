@@ -20,7 +20,6 @@ document.querySelector('.set-avatar').addEventListener('click', () => {
     let maker = new AvatarMaker((blob) => {
         let formData = new FormData()
         formData.append('avatar', blob)
-        console.log(blob)
     
         fetch('/setavatar', {
             method: 'POST',

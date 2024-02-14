@@ -137,6 +137,9 @@ exports.init = (cfx) => {
             res.send({success:false})
             return
         }
+        console.log(req.files)
+        console.log(req.file)
+        console.log(req.avatar)
         req.file.originalname = 'avatar.jpg'
         cfx.files.saveFiles([req.file])
         .then(r => {
