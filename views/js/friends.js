@@ -17,6 +17,8 @@ document.querySelector('.add-friend').addEventListener('click', () => {
                 popup.close()
             })
     })
+
+    popup.open()
 })
 
 function answerRequest(id, accept) {
