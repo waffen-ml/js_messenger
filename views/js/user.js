@@ -26,8 +26,10 @@ document.querySelector('.set-avatar').addEventListener('click', () => {
             credentials: 'same-origin',
             body: formData
         })
-        .then((r) => r.json())
+        .then((r) => r.text())
         .then((r) => {
+            console.log(r)
+            return
             if (!r.success)
                 alert('Ошибка...')
             location.reload()
