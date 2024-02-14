@@ -22,7 +22,7 @@ html
                             a.button(href="/logout", recurrent) 🚪
                         else
                             a.clean(href="/form?name=login", recurrent) Вход
-                        a.burger.clean(href="#") МЕНЮ
+                        a.burger.clean(href="callMenu()") МЕНЮ
                 nav 
                     each link, text in nav
                         a.button(href=link)=text
@@ -31,6 +31,17 @@ html
                 footer 
                     span CoffeeTox ☕
         block body
+
+        script(type="text/x-ejs-template", template="menu")
+            ul
+                li
+                    a(href="") heyyy
+                li
+                    a(href="") heyyy
+                li
+                    a(href="") heyyy
+                li
+                    a(href="") heyyy
 
         script
             include js/script.js
