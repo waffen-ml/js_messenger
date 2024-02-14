@@ -20,7 +20,7 @@ class Popup {
         this.isOpened = false
         this.events = {}
 
-        this.windowAnimation = config.windowAnimation
+        this.windowAnimation = config.windowAnimation ?? {}
         this.windowAnimation.open ??=  `open-window ${animlength}ms ease-in-out forwards`
         this.windowAnimation.close ??= `close-window ${animlength}ms ease-in-out forwards`
 
