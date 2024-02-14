@@ -68,6 +68,7 @@ exports.init = (cfx) => {
             .then(b => {
                 if (b === null || b < amount) {
                     erf('amount', 'Недостаточно средств');
+                    throw Error("hey")
                 }
                 return cfx.auth.getUserByTag(data.usertag);
             })
