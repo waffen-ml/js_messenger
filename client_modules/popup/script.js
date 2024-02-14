@@ -16,6 +16,10 @@ class Popup {
         this.optionHolder = this.window.querySelector('.buttons');
         this.isOpened = false
         this.events = {}
+        this.windowOpenAnimation = config.windowOpenAnimation 
+            ?? `open-window ${animlength}ms ease-in-out forwards`
+        this.windowCloseAnimation = config.windowCloseAnimation
+            ?? `close-window ${animlength}ms ease-in-out forwards`
 
         this.setTitle(config.title)
 
@@ -101,7 +105,7 @@ class Popup {
             onShown()
         else {
             this.popup.style.animation = `appear ${animlength}ms ease-in-out forwards`
-            this.window.style.animation = `open-window ${animlength}ms ease-in-out forwards`
+            this.window.style.animation = this.windowOpenAnimation
             setTimeout(() => onShown(), animlength)
         }
     }
@@ -124,7 +128,7 @@ class Popup {
             onHidden()
         else {
             this.popup.style.animation = `disappear ${animlength}ms ease-in-out forwards`
-            this.window.style.animation = `close-window ${animlength}ms ease-in-out forwards`
+            this.window.style.animation = this.windowCloseAnimation
             setTimeout(() => onHidden(), animlength)
         }
     }
