@@ -64,13 +64,13 @@
          background:transparent;
     }
     to {
-         background:#0000007d;
+         background:#00000040;
     }
 }
 
 @keyframes popup-disappear {
     from {
-        background:#0000007d;
+        background:#00000040;
     }
     to {
         background:transparent;
