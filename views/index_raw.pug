@@ -30,15 +30,14 @@ html
                     block main
                 footer 
                     span CoffeeTox ☕
-        block body
 
         script(type="text/x-ejs-template", template="menu")
             ul
                 each link, text in nav
                     li
                         a.button(href=link)=text
-
+        
         script
             include js/script.js
-            block script
-            block scripthead
+
+        block body

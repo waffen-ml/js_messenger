@@ -1,10 +1,12 @@
 extends index
 
-append script 
-    include js/chatlist.js
+append body 
+    script 
+        include js/chatlist.js
 
-append style
-    include css/chatlist.css
+append header 
+    style 
+        include css/chatlist.css
 
 block main
     h1.page-header Сообщения

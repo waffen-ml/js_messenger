@@ -1,9 +1,9 @@
 extends index
 
-append script 
-    include js/form.js
-append scripthead 
-    | loadForm();
+append body 
+    script 
+        include js/form.js
+        | loadForm();
 
 block header 
     - let titleText = form.meta.title ?? 'Форма'

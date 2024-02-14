@@ -5,11 +5,12 @@ include units
 append header 
     script(src="/socket.io/socket.io.js")
     script(src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js")
-append style 
-    include css/chat.css
-    include css/content.css
-append script 
-    include js/chat.js
+    style 
+        include css/chat.css
+        include css/content.css
+append body 
+    script 
+        include js/chat.js
 
 block main
     .chat-header.block 
