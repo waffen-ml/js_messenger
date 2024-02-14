@@ -107,7 +107,7 @@ class Popup {
         if(instantly)
             onShown()
         else {
-            this.popup.style.animation = `appear ${animlength}ms ease-in-out forwards`
+            this.popup.style.animation = `popup-appear ${animlength}ms ease-in-out forwards`
             this.window.style.animation = this.windowAnimation.open
             setTimeout(() => onShown(), animlength)
         }
@@ -130,7 +130,7 @@ class Popup {
         if (instantly)
             onHidden()
         else {
-            this.popup.style.animation = `disappear ${animlength}ms ease-in-out forwards`
+            this.popup.style.animation = `popup-disappear ${animlength}ms ease-in-out forwards`
             this.window.style.animation = this.windowAnimation.close
             setTimeout(() => onHidden(), animlength)
         }
