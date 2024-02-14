@@ -22,12 +22,20 @@ body {
     gap: 8px;
 }
 
-@media(max-width:700px) {
+.main-grid header .burger {
+    display:none;
+}
+
+@media(max-width:750px) {
     .main-grid nav {
         display:none;
     }
     .main-grid main {
         grid-column:1/3
+    }
+
+    .main-grid header .burger {
+        display:block;
     }
 }
 
