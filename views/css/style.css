@@ -22,9 +22,12 @@ body {
     gap: 8px;
 }
 
-@media(max-width:575px) {
+@media(max-width:7000px) {
     .main-grid nav {
         display:none;
+    }
+    .main-grid main {
+        grid-column:1/3
     }
 }
 
