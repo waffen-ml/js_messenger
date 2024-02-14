@@ -1,2 +1,29 @@
-* {
+
+
+
+.popup.menu {
+  justify-content:flex-end;
+}
+
+.popup.menu .window {
+  height:100%;
+  max-width:100%;
+}
+
+@keyframes menu-appear {
+  from {
+    transform:translate(100%, 0)
+  }
+  to {
+    transform.translate(0, 0);
+  }
+}
+
+@keyframes menu-disappear {
+  from {
+    transform:translate(0, 0)
+  }
+  to {
+    transform.translate(100%, 0);
+  }
 }
