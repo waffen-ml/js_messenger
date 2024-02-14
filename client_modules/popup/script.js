@@ -7,7 +7,8 @@ class Popup {
     constructor(config) {
         this.closable = config.closable ?? false
         this.popup = templateManager.createElement('popup', {
-            html: config.html ?? ''
+            html: config.html ?? '',
+            className: config.className ?? ''
         })
         this.window =  this.popup.querySelector('.window')
         this.content = this.window.querySelector('.content')
