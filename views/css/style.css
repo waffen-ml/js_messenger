@@ -22,7 +22,7 @@ body {
     gap: 8px;
 }
 
-@media(max-width:7000px) {
+@media(max-width:700px) {
     .main-grid nav {
         display:none;
     }
