@@ -22,7 +22,7 @@ html
                             a.button(href="/logout", recurrent) 🚪
                         else
                             a.clean(href="/form?name=login", recurrent) Вход
-                        a.clean(href="#") МЕНЮ
+                        a.burger.clean(href="#") МЕНЮ
                 nav 
                     each link, text in nav
                         a.button(href=link)=text
