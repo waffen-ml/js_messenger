@@ -16,17 +16,17 @@ class Popup {
         this.optionHolder = this.window.querySelector('.buttons');
         this.isOpened = false
         this.events = {}
-        this.windowOpenAnimation = config.windowOpenAnimation 
-            ?? `open-window ${animlength}ms ease-in-out forwards`
-        this.windowCloseAnimation = config.windowCloseAnimation
-            ?? `close-window ${animlength}ms ease-in-out forwards`
+
+        this.windowAnimation = config.windowAnimation
+        this.windowAnimation.open ??=  `open-window ${animlength}ms ease-in-out forwards`
+        this.windowAnimation.close ??= `close-window ${animlength}ms ease-in-out forwards`
 
         this.setTitle(config.title)
 
         let cbtn = this.window.querySelector('.close-btn');
         cbtn.style.display = this.closable? 'block' : 'none';
         cbtn.addEventListener('click', () => this.close())
-
+        
         this.popup.addEventListener('click', (e) => {
             if (this.isOpened && this.closable && e.target == this.popup)
                 this.close()
@@ -105,7 +105,7 @@ class Popup {
             onShown()
         else {
             this.popup.style.animation = `appear ${animlength}ms ease-in-out forwards`
-            this.window.style.animation = this.windowOpenAnimation
+            this.window.style.animation = this.windowAnimation.open
             setTimeout(() => onShown(), animlength)
         }
     }
@@ -128,7 +128,7 @@ class Popup {
             onHidden()
         else {
             this.popup.style.animation = `disappear ${animlength}ms ease-in-out forwards`
-            this.window.style.animation = this.windowCloseAnimation
+            this.window.style.animation = this.windowAnimation.close
             setTimeout(() => onHidden(), animlength)
         }
     }
