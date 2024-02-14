@@ -1,29 +1,22 @@
 document.querySelector('.add-friend').addEventListener('click', () => {
 
-    let form = null;
-
-    openPopup({
-        header: 'Добавить друга',
+    let popup = new Popup({
+        title: 'Добавить друга',
         closable: true,
         html: '<form name="addfriend"></form>',
-        options: {
-            'Добавить': () => {
-                if(form)
-                    form.submit(() => {
-                        closePopup()
-                    })
-                return true
-            },
-            'Отмена': null
-        },
-        onhidden: () => {
-            location.reload()
-        },
-        onload: (d) => {
-            form = new Form('addfriend', null);
-        }
     })
 
+    popup.on('hidden', () => location.reload())
+
+    let form = new Form('addfriend', null)
+
+    popup.addOption('Отмена', () => true)
+    popup.addOption('Добавить', () => {
+        if (form)
+            form.submit(() => {
+                popup.close()
+            })
+    })
 })
 
 function answerRequest(id, accept) {
