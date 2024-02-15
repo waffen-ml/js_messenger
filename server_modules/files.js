@@ -21,7 +21,6 @@ class Files {
         if(!files || !files.length)
             return Promise.resolve({bundle: null, ids: []})
 
-        console.log(files)
         return new Promise((resolve) => {
             bundle = parseInt(bundle)
             if (isNaN(bundle))
@@ -37,9 +36,11 @@ class Files {
         })
         .then(bId => {
             return Promise.all(files.map(f => {
+                let name = Buffer.from(f.originalname, 'latin1').toString('utf8')
+
                 return this.cfx.query(`insert into file(name, mimetype, 
                     bundle_id, data) values(?,?,?,binary(?))`,
-                    [f.originalname, utils.simplifyMimetype(f.mimetype), bId, f.buffer])
+                    [name, utils.simplifyMimetype(f.mimetype), bId, f.buffer])
             }))
             .then(values => {
                 let ids = []
