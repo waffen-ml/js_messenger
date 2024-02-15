@@ -83,6 +83,8 @@ exports.init = (cfx) => {
 
             let buffer = Buffer.from(file.data)
             res.setHeader('Content-Disposition', 'attachment; filename=' + file.name);
+            res.setHeader('Content-Transfer-Encoding', 'binary')
+            
             
             res.send(buffer)
         })
