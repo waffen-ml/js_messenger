@@ -1,15 +1,19 @@
-extends form
+extends index
 
 append header 
+    title Создать пост
     script(src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.31.1/ace.js")
     style 
         include css/create_post.css
 
 append body 
     script 
+        include js/form.js
         include js/create_post.js
 
 append main 
+    h1.page-header
+    form(name=form.meta.name)
     hidden
         .html-editor 
             #editor
