@@ -21,6 +21,7 @@ class Files {
         if(!files || !files.length)
             return Promise.resolve({bundle: null, ids: []})
 
+        console.log(files)
         return new Promise((resolve) => {
             bundle = parseInt(bundle)
             if (isNaN(bundle))
