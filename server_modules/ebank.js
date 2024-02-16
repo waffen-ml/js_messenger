@@ -113,7 +113,7 @@ exports.init = (cfx) => {
                     case ebankError.SELF_TRANSACTION:
                         erf('usertag', 'Перевод себе')
                         break
-                    default
+                    default:
                         throw err
                 }
             })
