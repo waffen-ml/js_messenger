@@ -108,7 +108,7 @@ exports.init = (cfx) => {
                     case ebankErrors.INVALID_AMOUNT:
                         erf('amount', 'Некорректное значение')
                         break
-                    case ebankErrors.UNKNOWN_RECIEVER:
+                    case ebankErrors.UNKNOWN_RECEIVER:
                         erf('usertag', 'Не найдено')
                         break
                     case ebankErrors.LACKING_AMOUNT:
