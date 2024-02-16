@@ -2,7 +2,8 @@ const Form = require('./forms').Form
 const utils = require('./utils')
 const ebankErrors = utils.makeEnum([
     "UNKNOWN_SENDER", "UNKNOWN_RECEIVER",
-    "LACKING_BALANCE"
+    "LACKING_BALANCE", "INVALID_AMOUNT",
+    "SELF_TRANSACTION"
 ])
 
 class Ebank {
@@ -11,18 +12,28 @@ class Ebank {
     }
 
     makeTransaction(from_id, to_id, amount, comment="") {
+        if(!amount || amount < 0)
+            throw Error(ebankErrors.INVALID_AMOUNT)
+        else if(from_id == to_id)
+            throw Error(ebankErrors.SELF_TRANSACTION)
         return this.getBalance(from_id)
         .then(b => {
             if (b === null)
                 throw Error(ebankErrors.UNKNOWN_SENDER)
             if (b < amount)
                 throw Error(ebankErrors.LACKING_BALANCE)
+            return this.changeBalance(from_id, -amount)
         })
         .then(() => {
             return this.changeBalance(to_id, amount)
         })
         .then(s => {
-            if(!s)
+            if(!s) {
+                return this.changeBalance(from_id, amount)
+                .then(() => throw Error(ebankErrors.UNKNOWN_RECEIVER))
+            }
+            return this.cfx.query('insert into ebank_transaction(from_id, to_id, amount, comment) values(?, ?, ?, ?)',
+                [from_id, to_id, amount, comment])
         })
     }
     
@@ -68,48 +79,42 @@ exports.init = (cfx) => {
         {name: 'ebank'},
         [
             {type: 'text', title: 'Получатель', name: 'usertag'},
-            {type: 'text', title: 'Сумма', name: 'amount'}
+            {type: 'text', title: 'Сумма', name: 'amount'},
+            {type: "textarea", title: 'Комментарий', name: 'comment'}
         ], (data, erf, cfx) => {
 
-            let amount = parseInt(data.amount);
+            let from_id = cfx.user().id
+            let to_tag = data.usertag
+            let amount = parseInt(data.amount)
+            let comment = data.comment
             
-            if (isNaN(amount) || amount <= 0) {
-                erf('amount', 'Некорректное значение')
-                return;
-            } else if(!cfx.user()) {
-                erf('amount', 'Не удается получить доступ к кошельку')
-                return;
-            } else if(cfx.user().tag == data.usertag) {
-                erf('usertag', 'Перевод самому себе')
-                return;
-            }
-            
-            return cfx.ebank.getBalance(cfx.user().id)
-            .then(b => {
-                if (b === null || b < amount) {
-                    erf('amount', 'Недостаточно средств');
-                    throw Error("hey")
+            return cfx.auth.getUserByTag(to_tag)
+            .then(to_user => {
+                if (!to_user)
+                    throw Error(ebankErrors.UNKNOWN_RECIEVER)
+                return cfx.ebank.makeTransaction(from_id, to_user.id, amount, comment)
+            })
+            .then(() => {
+                
+            })
+            .catch(err => {
+                switch(err.message) {
+                    case ebankErrors.INVALID_AMOUNT:
+                        erf('amount', 'Некорректное значение')
+                        break
+                    case ebankErrors.UNKNOWN_RECIEVER:
+                        erf('usertag', 'Не найдено')
+                        break
+                    case ebankErrors.LACKING_AMOUNT:
+                        erf('amount', 'Недостаточно средств')
+                        break
+                    case ebankError.SELF_TRANSACTION:
+                        erf('usertag', 'Перевод себе')
+                        break
+                    default
+                        throw err
                 }
-                return cfx.auth.getUserByTag(data.usertag);
             })
-            .then(user => {
-                if (!user) {
-                    erf('usertag', 'Пользователь не найден')
-                    throw Error('err');
-                }
-                return user.id;
-            })
-            .then(id => {
-                return cfx.ebank.changeBalance(id, amount);
-            })
-            .then(state => {
-                if(!state) {
-                    erf('usertag', 'Не удается получить доступ к кошельку');
-                    throw Error('err');
-                }
-                return cfx.ebank.changeBalance(cfx.user().id, -amount);
-            })
-            .catch(e => {});
 
         }, () => {}
     ));
