@@ -82,7 +82,7 @@ exports.init = (cfx) => {
         [
             {type: 'text', title: 'Получатель', name: 'usertag'},
             {type: 'text', title: 'Сумма', name: 'amount'},
-            {type: "textarea", title: 'Комментарий', name: 'comment'}
+            {type: "textarea", title: 'Комментарий', name: 'comment', optional:true}
         ], (data, erf, cfx) => {
 
             let from_id = cfx.user().id
@@ -110,7 +110,7 @@ exports.init = (cfx) => {
                     case ebankErrors.LACKING_AMOUNT:
                         erf('amount', 'Недостаточно средств')
                         break
-                    case ebankError.SELF_TRANSACTION:
+                    case ebankErrors.SELF_TRANSACTION:
                         erf('usertag', 'Перевод себе')
                         break
                     default:
