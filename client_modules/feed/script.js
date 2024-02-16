@@ -36,9 +36,9 @@ class FeedHolder {
             setupInspectObjects(element)
 
             let iframe = element.querySelector('.html iframe')
-            if (iframe)
+            if (iframe && false)
                 iframe.srcdoc = templateManager.createHTML('html-srcdoc', {html: post.html})
-
+            
             this.holder.appendChild(element)
         })
     }
