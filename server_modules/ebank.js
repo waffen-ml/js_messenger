@@ -97,14 +97,13 @@ exports.init = (cfx) => {
             return cfx.auth.getUserByTag(to_tag)
             .then(to_user => {
                 if (!to_user)
-                    throw Error(ebankErrors.UNKNOWN_RECIEVER)
+                    throw Error(ebankErrors.UNKNOWN_RECEIVER)
                 return cfx.ebank.makeTransaction(from_id, to_user.id, amount, comment)
             })
             .then(() => {
                 
             })
             .catch(err => {
-                console.log(err.message)
                 switch(err.message) {
                     case ebankErrors.INVALID_AMOUNT:
                         erf('amount', 'Некорректное значение')
@@ -118,6 +117,8 @@ exports.init = (cfx) => {
                     case ebankErrors.SELF_TRANSACTION:
                         erf('usertag', 'Перевод себе')
                         break
+                    default:
+                        throw err
                 }
             })
 
