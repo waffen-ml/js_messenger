@@ -1,0 +1,17 @@
+.stats {
+
+}
+
+.stats .balance {
+  display:block;
+  margin:0;
+  font-weight:bold;
+  font-size:19px;
+}
+
+.stats .capital {
+  font-size:17px;
+  display:block;
+  margin-top:7px;
+  margin-bottom:0;
+}
