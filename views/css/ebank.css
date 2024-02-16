@@ -1,12 +1,12 @@
 .stats {
-
+  width:max-content;
 }
 
 .stats .balance {
   display:block;
   margin:0;
   font-weight:bold;
-  font-size:19px;
+  font-size:25px;
 }
 
 .stats .capital {
