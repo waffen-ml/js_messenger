@@ -86,7 +86,7 @@ exports.init = (cfx) => {
         [
             {type: 'text', title: 'Получатель', name: 'usertag'},
             {type: 'text', title: 'Сумма', name: 'amount'},
-            {type: "textarea", title: 'Комментарий', name: 'comment', optional:true}
+            {type: "text", title: 'Комментарий', name: 'comment', optional:true}
         ], (data, erf, cfx) => {
 
             let from_id = cfx.user().id
