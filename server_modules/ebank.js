@@ -104,6 +104,7 @@ exports.init = (cfx) => {
                 
             })
             .catch(err => {
+                console.log(err)
                 switch(err.message) {
                     case ebankErrors.INVALID_AMOUNT:
                         erf('amount', 'Некорректное значение')
