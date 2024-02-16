@@ -38,7 +38,7 @@ class Ebank {
                     throw Error(ebankErrors.UNKNOWN_RECEIVER)
                 })
             }
-            return this.cfx.query('insert into ebank_transaction(from_id, to_id, amount, comment) values(?, ?, ?, ?)',
+            return this.cfx.query('insert into ebank_transaction(from_id, to_id, amount, comment, datetime) values(?, ?, ?, ?, now())',
                 [from_id, to_id, amount, comment])
         })
     }
