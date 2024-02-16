@@ -129,18 +129,11 @@ exports.init = (cfx) => {
         let user = cfx.core.login(req, res, true);
         if(!user) return;
 
-        cfx.ebank.getBalance(user.id)
-        .then(b => {
-            if (b !== null)
-                return b;
-            return cfx.ebank.setupUser(user.id)
-            .then(() => {
-                return 0;
-            })
-        })
-        .then(b => {
+        cfx.ebank.getStats(user.id)
+        .then(s => {
             cfx.core.render(req, res, 'ebank', {
-                balance: b
+                balance: s.balance,
+                capital: s.capital
             })
         });
 
