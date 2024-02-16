@@ -1,4 +1,9 @@
-let Form = require('./forms').Form;
+const Form = require('./forms').Form
+const utils = require('./utils')
+const ebankErrors = utils.makeEnum([
+    "UNKNOWN_SENDER", "UNKNOWN_RECEIVER",
+    "LACKING_BALANCE"
+])
 
 class Ebank {
     constructor(cfx) {
@@ -8,8 +13,16 @@ class Ebank {
     makeTransaction(from_id, to_id, amount, comment="") {
         return this.getBalance(from_id)
         .then(b => {
-            if (b == 
-                 
+            if (b === null)
+                throw Error(ebankErrors.UNKNOWN_SENDER)
+            if (b < amount)
+                throw Error(ebankErrors.LACKING_BALANCE)
+        })
+        .then(() => {
+            return this.changeBalance(to_id, amount)
+        })
+        .then(s => {
+            if(!s)
         })
     }
     
