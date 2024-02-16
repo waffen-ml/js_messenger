@@ -30,7 +30,9 @@ class Ebank {
         .then(s => {
             if(!s) {
                 return this.changeBalance(from_id, amount)
-                .then(() => throw Error(ebankErrors.UNKNOWN_RECEIVER))
+                .then(() => {
+                    throw Error(ebankErrors.UNKNOWN_RECEIVER)
+                })
             }
             return this.cfx.query('insert into ebank_transaction(from_id, to_id, amount, comment) values(?, ?, ?, ?)',
                 [from_id, to_id, amount, comment])
