@@ -1,5 +1,7 @@
 .stats {
+  box-sizing:content-box;
   width:max-content;
+  padding-right:50px;
 }
 
 .stats .balance {
