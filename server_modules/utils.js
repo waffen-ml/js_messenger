@@ -169,6 +169,12 @@ class Utils {
         return result
     }
 
+    makeEnum(arr) {
+        let enum = {}
+        arr.forEach(a => enum[a] = a)
+        return enum
+    }
+
 }
 
 const utils = new Utils();
