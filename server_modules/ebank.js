@@ -5,17 +5,33 @@ class Ebank {
         this.cfx = cfx;
     }
 
-    setupUser(userid) {
-        return this.cfx.query(`insert into ebank(user_id) values(${userid})`)
-        .then(() => true, () => false);
+    makeTransaction(from_id, to_id, amount, comment="") {
+        return this.getBalance(from_id)
+        .then(b => {
+            if (b == 
+                 
+        })
+    }
+    
+    setBalance(userid, balance) {
+        return this.cfx.query('update user set balance=? where user_id=?', [balance, userid])
+        .then(r => {
+            return r.affectedRows > 0
+        })
     }
 
-    setBalance(userid, balance) {
-        return this.cfx.query(`update ebank set balance=${balance} where user_id=${userid}`)
-        .then((data) => {
-            return data.affectedRows > 0;
-        }, (err) => {
-            return false;
+    getBalance(userid) {
+        return this.cfx.query('select balance from user where id=?', [userid])
+        .then(r => {
+            return r.length? r[0].balance : null
+        })
+    }
+
+    getStats(userid) {
+        return this.cfx.query(`select balance, balance/(select sum(balance) from user) 
+            as capital from user where id=` + userid)
+        .then(r => {
+            return r[0]
         })
     }
 
@@ -25,15 +41,6 @@ class Ebank {
             if(b === null)
                 return false;
             return this.setBalance(userid, b + diff);
-        })
-    }
-
-    getBalance(userid) {
-        return this.cfx.query(`select balance from ebank where user_id=${userid}`)
-        .then(data => {
-            if (data.length == 0)
-                return null;
-            return data[0].balance;
         })
     }
 }
