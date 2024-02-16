@@ -44,7 +44,7 @@ class Ebank {
     }
     
     setBalance(userid, balance) {
-        return this.cfx.query('update user set balance=? where user_id=?', [balance, userid])
+        return this.cfx.query('update user set balance=? where id=?', [balance, userid])
         .then(r => {
             return r.affectedRows > 0
         })
