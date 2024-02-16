@@ -170,9 +170,9 @@ class Utils {
     }
 
     makeEnum(arr) {
-        let enum = {}
-        arr.forEach(a => enum[a] = a)
-        return enum
+        let e = {}
+        arr.forEach(a => e[a] = a)
+        return e
     }
 
 }
