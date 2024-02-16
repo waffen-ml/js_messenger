@@ -13,9 +13,13 @@ class Ebank {
 
     makeTransaction(from_id, to_id, amount, comment="") {
         if(!amount || amount < 0)
-            throw Error(ebankErrors.INVALID_AMOUNT)
+            return new Promise(() => {
+                throw Error(ebankErrors.INVALID_AMOUNT)
+            })
         else if(from_id == to_id)
-            throw Error(ebankErrors.SELF_TRANSACTION)
+            return new Promise(() => {
+                throw Error(ebankErrors.SELF_TRANSACTION)
+            })
         return this.getBalance(from_id)
         .then(b => {
             if (b === null)
