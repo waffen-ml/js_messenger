@@ -28,7 +28,7 @@ block main
                     th Комментарий
                     th Дата и время
                     th Сумма
-                <% transactions.forEach(t => { %>
+                | <% transactions.forEach(t => { %>
                     tr
                         td.user-wrapper
                             .user 
@@ -43,4 +43,4 @@ block main
                                 span.positive= "+" + t.amount + " EBL"
                             else 
                                 span.negative= "-" + t.amount + " EBL"
-                <% } %>
+                | <% } %>
