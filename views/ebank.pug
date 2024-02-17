@@ -26,9 +26,10 @@ block main
                 th Сумма
             each t in transactions
                 tr
-                    td.user 
-                        img.avatar(src="/getuseravatar?id=" + t.target_id)
-                        a.clean(href="/user?id=" + t.target_id)= t.target_name 
+                    td.user-wrapper
+                        .user 
+                            img.avatar(src="/getuseravatar?id=" + t.target_id)
+                            a.clean(href="/user?id=" + t.target_id)= t.target_name 
                     td.comment 
                         p= t.comment || "-"
                     td.datetime 
