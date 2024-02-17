@@ -58,7 +58,7 @@ class Ebank {
     }
 
     getStats(userid) {
-        return this.cfx.query(`select balance, balance/(select sum(balance)*100 from user) 
+        return this.cfx.query(`select balance, balance/(select sum(balance) from user)*100 
             as capital from user where id=` + userid)
         .then(r => {
             return r[0]
