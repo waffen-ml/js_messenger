@@ -330,7 +330,6 @@ exports.init = (cfx) => {
         .then((views) => {
             cfx.core.render(req, res, 'chatlist', {views: views})
         })
-        .catch(() => {})
     })
 
     cfx.core.app.get('/chat', (req, res, next) => {
