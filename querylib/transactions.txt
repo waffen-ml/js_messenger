@@ -1,3 +1,3 @@
 select id, from_id, to_id, from_name, from_tag, to_tag, to_name, comment, datetime, amount 
-from ebank_transaction t left join u_from on u_from.id = from_id left join u_to on u_to.id = to_id 
+from ebank_transaction t left join user u_from on u_from.id = from_id left join user u_to on u_to.id = to_id 
 where to_id={id} or from_id={id} order by id desc limit 100
