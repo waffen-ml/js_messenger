@@ -129,37 +129,16 @@ class ChatSystem {
 
     getChatViews(userid) {
         return this.cfx.db.executeFile('views', {id: userid, max_members: 4})
-        .then((views) => {
-            let result = []
-            let current = {id:-1}
-                
-            views.forEach(view => {
-                let view_member = {
-                    id: view.member_id,
-                    name: view.member_name,
-                    tag: view.member_tag
-                }
-
-                if (view.id != current.id) {
-                    result.push(current)
-                    current = view
-                    view.members = [view_member]
-                    delete view.member_id
-                    delete view.member_name
-                    delete view.member_tag
-                    return
-                }
-                current.members.push(view_member)
-            })
-
-            result.push(current)
-            result.shift()
-
-            return result
+        .then((views_raw) => {
+            return this.cfx.utils.parseArrayOutput(views_raw, 'members', {
+                member_id: 'id',
+                member_name: 'name',
+                member_tag: 'tag'
+            }, 'id')
         })
         .then(views => {
+            console.log(views)
             views.forEach(view => {
-
                 if (!view.lm_id || view.lm_local_id < view.focus) {
                     view.visible = false;
                     return;
@@ -354,7 +333,6 @@ exports.init = (cfx) => {
             return cfx.chats.getChatViews(user.id)
         })
         .then((views) => {
-            console.log(views)
             cfx.core.render(req, res, 'chatlist', {views: views})
         })
         .catch(() => {})
