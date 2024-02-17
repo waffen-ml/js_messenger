@@ -20,18 +20,18 @@ block main
     table.ebank-table.transactions.styled-scroll
         tr 
             th Пользователь
-            th Дата и время
             th Комментарий
+            th Дата и время
             th Сумма
         each t in transactions
             tr
                 td.user 
                     img.avatar(src="/getuseravatar?id=" + t.target_id)
                     a.clean(href="/user?id=" + t.target_id)= t.target_name 
-                td.datetime 
-                    span= utils.getPostDatetimeLabel(t.datetime)
                 td.comment 
                     p= t.comment || "-"
+                td.datetime 
+                    span= utils.getPostDatetimeLabel(t.datetime)
                 td.amount
                     if t.to_me 
                         span.positive= "+" + t.amount + " EBL"
