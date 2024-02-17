@@ -50,8 +50,13 @@
   text-align: center;
 }
 
-.table-wrapper {
-  max-width:min(650px, 100%);
+.capitallb-wrapper {
+  max-width: 100%;
+  overflow-x:scroll;
+}
+
+.transactions-wrapper {
+  max-width:650px;
   max-height:400px;
   overflow-y:auto;
   overflow-x:auto;
