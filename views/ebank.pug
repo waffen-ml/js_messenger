@@ -31,7 +31,7 @@ block main
                 td.datetime 
                     span= utils.getPostDatetimeLabel(t.datetime)
                 td.comment 
-                    p= t.comment 
+                    p= t.comment || "-"
                 td.amount
                     if t.to_me 
                         span.positive= "+" + t.amount + " EBL"
