@@ -16,29 +16,31 @@ block main
         span.balance= balance + ' EBL'
         span.capital= 'Капитал: ' + (capital).toFixed(2) + '%'
     a.clean(href="/capitallb", style="display:block;margin-top:15px") Лидерборд капитала
-    h2 Последние переводы
-    .table-wrapper.styled-scroll 
-        table.ebank-table.transactions
-            tr 
-                th Пользователь
-                th Комментарий
-                th Дата и время
-                th Сумма
-            each t in transactions
-                tr
-                    td.user-wrapper
-                        .user 
-                            img.avatar(src="/getuseravatar?id=" + t.target_id)
-                            a.clean(href="/user?id=" + t.target_id)= t.target_name 
-                    td.comment 
-                        p= t.comment || "-"
-                    td.datetime 
-                        span= utils.getPostDatetimeLabel(t.datetime)
-                    td.amount
-                        if t.to_me 
-                            span.positive= "+" + t.amount + " EBL"
-                        else 
-                            span.negative= "-" + t.amount + " EBL"
-
+    a.clean(href="javascript:openTransactions()") Последние переводы
     h2 Перевести человеку
     form(name="ebank")
+
+    script(type="text/x-ejs-template", template="transactions")
+        .table-wrapper.styled-scroll 
+            table.ebank-table.transactions
+                tr 
+                    th Пользователь
+                    th Комментарий
+                    th Дата и время
+                    th Сумма
+                <% transactions.forEach(t => { %>
+                    tr
+                        td.user-wrapper
+                            .user 
+                                img.avatar(src="/getuseravatar?id=" + t.target_id)
+                                a.clean(href="/user?id=" + t.target_id)= t.target_name 
+                        td.comment 
+                            p= t.comment || "-"
+                        td.datetime 
+                            span= utils.getPostDatetimeLabel(t.datetime)
+                        td.amount
+                            if t.to_me 
+                                span.positive= "+" + t.amount + " EBL"
+                            else 
+                                span.negative= "-" + t.amount + " EBL"
+                <% } %>

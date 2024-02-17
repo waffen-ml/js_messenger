@@ -4,3 +4,7 @@ let form = new Form('ebank', null, () => {
     })
 });
 
+function openTransactions() {
+
+
+}
