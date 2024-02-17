@@ -65,6 +65,25 @@ class Ebank {
         })
     }
 
+    getUserTransactions(userid) {
+        return this.cfx.db.executeFile('transactions', {id: userid})
+        .then(transactions => {
+            return transactions.map(t => {
+                let from_me = userid == t.from_id
+
+                return {
+                    target_id: from_me? t.to_id : t.from_id,
+                    target_name: from_me? t.to_name : t.from_name,
+                    target_tag: from_me? t.to_tag : t.from_tag,
+                    datetime: t.datetime,
+                    comment: t.comment,
+                    amount: t.amount,
+                    from_me: from_me
+                }
+            })
+        })
+    }
+
     changeBalance(userid, diff) {
         return this.getBalance(userid)
         .then((b) => {
@@ -135,9 +154,14 @@ exports.init = (cfx) => {
 
         cfx.ebank.getStats(user.id)
         .then(s => {
-            cfx.core.render(req, res, 'ebank', {
-                balance: s.balance,
-                capital: s.capital
+            cfx.ebank.getUserTransactions(user.id)
+            .then(t => {
+                cfx.core.render(req, res, 'ebank', {
+                    balance: s.balance,
+                    capital: s.capital,
+                    transactions: t,
+                    utils: cfx.utils
+                })
             })
         })
     })
