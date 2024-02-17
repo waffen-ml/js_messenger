@@ -53,7 +53,7 @@
   max-height:400px;
 }
 
-.transactions .amount, .transaction .comment, .transactions .datetime {
+.transactions .amount, .transactions .comment, .transactions .datetime {
   text-align:center;
 }
 
@@ -66,5 +66,5 @@
 }
 
 .transactions .amount .negative {
-  color:#861000;
+  color:#c11600;
 }
