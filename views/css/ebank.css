@@ -28,7 +28,7 @@
   background:#00000023;
 }
 
-.capitallb td, th {
+.capitallb td, .capitallb th {
   padding:5px 8px;
 }
 
@@ -42,7 +42,7 @@
   height:40px;
 }
 
-.capitallb .capital, .balance {
+.capitallb .capital, .capitallb .balance {
   text-align: center;
 }
 
