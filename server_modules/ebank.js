@@ -75,7 +75,7 @@ class Ebank {
     }
 
     getCapitalLeaderboard() {
-        return this.cfx.db.executeFile('capitallb')
+        return this.cfx.db.executeFile('capitallb', {})
     }
 }
 
