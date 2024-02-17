@@ -57,6 +57,7 @@
 
 .transactions .amount, .transactions .datetime {
   text-align:center;
+  width:max-content;
 }
 
 .transactions .amount .positive {
