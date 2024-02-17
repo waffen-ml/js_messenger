@@ -61,8 +61,15 @@
   color:#007900;
 }
 
+.transactions .comment {
+  max-width: 45%;
+  display:flex;
+  justify-content: center;
+  align-items:center;
+}
+
 .transactions .comment p {
-  margin:0 auto;
+  margin:0;
 }
 
 .transactions .amount .negative {
