@@ -2,7 +2,7 @@ extends index
 
 
 append header 
-    title Банк CoffeTox
+    title Банк CoffeeTox
     style 
         include css/ebank.css
     
@@ -14,6 +14,7 @@ block main
     h1.page-header Банк CoffeeTox
     .stats.block
         span.balance= balance + ' EBL'
-        span.capital= 'Капитал: ' + (100*capital).toFixed(2) + '%'
+        span.capital= 'Капитал: ' + (capital).toFixed(2) + '%'
+    a.clean(href="/capitallb") Лидерборд капитала
     h2 Перевести человеку
     form(name="ebank")

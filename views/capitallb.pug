@@ -1,0 +1,23 @@
+extends index
+
+append header 
+    title Лидерборд капитала
+    
+block main
+    h1.page-header Лидерборд капитала
+    table 
+        tr
+            th Пользователь
+            th Баланс
+            th Капитал
+        each user in lb 
+            tr 
+                td 
+                    img.avatar(src="/getuseravatar?id=" + user.id)
+                    a.clean(href="/user?id=" + user.id)= user.name
+                td 
+                    span.balance= user.balance + " EBL"
+                td 
+                    span.capital= user.capital.toFixed(2) + " %"
+
+

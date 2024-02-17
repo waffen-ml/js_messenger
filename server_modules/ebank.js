@@ -58,7 +58,7 @@ class Ebank {
     }
 
     getStats(userid) {
-        return this.cfx.query(`select balance, balance/(select sum(balance) from user) 
+        return this.cfx.query(`select balance, balance/(select sum(balance)*100 from user) 
             as capital from user where id=` + userid)
         .then(r => {
             return r[0]
@@ -72,6 +72,10 @@ class Ebank {
                 return false;
             return this.setBalance(userid, b + diff);
         })
+    }
+
+    getCapitalLeaderboard() {
+        return this.cfx.db.executeFile('capitallb')
     }
 }
 
@@ -135,8 +139,16 @@ exports.init = (cfx) => {
                 balance: s.balance,
                 capital: s.capital
             })
-        });
+        })
+    })
 
+    cfx.core.app.get('/capitallb', (req, res) => {
+        cfx.ebank.getCapitalLeaderboard()
+        .then(lb => {
+            cfx.core.render(req, res, 'capitallb', {
+                lb: lb
+            })
+        })
     })
 
 
