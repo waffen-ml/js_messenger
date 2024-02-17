@@ -25,30 +25,10 @@ class Utils {
         return w
     }
 
-    getDateLabel(date, ll) {
-        if (ll) 
-            return date.toLocaleString(ll, { month: 'long', day: 'numeric'})
-                + (this.hasCurrentYear(date)? '' : ' ' + date.getFullYear());
-        let day = this.addLeadingZeros(date.getDay(), 2)
-        let month = this.addLeadingZeros(date.getMonth() + 1, 2)
-        return day + ":" + month + (this.hasCurrentYear(date)? '' : '.' + date.getFullYear())
-    }
-
     areDatesEqual(d1, d2) {
         return d1.getFullYear() == d2.getFullYear()
             && d1.getMonth() == d2.getMonth()
             && d1.getDate() == d2.getDate()
-    }
-
-    addLeadingZeros(n, z) {
-        n = n.toString();
-        return '0'.repeat(Math.max(0, z - n.length)) + n
-    }
-
-    getTimeLabel(datetime) {
-        let hourLabel = this.addLeadingZeros(datetime.getHours(), 2);
-        let minuteLabel = this.addLeadingZeros(datetime.getMinutes(), 2); 
-        return hourLabel + ':' + minuteLabel;
     }
 
     isToday(datetime) {
@@ -62,6 +42,22 @@ class Utils {
         return this.areDatesEqual(datetime, now)
     }
 
+    getLocalizedDateLabel(date, rel) 
+    { 
+        if (rel && this.isToday(date))
+            return 'Сегодня'
+        else if(rel && this.isYesterday(date))
+            return 'Вчера'
+
+        return date.toLocaleString('ru', { month: 'long', day: 'numeric'})
+            + (date.getFullYear() == (new Date()).getFullYear()? '' : ' ' + date.getFullYear());
+    }
+
+    formatTime(dt) {
+        return String(dt.getHours()).padStart(2, "0") + ':'
+            + String(dt.getMinutes()).padStart(2, "0")
+    }
+
     hasCurrentYear(datetime) {
         let now = new Date();
         return datetime.getFullYear() == now.getFullYear()
@@ -69,7 +65,7 @@ class Utils {
 
     getPostDatetimeLabel(datetime, fancy) {
         let time = this.hasCurrentYear(datetime)?
-            ' в ' + this.getTimeLabel(datetime) : '';
+            ' в ' + this.formatTime(datetime) : '';
         
         if (fancy) {
             if(this.isToday(datetime))
@@ -77,16 +73,8 @@ class Utils {
             else if (this.isYesterday(datetime))
                 return 'Вчера' + time;
         }
-    
-        return this.getDateLabel(datetime, 'ru') + time;
-    }
 
-    getMessageDatetimeLabel(datetime) {
-        if (this.isToday(datetime))
-            return this.getTimeLabel(datetime);
-        else if (this.isYesterday(datetime))
-            return 'вчера'
-        return this.getDateLabel(datetime)
+        return this.getLocalizedDateLabel(datetime, 'ru') + time
     }
 
     clamp(num, min, max) {

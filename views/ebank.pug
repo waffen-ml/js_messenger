@@ -16,6 +16,7 @@ block main
         span.balance= balance + ' EBL'
         span.capital= 'Капитал: ' + (capital).toFixed(2) + '%'
     a.clean(href="/capitallb", style="display:block;margin-top:15px") Лидерборд капитала
+    h2 Последние переводы
     table.ebank-table.transactions 
         tr 
             th Пользователь
@@ -28,7 +29,7 @@ block main
                     img.avatar(src="/getuseravatar?id=" + t.target_id)
                     a.clean(href="/user?id=" + t.target_id)= t.target_name 
                 td.datetime 
-                    span= t.datetime 
+                    span= utils.getPostTimeLabel(t.datetime)
                 td.comment 
                     p= t.comment 
                 td.amount
