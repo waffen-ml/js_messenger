@@ -79,7 +79,7 @@ class Utils {
 
     getMessageDatetimeLabel(datetime) {
         if (this.isToday(datetime))
-            return this.getTimeLabel(datetime);
+            return this.formatTime(datetime);
         else if (this.isYesterday(datetime))
             return 'вчера'
         return this.formatTime(datetime)
