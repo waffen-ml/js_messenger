@@ -23,7 +23,7 @@
   width:100%;
 }
 
-.ebank-table tr:nth-child(2n) {
+.ebank-table tr:nth-child(2n + 1) {
   background:#00000023;
 }
 
@@ -51,6 +51,8 @@
 
 .transactions {
   max-height:400px;
+  overflow-y:auto;
+  overflow-x:auto;
 }
 
 .transactions .amount, .transactions .datetime {
@@ -62,10 +64,6 @@
 }
 
 .transactions .comment {
-  max-width: 45%;
-  display:flex;
-  justify-content: center;
-  align-items:center;
 }
 
 .transactions .comment p {
