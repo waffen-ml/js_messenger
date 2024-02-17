@@ -29,7 +29,7 @@ block main
                     img.avatar(src="/getuseravatar?id=" + t.target_id)
                     a.clean(href="/user?id=" + t.target_id)= t.target_name 
                 td.datetime 
-                    span= utils.getPostTimeLabel(t.datetime)
+                    span= utils.getPostDatetimeLabel(t.datetime)
                 td.comment 
                     p= t.comment 
                 td.amount
