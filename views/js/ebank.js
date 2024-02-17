@@ -13,7 +13,7 @@ function openTransactions() {
         let popup = new Popup({
             closable: true,
             title: 'Недавние переводы',
-            html: templateManager.createHTML({transactions: transactions})
+            html: templateManager.createHTML('transactions', {transactions: transactions})
         })
 
         popup.addOption('Закрыть', () => true)
