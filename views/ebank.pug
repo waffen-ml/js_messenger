@@ -32,15 +32,16 @@ block main
                     tr
                         td.user-wrapper
                             .user 
-                                img.avatar(src="/getuseravatar?id=" + t.target_id)
-                                a.clean(href="/user?id=" + t.target_id)= t.target_name 
+                                img.avatar(src="/getuseravatar?id=<%=t.target_id%>")
+                                a.clean(href="/user?id=<%=t.target_id%>") <%=t.target_name%> 
                         td.comment 
-                            p= t.comment || "-"
+                            p <%= t.comment || "-" %>
                         td.datetime 
-                            span= utils.getPostDatetimeLabel(t.datetime)
+                            span <%= utils.getPostDatetimeLabel(t.datetime) %>
                         td.amount
-                            if t.to_me 
-                                span.positive= "+" + t.amount + " EBL"
-                            else 
-                                span.negative= "-" + t.amount + " EBL"
+                            | <% if (t.to_me) { %>
+                            span.positive +<%=t.amount%> EBL
+                            | <% } else { %>
+                            span.negative -<%=t.amount%> EBL
+                            | <% } %>
                 | <% } %>
