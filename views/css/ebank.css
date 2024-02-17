@@ -42,6 +42,7 @@
   height:40px;
 }
 
-.capitallb .capital {
-
+.capitallb .capital, .balance {
+  text-align: center;
 }
+
