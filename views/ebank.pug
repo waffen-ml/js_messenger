@@ -32,8 +32,8 @@ block main
                 tr
                     td.user-wrapper
                         .user 
-                            img.avatar(src="/getuseravatar?id=<%=t.target_id%>")
-                            a.clean(href="/user?id=<%=t.target_id%>") <%=t.target_name%> 
+                            img.avatar(src!="/getuseravatar?id=<%=t.target_id%>")
+                            a.clean(href!="/user?id=<%=t.target_id%>") <%=t.target_name%> 
                     td.comment 
                         p <%= t.comment || "-" %>
                     td.datetime 
@@ -44,4 +44,4 @@ block main
                         | <% } else { %>
                         span.negative -<%=t.amount%> EBL
                         | <% } %>
-                | <% } %>
+                | <% }) %>
