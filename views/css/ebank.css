@@ -23,6 +23,10 @@
   background:#00000023;
 }
 
+.capitallb td, th {
+  padding:5px 8px;
+}
+
 .capitallb .user {
   display:flex;
   align-items: center;
