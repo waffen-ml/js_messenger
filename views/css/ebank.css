@@ -53,14 +53,18 @@
   max-height:400px;
 }
 
-.transactions .amount, .transactions .datetime {
+.transactions .amount, .transaction .comment, .transactions .datetime {
   text-align:center;
 }
 
-.transactions .amount.positive {
+.transactions .amount .positive {
   color:#007900;
 }
 
-.transactions .amount.negative {
+.transactions .comment p {
+  margin:0;
+}
+
+.transactions .amount .negative {
   color:#861000;
 }
