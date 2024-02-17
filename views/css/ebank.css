@@ -16,5 +16,19 @@
   display:block;
   margin-top:7px;
   margin-bottom:0;
-  text-style:italic;
+  font-style:italic;
+}
+
+.capitallb tr:nth-child(2n) {
+  background:#00000023;
+}
+
+.capitallb .user {
+  display:flex;
+  align-items: center;
+  gap:10px;
+}
+
+.capitallb .capital {
+
 }
