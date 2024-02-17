@@ -39,9 +39,9 @@ block main
                     td.datetime 
                         span <%= utils.getPostDatetimeLabel(t.datetime, true) %>
                     td.amount
-                        | <% if (t.to_me) { %>
-                        span.positive +<%=t.amount%> EBL
-                        | <% } else { %>
+                        | <% if (t.from_me) { %>
                         span.negative -<%=t.amount%> EBL
+                        | <% } else { %>
+                        span.positive +<%=t.amount%> EBL
                         | <% } %>
                 | <% }) %>
