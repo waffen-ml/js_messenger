@@ -138,27 +138,21 @@ class ChatSystem {
         })
         .then(views => {
             views.forEach(view => {
-                console.log(view)
                 if (!view.lm_id || view.lm_local_id < view.focus) {
                     view.visible = false;
                     return;
                 } else
                     view.visible = true;
 
-                console.log(1)
                 view.unread = view.lm_local_id - view.last_read;
-                console.log(2)
                 if (!view.chat_name) {
                     let names = view.members.filter(m => m.id != view.owner_id).map(m => m.name)
                     view.chat_name = names.join(', ')
                 }
-                console.log(3)
                 view.lm_preview = view.lm_text? view.lm_text.substr(0, 100) + ' ' : '';
                 if (view.lm_file_count > 0)
                     view.lm_preview += `[${view.lm_file_count} файлов]`
-                console.log(4)
                 view.datetime_label = view.lm_datetime && this.cfx.utils.getMessageDatetimeLabel(view.lm_datetime)
-
             })
             return views
         })
