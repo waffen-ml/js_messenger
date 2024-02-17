@@ -7,19 +7,20 @@ append header
     
 block main
     h1.page-header Лидерборд капитала
-    table.ebank-table.capitallb
-        tr
-            th Пользователь
-            th Баланс
-            th Капитал
-        each user in lb 
-            tr 
-                td.user
-                    img.avatar(src="/getuseravatar?id=" + user.id)
-                    a.clean(href="/user?id=" + user.id)= user.name
-                td.balance
-                    span= user.balance + " EBL"
-                td.capital
-                    span= user.capital.toFixed(2) + " %"
+    .table-wrapper(style="overflow-y:visible")
+        table.ebank-table.capitallb
+            tr
+                th Пользователь
+                th Баланс
+                th Капитал
+            each user in lb 
+                tr 
+                    td.user
+                        img.avatar(src="/getuseravatar?id=" + user.id)
+                        a.clean(href="/user?id=" + user.id)= user.name
+                    td.balance
+                        span= user.balance + " EBL"
+                    td.capital
+                        span= user.capital.toFixed(2) + " %"
 
 

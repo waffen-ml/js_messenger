@@ -51,7 +51,7 @@
 }
 
 .table-wrapper {
-  max-width:600px;
+  max-width:min(650px, 100%);
   max-height:400px;
   overflow-y:auto;
   overflow-x:auto;
