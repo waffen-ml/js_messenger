@@ -49,7 +49,7 @@
   text-align: center;
 }
 
-.transactions {
+.table-wrapper {
   max-height:400px;
   overflow-y:auto;
   overflow-x:auto;
