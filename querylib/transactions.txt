@@ -1,3 +1,4 @@
-select id, from_id, to_id, from_name, from_tag, to_tag, to_name, comment, datetime, amount 
+select t.id, t.from_id, t.to_id, u_from.name as t.from_name, u_from.tag as from_tag, u_to.tag as to_tag, 
+u_to.name as to_name, t.comment, t.datetime, t.amount 
 from ebank_transaction t left join user u_from on u_from.id = from_id left join user u_to on u_to.id = to_id 
-where to_id={id} or from_id={id} order by id desc limit 100
+where t.to_id={id} or t.from_id={id} order by id desc limit 100
