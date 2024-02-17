@@ -10,6 +10,10 @@ function openTransactions() {
     .then(r => r.json())
     .then(transactions => {
 
+        transactions.forEach(t => {
+            t.datetime = new Date(t.datetime)
+        })
+
         let popup = new Popup({
             closable: true,
             title: 'Недавние переводы',
