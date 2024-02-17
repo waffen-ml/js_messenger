@@ -19,27 +19,30 @@
   font-style:italic;
 }
 
-.capitallb {
-  margin-top:20px;
+.ebank-table {
   width:100%;
 }
 
-.capitallb tr:nth-child(2n) {
+.ebank-table tr:nth-child(2n) {
   background:#00000023;
 }
 
-.capitallb td, .capitallb th {
+.ebank-table td, .ebank-table th {
   padding:5px 8px;
 }
 
-.capitallb .user {
+.ebank-table .user {
   display:flex;
   align-items: center;
   gap:10px;
 }
 
-.capitallb .user .avatar {
+.ebank-table .user .avatar {
   height:40px;
+}
+
+.capitallb {
+  margin-top:20px;
 }
 
 .capitallb .capital, .capitallb .balance {
