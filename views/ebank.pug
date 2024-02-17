@@ -37,7 +37,7 @@ block main
                     td.comment 
                         p <%= t.comment || "-" %>
                     td.datetime 
-                        span <%= utils.getPostDatetimeLabel(t.datetime) %>
+                        span <%= utils.getPostDatetimeLabel(t.datetime, true) %>
                     td.amount
                         | <% if (t.to_me) { %>
                         span.positive +<%=t.amount%> EBL
