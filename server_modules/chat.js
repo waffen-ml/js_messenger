@@ -351,10 +351,10 @@ exports.init = (cfx) => {
     cfx.core.app.get('/chatlist', (req, res) => {
         cfx.core.plogin(req, res, true)
         .then((user) => {
-            console.log(user)
             return cfx.chats.getChatViews(user.id)
         })
         .then((views) => {
+            console.log(views)
             cfx.core.render(req, res, 'chatlist', {views: views})
         })
         .catch(() => {})
