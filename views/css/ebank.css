@@ -28,9 +28,14 @@
 }
 
 .capitallb .user {
+  width:100%;
   display:flex;
   align-items: center;
   gap:10px;
+}
+
+.capitallb .user .avatar {
+  height:40px;
 }
 
 .capitallb .capital {
