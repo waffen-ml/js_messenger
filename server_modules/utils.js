@@ -77,6 +77,14 @@ class Utils {
         return this.getLocalizedDateLabel(datetime, 'ru') + time
     }
 
+    getMessageDatetimeLabel(datetime) {
+        if (this.isToday(datetime))
+            return this.getTimeLabel(datetime);
+        else if (this.isYesterday(datetime))
+            return 'вчера'
+        return this.formatTime(datetime)
+    }
+
     clamp(num, min, max) {
         return Math.min(Math.max(num, min), max);
     }
