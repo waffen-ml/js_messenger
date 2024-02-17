@@ -60,6 +60,10 @@
   width:max-content;
 }
 
+.transactions .target {
+  width:100%;
+}
+
 .transactions .amount .positive {
   color:#007900;
 }
