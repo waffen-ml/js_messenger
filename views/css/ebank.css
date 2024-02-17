@@ -64,6 +64,7 @@
 }
 
 .transactions .comment {
+  max-width: 40%;
 }
 
 .transactions .comment p {
