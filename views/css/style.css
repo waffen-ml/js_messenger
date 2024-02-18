@@ -168,6 +168,10 @@ input, .block, textarea {
     cursor:pointer;
 }
 
+.button.light {
+    background-color: transparent;
+}
+
 .button:hover {
     background-color:#3b2f2f30;
 }

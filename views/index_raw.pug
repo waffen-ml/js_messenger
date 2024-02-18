@@ -15,11 +15,11 @@ html
             .main-grid 
                 header 
                     .logo 
-                        a.button(href="/") ☕tox
+                        a.button.light(href="/") ☕tox
                     .current 
                         if user !== null
                             a.clean(href="/user?id=" + user.id)= user.name
-                            a.button(href="/logout", recurrent) 🚪
+                            a.button.light(href="/logout", recurrent) 🚪
                         else
                             a.clean(href="/form?name=login", recurrent) Вход
                         a.burger.clean(href="javascript:callMenu()") МЕНЮ
