@@ -32,6 +32,10 @@ class FeedHolder {
         this.react = react    
     }
 
+    onDonate(donate) {
+        this.donate = donate
+    }
+
     updatePostReactions(post) {
         let postElement = this.holder.querySelector('#post' + post.id)
         let dislike = postElement.querySelector('.dislike')
@@ -59,7 +63,18 @@ class FeedHolder {
 
             element.querySelector('.like').onclick = () => this.react(post, 1)
             element.querySelector('.dislike').onclick = () => this.react(post, 0)
+
+            let donate = element.querySelector('.donate')
             
+            donate.addEventListener('change', () => {
+                if (donate.value == 'cancel')   
+                    donate.value = 'start'
+                else if(donate.value !=' start') {
+                    let amount = parseInt(donate.value)
+                    this.donate(amount)
+                }
+            })
+
             //let iframe = element.querySelector('.html iframe')
             //if (iframe && false)
             //    iframe.srcdoc = templateManager.createHTML('html-srcdoc', {html: post.html})
@@ -79,8 +94,13 @@ class Feed {
         this.me = me
         this.holder.initLoadFeedFunction(() => this.loadBatch())
         this.holder.onReaction((p, r) => this.react(p, r))
+        this.holder.onDonate((d) => this.donate(d))
         this.loadBatch()
     }
+
+    donate(amount) {
+        alert(amount)
+    } 
 
     react(post, reaction) {
         if (!this.me || !this.me.id) {
