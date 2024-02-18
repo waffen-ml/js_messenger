@@ -45,6 +45,13 @@
     margin-top:8px;
 }
 
+.post .actions {
+    display:flex;
+    gap: 10px;
+}
+
+
+
 .post .reactions .chosen {
     background:grey;
 }

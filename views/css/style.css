@@ -156,6 +156,21 @@ input, .block, textarea {
     overflow:hidden;
 }
 
+.button {
+    display: block;
+    font-size:17px;
+    box-sizing: border-box;
+    padding:13px;
+    border:none;
+    border-radius: 12px;
+    background-color:#3b2f2f20;
+    overflow:hidden;
+}
+
+.button:hover {
+    background-color:#3b2f2f30;
+}
+
 input, textarea {
     padding:7px 11px;
     display:block;

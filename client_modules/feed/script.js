@@ -37,8 +37,8 @@ class FeedHolder {
         let dislike = postElement.querySelector('.dislike')
         let like = postElement.querySelector('.like')
 
-        like.textContent = (post.like_count > 0? post.like_count : '') + '👍'
-        dislike.textContent = (post.dislike_count > 0? post.dislike_count : '') + '👎'
+        like.textContent = '👍' + (post.like_count > 0? post.like_count : '')
+        dislike.textContent = '👎' + (post.dislike_count > 0? post.dislike_count : '')
 
         like.classList.remove('chosen')
         dislike.classList.remove('chosen')
