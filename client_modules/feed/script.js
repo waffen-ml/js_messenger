@@ -106,7 +106,7 @@ class Feed {
         this.me = me
         this.holder.initLoadFeedFunction(() => this.loadBatch())
         this.holder.onReaction((p, r) => this.react(p, r))
-        this.holder.onDonate((p, d) => this.donate(d))
+        this.holder.onDonate((p, d) => this.donate(p, d))
         this.loadBatch()
     }
 
