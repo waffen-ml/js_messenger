@@ -116,6 +116,10 @@ class Feed {
     }
 
     donate(post, amount) {
+        if(!this.me || !this.me.id) {
+            alert('Войдите в аккаунт!')
+            return
+        }
         let to_id = post.author_id
         fetch(`/maketransaction?id=${to_id}&comment=Пожертвование&amount=${amount}`)
         .then(r => r.json())
