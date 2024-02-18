@@ -125,8 +125,10 @@ exports.init = (cfx) => {
     cfx.core.app.get('/getuser', (req, res) => {
         cfx.auth.getUser(req.query.id, req.query.tag)
         .then(data => {
-            if(!data)
-                throw Error('unknown user')
+            if(!data) {
+                res.send({})
+                return
+            }
             res.send({
                 id: data.id,
                 name: data.name,
