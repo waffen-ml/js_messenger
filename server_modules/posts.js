@@ -110,12 +110,14 @@ exports.init = (cfx) => {
         let user = cfx.core.login(req, res, false)
         if(!user) return
         cfx.posts.setReaction(user.id, req.query.post_id, req.query.reaction)
+        .then(() => res.send({success:1}))
     })
     
     cfx.core.app.get('/remove_reaction', (req, res) => {
         let user = cfx.core.login(req, res, false)
         if(!user) return
         cfx.posts.removeReaction(user.id, req.query.post_id)
+        .then(() => res.send({success:1}))
     })
 
 
