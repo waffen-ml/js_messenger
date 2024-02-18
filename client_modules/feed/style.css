@@ -48,10 +48,8 @@
 .post .actions {
     margin-top:10px;
     display:flex;
-    gap: 5px;
+    gap: 7px;
 }
-
-
 
 .post .reactions .chosen {
     background:grey;

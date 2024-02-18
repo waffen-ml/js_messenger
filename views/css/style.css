@@ -160,7 +160,7 @@ input, .block, textarea {
     display: block;
     font-size:17px;
     box-sizing: border-box;
-    padding:6px;
+    padding:5px 6px;
     border:none;
     border-radius: 12px;
     background-color:#3b2f2f20;
