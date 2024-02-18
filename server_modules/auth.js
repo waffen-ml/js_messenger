@@ -103,6 +103,11 @@ exports.init = (cfx) => {
     cfx.forms.addForm(loginForm);
     cfx.forms.addForm(regForm);
 
+    app.get('/auth', (req, res) => {
+        let user = cfx.core.login(req, res, false)
+        res.send(user? user : {})
+    })
+
     cfx.core.app.get('/user', (req, res, next) => {
         return cfx.auth.getUser(req.query.id, req.query.tag)
         .then((user) => {

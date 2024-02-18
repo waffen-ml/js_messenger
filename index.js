@@ -96,12 +96,6 @@ cfx.init({
 //cfx.auth.addUser('t1', 'Ilya Kostin', '1');
 //cfx.auth.addUser('t2', 'Another guy', '1');
 
-app.get('/auth', (req, res) => {
-    plogin(req, res, false)
-    .then(user => {
-        res.send(user)
-    })
-})
 
 app.use('/node_modules', express.static(__dirname + '/node_modules/'));
 
