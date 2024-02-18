@@ -44,3 +44,7 @@
 .post .content {
     margin-top:8px;
 }
+
+.post .reactions .chosen {
+    background:grey;
+}
