@@ -180,5 +180,28 @@ exports.init = (cfx) => {
         })
     })
 
+    cfx.core.app.get('/maketransaction', (req, res) => {
+        try {
+            let user = cfx.core.login(req, res, false)
+            if(!user) throw Error(ebankErrors.UNKNOWN_SENDER)
+            let to_id = req.query.id
+            let amount = parseInt(req.query.amount)
+            let comment = req.query.comment
+            cfx.ebank.makeTransaction(user.id, to_id, amount, comment)
+            .then(r => {
+                res.send({
+                    success: true,
+                    error: null
+                })
+            })
+        }
+        catch(err) {
+            res.send({
+                success: false,
+                error: err.message
+            })
+        }
+    })
+
 
 }

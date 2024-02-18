@@ -58,11 +58,15 @@ class FeedHolder {
     }
 
     updateDonate(post, amount) {
-        let postElement = this.getPostElement(post)
-        let donate = postElement.querySelector('.donate')
+        let donate = this.getPostElement(post).querySelector('.donate')
 
         donate.style.pointerEvents = 'none'
         donate.querySelector('option[value="default"]').textContent = '✅' + amount + 'EBL'
+        donate.value = 'default'
+    }
+
+    resetDonate(post) {
+        let donate = this.getPostElement(post).querySelector('.donate')
         donate.value = 'default'
     }
 
@@ -112,7 +116,20 @@ class Feed {
     }
 
     donate(post, amount) {
-        this.holder.updateDonate(post, amount)
+        let to_id = post.author_id
+        fetch(`/maketransaction?id=${to_id}&comment=Пожертвование&amount=${amount}`)
+        .then(r => {
+            if (r.success) {
+                this.holder.updateDonate(post, amount)
+                return
+            }
+            this.holder.resetDonate(post)
+
+            if (r.error == 'LACKING_BALANCE')
+                alert('Недостаточно средств.')
+            else
+                alert('Ошибка: ' + r.error)
+        })
     } 
 
     react(post, reaction) {

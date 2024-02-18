@@ -134,7 +134,6 @@ exports.init = (cfx) => {
         })
     })
 
-
     cfx.core.app.get('/', (req, res) => {
         cfx.core.render(req, res, 'main', {})
     })
