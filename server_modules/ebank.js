@@ -182,7 +182,7 @@ exports.init = (cfx) => {
 
     cfx.core.app.get('/maketransaction', (req, res) => {
         let user = cfx.core.login(req, res, false)
-        
+
         if(!user) {
             res.send({
                 success: false,
@@ -207,6 +207,7 @@ exports.init = (cfx) => {
                 error: err.message
             })
         })
+        
     })
 
 

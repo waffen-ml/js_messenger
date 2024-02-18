@@ -5,14 +5,17 @@ new Promise((resolve) => {
         resolve(url.get('id'))
         return
     }
-
     fetch('/getuser?tag=' + url.get('tag'))
     .then(r => r.json())
     .then(r => resolve(r.id))
 }).then(id => {
-    let feed = new Feed(id, 
-        document.querySelector('.feed'), 
-        document.querySelector('main'))
+    fetch('/auth')
+    .then(r => r.json())
+    .then(r => {
+        let feed = new Feed(r, id, 
+            document.querySelector('.feed'), 
+            document.querySelector('main'))
+    })
 })
 
 document.querySelector('.set-avatar').addEventListener('click', () => {
