@@ -57,6 +57,8 @@
 
 .post .actions .donate {
     outline:none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
 }
 
 .post .actions .donate::-ms-expand {
