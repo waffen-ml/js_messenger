@@ -76,6 +76,7 @@ class Feed {
         this.authorId = authorId
         this.holder = new FeedHolder(Boolean(authorId), holder, scrollPage)
         this.feed = []
+        this.me = me
         this.holder.initLoadFeedFunction(() => this.loadBatch())
         this.holder.onReaction((p, r) => this.react(p, r))
         this.loadBatch()
@@ -105,7 +106,7 @@ class Feed {
             fetch(`/set_reaction?post_id=${post.id}&reaction=${reaction}`)
         }
 
-        updatePostReactions(post)
+        this.holder.updatePostReactions(post)
     }
 
     loadBatch() {
