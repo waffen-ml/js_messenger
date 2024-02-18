@@ -196,7 +196,8 @@ exports.init = (cfx) => {
             })
         }
         catch(err) {
-            console.log(err)
+            console.log(err.message)
+            console.log(err.msg)
             res.send({
                 success: false,
                 error: err.message
