@@ -109,13 +109,13 @@ exports.init = (cfx) => {
     cfx.core.app.get('/set_reaction', (req, res) => {
         let user = cfx.core.login(req, res, false)
         if(!user) return
-        this.cfx.posts.setReaction(user.id, req.query.chat_id, req.query.reaction)
+        cfx.posts.setReaction(user.id, req.query.post_id, req.query.reaction)
     })
     
     cfx.core.app.get('/remove_reaction', (req, res) => {
         let user = cfx.core.login(req, res, false)
         if(!user) return
-        this.cfx.posts.removeReaction(user.id, req.query.chat_id)
+        cfx.posts.removeReaction(user.id, req.query.post_id)
     })
 
 
