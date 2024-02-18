@@ -85,7 +85,7 @@ class FeedHolder {
             element.querySelector('.dislike').onclick = () => this.react(post, 0)
 
             let donate = element.querySelector('.donate')
-            
+
             donate.addEventListener('change', () => {
                 if (donate.value == 'cancel')   
                     donate.value = 'default'
@@ -94,6 +94,11 @@ class FeedHolder {
                     this.donate(post, amount)
                 }
             })
+
+            if (post.author_id == this.me.id || !this.me.id) 
+                donate.style.display = 'none'
+            
+            
 
             //let iframe = element.querySelector('.html iframe')
             //if (iframe && false)
