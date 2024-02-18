@@ -83,7 +83,7 @@ class Feed {
     }
 
     react(post, reaction) {
-        if (!this.me) {
+        if (!this.me || !this.me.id) {
             alert('Войдите в аккаунт!')
             return
         }
