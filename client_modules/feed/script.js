@@ -3,12 +3,13 @@ const loadDistance = 500
 
 
 class FeedHolder {
-    constructor(hideAuthor, holder, scrollPage) {
+    constructor(me, hideAuthor, holder, scrollPage) {
         this.scrollPage = scrollPage
         this.holder = holder
         this.loadedAll = false
         this.loadingMore = false
         this.hideAuthor = hideAuthor
+        this.me = me
     }
 
     initLoadFeedFunction(load) {
@@ -74,7 +75,9 @@ class FeedHolder {
         posts.forEach(post => {
             let element = templateManager.createElement('post', {
                 data: post,
-                hide_author: this.hideAuthor})
+                hide_author: this.hideAuthor,
+                me: this.me
+            })
             
             setupInspectObjects(element)
 
@@ -106,7 +109,7 @@ class FeedHolder {
 class Feed {
     constructor(me, authorId, holder, scrollPage) {
         this.authorId = authorId
-        this.holder = new FeedHolder(Boolean(authorId), holder, scrollPage)
+        this.holder = new FeedHolder(me, Boolean(authorId), holder, scrollPage)
         this.feed = []
         this.me = me
         this.holder.initLoadFeedFunction(() => this.loadBatch())
