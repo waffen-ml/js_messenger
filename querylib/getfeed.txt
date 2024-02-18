@@ -1,4 +1,7 @@
 select p.id, p.author_id, p.text, p.html, p.title, p.datetime, u.name as author_name,
-u.tag as author_tag, f.id as file_id, f.name as file_name, f.mimetype as file_mimetype 
+u.tag as author_tag, f.id as file_id, f.name as file_name, f.mimetype as file_mimetype,
+coalesce((select sum(r.type) from post_reaction r where r.post_id=p.id), 0) as like_count,
+coalesce((select sum(1 - r.type) from post_reaction r where r.post_id=p.id), 0) as dislike_count,
+(select r.type from post_reaction r where r.post_id=p.id and r.user_id={observer_id}) as my_reaction
 from (select * from post where id <= {start} and {author_query} order by id desc limit {count}) 
 p left join user u on p.author_id = u.id left join file f on f.bundle_id = p.bundle_id order by id desc

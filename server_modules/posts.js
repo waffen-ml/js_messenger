@@ -14,7 +14,7 @@ class Posts {
             + `values (${author_id}, ${bundle_id}, "${text}", "${html}", "${title}", now())`)
     }
 
-    getFeed(start, count, author_id) {
+    getFeed(start, count, observer_id, author_id) {
         let author_query = author_id? 'author_id=' + author_id : '1'
 
         return new Promise((resolve) => {
@@ -30,7 +30,8 @@ class Posts {
             return this.cfx.db.executeFile('getfeed', {
                 start: start,
                 count: count,
-                author_query: author_id? 'author_id=' + author_id : '1'
+                author_query: author_id? 'author_id=' + author_id : '1',
+                observer_id: observer_id
             })
         })
         .then(feed => {
@@ -39,6 +40,18 @@ class Posts {
                 file_name: 'name',
                 file_mimetype: 'mimetype'
             }, 'id')
+        })
+    }
+
+    removeReaction(user_id, post_id) {
+        return this.cfx.query('delete from post_reaction where user_id=? and post_id=?', [user_id, post_id])
+    }
+
+    setReaction(user_id, post_id, reaction) {
+        return this.removeReaction(user_id, post_id)
+        .then(() => {
+            return this.cfx.query('insert into post_reaction(post_id, user_id, type) values(?,?,?)',
+                [post_id, user_id, reaction])
         })
     }
 
@@ -74,11 +87,13 @@ exports.init = (cfx) => {
     ))
 
     cfx.core.app.get('/getfeed', (req, res) => {
+        let user = cfx.core.login(req, res, false)
         let start = parseInt(req.query.start)
         let count = parseInt(req.query.count)
         let author_id = req.query.author_id
+        let observer_id = user? user.id : -1
         
-        cfx.posts.getFeed(start, count, author_id)
+        cfx.posts.getFeed(start, count, observer_id, author_id)
         .then(feed => {
             res.send(feed)
         })
@@ -90,6 +105,19 @@ exports.init = (cfx) => {
             form: cfx.forms.getForm('create_post')
         });
     })
+
+    cfx.core.app.get('/set_reaction', (req, res) => {
+        let user = cfx.core.login(req, res, false)
+        if(!user) return
+        this.cfx.posts.setReaction(user.id, req.query.chat_id, req.query.reaction)
+    })
+    
+    cfx.core.app.get('/remove_reaction', (req, res) => {
+        let user = cfx.core.login(req, res, false)
+        if(!user) return
+        this.cfx.posts.removeReaction(user.id, req.query.chat_id)
+    })
+
 
     cfx.core.app.get('/', (req, res) => {
         cfx.core.render(req, res, 'main', {})
