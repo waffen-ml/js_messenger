@@ -90,11 +90,12 @@
     <div class="content">
         <%- templateManager.apply("text", {text: text}) %>
         <%- templateManager.apply("audio", {audio: files.audio}) %>
-        <%- templateManager.apply("html", {html: html}) %>
         <%- templateManager.apply("visual", {files: files}) %>
         <%- templateManager.apply("other", {other: files.other}) %>
     </div>
 </script>
+
+<!-- <%- templateManager.apply("html", {html: html}) %> -->
 
 <script template="system-message" type="text/x-ejs-template">
     <span class="system-message"><%= text %></span>

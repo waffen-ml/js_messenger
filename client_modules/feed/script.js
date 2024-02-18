@@ -28,30 +28,84 @@ class FeedHolder {
         })
     }
 
+    onReaction(react) {
+        this.react = react    
+    }
+
+    updatePostReactions(post) {
+        let post = this.holder.querySelector('#post' + post.id)
+        let dislike = post.querySelector('.dislike')
+        let like = post.querySelector('.like')
+
+        like.textContent = (post.like_count > 0? post.like_count : '') + '👍'
+        dislike.textContent = (post.dislike_count > 0? post.dislike_count : '') + '👎'
+
+        like.classList.remove('chosen')
+        dislike.classList.remove('chosen')
+
+        if (post.my_reaction === 0)
+            dislike.classList.add('chosen')
+        else if(post.my_reaction === 1)
+            like.classList.add('chosen')
+    }
+
     addPosts(posts) {
         posts.forEach(post => {
             let element = templateManager.createElement('post', {
                 data: post,
                 hide_author: this.hideAuthor})
+            
             setupInspectObjects(element)
 
-            let iframe = element.querySelector('.html iframe')
-            if (iframe && false)
-                iframe.srcdoc = templateManager.createHTML('html-srcdoc', {html: post.html})
+            element.querySelector('.like').onclick = () => this.react(post, 1)
+            element.querySelector('.dislike').onclick = () => this.react(post, 0)
             
+            //let iframe = element.querySelector('.html iframe')
+            //if (iframe && false)
+            //    iframe.srcdoc = templateManager.createHTML('html-srcdoc', {html: post.html})
+
             this.holder.appendChild(element)
+            this.updatePostReactions(post)
         })
     }
 
 }
 
 class Feed {
-    constructor(authorId, holder, scrollPage) {
+    constructor(me, authorId, holder, scrollPage) {
         this.authorId = authorId
         this.holder = new FeedHolder(Boolean(authorId), holder, scrollPage)
         this.feed = []
         this.holder.initLoadFeedFunction(() => this.loadBatch())
+        this.holder.onReaction((p, r) => this.react(p, r))
         this.loadBatch()
+    }
+
+    react(post, reaction) {
+        if (!this.me) {
+            alert('Войдите в аккаунт!')
+            return
+        }
+
+        if (post.my_reaction === reaction) {
+            if (reaction === 0)
+                post.dislike_count -= 1
+            else
+                post.like_count -= 1
+
+            post.my_reaction = null
+            fetch('/remove_reaction?post_id=' + post.id)
+        }
+        else {
+            if (post.my_reaction === 0)
+                post.dislike_count -= 1
+            else if(post.my_reaction === 1)
+                post.like_count -= 1
+            post.my_reaction = reaction
+            fetch(`/set_reaction?post_id=${post.id}&reaction=${reaction}`)
+        }
+
+        updatePostReactions(post)
     }
 
     loadBatch() {
