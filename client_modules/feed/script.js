@@ -62,7 +62,8 @@ class FeedHolder {
         let donate = postElement.querySelector('.donate')
 
         donate.style.pointerEvents = 'none'
-        donate.textContent = 'OK: ' + amount
+        donate.querySelector('option[value="default"]').textContent = '✅' + amount + 'EBL'
+        donate.value = 'default'
     }
 
     addPosts(posts) {
@@ -80,8 +81,8 @@ class FeedHolder {
             
             donate.addEventListener('change', () => {
                 if (donate.value == 'cancel')   
-                    donate.value = 'start'
-                else if(donate.value !=' start') {
+                    donate.value = 'default'
+                else if(donate.value !=' default') {
                     let amount = parseInt(donate.value)
                     this.donate(post, amount)
                 }
