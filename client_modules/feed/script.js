@@ -69,6 +69,7 @@ class FeedHolder {
     resetDonate(post) {
         let donate = this.getPostElement(post).querySelector('.donate')
         donate.value = 'default'
+        donate.style.pointerEvents = 'all'
     }
 
     addPosts(posts) {
@@ -91,6 +92,7 @@ class FeedHolder {
                     donate.value = 'default'
                 else if(donate.value !=' default') {
                     let amount = parseInt(donate.value)
+                    donate.style.pointerEvents = 'none'
                     this.donate(post, amount)
                 }
             })
