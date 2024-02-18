@@ -33,9 +33,9 @@ class FeedHolder {
     }
 
     updatePostReactions(post) {
-        let post = this.holder.querySelector('#post' + post.id)
-        let dislike = post.querySelector('.dislike')
-        let like = post.querySelector('.like')
+        let postElement = this.holder.querySelector('#post' + post.id)
+        let dislike = postElement.querySelector('.dislike')
+        let like = postElement.querySelector('.like')
 
         like.textContent = (post.like_count > 0? post.like_count : '') + '👍'
         dislike.textContent = (post.dislike_count > 0? post.dislike_count : '') + '👎'
