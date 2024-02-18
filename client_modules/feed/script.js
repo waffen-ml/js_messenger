@@ -36,8 +36,12 @@ class FeedHolder {
         this.donate = donate
     }
 
+    getPostElement(post) {
+        return this.holder.querySelector('#post' + post.id)
+    }
+
     updatePostReactions(post) {
-        let postElement = this.holder.querySelector('#post' + post.id)
+        let postElement = this.getPostElement(post)
         let dislike = postElement.querySelector('.dislike')
         let like = postElement.querySelector('.like')
 
@@ -51,6 +55,14 @@ class FeedHolder {
             dislike.classList.add('chosen')
         else if(post.my_reaction === 1)
             like.classList.add('chosen')
+    }
+
+    updateDonate(post, amount) {
+        let postElement = this.getPostElement(post)
+        let donate = postElement.querySelector('.donate')
+
+        donate.style.pointerEvents = 'none'
+        donate.textContent = 'OK: ' + amount
     }
 
     addPosts(posts) {
@@ -71,7 +83,7 @@ class FeedHolder {
                     donate.value = 'start'
                 else if(donate.value !=' start') {
                     let amount = parseInt(donate.value)
-                    this.donate(amount)
+                    this.donate(post, amount)
                 }
             })
 
@@ -94,12 +106,12 @@ class Feed {
         this.me = me
         this.holder.initLoadFeedFunction(() => this.loadBatch())
         this.holder.onReaction((p, r) => this.react(p, r))
-        this.holder.onDonate((d) => this.donate(d))
+        this.holder.onDonate((p, d) => this.donate(d))
         this.loadBatch()
     }
 
-    donate(amount) {
-        alert(amount)
+    donate(post, amount) {
+        this.holder.updateDonate(post, amount)
     } 
 
     react(post, reaction) {

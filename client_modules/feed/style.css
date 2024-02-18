@@ -54,3 +54,11 @@
 .post .actions .chosen {
     background:grey;
 }
+
+.post .actions .donate {
+    outline:none;
+}
+
+.post .actions .donate::-ms-expand {
+    display: none;
+}
