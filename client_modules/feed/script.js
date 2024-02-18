@@ -98,10 +98,14 @@ class Feed {
             fetch('/remove_reaction?post_id=' + post.id)
         }
         else {
-            if (post.my_reaction === 0)
+            if (post.my_reaction === 0) {
                 post.dislike_count -= 1
-            else if(post.my_reaction === 1)
+                post.like_count += 1
+            }
+            else if(post.my_reaction === 1) {
                 post.like_count -= 1
+                post.dislike_count += 1
+            }
             post.my_reaction = reaction
             fetch(`/set_reaction?post_id=${post.id}&reaction=${reaction}`)
         }
