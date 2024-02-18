@@ -118,6 +118,7 @@ class Feed {
     donate(post, amount) {
         let to_id = post.author_id
         fetch(`/maketransaction?id=${to_id}&comment=Пожертвование&amount=${amount}`)
+        .then(r => r.json())
         .then(r => {
             if (r.success) {
                 this.holder.updateDonate(post, amount)
