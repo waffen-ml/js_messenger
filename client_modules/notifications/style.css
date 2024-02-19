@@ -1,8 +1,7 @@
 
 .notification {
   position:fixed;
-  max-width:100%;
-  bottom:8px;
+  bottom:16px;
   right:8px;
   min-width:200px;
   min-height:50px;
