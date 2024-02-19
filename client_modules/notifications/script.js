@@ -16,25 +16,25 @@ function hideNotification() {
     }, 400)
 }
 
-function showNotification(link, text, title, imagesrc) {
+function showNotification(options) {
 
     if (hideTimeout) {
         clearTimeout(hideTimeout)
         hideTimeout = null
     }
 
-    textHolder.textContent = text
-    titleHolder.textContent = title ?? 'Уведомление'
+    textHolder.textContent = options.text
+    titleHolder.textContent = options.title ?? 'Уведомление'
 
-    if (imagesrc) {
-        imageHolder.src = imagesrc
+    if (options.imagesrc) {
+        imageHolder.src = options.imagesrc
         imageHolder.style.display = 'block'
     } else {
         imageHolder.style.display = 'none'
     }
 
-    if (link) {
-        notificationWindow.onclick = () => location.replace(link)
+    if (options.link) {
+        notificationWindow.onclick = () => location.replace(options.link)
         notificationWindow.style.cursor = 'pointer'
     } else {
         notificationWindow.onclick = () => {}
