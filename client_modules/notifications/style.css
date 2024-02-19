@@ -15,7 +15,7 @@
 
 .notification .inner {
   display:flex;
-  gap:8px;
+  gap:14px;
   pointer-events:none;
 }
 
