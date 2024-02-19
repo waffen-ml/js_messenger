@@ -23,6 +23,7 @@
 
 .notification .avatar {
   background:green;
+  grid-row:1/3;
 }
 
 .notification .text {
