@@ -3,8 +3,8 @@
   position:fixed;
   bottom:20px;
   right:8px;
-  min-width:200px;
-  min-height:50px;
+  min-width:250px;
+  min-height:100px;
   max-width:min(100%, 400px);
   background:white;
   box-shadow: 0 0 2px 0 black;
@@ -43,7 +43,7 @@
 
 @keyframes notification-open {
   from {
-    transform:translate(100%, 0)
+    transform:translate(calc(100% + 8px), 0)
   }
   to {
     transform:translate(0, 0)
@@ -55,6 +55,6 @@
       transform:translate(0, 0)
   }
   to {
-    transform:translate(100%, 0)
+    transform:translate(calc(100% + 8px), 0)
   }
 }
