@@ -22,7 +22,7 @@ function showNotification(options) {
         clearTimeout(hideTimeout)
         hideTimeout = null
     }
-
+    console.log(options)
     textHolder.textContent = options.text
     titleHolder.textContent = options.title ?? 'Уведомление'
 
