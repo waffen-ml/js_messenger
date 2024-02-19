@@ -1,7 +1,7 @@
 
 .notification {
   position:fixed;
-  bottom:16px;
+  bottom:20px;
   right:8px;
   min-width:200px;
   min-height:50px;
@@ -10,6 +10,7 @@
   box-shadow: 0 0 2px 0 black;
   padding:12px;
   border-radius:20px;
+  animation: notification-open 0.75s ease-in;
 }
 
 .notification .inner {
