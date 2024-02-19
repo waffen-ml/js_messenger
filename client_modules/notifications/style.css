@@ -1,5 +1,6 @@
 
 .notification {
+  display:none;
   position:fixed;
   bottom:20px;
   right:8px;
@@ -10,7 +11,6 @@
   box-shadow: 0 0 2px 0 black;
   padding:12px;
   border-radius:20px;
-  animation: notification-open 400ms ease-in-out;
 }
 
 .notification .inner {
@@ -22,7 +22,7 @@
   pointer-events:none;
 }
 
-.notification .inner > * {
+.notification .inner * {
   margin:0;
 }
 
