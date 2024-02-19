@@ -17,7 +17,8 @@
   display:grid;
   grid-template-rows: auto auto;
   grid-template-columns: auto auto;
-  gap:10px;
+  column-gap:5px;
+  row-gap:10px;
   pointer-events:none;
 }
 

@@ -1,1 +1,3 @@
-console.log("hello world!")
+const notificationWindow = document.querySelector('.notification')
+
+
