@@ -2,7 +2,7 @@
 .notification {
   display:none;
   position:fixed;
-  bottom:20px;
+  bottom:50px;
   right:8px;
   min-height:120px;
   min-width: 200px;
