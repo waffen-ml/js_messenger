@@ -10,7 +10,7 @@
   box-shadow: 0 0 2px 0 black;
   padding:12px;
   border-radius:20px;
-  animation: notification-open 200ms ease-in-out;
+  animation: notification-open 400ms ease-in-out;
 }
 
 .notification .inner {
