@@ -2,14 +2,14 @@
 .notification {
   position:fixed;
   max-width:100%;
-  bottom:10px;
-  right:10px;
+  bottom:8px;
+  right:8px;
   min-width:200px;
   min-height:100px;
   background:white;
   box-shadow: 0 0 2px 0 black;
   pointer-events:none;
-  padding:15px;
+  padding:12px;
   border-radius:20px;
 }
 
@@ -26,16 +26,18 @@
 
 .notification .title {
   background:red;
-
+  font-size:20px;
 }
 
 .notification .avatar {
   background:green;
   grid-row:1/3;
+  height:50px;
 }
 
 .notification .text {
   background:grey;
+  font-size:17px;
 }
 
 @keyframes notification-open {
