@@ -102,9 +102,9 @@ class FeedHolder {
             
             
 
-            //let iframe = element.querySelector('.html iframe')
-            //if (iframe && false)
-            //    iframe.srcdoc = templateManager.createHTML('html-srcdoc', {html: post.html})
+            let iframe = element.querySelector('.html iframe')
+            if (iframe && false)
+                iframe.srcdoc = templateManager.createHTML('html-srcdoc', {html: post.html})
 
             this.holder.appendChild(element)
             this.updatePostReactions(post)
