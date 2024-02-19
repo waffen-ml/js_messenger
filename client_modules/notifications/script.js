@@ -15,14 +15,14 @@ function hideNotification() {
 
 function showNotification(link, text, title, imagesrc) {
 
-    if(textHolder) {
+    if(text) {
         textHolder.style.display = 'block'
         textHolder.textContent = text
     } else {
         textHolder.style.display = 'none'
     }
 
-    if(titleHolder) {
+    if(title) {
         titleHolder.style.display = 'block'
         titleHolder.textContent = title
     } else {
