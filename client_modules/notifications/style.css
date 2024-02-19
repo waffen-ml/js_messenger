@@ -1,1 +1,30 @@
 
+.notification {
+  position:fixed;
+  max-width:100%;
+  bottom:0;
+  right:0;
+  min-width:100px;
+  min-height:50px;
+  background:white;
+  box-shadow: 0 0 2px 0 black;
+  transform:translate(100%, 0);
+}
+
+@keyframes notification-open {
+  from {
+    transform:translate(100%, 0)
+  }
+  to {
+    transform:translate(0, 0)
+  }
+}
+
+@keyframes notification-close {
+  from {
+      transform:translate(0, 0)
+  }
+  to {
+    transform:translate(100%, 0)
+  }
+}
