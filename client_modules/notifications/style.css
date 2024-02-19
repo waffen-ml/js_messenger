@@ -14,12 +14,15 @@
 }
 
 .notification .inner {
-  display:grid;
-  grid-template-rows: auto auto;
-  grid-template-columns: auto auto;
-  column-gap:5px;
-  row-gap:10px;
+  display:flex;
+  gap:5px;
   pointer-events:none;
+}
+
+.notification .text-column {
+  display:flex;
+  flex-direction: column;
+  gap:10px;
 }
 
 .notification .inner * {
@@ -33,7 +36,6 @@
 
 .notification .avatar {
   background:green;
-  grid-row:1/3;
   height:70px;
 }
 
