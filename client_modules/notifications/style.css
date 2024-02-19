@@ -15,12 +15,13 @@
 
 .notification .inner {
   display:flex;
-  gap:5px;
+  gap:8px;
   pointer-events:none;
 }
 
 .notification .text-column {
   display:flex;
+  justify-content: center;
   flex-direction: column;
   gap:10px;
 }
@@ -30,12 +31,10 @@
 }
 
 .notification .title {
-  background:red;
   font-size:20px;
 }
 
 .notification .avatar {
-  background:green;
   height:70px;
 }
 
