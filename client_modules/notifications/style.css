@@ -8,6 +8,7 @@
   min-height:50px;
   background:white;
   box-shadow: 0 0 2px 0 black;
+  pointer-events:none;
 }
 
 @keyframes notification-open {
