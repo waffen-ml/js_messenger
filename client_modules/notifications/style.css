@@ -21,7 +21,6 @@
 
 .notification .text-column {
   display:flex;
-  justify-content: center;
   flex-direction: column;
   gap:10px;
 }
@@ -39,7 +38,6 @@
 }
 
 .notification .text {
-  background:grey;
   font-size:17px;
 }
 
