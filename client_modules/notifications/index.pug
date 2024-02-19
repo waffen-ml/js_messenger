@@ -4,9 +4,10 @@ append header
 
 append body
   .notification
-    img.avatar(src="/getuseravatar?id=-1")
-    h3.title Нотификация
-    p.content тест тест тест тест
+    .inner
+      img.avatar(src="/getuseravatar?id=1")
+      h3.title Нотификация
+      p.text тест тест тест тест
   
   script
     include script.js

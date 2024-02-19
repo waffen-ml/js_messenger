@@ -11,6 +11,24 @@
   pointer-events:none;
 }
 
+.notification .inner {
+  display:grid;
+  gap:10px;
+}
+
+.notification .title {
+  background:red;
+
+}
+
+.notification .avatar {
+  background:green;
+}
+
+.notification .text {
+  background:grey;
+}
+
 @keyframes notification-open {
   from {
     transform:translate(100%, 0)

@@ -158,7 +158,7 @@ exports.init = (cfx) => {
     cfx.core.app.get('/getuseravatar', (req, res) => {
         cfx.auth.getUserById(req.query.id)
         .then(user => {
-            if (user.avatar_id)
+            if (user && user.avatar_id)
                 res.redirect('/file?id=' + user.avatar_id)
             else
                 res.redirect('/public/useravatar.jpg')
