@@ -20,6 +20,7 @@ function showNotification(link, text, title, imagesrc) {
 
     if (hideTimeout) {
         clearTimeout(hideTimeout)
+        hideTimeout = null
     }
 
     textHolder.textContent = text
