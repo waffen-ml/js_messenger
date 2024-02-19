@@ -43,7 +43,7 @@ function showNotification(link, text, title, imagesrc) {
 
     notificationWindow.style.display = "block"
     notificationWindow.style.animation = "none"
-    void element.offsetWidth
+    void notificationWindow.offsetWidth
     notificationWindow.style.animation = "notification-open 400ms ease-in-out"
 
     hideTimeout = setTimeout(() => {
