@@ -4,12 +4,12 @@
   max-width:100%;
   bottom:10px;
   right:10px;
-  min-width:100px;
-  min-height:50px;
+  min-width:200px;
+  min-height:100px;
   background:white;
   box-shadow: 0 0 2px 0 black;
   pointer-events:none;
-  padding:20px;
+  padding:15px;
   border-radius:20px;
 }
 
