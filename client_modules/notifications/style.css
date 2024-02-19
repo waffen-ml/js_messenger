@@ -13,6 +13,8 @@
 
 .notification .inner {
   display:grid;
+  grid-template-rows: auto auto;
+  grid-template-columns: auto auto;
   gap:10px;
 }
 
