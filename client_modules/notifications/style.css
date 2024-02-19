@@ -5,7 +5,6 @@
   bottom:20px;
   right:8px;
   min-height:100px;
-  min-width:max(250px, calc(100% - 16px));
   max-width:min(calc(100% - 16px), 400px);
   background:white;
   box-shadow: 0 0 2px 0 black;
