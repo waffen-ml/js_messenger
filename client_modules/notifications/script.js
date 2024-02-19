@@ -10,7 +10,7 @@ function playNotificationSound() {
 }
 
 function hideNotification() {
-    notificationWindow.style.animation = "notification-close 400ms ease-in-out"
+    notificationWindow.style.animation = "notification-close 400ms ease-in-out forwards"
     hideTimeout = setTimeout(() => {
         notificationWindow.style.display = 'none'
     }, 400)
@@ -42,7 +42,7 @@ function showNotification(link, text, title, imagesrc) {
     }
 
     notificationWindow.style.display = "block";
-    notificationWindow.style.animation = ""
+    notificationWindow.style.animation = "none"
     notificationWindow.style.animation = "notification-open 400ms ease-in-out";
 
     hideTimeout = setTimeout(() => {
