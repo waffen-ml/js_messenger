@@ -18,6 +18,10 @@
   gap:10px;
 }
 
+.notification .inner > * {
+  margin:0;
+}
+
 .notification .title {
   background:red;
 
