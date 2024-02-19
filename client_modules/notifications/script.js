@@ -2,7 +2,7 @@ const notificationWindow = document.querySelector('.notification')
 const textHolder = notificationWindow.querySelector('.text')
 const imageHolder = notificationWindow.querySelector('.avatar')
 const titleHolder = notificationWindow.querySelector('.title')
-
+let hideTimeout = null
 
 
 function playNotificationSound() {
@@ -10,24 +10,20 @@ function playNotificationSound() {
 }
 
 function hideNotification() {
-
+    notificationWindow.style.animation = "notification-close 400ms ease-in-out"
+    hideTimeout = setTimeout(() => {
+        notificationWindow.style.display = 'none'
+    }, 400)
 }
 
 function showNotification(link, text, title, imagesrc) {
 
-    if(text) {
-        textHolder.style.display = 'block'
-        textHolder.textContent = text
-    } else {
-        textHolder.style.display = 'none'
+    if (hideTimeout) {
+        clearTimeout(hideTimeout)
     }
 
-    if(title) {
-        titleHolder.style.display = 'block'
-        titleHolder.textContent = title
-    } else {
-        titleHolder.style.display = 'none'
-    }
+    textHolder.textContent = text
+    titleHolder.textContent = title ?? 'Уведомление'
 
     if (imagesrc) {
         imageHolder.src = imagesrc
@@ -47,12 +43,7 @@ function showNotification(link, text, title, imagesrc) {
     notificationWindow.style.display = "block";
     notificationWindow.style.animation = "notification-open 400ms ease-in-out";
 
-    
-
-    setTimeout(() => {
+    hideTimeout = setTimeout(() => {
         hideNotification()
     }, 3000)
-
-
-
 }
