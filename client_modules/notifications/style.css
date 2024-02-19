@@ -2,13 +2,15 @@
 .notification {
   position:fixed;
   max-width:100%;
-  bottom:0;
-  right:0;
+  bottom:10px;
+  right:10px;
   min-width:100px;
   min-height:50px;
   background:white;
   box-shadow: 0 0 2px 0 black;
   pointer-events:none;
+  padding:20px;
+  border-radius:20px;
 }
 
 .notification .inner {
