@@ -10,6 +10,7 @@
   background:white;
   box-shadow: 0 0 2px 0 black;
   padding:12px;
+  padding-right:20px;
   border-radius:20px;
 }
 
@@ -20,10 +21,10 @@
 }
 
 .notification .text-column {
-  padding-top:10px;
+  padding-top:6px;
   display:flex;
   flex-direction: column;
-  gap:10px;
+  gap:8px;
 }
 
 .notification .inner * {
