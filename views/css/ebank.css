@@ -48,7 +48,9 @@
 
 .capitallb .place {
   width:min-content;
+  text-align: center;
 }
+
 
 .capitallb .capital, .capitallb .balance {
   text-align: center;
