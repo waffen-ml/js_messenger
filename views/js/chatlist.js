@@ -60,7 +60,8 @@ fetch('/getchatlist')
                     left:0,
                     top:0
                 },
-                parent: main
+                destroyOnClose: true,
+                parent: null
             })
             //right: dots.getBoundingClientRect().right,
             //top: dots.getBoundingClientRect().top
