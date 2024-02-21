@@ -63,6 +63,8 @@ fetch('/getchatlist')
                 parent: main
             })
 
+            console.log('heyy!!!')
+
             cw.open()
         })
 
