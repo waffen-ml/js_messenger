@@ -136,26 +136,6 @@ class ChatSystem {
                 member_tag: 'tag'
             }, 'id')
         })
-        .then(views => {
-            views.forEach(view => {
-                if (!view.lm_id || view.lm_local_id < view.focus) {
-                    view.visible = false;
-                    return;
-                } else
-                    view.visible = true;
-
-                view.unread = view.lm_local_id - view.last_read;
-                if (!view.chat_name) {
-                    let names = view.members.filter(m => m.id != view.owner_id).map(m => m.name)
-                    view.chat_name = names.join(', ')
-                }
-                view.lm_preview = view.lm_text? view.lm_text.substr(0, 100) + ' ' : '';
-                if (view.lm_file_count > 0)
-                    view.lm_preview += `[${view.lm_file_count} файлов]`
-                view.datetime_label = view.lm_datetime && this.cfx.utils.getMessageDatetimeLabel(view.lm_datetime)
-            })
-            return views
-        })
     }
 
     getDirectChat(userid1, userid2) {
@@ -322,16 +302,13 @@ exports.init = (cfx) => {
         })
     })
 
-    cfx.core.app.get('/chatlist', (req, res) => {
-        cfx.core.plogin(req, res, true)
-        .then((user) => {
-            return cfx.chats.getChatViews(user.id)
-        })
-        .then((views) => {
-            cfx.core.render(req, res, 'chatlist', {views: views})
-        })
-        .catch((err) => {
-            console.log(err)
+    cfx.core.app.get('/getchatlist', (req, res) => {
+        let user = cfx.core.login(req, res, false)
+        if(!user)
+            res.send([])
+        cfx.chats.getChatViews(user.id)
+        .then(views => {
+            res.send(views)
         })
     })
 

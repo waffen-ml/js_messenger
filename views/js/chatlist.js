@@ -1,3 +1,35 @@
+fetch('/getchatlist')
+.then(r => r.json())
+.then(views => {
+
+    views.forEach(view => {
+        view.visible = view.lm_id && view.lm_local_id >= view.focus
+        view.unread = view.lm_local_id - view.last_read
+
+        if (!view.chat_name) {
+            let names = view.members.filter(m => m.id != view.owner_id).map(m => m.name)
+            view.chat_name = names.join(', ')
+        }
+        view.lm_preview = view.lm_text? view.lm_text.substr(0, 100) + ' ' : '';
+
+        if (view.lm_file_count > 0)
+            view.lm_preview += `[${view.lm_file_count} файлов]`
+        
+        view.datetime_label = view.lm_datetime && utils.getMessageDatetimeLabel(view.lm_datetime)
+
+    })
+
+    let holder = document.querySelector('.chatlist')
+
+    views.forEach(view => {
+
+        let element = templateManager.createElement('chat-view', view)
+        holder.appendChild(element)
+    })
+
+})
+
+
 
 document.querySelectorAll('[chatid]').forEach(chat => {
     chat.addEventListener('click', (e) => {

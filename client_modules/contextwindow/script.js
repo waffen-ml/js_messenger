@@ -2,48 +2,26 @@ const button = document.querySelector('#hey')
 
 let openedCW = null
 
-function interruptCW() {
-    if(openedCW)
-        openedCW.close(true)
-}
+document.addEventListener('click', (e) => {
+    if(!openedCW)
+        return
 
-document.addEventListener('scroll', interruptCW)
-document.addEventListener('resize', interruptCW)
-//document.addEventListener('click', (e) => {
-//    if (openedCW && !openedCW.window.contains(e.target))
-//        interruptCW()
-//})
+    if(openedCW.window.contains(e.target) || openedCW.attachedTo 
+        && openedCW.attachedTo.contains(e.target))
+        return
+    
+    openedCW.close(true)
+})
 
-
-function cwTest() {
-    let w = {};
-
-    ['hey', 'hi', 'vovapidr'].forEach(msg => {
-        w[msg] = () => console.log(msg)
-    })
-
-    let brect = button.getBoundingClientRect()
-
-    let cw = makeButtonsCW(w, {
-        top: brect.top + brect.height,
-        left: brect.left
-    })
-
-    cw.open()
-
-}
-
-function makeButtonsCW(buttons, pos) {
+function makeButtonsCW(buttons, options) {
     let cw = new ContextWindow({
         html: templateManager.createHTML('buttons-cw', {
             labels: Object.keys(buttons)
         }),
-        pos: pos ?? {},
-        className: 'cw-buttons'
+        className: 'cw-buttons',
+        ...options
     })
-    
     return cw
-
 }
 
 class ContextWindow {
@@ -52,6 +30,7 @@ class ContextWindow {
         this.window = templateManager.createElement('context-window', {
             html: options.html ?? ''
         })
+        this.attachedTo = options.attachedTo ?? null
         this.parent = options.parent ?? document.body
         this.parent.appendChild(this.window)
         this.animLength = options.animLength ?? 300
@@ -63,9 +42,13 @@ class ContextWindow {
 
         this.setPosition(options.pos ?? {})
 
+        this.parent.addEventListener('scroll', () => {
+            this.close(true)
+        })
 
-
-
+        this.parent.addEventListener('resize', () => {
+            this.close(true)
+        })
     }
 
     setPosition(pos) {
@@ -86,8 +69,11 @@ class ContextWindow {
     }
 
     close(instantly) {
-        if (openedCW == this)
-            openedCW = null
+        if (openedCW != this)
+            return Promise.resolve()
+        
+        openedCW = null
+
         return new Promise((resolve) => {
             if (instantly) {
                 resolve()

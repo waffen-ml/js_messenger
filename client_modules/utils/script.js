@@ -33,6 +33,14 @@ class Utils {
             + String(dt.getMinutes()).padStart(2, "0")
     }
 
+    formatDate(dt, year=false) {
+        let w = String(dt.getDate()).padStart(2, '0') + '.'
+            + String(dt.getMonth() + 1).padStart(2, '0')
+        if (year)
+            w += '.' + String(dt.getFullYear())
+        return w
+    }
+
     hasCurrentYear(datetime) {
         let now = new Date();
         return datetime.getFullYear() == now.getFullYear()
@@ -50,6 +58,14 @@ class Utils {
         }
 
         return this.getLocalizedDateLabel(datetime, 'ru') + time
+    }
+
+    getMessageDatetimeLabel(datetime) {
+        if (this.isToday(datetime))
+            return this.formatTime(datetime)
+        else if (this.isYesterday(datetime))
+            return 'вчера'
+        return this.formatDate(datetime, !this.hasCurrentYear(datetime))
     }
 
     distributeFiles(msg, mimetypeField) {
