@@ -49,6 +49,9 @@
     width: 100%;
 }
 .cw-buttons button {
+    padding-left:6px;
+    padding-top:3px;
+    padding-bottom:3px;
     width: 100%;
     border-radius:0;
     text-align: left;
