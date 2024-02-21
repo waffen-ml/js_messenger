@@ -51,10 +51,21 @@
   text-align: center;
 }
 
-.capitallb .gold {
+.capitallb .place1, .place2, .place3 {
+  padding:3px;
+  background:white;
+}
+
+.capitallb .place1 {
   color:#ffd900;
-  text-shadow:0px 0px 1px black;
-  font-style:italic;
+}
+
+.capitallb .place2 {
+  color:#c0c0c0;
+}
+
+.capitallb .place3 {
+  color:	#CD7F32;
 }
 
 .capitallb .capital, .capitallb .balance {
