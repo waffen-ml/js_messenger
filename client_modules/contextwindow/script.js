@@ -1,4 +1,4 @@
-const button = document.querySelector('#hi')
+const button = document.querySelector('#hey')
 
 function cwTest() {
     let w = {};
