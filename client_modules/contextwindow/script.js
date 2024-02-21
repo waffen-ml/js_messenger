@@ -41,11 +41,9 @@ class ContextWindow {
         })
         this.parent = options.parent ?? document.body
         this.parent.appendChild(this.window)
-
-        this.animType = options.animType ?? 'lt'
         this.animLength = options.animLength ?? 300
         this.destroyOnClose = options.destroyOnClose ?? true
-
+        this.window.style.transformOrigin = options.transformOrigin ?? 'top left'
         this.setPosition(options.pos ?? {})
     }
 
@@ -61,7 +59,7 @@ class ContextWindow {
             openedCW.close(true)
         openedCW = this
         this.window.style.display = 'block'
-        this.window.style.animation = `cw-open-${this.animType} ${this.animLength}ms ease-in-out`
+        this.window.style.animation = `cw-open ${this.animLength}ms ease-in-out`
 
         return new Promise((r) => setTimeout(() => r(), this.animLength))
     }
@@ -74,7 +72,7 @@ class ContextWindow {
                 resolve()
                 return
             }
-            this.window.style.animation = `cw-close-${this.animType} ${this.animLength}ms ease-in-out`
+            this.window.style.animation = `cw-close ${this.animLength}ms ease-in-out`
             setTimeout(() => {
                 resolve()
             }, this.animLength)
