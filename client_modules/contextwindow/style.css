@@ -39,6 +39,7 @@
 }
 
 .cw-buttons ul {
+    margin:0;
     padding:0;
     list-style-type: none;
     width:min-content;
@@ -50,4 +51,5 @@
 .cw-buttons button {
     width: 100%;
     border-radius:0;
+    text-align: left;
 }
