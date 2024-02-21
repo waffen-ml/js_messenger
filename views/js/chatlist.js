@@ -34,8 +34,16 @@ fetch('/getchatlist')
             window.location = '/chat?id=' + view.chat_id
         })
 
+        let cw = null
+
         dots.addEventListener('click', () => {
-            let cw = makeButtonsCW({
+            if (cw) {
+                cw.close()
+                cw = null
+                return
+            }
+            
+            cw = makeButtonsCW({
                 'Очистить историю': () => {
                     alert('hey')
                 },
