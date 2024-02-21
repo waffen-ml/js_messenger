@@ -7,8 +7,6 @@
     box-shadow:0 0 2px 0 black;
     min-width: 50px;
     min-height: 50px;
-    top:0;
-    left:0;
 }
 
 @keyframes cw-open {
