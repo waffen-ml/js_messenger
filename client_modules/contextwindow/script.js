@@ -9,10 +9,10 @@ function interruptCW() {
 
 document.addEventListener('scroll', interruptCW)
 document.addEventListener('resize', interruptCW)
-document.addEventListener('click', (e) => {
-    if (openedCW && !openedCW.window.contains(e.target))
-        interruptCW()
-})
+//document.addEventListener('click', (e) => {
+//    if (openedCW && !openedCW.window.contains(e.target))
+//        interruptCW()
+//})
 
 
 function cwTest() {
