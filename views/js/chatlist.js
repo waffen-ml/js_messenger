@@ -3,7 +3,7 @@ fetch('/getchatlist')
 .then(views => {
 
     views.forEach(view => {
-        view.lm_datetime = new Date(view.lm_datetime)
+        view.lm_datetime = view.lm_datetime? new Date(view.lm_datetime) : null
         view.visible = view.lm_id && view.lm_local_id >= view.focus
         view.unread = view.lm_local_id - view.last_read
 
@@ -15,9 +15,10 @@ fetch('/getchatlist')
 
         if (view.lm_file_count > 0)
             view.lm_preview += `[${view.lm_file_count} файлов]`
-        if (view.lm_sender_id)
+        if (view.lm_sender_id) {
             view.lm_preview = (view.lm_sender_id == view.owner_id? 'Вы' : view.lm_sender_name)
                 + ': ' + view.lm_preview
+        }
         
         view.datetime_label = view.lm_datetime && utils.getMessageDatetimeLabel(view.lm_datetime)
 
