@@ -41,6 +41,7 @@ class ContextWindow {
     }
 
     setPosition(pos) {
+        console.log(this.window)
         ['top', 'left', 'right', 'bottom'].forEach(dir => {
             if (pos[dir])
                 this.window.style[dir] = pos[dir] + 'px'
