@@ -48,10 +48,10 @@ fetch('/getchatlist')
             }
             
             cw = makeButtonsCW({
-                'Очистить историю': () => {
+                'SDFASDFADS': () => {
                     alert('hey')
                 },
-                'Выйти': () => {
+                'ADFADSFADF': () => {
                     alert('hey1')
                 }
             }, {
