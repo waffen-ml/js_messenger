@@ -17,7 +17,7 @@ block main
             each user, place in lb 
                 tr 
                     td.place 
-                        span= place 
+                        span= place + 1
                     td.user
                         img.avatar(src="/getuseravatar?id=" + user.id)
                         a.clean(href="/user?id=" + user.id)= user.name
