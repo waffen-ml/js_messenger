@@ -26,7 +26,8 @@ function makeButtonsCW(buttons, pos) {
         html: templateManager.createHTML('buttons-cw', {
             labels: Object.keys(buttons)
         }),
-        pos: pos ?? {}
+        pos: pos ?? {},
+        className: 'buttons'
     })
     
     return cw
@@ -44,6 +45,10 @@ class ContextWindow {
         this.animLength = options.animLength ?? 300
         this.destroyOnClose = options.destroyOnClose ?? true
         this.window.style.transformOrigin = options.transformOrigin ?? 'top left'
+
+        if (options.className)
+            this.window.classList.add(options.className)
+
         this.setPosition(options.pos ?? {})
     }
 
