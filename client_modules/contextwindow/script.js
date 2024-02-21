@@ -43,7 +43,7 @@ class ContextWindow {
         this.parent.appendChild(this.window)
 
         this.animType = options.animType ?? 'lt'
-        this.animLength = options.animLength ?? 400
+        this.animLength = options.animLength ?? 300
         this.destroyOnClose = options.destroyOnClose ?? true
 
         this.setPosition(options.pos ?? {})
