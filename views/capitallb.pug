@@ -23,7 +23,7 @@ block main
                             span= place + 1
                     td.user
                         img.avatar(src="/getuseravatar?id=" + user.id)
-                        a.clean(href="/user?id=" + user.id)= user.name
+                        a.clean(href="/user?id=" + user.id, class=(place < 3)&&"gold")= user.name
                     td.balance
                         span= user.balance + " EBL"
                     td.capital

@@ -51,6 +51,10 @@
   text-align: center;
 }
 
+.capitallb .gold {
+  color:#bea100;
+  font-style:italic;
+}
 
 .capitallb .capital, .capitallb .balance {
   text-align: center;
