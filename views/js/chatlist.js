@@ -64,9 +64,7 @@ fetch('/getchatlist')
             })
             //right: dots.getBoundingClientRect().right,
             //top: dots.getBoundingClientRect().top
-
-            console.log('heyy!!!')
-
+            console.log(cw.window)
             cw.open()
         })
 
