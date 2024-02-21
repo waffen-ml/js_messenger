@@ -1,2 +1,2 @@
-select id, tag, name, balance, balance / (select sum(balance) from user) * 100 
+select id, tag, name, balance, balance / (select sum(balance) from user where tag!="creditsuisse") * 100 
 as capital from user where balance > 0 and tag!="creditsuisse" order by balance desc limit 20
