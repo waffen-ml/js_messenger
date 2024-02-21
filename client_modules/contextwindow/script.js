@@ -31,8 +31,8 @@ class ContextWindow {
 
     constructor(options) {
 
-        this.window = templateManager.createElement({
-            html: templateManager.createHTML('context-window')
+        this.window = templateManager.createElement('context-window', {
+            html: options.html ?? ''
         })
         this.parent = options.parent ?? document.body
         console.log(this.window)
