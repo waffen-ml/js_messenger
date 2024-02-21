@@ -51,6 +51,10 @@ class ContextWindow {
         })
     }
 
+    isOpened() {
+        return this == openedCW
+    }
+
     setPosition(pos) {
         ['top', 'left', 'right', 'bottom'].forEach(dir => {
             if (pos[dir])

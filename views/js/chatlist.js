@@ -20,13 +20,43 @@ fetch('/getchatlist')
 
     })
 
+    let main = document.querySelector('main')
     let holder = document.querySelector('.chatlist')
 
     views.forEach(view => {
-
         let element = templateManager.createElement('chat-view', view)
+        let dots = element.querySelector('.dots')
         holder.appendChild(element)
+
+        element.addEventListener('click', (e) => {
+            if (e.target.classList.contains('dots'))
+                return
+            window.location = '/chat?id=' + view.chat_id
+        })
+
+        dots.addEventListener('click', () => {
+            let cw = makeButtonsCW({
+                'Очистить историю': () => {
+                    alert('hey')
+                },
+                'Выйти': () => {
+                    alert('hey1')
+                }
+            }, {
+                transformOrigin: 'top right',
+                pos: {
+                    right: dots.getBoundingClientRect().right,
+                    top: dots.getBoundingClientRect().top
+                },
+                parent: main
+            })
+        })
+
+        dots.open()
+        
     })
+
+    
 
 })
 

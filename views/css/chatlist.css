@@ -47,7 +47,7 @@
 .chat .dots {
     font-weight: bold;
     text-align: center;
-    width:20px;
+    width:30px;
     justify-self:end;
     align-self: center;
 }
