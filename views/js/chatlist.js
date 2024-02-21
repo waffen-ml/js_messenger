@@ -41,7 +41,7 @@ fetch('/getchatlist')
         let cw = null
 
         dots.addEventListener('click', () => {
-            if (cw) {
+            if (cw && cw.isOpened()) {
                 cw.close()
                 cw = null
                 return

@@ -83,7 +83,7 @@ class ContextWindow {
                 resolve()
                 return
             }
-            this.window.style.animation = `cw-close ${this.animLength}ms ease-in-out`
+            this.window.style.animation = `cw-close ${this.animLength}ms ease-in-out forwards`
             setTimeout(() => {
                 resolve()
             }, this.animLength)
