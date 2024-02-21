@@ -1,10 +1,9 @@
 const button = document.querySelector('#hi')
 
 function cwTest() {
-    let w = {}
+    let w = {};
 
     ['hey', 'hi', 'vovapidr'].forEach(msg => {
-        console.log(w)
         w[msg] = () => console.log(msg)
     })
 
