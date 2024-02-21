@@ -53,18 +53,20 @@
 
 .capitallb .place1, .place2, .place3 {
   padding:3px;
+  font-weight: bold;
 }
 
 .capitallb .place1 {
   color:#f2ce00;
+  text-decoration: underline;
 }
 
 .capitallb .place2 {
-  color:#ff0000;
+  color:	#0098f7;
 }
 
 .capitallb .place3 {
-  color:	#0098f7;
+  color:#ff0000;
 }
 
 .capitallb .capital, .capitallb .balance {
