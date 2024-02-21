@@ -15,6 +15,9 @@ fetch('/getchatlist')
 
         if (view.lm_file_count > 0)
             view.lm_preview += `[${view.lm_file_count} файлов]`
+        if (view.lm_sender_id)
+            view.lm_preview = (view.lm_sender_id == view.owner_id? 'Вы' : view.lm_sender_name)
+                + ': ' + view.lm_preview
         
         view.datetime_label = view.lm_datetime && utils.getMessageDatetimeLabel(view.lm_datetime)
 
@@ -58,10 +61,10 @@ fetch('/getchatlist')
                 },
                 parent: main
             })
+
+            cw.open()
         })
 
-        cw.open()
-        
     })
 
 
