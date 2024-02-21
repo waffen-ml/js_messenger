@@ -13,8 +13,10 @@ block main
                 th Пользователь
                 th Баланс
                 th Капитал
-            each user in lb 
+            each user, place in lb 
                 tr 
+                    td.place 
+                        span= place 
                     td.user
                         img.avatar(src="/getuseravatar?id=" + user.id)
                         a.clean(href="/user?id=" + user.id)= user.name
