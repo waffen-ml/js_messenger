@@ -59,7 +59,7 @@ fetch('/getchatlist')
             }, {
                 transformOrigin: 'top right',
                 pos: {
-                    right: window.screen.width - brect.right,
+                    right: document.body.clientWidth - brect.right,
                     top: brect.top + brect.height
                 },
                 attachedTo: dots,
