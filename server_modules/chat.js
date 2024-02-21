@@ -312,6 +312,12 @@ exports.init = (cfx) => {
         })
     })
 
+    cfx.core.app.get('/chatlist', (req, res) => {
+        let user = cfx.core.login(req, res, true)
+        if(!user) return
+        cfx.core.render('chatlist')
+    })
+
     cfx.core.app.get('/chat', (req, res, next) => {
         let user = cfx.core.login(req, res, true)
         if(!user) return
