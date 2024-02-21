@@ -1,10 +1,11 @@
 
 .context-window {
-
     position:absolute;
     z-index:100;
     background:white;
     box-shadow:0 0 2px 0 black;
     min-width: 50px;
     min-height: 50px;
+    top:0;
+    left:0;
 }

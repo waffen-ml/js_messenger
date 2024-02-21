@@ -17,12 +17,11 @@ function cwTest() {
 }
 
 function makeButtonsCW(buttons, pos) {
-    pos ??= {}
-
     let cw = new ContextWindow({
         html: templateManager.createHTML('buttons-cw', {
             labels: Object.keys(buttons)
-        })
+        }),
+        pos: pos ?? {}
     })
 
     return cw
