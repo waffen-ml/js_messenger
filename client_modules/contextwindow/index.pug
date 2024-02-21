@@ -6,7 +6,7 @@ append body
     script 
         include script.js 
     script(template="context-window", type="text/x-ejs-template")
-        .block.context-window
+        .block.context-window <%- html %>
     script(template="buttons-cw", type="text/x-ejs-template")
         ul 
         <% labels.forEach(label => { %>
