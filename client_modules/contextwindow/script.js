@@ -7,12 +7,10 @@ function cwTest() {
     })
 
     makeButtonsCW(w, {
-        pos: {
-            top: button.clientTop,
-            left: button.clientLeft
-        }
+        top: button.clientTop,
+        left: button.clientLeft
     })
-    
+
 }
 
 function makeButtonsCW(buttons, pos) {
