@@ -7,11 +7,9 @@ function interruptCW() {
         openedCW.close(true)
 }
 
-
-
 document.addEventListener('scroll', interruptCW)
 document.addEventListener('resize', interruptCW)
-document.addEventListener('click', (e) = >{
+document.addEventListener('click', (e) => {
     if (openedCW && !openedCW.window.contains(e.target))
         interruptCW()
 })
