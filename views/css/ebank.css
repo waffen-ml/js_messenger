@@ -46,6 +46,10 @@
   margin-top:20px;
 }
 
+.capitallb .place {
+  width:min-content;
+}
+
 .capitallb .capital, .capitallb .balance {
   text-align: center;
 }
