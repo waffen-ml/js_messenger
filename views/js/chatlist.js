@@ -3,6 +3,7 @@ fetch('/getchatlist')
 .then(views => {
 
     views.forEach(view => {
+        view.lm_datetime = new Date(view.lm_datetime)
         view.visible = view.lm_id && view.lm_local_id >= view.focus
         view.unread = view.lm_local_id - view.last_read
 
