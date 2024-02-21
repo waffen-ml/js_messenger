@@ -57,11 +57,13 @@ fetch('/getchatlist')
             }, {
                 transformOrigin: 'top right',
                 pos: {
-                    right: dots.getBoundingClientRect().right,
-                    top: dots.getBoundingClientRect().top
+                    left:0,
+                    top:0
                 },
                 parent: main
             })
+            //right: dots.getBoundingClientRect().right,
+            //top: dots.getBoundingClientRect().top
 
             console.log('heyy!!!')
 
