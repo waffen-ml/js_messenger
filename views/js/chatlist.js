@@ -46,6 +46,8 @@ fetch('/getchatlist')
                 cw = null
                 return
             }
+
+            let brect = dots.getBoundingClientRect()
             
             cw = makeButtonsCW({
                 'Очистить историю': () => {
@@ -57,8 +59,8 @@ fetch('/getchatlist')
             }, {
                 transformOrigin: 'top right',
                 pos: {
-                    left:0,
-                    top: 0
+                    right: main.clientWidth - brect.right,
+                    top: brect.top + brect.height
                 },
                 attachedTo: dots,
                 destroyOnClose: true,
