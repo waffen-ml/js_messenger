@@ -3,6 +3,13 @@ const button = document.querySelector('#hey')
 let openedCW = null
 
 
+document.addEventListener('scroll', () => {
+    if(openedCW)
+        openedCW.close(true)
+})
+
+
+
 function cwTest() {
     let w = {};
 
@@ -50,6 +57,10 @@ class ContextWindow {
             this.window.classList.add(options.className)
 
         this.setPosition(options.pos ?? {})
+
+
+
+
     }
 
     setPosition(pos) {
