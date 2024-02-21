@@ -35,7 +35,7 @@ class ContextWindow {
             html: templateManager.createHTML('context-window')
         })
         this.parent = options.parent ?? document.body
-
+        console.log(this.window)
         this.parent.appendChild(this.window)
 
         this.setPosition(options.pos ?? {})
