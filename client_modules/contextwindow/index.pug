@@ -9,7 +9,7 @@ append body
         .block.context-window <%- html %>
     script(template="buttons-cw", type="text/x-ejs-template")
         ul 
-        <% labels.forEach(label => { %>
+            <% labels.forEach(label => { %>
             li 
                 button.button <%= label %>
-        <% }) %>
+            <% }) %>
