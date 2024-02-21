@@ -9,10 +9,12 @@ function cwTest() {
 
     let brect = button.getBoundingClientRect()
 
-    makeButtonsCW(w, {
-        top: brect.top,
+    let cw = makeButtonsCW(w, {
+        top: brect.top + brect.height,
         left: brect.left
     })
+
+    cw.open()
 
 }
 
@@ -23,7 +25,7 @@ function makeButtonsCW(buttons, pos) {
         }),
         pos: pos ?? {}
     })
-
+    
     return cw
 
 }
@@ -36,7 +38,6 @@ class ContextWindow {
             html: options.html ?? ''
         })
         this.parent = options.parent ?? document.body
-
         this.parent.appendChild(this.window)
 
         this.setPosition(options.pos ?? {})
@@ -47,6 +48,11 @@ class ContextWindow {
             if (pos[dir])
                 this.window.style[dir] = pos[dir] + 'px'
         })
+    }
+
+    open() {
+        this.window.style.display = 'block'
+        this.window.style.animation = 'cw-open-lt 400ms ease-in-out'
     }
 
 }

@@ -1,6 +1,7 @@
 
 .context-window {
     position:absolute;
+    display:none;
     z-index:100;
     background:white;
     box-shadow:0 0 2px 0 black;
@@ -8,4 +9,13 @@
     min-height: 50px;
     top:0;
     left:0;
+}
+
+@keyframes cw-appear-lt {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
