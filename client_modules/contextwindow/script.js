@@ -2,12 +2,19 @@ const button = document.querySelector('#hey')
 
 let openedCW = null
 
-
-document.addEventListener('scroll', () => {
+function interruptCW() {
     if(openedCW)
         openedCW.close(true)
-})
+}
 
+
+
+document.addEventListener('scroll', interruptCW)
+document.addEventListener('resize', interruptCW)
+document.addEventListener('click', (e) = >{
+    if (openedCW && !openedCW.window.contains(e.target))
+        interruptCW()
+})
 
 
 function cwTest() {
