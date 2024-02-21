@@ -7,6 +7,8 @@ function cwTest() {
         w[msg] = () => console.log(msg)
     })
 
+    console.log(button.clientTop + ' ' + button.clientLeft)
+
     makeButtonsCW(w, {
         top: button.clientTop,
         left: button.clientLeft
@@ -35,7 +37,7 @@ class ContextWindow {
             html: options.html ?? ''
         })
         this.parent = options.parent ?? document.body
-        console.log(this.window)
+
         this.parent.appendChild(this.window)
 
         this.setPosition(options.pos ?? {})
