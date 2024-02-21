@@ -14,7 +14,6 @@ class Chat {
     }
 
     containsUser(id) {
-        return Promise.resolve(true);
         return this.cfx.query(`select id from chat_member where user_id=${id} and chat_id=${this.id}`)
         .then((r) => {
             return r.length > 0;
