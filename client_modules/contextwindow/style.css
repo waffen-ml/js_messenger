@@ -39,7 +39,14 @@
     width:min-content;
 }
 
-.cw-buttons .button:not(:first-child) {
+.cw-buttons li {
+    width: 100%;
+}
+
+.cw-buttons li:not(:first-child) {
     margin-top:5px;
-    width:100%;
+}
+
+.cw-buttons button {
+    width: 100%;
 }
