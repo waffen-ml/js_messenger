@@ -23,7 +23,7 @@ append body
             p.finite.last-msg-preview <%= lm_preview %>
             a.button.light.dots ...
             .event-icons
-                span.new-msg(text!="<%= view.unread %>")
+                span.new-msg(text!="<%= unread %>")
                 span.call(text="📞")
 
     script(template="friend", type="text/x-ejs-template")
