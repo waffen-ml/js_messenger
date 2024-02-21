@@ -7,11 +7,11 @@ function cwTest() {
         w[msg] = () => console.log(msg)
     })
 
-    console.log(button.clientTop + ' ' + button.clientLeft)
+    let brect = button.getBoundingClientRect()
 
     makeButtonsCW(w, {
-        top: button.clientTop,
-        left: button.clientLeft
+        top: brect.top,
+        left: brect.left
     })
 
 }
