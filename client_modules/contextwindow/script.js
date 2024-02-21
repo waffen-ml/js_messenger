@@ -27,7 +27,7 @@ function makeButtonsCW(buttons, pos) {
             labels: Object.keys(buttons)
         }),
         pos: pos ?? {},
-        className: 'buttons'
+        className: 'cw-buttons'
     })
     
     return cw

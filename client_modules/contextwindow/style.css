@@ -16,10 +16,6 @@
         opacity: 0;
         transform: scale(50%);
     }
-    50% {
-        opacity: 1;
-        transform:scale(75%);
-    }
     to {
         opacity: 1;
         transform:scale(100%);
@@ -31,12 +27,19 @@
         opacity: 1;
         transform: scale(100%);
     }
-    50% {
-        opacity: 1;
-        transform:scale(75%);
-    }
     to {
         opacity: 0;
         transform:scale(50%);
     }
+}
+
+.cw-buttons ul {
+    padding:0;
+    list-style-type: none;
+    width:min-content;
+}
+
+.cw-buttons .button:not(:first-child) {
+    margin-top:5px;
+    width:100%;
 }
