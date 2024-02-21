@@ -52,7 +52,8 @@
 }
 
 .capitallb .gold {
-  color:#bea100;
+  color:#ffd900;
+  text-shadow:0px 0px 1px grey;
   font-style:italic;
 }
 
