@@ -1,5 +1,8 @@
 const button = document.querySelector('#hey')
 
+let openedCW = null
+
+
 function cwTest() {
     let w = {};
 
@@ -33,12 +36,15 @@ function makeButtonsCW(buttons, pos) {
 class ContextWindow {
 
     constructor(options) {
-
         this.window = templateManager.createElement('context-window', {
             html: options.html ?? ''
         })
         this.parent = options.parent ?? document.body
         this.parent.appendChild(this.window)
+
+        this.animType = options.animType ?? 'lt'
+        this.animLength = options.animLength ?? 400
+        this.destroyOnClose = options.destroyOnClose ?? true
 
         this.setPosition(options.pos ?? {})
     }
@@ -51,8 +57,32 @@ class ContextWindow {
     }
 
     open() {
+        if(openedCW)
+            openedCW.close(true)
+        openedCW = this
         this.window.style.display = 'block'
-        this.window.style.animation = 'cw-open-lt 400ms ease-in-out'
+        this.window.style.animation = `cw-open-${this.animType} ${this.animLength}ms ease-in-out`
+
+        return new Promise((r) => setTimeout(() => r(), this.animLength))
+    }
+
+    close(instantly) {
+        if (openedCW == this)
+            openedCW = null
+        return new Promise((resolve) => {
+            if (instantly) {
+                resolve()
+                return
+            }
+            this.window.style.animation = `cw-close-${this.animType} ${this.animLength}ms ease-in-out`
+            setTimeout(() => {
+                resolve()
+            }, this.animLength)
+        }).then(() => {
+            this.window.style.display = 'none'
+            if (this.destroyOnClose)
+                this.parent.removeChild(this.window)
+        })
     }
 
 }

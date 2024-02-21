@@ -11,7 +11,7 @@
     left:0;
 }
 
-@keyframes cw-appear-lt {
+@keyframes cw-open-lt {
     from {
         opacity: 0;
     }
