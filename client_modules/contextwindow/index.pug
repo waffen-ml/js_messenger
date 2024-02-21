@@ -1,0 +1,15 @@
+append header 
+    style 
+        include style.css
+
+append body 
+    script 
+        include script.js 
+    script(template="context-window", type="text/x-ejs-template")
+        .block.context-window
+    script(template="buttons-cw", type="text/x-ejs-template")
+        ul 
+        <% labels.forEach(label => { %>
+            li 
+                button <%= label %>
+        <% }) %?>
