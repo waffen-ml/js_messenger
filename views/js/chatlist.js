@@ -52,11 +52,11 @@ fetch('/getchatlist')
             })
         })
 
-        dots.open()
+        cw.open()
         
     })
 
-    
+
 
 })
 
