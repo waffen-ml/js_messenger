@@ -107,12 +107,14 @@
             <%- templateManager.apply("visual", {files: data.files}) %>
             <%- templateManager.apply("audio", {audio: data.files.audio}) %>
             <%- templateManager.apply("other", {other: data.files.other}) %>
-            <p class="text">
-                <%- data.text.replace(/\n/g, '<br>') %>
-                <span class="date">
+            <div class="bottom">
+                <p class="text">
+                    <%- data.text.replace(/\n/g, '<br>') %>
+                </p>
+                <span class="time">
                     <%= utils.formatTime(data.datetime) %>
                 </span>
-            </p>
+            </div>
         </div>
     </div>
 </script>

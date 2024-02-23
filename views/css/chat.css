@@ -116,6 +116,17 @@ main {
     display:none;
 }
 
+.user-message .bottom {
+    max-width: 100%;
+
+}
+
+.user-message .time {
+    color:#454545;
+    vertical-align: bottom;
+    font-size:0.75em;
+}
+
 .user-message .text {
     margin:0;
 }
