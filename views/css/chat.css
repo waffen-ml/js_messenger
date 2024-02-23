@@ -88,7 +88,7 @@ main {
     gap:13px;
 }
 
-.user-message.minor .top-bar {
+.minor .top-bar {
     display:none;
 }
 
