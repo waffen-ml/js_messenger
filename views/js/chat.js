@@ -145,7 +145,7 @@ class ChatInterface {
     }
 
     makeMessageMinor(id) {
-        let msg = this.getMessageWrapper(id)
+        let msg = this.getMessageWrapper(id).querySelector('.user-message')
         msg.classList.add('minor')
     }
 
