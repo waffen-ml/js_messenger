@@ -4,8 +4,7 @@ class Auth {
     }
 
     _getUserByQuery(query) {
-        return this.cfx.query(`select id, name, tag, admin, 
-            avatar_id, balance from user where ${query}`)
+        return this.cfx.query(`select * from user where ${query}`)
         .then((result) => {
             if(!result.length)
                 return null;
