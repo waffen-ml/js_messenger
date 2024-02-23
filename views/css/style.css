@@ -104,16 +104,17 @@ nav .button {
     align-items: center;
 }
 
-nav a .label {
+nav .button .label {
 
 }
 
-nav a .unread {
+nav .button .unread {
     color:white;
     background:grey;
-    border-radius:50%;
-    padding:5px;
-    aspect-ratio:1;
+    border-radius:0.5em;
+    padding:3px;
+    width:1em;
+    font-size:17px;
 }
 
 main {
