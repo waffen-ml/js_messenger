@@ -46,12 +46,11 @@ main {
 
 
 .message-wrapper {
-    margin-top:10px;
 }
 
 .date-label {
     margin-top:15px;
-    margin-bottom:20px;
+    margin-bottom:10px;
 }
 
 .date-label .system-message {
@@ -66,6 +65,7 @@ main {
 }
 
 .user-message {
+    margin-top:20px;
     display:flex;
     gap:5px;
     align-items: flex-end;
@@ -88,6 +88,10 @@ main {
     margin-left:auto;
 }
 
+.user-message.mine .avatar {
+    display:none;
+}
+
 .content-block {
     margin:0;
     flex-shrink: 0;
@@ -97,7 +101,7 @@ main {
     width: max-content;
 }
 
-.message-wrapper.minor {
+.user-message.minor {
     margin-top:5px;
 }
 
