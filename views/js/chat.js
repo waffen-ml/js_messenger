@@ -679,6 +679,7 @@ fetch('/auth')
 })
 .then(r => r.json())
 .then(info => {
+    console.log(info)
     chat = new Chat(user, info, socket)
     call = new Call(user, info, socket)
 })
