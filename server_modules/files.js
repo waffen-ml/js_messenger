@@ -82,12 +82,8 @@ exports.init = (cfx) => {
                 throw Error('Unknown file')
 
             let buffer = Buffer.from(file.data, 'base64')
-            //res.setHeader('Content-Disposition', 'attachment; filename=' + encodeURI(file.name))
-            res.writeHead(200, [
-                ['Content-Disposition', 'attachment; filename=' + encodeURI(file.name)]
-            ])
-            res.end(buffer)
-            //res.send(buffer)
+            res.setHeader('Content-Disposition', 'attachment; filename=' + encodeURI(file.name))
+            res.send(buffer)
         })
         .catch(err => {
             next(err)
