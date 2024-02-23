@@ -47,9 +47,13 @@ main {
 .message-wrapper {
 }
 
+.date-label {
+    margin-top:5px;
+}
+
 .system-message {
     display:block;
-    margin-top:20px;
+    margin-top:15px;
     width: 100%;
     text-align: center;
     font-style: italic;
