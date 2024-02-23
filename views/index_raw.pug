@@ -25,7 +25,8 @@ html
                         a.burger.clean(href="javascript:callMenu()") МЕНЮ
                 nav 
                     each link, text in nav
-                        a.button.light(href=link)=text
+                        a.button.light(href=link)
+                            span.label= text
                             span.unread 1
                 main.styled-scroll
                     block main

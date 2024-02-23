@@ -99,6 +99,20 @@ nav {
 
 nav a {
     font-size:19px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav a .label {
+
+}
+
+nav a .unread {
+    color:white;
+    background:grey;
+    border-radius:50%;
+    padding:5px;
 }
 
 main {
