@@ -75,7 +75,7 @@ main {
 }
 
 .user-message .avatar {
-    height:30px;
+    height:40px;
 }
 
 .user-message.minor .avatar {
@@ -85,6 +85,9 @@ main {
 
 .user-message.mine .content-block {
     background-color: #ded3b5;
+}
+
+.user-message.mine {
     margin-left:auto;
 }
 
