@@ -252,7 +252,7 @@ class Chat {
         this.chatid = info.id
         this.socket = socket
         this.me = me
-        this.interface = new ChatInterface(info.direct)
+        this.interface = new ChatInterface(info.is_direct)
         this.messages = new ChatMessages(this.interface, me)
 
         this.interface.initSendFunction(() => this.send())
