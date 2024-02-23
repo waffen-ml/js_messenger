@@ -45,12 +45,11 @@ main {
 }
 
 .message-wrapper {
-    margin-top:10px;
 }
 
 .system-message {
     display:block;
-    margin-top:15px;
+    margin-top:20px;
     width: 100%;
     text-align: center;
     font-style: italic;
@@ -61,7 +60,7 @@ main {
 }
 
 .user-message {
-    margin-top:15px;
+    margin-top:18px;
     flex-shrink: 0;
     background: #e2ccb9d7;
     max-width: 500px;
