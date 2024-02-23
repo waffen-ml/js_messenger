@@ -112,6 +112,7 @@ main {
 .user-message .name {
     margin-top:0;
     margin-bottom:4px;
+    display:block;
 }
 
 .user-message.minor .name, .user-message.mine .name,
