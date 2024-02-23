@@ -123,8 +123,7 @@ main {
 
 .user-message .time {
     color:#454545;
-    vertical-align: bottom;
-    font-size:0.75em;
+    font-size:0.85em;
 }
 
 .user-message .text {
