@@ -79,7 +79,7 @@ main {
 }
 
 .user-message.minor .avatar {
-    display:none;
+    visibility: hidden;
 }
 
 
