@@ -58,6 +58,11 @@ function render(req, res, page, params) {
     });
 }
 
+function redirectToLogin(req, res) {
+    res.redirect('/form?name=login&next='
+    + encodeURIComponent(req.url))
+}
+
 function login(req, res, requireLogin) {
     let user = req.session.user;
     if (!user && requireLogin)
