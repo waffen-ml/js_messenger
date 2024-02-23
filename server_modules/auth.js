@@ -151,19 +151,17 @@ exports.init = (cfx) => {
         })
     })
 
-    cfx.core.app.get('/getuser', (req, res) => {
-        cfx.auth.getUser(req.query.id, req.query.tag)
+    cfx.core.safeGet('/getuser', (req, res) => {
+        return cfx.auth.getUser(req.query.id, req.query.tag)
         .then(data => {
-            if(!data) {
-                res.send({})
-                return
-            }
-            res.send({
+            if(!data)
+                return {}
+            return {
                 id: data.id,
                 name: data.name,
                 tag: data.tag,
                 avatar_id: data.avatar_id
-            })
+            }
         })
     })
 
