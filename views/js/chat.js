@@ -146,10 +146,7 @@ class ChatInterface {
 
     makeMessageMinor(id) {
         let msg = this.getMessageWrapper(id).querySelector('.message')
-        let topBar = msg.querySelector('.top-bar')
-        if(!topBar)
-            return
-        msg.removeChild(topBar)
+        msg.classList.add('minor')
     }
 
     clearInput() {
@@ -228,6 +225,10 @@ class ChatMessages {
             if (!this.requiresDateLabel(b, a)) {
                 this.interface.removeDateLabel(b.id)
                 b.dateLabel = false
+            }
+            if (this.isMinor(b, a)) {
+                this.interface.makeMessageMinor(b.id)
+                b.minor = true
             }
         }
 

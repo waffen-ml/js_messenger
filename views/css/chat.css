@@ -88,6 +88,10 @@ main {
     gap:13px;
 }
 
+.user-message.minor .top-bar {
+    display:none;
+}
+
 .user-message .text {
     margin:0;
 }

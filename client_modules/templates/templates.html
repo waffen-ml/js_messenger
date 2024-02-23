@@ -96,13 +96,11 @@
 <script template="standard-message" type="text/x-ejs-template">
     <% let cls = (data.minor? 'minor' : '') + ' ' + (myid == data.sender_id? 'mine' : '') %>
     <div class="user-message block <%= cls %>">
-        <% if (!data.minor) { %>
-            <div class="top-bar">
-                <a href="/user?tag=<%= data.sender_tag %>" class="finite clean name">
-                    <%= data.sender_name %>
-                </a>
-            </div>
-        <% } %>
+        <div class="top-bar">
+            <a href="/user?tag=<%= data.sender_tag %>" class="finite clean name">
+                <%= data.sender_name %>
+            </a>
+        </div>
         <%- templateManager.apply("visual", {files: data.files}) %>
         <%- templateManager.apply("audio", {audio: data.files.audio}) %>
         <%- templateManager.apply("other", {other: data.files.other}) %>
