@@ -29,13 +29,14 @@ app.use(cors());
 
 const sessionMiddleware = session({
     secret: 'coffee tox',
-    cookie: {maxAge: 1000 * 60 * 60},
+    cookie: {maxAge: 1000 * 60 * 60 * 48},
     saveUninitialized: false,
     resave: false
 });
 
 app.use('/public', express.static('public'))
 app.use('/cmodules', express.static('client_modules'))
+app.use('/node_modules', express.static(__dirname + '/node_modules/'));
 
 app.use(sessionMiddleware);
 io.engine.use(sessionMiddleware);
@@ -57,11 +58,6 @@ function render(req, res, page, params) {
     });
 }
 
-function redirectToLogin(req, res) {
-    res.redirect('/form?name=login&next='
-    + encodeURIComponent(req.url));
-}
-
 function login(req, res, requireLogin) {
     let user = req.session.user;
     if (!user && requireLogin)
@@ -70,14 +66,59 @@ function login(req, res, requireLogin) {
 }
 
 function plogin(req, res, requireLogin) {
-
     return new Promise((resolve, reject) => {
         let user = login(req, res, requireLogin)
-
         if(!user && requireLogin)
             reject()
-
         resolve(user)
+    })
+}
+
+
+function safeGet(pattern, onget, reqlogin) {
+    app.get(pattern, (req, res) => {
+        try {
+            let user = req.session.user
+            if(!user && reqlogin) {
+                res.send({
+                    error: 'User is not authorized'
+                })
+                return
+            }
+            Promise.resolve(onget(user, req, res))
+            .then(r => {
+                res.send(r)
+            })
+        }
+        catch(err) {
+            res.send({
+                error: err.message
+            })
+        }
+    })
+}
+
+function safeRender(pattern, onget, reqlogin) {
+    app.get(pattern, (req, res, next) => {
+        try {
+            let user = req.session.user
+            if(!user && reqlogin) {
+                res.redirect('/form?name=login&next='
+                + encodeURIComponent(req.url))
+                return
+            }
+    
+            Promise.resolve(onget(user, req, res))
+            .then(data => {
+                render(req, res, data.render, data)
+            })
+        }
+        catch(err) {
+            res.status(500);
+            render(req, res, 'error', {
+                error: err.message
+            })
+        }
     })
 }
 
@@ -90,14 +131,10 @@ cfx.init({
     session: session,
     render: render,
     login: login,
-    plogin: plogin
-});
-//cfx.chats.createChat('Coffee chat');
-//cfx.auth.addUser('t1', 'Ilya Kostin', '1');
-//cfx.auth.addUser('t2', 'Another guy', '1');
-
-
-app.use('/node_modules', express.static(__dirname + '/node_modules/'));
+    plogin: plogin,
+    safeGet: safeGet,
+    safeRender: safeRender
+})
 
 app.get('/createchat', (req, res) => {
     const user = login(req, res, true);
@@ -180,13 +217,6 @@ app.get('/croptest', (req, res) => {
 
 app.use((req, res, next) => {
     next(new Error('Not found'))
-})
-
-app.use((err, req, res, next) => {
-    res.status(500);
-    render(req, res, 'error', {
-        error: err.message
-    })
 })
 
 server.listen(443, () => {

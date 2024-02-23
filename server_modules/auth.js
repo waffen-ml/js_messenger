@@ -4,7 +4,8 @@ class Auth {
     }
 
     _getUserByQuery(query) {
-        return this.cfx.query(`select * from user where ${query}`)
+        return this.cfx.query(`select id, name, tag, admin, 
+            avatar_id, balance from user where ${query}`)
         .then((result) => {
             if(!result.length)
                 return null;
@@ -28,10 +29,18 @@ class Auth {
         return this.getUserByTag(tag)
         .then(u => {
             if (u) return;
-            return this.cfx.query(`insert into user(name, tag, password) values ("${name}", "${tag}", "${password}")`)
+            return this.cfx.query(`insert into user(name, tag, password) 
+                values (?, ?, ?)`, [name, tag, password])
             .then(() => {
                 return this.getUserByTag(tag);
             });
+        })
+    }
+
+    isAdmin(id) {
+        return this.getUserById(id)
+        .then(user => {
+            return user && user.admin
         })
     }
 }
@@ -93,7 +102,28 @@ const loginForm = new Form(
         cfx.authSession(user);
     }, {'Создать аккаунт': '/form?name=reg',
         'Забыли пароль?': '#'}
-) 
+)
+
+const banForm = new Form(
+    {name: 'ban', title: 'Забанить'},
+    [
+        {type: 'text', title: 'Тег пользователя', name: 'tag'},
+        {type: 'text', title: 'Срок', name: 'time'},
+        {type: 'text', title: 'Причина', name: 'reason', optional: true}
+    ], (data, erf, cfx) => {
+        let observer = cfx.user()
+        if (!observer) {
+            erf('tag', 'Вы не админ')
+            return
+        }
+        return cfx.auth.isAdmin(observer.id)
+        .then(admin => {
+            if(!admin)
+                erf('tag', 'Вы не админ')
+        })
+
+    }
+)
 
 exports.init = (cfx) => {
     if (!cfx.forms || !cfx.db || !cfx.files)

@@ -77,15 +77,6 @@
     <% } %>
 </script>
 
-<script template="msg-content" type="text/x-ejs-template">
-    <div class="content">
-        <%- templateManager.apply("visual", {files: files}) %>
-        <%- templateManager.apply("audio", {audio: files.audio}) %>
-        <%- templateManager.apply("other", {other: files.other}) %>
-        <%- templateManager.apply("text", {text: text}) %>
-    </div>
-</script>
-
 <script template="post-content" type="text/x-ejs-template">
     <div class="content">
         <%- templateManager.apply("text", {text: text}) %>
@@ -102,7 +93,7 @@
     <span class="system-message"><%= text %></span>
 </script>
 
-<script template="user-message" type="text/x-ejs-template">
+<script template="standard-message" type="text/x-ejs-template">
     <% let cls = (data.minor? 'minor' : '') + ' ' + (myid == data.sender_id? 'mine' : '') %>
     <div class="user-message block <%= cls %>">
         <% if (!data.minor) { %>
@@ -110,12 +101,17 @@
                 <a href="/user?tag=<%= data.sender_tag %>" class="finite clean name">
                     <%= data.sender_name %>
                 </a>
-                <span class="date">
-                    <%= utils.formatTime(data.datetime) %>
-                </span>
             </div>
         <% } %>
-        <%- templateManager.apply("msg-content", data) %>
+        <%- templateManager.apply("visual", {files: data.files}) %>
+        <%- templateManager.apply("audio", {audio: data.files.audio}) %>
+        <%- templateManager.apply("other", {other: data.files.other}) %>
+        <p class="text">
+            <%- data.text.replace(/\n/g, '<br>') %>
+            <span class="date">
+                <%= utils.formatTime(data.datetime) %>
+            </span>
+        </p>
     </div>
 </script>
 
@@ -125,7 +121,7 @@
             <%- templateManager.apply("system-message", {text: utils.getLocalizedDateLabel(data.datetime, true)}) %>
         <% } %> 
         <% if (data.sender_id !== null && data.sender_id !== undefined) { %>
-            <%- templateManager.apply("user-message", {data: data, myid: myid}) %>
+            <%- templateManager.apply("standard-message", {data: data, myid: myid}) %>
         <% } else { %>
             <%- templateManager.apply("system-message", {text: data.text}) %>
         <% } %>
