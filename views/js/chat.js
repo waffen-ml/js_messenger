@@ -196,8 +196,8 @@ class ChatMessages {
     }
 
     isMinor(curr, prev) {
-        return curr.sender_id === prev.sender_id && 
-            utils.differenceInMinutes(curr.datetime, prev.datetime) < 5
+        return curr.sender_id === prev.sender_id
+            // && utils.differenceInMinutes(curr.datetime, prev.datetime) < 5
     }
 
     requiresDateLabel(curr, prev) {
