@@ -92,11 +92,6 @@ exports.init = (cfx) => {
                 res.setHeader('Content-Type', file.mimetype + '/' + path.extname(file.name).substring(1))
 
             res.send(buffer)
-
-            //accept-ranges: bytes
-            //Content-Length: BYTE_LENGTH_OF_YOUR_FILE
-            //Content-Range: bytes 0-BYTE_LENGTH_OF_YOUR_FILE/BYTE_LENGTH_OF_YOUR_FILE
-            //content-type: audio/mp3
         })
         .catch(err => {
             next(err)
