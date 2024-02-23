@@ -118,6 +118,10 @@ nav .button .unread {
     text-align:center;
 }
 
+nav .button .unread.zero {
+    display:none;
+}
+
 main {
     box-sizing: border-box;
     padding:10px;
