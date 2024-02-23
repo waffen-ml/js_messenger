@@ -105,14 +105,13 @@ main {
     margin-top:5px;
 }
 
-.user-message .top-bar {
+.user-message .name {
     margin-top:0;
     margin-bottom:4px;
-    display:flex;
-    gap:13px;
 }
 
-.user-message.minor .top-bar {
+.user-message.minor .name, .user-message.mine .name,
+.holder.direct .user-message .name {
     display:none;
 }
 
@@ -128,7 +127,7 @@ main {
     font-size:0.7em;
     float:right;
     top:0.6em;
-    margin-left:6px;
+    margin-left:8px;
 }
 
 .user-message .text {

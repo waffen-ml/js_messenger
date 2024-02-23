@@ -3,7 +3,7 @@ const socket = io();
 const loadWindow = 15
 
 class ChatInterface {
-    constructor() {
+    constructor(isdirect) {
         this.holder = document.querySelector('.holder')
         this.holderWrapper = document.querySelector('.holder-wrapper')
         this.loadZone = document.querySelector('.load-zone')
@@ -11,6 +11,9 @@ class ChatInterface {
         this.loadedAll = false
         this.loadingMore = false
         this.attachedFiles = []
+
+        if(isdirect)
+            this.holder.classList.add('direct')
 
         document.querySelector('#file').addEventListener('click', () => {
             this.openFilePopup()
@@ -244,11 +247,12 @@ class ChatMessages {
 }
 
 class Chat {
-    constructor(me, chatid, socket) {
-        this.chatid = chatid
+    constructor(me, info, socket) {
+        this.info = info
+        this.chatid = info.id
         this.socket = socket
         this.me = me
-        this.interface = new ChatInterface()
+        this.interface = new ChatInterface(info.direct)
         this.messages = new ChatMessages(this.interface, me)
 
         this.interface.initSendFunction(() => this.send())
@@ -660,17 +664,22 @@ class Call {
 
 let chat = null
 let call = null
+let user = null
 
 fetch('/auth')
 .then((r) => r.json())
-.then(user => {
-    if(!user) {
+.then(user_ => {
+    if(!user_) {
         alert('Вы не вошли в аккаунт.')
         location.replace('/')
         return
     }
-    chat = new Chat(user, chatid, socket)
-    call = new Call(user, chatid, socket)
+    user = user_
+    return fetch('/getchatinfo?id=' + chatid)
+})
+.then(info => {
+    chat = new Chat(user, info, socket)
+    call = new Call(user, info, socket)
 })
 
 
