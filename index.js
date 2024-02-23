@@ -44,10 +44,22 @@ io.engine.use(sessionMiddleware);
 function render(req, res, page, params) {
     res.render(page, {
         nav: {
-            'Сообщения': '/chatlist',
-            'Банк CFX': '/ebank',
-            'Создать пост': '/create_post',
-            'Друзья': '/friends'
+            'messages': {
+                text: 'Сообщения',
+                link: '/ebank'
+            },
+            'bank': {
+                text: 'Банк CFX',
+                link: '/ebank'
+            },
+            'create_post': {
+                text: 'Создать пост',
+                link: '/create_post'
+            },
+            'friends': {
+                text: 'Друзья',
+                link: '/friends'
+            }
         },
         user: cfx.as(req.session).user(),
         cfx: cfx,
