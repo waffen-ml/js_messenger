@@ -11,9 +11,11 @@
   background:white;
 }
 
-.popup.menu ul {
-  padding-left:10px;
-  
+.popup.menu .wrapper {
+  display:flex;
+  flex-direction: column;
+  padding-top:30px;
+  justify-content: space-between;
 }
 
 @keyframes menu-appear {
