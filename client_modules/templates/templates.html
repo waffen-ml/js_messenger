@@ -95,21 +95,25 @@
 
 <script template="standard-message" type="text/x-ejs-template">
     <% let cls = (data.minor? 'minor' : '') + ' ' + (myid == data.sender_id? 'mine' : '') %>
-    <div class="user-message block <%= cls %>">
-        <div class="top-bar">
-            <a href="/user?tag=<%= data.sender_tag %>" class="finite clean name">
-                <%= data.sender_name %>
-            </a>
+
+    <div class="user-message <%= cls %>">
+        <img class="avatar" src="/getuseravatar?id=<%= data.sender_id %>">
+        <div class="block content-block">
+            <div class="top-bar">
+                <a href="/user?tag=<%= data.sender_tag %>" class="finite clean name">
+                    <%= data.sender_name %>
+                </a>
+            </div>
+            <%- templateManager.apply("visual", {files: data.files}) %>
+            <%- templateManager.apply("audio", {audio: data.files.audio}) %>
+            <%- templateManager.apply("other", {other: data.files.other}) %>
+            <p class="text">
+                <%- data.text.replace(/\n/g, '<br>') %>
+                <span class="date">
+                    <%= utils.formatTime(data.datetime) %>
+                </span>
+            </p>
         </div>
-        <%- templateManager.apply("visual", {files: data.files}) %>
-        <%- templateManager.apply("audio", {audio: data.files.audio}) %>
-        <%- templateManager.apply("other", {other: data.files.other}) %>
-        <p class="text">
-            <%- data.text.replace(/\n/g, '<br>') %>
-            <span class="date">
-                <%= utils.formatTime(data.datetime) %>
-            </span>
-        </p>
     </div>
 </script>
 
@@ -119,7 +123,8 @@
             <div class="date-label">
                 <%- templateManager.apply("system-message", {text: utils.getLocalizedDateLabel(data.datetime, true)}) %>
             </div>
-        <% } %> 
+        <% } %>
+
         <% if (data.sender_id !== null && data.sender_id !== undefined) { %>
             <%- templateManager.apply("standard-message", {data: data, myid: myid}) %>
         <% } else { %>

@@ -44,6 +44,10 @@ main {
     font-size:18px;
 }
 
+
+
+
+
 .message-wrapper {
     margin-top:10px;
 }
@@ -63,12 +67,21 @@ main {
     text-align: center;
     font-style: italic;
 }
-.user-message.mine {
+
+.user-message {
+    display:flex;
+    gap:5px;
+    align-items: flex-end;
+}
+
+
+.user-message.mine .content-block {
     background-color: #ded3b5;
     margin-left:auto;
 }
 
-.user-message {
+.content-block {
+    margin:0;
     flex-shrink: 0;
     background: #e2ccb9d7;
     max-width: 500px;
@@ -87,7 +100,7 @@ main {
     gap:13px;
 }
 
-.minor .top-bar {
+.user-message.minor .top-bar {
     display:none;
 }
 
