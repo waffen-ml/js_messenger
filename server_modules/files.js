@@ -82,8 +82,21 @@ exports.init = (cfx) => {
                 throw Error('Unknown file')
 
             let buffer = Buffer.from(file.data, 'base64')
+            let length = Buffer.byteLength(buffer)
+
             res.setHeader('Content-Disposition', 'attachment; filename=' + encodeURI(file.name))
+            res.setHeader('Content-Length', length)
+            res.setHeader('Content-Range', `bytes 0-${length}`)
+
+            if (file.mimetype != 'other')
+                res.setHeader('Content-Type', file.mimetype + '/' + path.extname(file.name).substring(1))
+
             res.send(buffer)
+
+            //accept-ranges: bytes
+            //Content-Length: BYTE_LENGTH_OF_YOUR_FILE
+            //Content-Range: bytes 0-BYTE_LENGTH_OF_YOUR_FILE/BYTE_LENGTH_OF_YOUR_FILE
+            //content-type: audio/mp3
         })
         .catch(err => {
             next(err)

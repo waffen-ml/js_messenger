@@ -38,7 +38,7 @@
         <img src="<%= c(files.image[0]) %>" class="semi-image" inspect>
     <% } else if (files.video.length) { %>
         <video controls class="semi-video">
-            source(src="<%= files.video[0] %>")
+            <source src="<%= files.video[0] %>">
         </video>
     <% } %>
 </script>
