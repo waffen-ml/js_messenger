@@ -5,10 +5,3 @@ append header
 append body 
     script  
         include script.js
-    
-    script(type="text/x-ejs-template", template="menu")
-        nav
-            each link, text in nav
-                a.button(href=link)
-                    span.label= text
-                    span.unread 1 

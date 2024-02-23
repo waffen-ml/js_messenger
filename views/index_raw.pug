@@ -33,6 +33,13 @@ html
                 footer 
                     span CoffeeTox ☕
         
+        script(type="text/x-ejs-template", template="menu")
+            nav
+                each link, text in nav
+                    a.button(href=link)
+                        span.label= text
+                        span.unread 1 
+        
         script
             include js/script.js
 
