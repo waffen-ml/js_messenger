@@ -97,7 +97,7 @@ nav {
     gap: 6px;
 }
 
-nav a {
+nav .button {
     font-size:19px;
     display:flex;
     justify-content: space-between;
