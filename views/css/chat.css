@@ -107,7 +107,7 @@ main {
 
 .user-message .top-bar {
     margin-top:0;
-    margin-bottom:8px;
+    margin-bottom:4px;
     display:flex;
     gap:13px;
 }
@@ -122,15 +122,13 @@ main {
 }
 
 .user-message .time {
+    display:inline;
     color:#454545;
     font-size:0.85em;
 }
 
 .user-message .text {
-    margin:0;
-}
-
-.user-message .content {
+    display:inline;
     margin:0;
 }
 
