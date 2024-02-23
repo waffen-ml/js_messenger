@@ -44,10 +44,8 @@ io.engine.use(sessionMiddleware);
 function render(req, res, page, params) {
     res.render(page, {
         nav: {
-            'Кофейный чат 🗨️': '/chat?id=1',
             'Сообщения': '/chatlist',
-            'Игры 🎮': '/gamelist',
-            'Виртуальный банк': '/ebank',
+            'Банк CFX': '/ebank',
             'Создать пост': '/create_post',
             'Друзья': '/friends'
         },

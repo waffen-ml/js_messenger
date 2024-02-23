@@ -34,10 +34,12 @@ html
                     span CoffeeTox ☕
 
         script(type="text/x-ejs-template", template="menu")
-            ul
+            nav
                 each link, text in nav
                     li
-                        a.button(href=link)=text
+                        a.button(href=link)
+                            span.label= text
+                            span.unread 1
         
         script
             include js/script.js
