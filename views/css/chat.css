@@ -80,6 +80,10 @@ main {
     visibility: hidden;
 }
 
+.holder.direct .user-message .avatar {
+    display:none;
+}
+
 .user-message.mine .content-block {
     background-color: #ded3b5;
 }
@@ -114,6 +118,7 @@ main {
 .holder.direct .user-message .name {
     display:none;
 }
+
 
 .user-message .bottom {
     max-width: 100%;
