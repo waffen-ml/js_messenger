@@ -677,6 +677,7 @@ fetch('/auth')
     user = user_
     return fetch('/getchatinfo?id=' + chatid)
 })
+.then(r => r.json())
 .then(info => {
     chat = new Chat(user, info, socket)
     call = new Call(user, info, socket)
