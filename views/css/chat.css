@@ -74,6 +74,14 @@ main {
     align-items: flex-end;
 }
 
+.user-message .avatar {
+    height:30px;
+}
+
+.user-message.minor .avatar {
+    display:none;
+}
+
 
 .user-message.mine .content-block {
     background-color: #ded3b5;
