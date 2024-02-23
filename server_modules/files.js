@@ -87,7 +87,6 @@ exports.init = (cfx) => {
             res.setHeader('Content-Disposition', 'attachment; filename=' + encodeURI(file.name))
             res.setHeader('Content-Length', length)
             res.setHeader('Content-Range', `bytes 0-${length}`)
-            res.setHeader('range', `bytes 0-${length}`)
             res.setHeader('accept-ranges', 'bytes')
 
             if (file.mimetype != 'other')

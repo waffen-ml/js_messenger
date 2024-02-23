@@ -47,7 +47,7 @@
     <% if (audio.length) { %>
         <div class="audio">
             <% audio.forEach(a => { %>
-                <audio controls>
+                <audio controls preload="metadata">
                     <source src="/file?id=<%= a.id %>">
                 </audio>
             <% }) %>
