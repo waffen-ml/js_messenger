@@ -37,7 +37,7 @@
     <% } else if (files.image.length) { %>
         <img src="<%= c(files.image[0]) %>" class="semi-image" inspect>
     <% } else if (files.video.length) { %>
-        <video controls class="semi-video">
+        <video controls class="semi-video" preload="metadata">
             <source src="/file?id=<%= files.video[0].id %>">
         </video>
     <% } %>
@@ -47,7 +47,7 @@
     <% if (audio.length) { %>
         <div class="audio">
             <% audio.forEach(a => { %>
-                <audio controls preload="none">
+                <audio controls preload="metadata">
                     <source src="/file?id=<%= a.id %>">
                 </audio>
             <% }) %>
