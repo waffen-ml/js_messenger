@@ -45,9 +45,6 @@ main {
 }
 
 
-
-
-
 .message-wrapper {
     margin-top:10px;
 }
@@ -72,6 +69,7 @@ main {
     display:flex;
     gap:5px;
     align-items: flex-end;
+    width: max-content;
 }
 
 .user-message .avatar {
@@ -81,7 +79,6 @@ main {
 .user-message.minor .avatar {
     visibility: hidden;
 }
-
 
 .user-message.mine .content-block {
     background-color: #ded3b5;
