@@ -105,7 +105,7 @@ exports.init = (cfx) => {
     }, cfx.db.conn)
 
     const sessionMiddleware = cfx.core.session({
-        storage: cfx.core.sessionStorage,
+        store: cfx.core.sessionStorage,
         secret: 'coffee tox',
         cookie: {maxAge: 1000 * 60 * 60 * 24 * 30},
         saveUninitialized: false,
