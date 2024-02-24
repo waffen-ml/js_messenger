@@ -69,7 +69,7 @@ function urlBase64ToUint8Array(base64String) {
 
 async function send() {
     const register = navigator.serviceWorker.register('/public/worker.js', {
-        scope: '/'
+        
     })
     const subscription = await register.pushManager.subscribe({
         userVisibleOnly: true,
