@@ -13,15 +13,15 @@ class Notifications {
         this.unreadCheckers[name] = f
     }
 
-    checkUnread(name, userid) {
+    getUnread(name, userid) {
         return Promise.resolve(this.unreadCheckers[name](userid))
     }
 
-    checkAllUnread(userid) {
+    getAllUnread(userid) {
         let unread = {}
         return Promise.all(
             Object.keys(this.unreadCheckers).map(name => {
-                return this.checkUnread(name, userid)
+                return this.getUnread(name, userid)
                 .then(w => {
                     unread[name] = w
                 })
@@ -32,8 +32,23 @@ class Notifications {
         })
     }
 
-    
+    notify(userid, data) {
+        const payload = JSON.stringify(data)
 
+        this.cfx.core.sessionStorage.all((sessions) => {
+            let subs = sessions.filter(s => s.user && s.user.id == userid).filter(s => s.notificationSubscription)
+                .map(s => s.notificationSubscription)
+            
+            subs.forEach(sub => {
+                webpush.sendNotification(sub, payload)
+                .catch(err => {
+                    console.log('Error with sending a notification:')
+                    console.log(err)
+                })
+            })
+        })
+
+    }
 }
 
 exports.init = (cfx) => {
@@ -46,20 +61,14 @@ exports.init = (cfx) => {
 
     cfx.core.app.post('/subnotif', cfx.core.upload.none(), (req, res) => {
         const subscription = JSON.parse(req.body.subscription)
-
-        // 201 --> success
+        req.session.notificationSubscription = subscription
         res.status(201).json({})
-
-        // Payload
-
-        const payload = JSON.stringify({title: 'Push CFX Test'})
-
-        webpush.sendNotification(subscription, payload)
-        .catch(err => {
-            console.log(err)
-        })
-
     })
+
+    cfx.core.app.get('/unsubnotif', (req, res) => {
+        req.session.notificationSubscription = null
+    })
+
 
 
 }
