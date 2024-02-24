@@ -5,6 +5,6 @@ self.addEventListener('push', e => {
     self.registration.showNotification(data.title, {
         body: data.body ?? 'HEY',
         icon: 'https://coffeetox.ru/public/coffee.png',
-        silent: false
+        dir: 'ltr'
     })
 })
