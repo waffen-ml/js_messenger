@@ -27,18 +27,11 @@ const cors = require('cors')
 app.set('view engine', 'pug');
 app.use(cors());
 
-const sessionMiddleware = session({
-    secret: 'coffee tox',
-    cookie: {maxAge: 1000 * 60 * 60 * 24 * 30},
-    saveUninitialized: false,
-    resave: false
-});
 
 app.use('/public', express.static('public'))
 app.use('/cmodules', express.static('client_modules'))
 app.use('/node_modules', express.static(__dirname + '/node_modules/'));
 
-app.use(sessionMiddleware);
 io.engine.use(sessionMiddleware);
 
 function render(req, res, page, params) {

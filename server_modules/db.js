@@ -104,4 +104,14 @@ exports.init = (cfx) => {
 	    expiration: 1000 * 60 * 60 * 24 * 30
     }, cfx.db.conn)
 
+    const sessionMiddleware = session({
+        storage: cfx.core.sessionStorage,
+        secret: 'coffee tox',
+        cookie: {maxAge: 1000 * 60 * 60 * 24 * 30},
+        saveUninitialized: false,
+        resave: false
+    });
+    
+    cfx.core.app.use(sessionMiddleware);
+
 }
