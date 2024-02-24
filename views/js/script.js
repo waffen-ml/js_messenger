@@ -74,6 +74,8 @@ async function send() {
         applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
     })
 
+    console.log(subscription)
+
     await fetch('/subnotif', {
         method: 'POST',
         body: JSON.stringify(subscription),

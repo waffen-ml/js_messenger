@@ -49,6 +49,7 @@ exports.init = (cfx) => {
 
     cfx.core.app.post('/subnotif', cfx.core.upload.none(), (req, res) => {
         const subscription = req.body
+        console.log(subscription)
 
         // 201 --> success
         res.status(201).json({})
