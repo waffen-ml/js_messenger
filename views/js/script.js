@@ -68,8 +68,7 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 async function send() {
-    const register = navigator.serviceWorker.register('/public/worker.js')
-    console.log(register)
+    const register = await navigator.serviceWorker.register('/public/worker.js')
     const subscription = await register.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
