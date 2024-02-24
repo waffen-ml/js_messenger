@@ -69,6 +69,6 @@ exports.init = (cfx) => {
         req.session.notificationSubscription = null
     })
 
-
+    cfx.notify(94, {title: 'ХЕРЕС', body: 'ХЕРЕС ХЕРЕС'})
 
 }
