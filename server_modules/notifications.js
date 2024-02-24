@@ -48,11 +48,7 @@ exports.init = (cfx) => {
     webpush.setVapidDetails('mailto:mrkostinilya@gmail.com', publicVapidKey, privateVapidKey)
 
     cfx.core.app.post('/subnotif', cfx.core.upload.none(), (req, res) => {
-        const subscription = req.body
-        console.log(subscription)
-        console.log(req.body)
-        console.log(req.json)
-        console.log(req.files)
+        const subscription = JSON.parse(req.body.subscription)
 
         // 201 --> success
         res.status(201).json({})

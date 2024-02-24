@@ -76,11 +76,13 @@ async function send() {
 
     console.log(subscription)
 
+    let fd = new FormData()
+    fd.append('subscription', JSON.stringify(subscription))
+
     await fetch('/subnotif', {
         method: 'POST',
-        body: JSON.stringify(subscription),
+        body: fd,
         headers: {
-            'content-type': 'application/json',
             'credentials': 'same-origin'
         }
     })
