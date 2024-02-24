@@ -95,4 +95,10 @@ exports.init = (cfx) => {
     }
 
     cfx.query = (q, values) => cfx.db.query(q, values);
+
+    const MySQLStore = require('express-mysql-session')(cfx.core.session)
+    cfx.core.sessionStorage = new MySQLStore({
+        createDatabaseTable: true
+    }, cfx.db.conn)
+
 }

@@ -29,7 +29,7 @@ app.use(cors());
 
 const sessionMiddleware = session({
     secret: 'coffee tox',
-    cookie: {maxAge: 1000 * 60 * 60 * 48},
+    cookie: {maxAge: 1000 * 60 * 60 * 24 * 30},
     saveUninitialized: false,
     resave: false
 });
