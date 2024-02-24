@@ -40,6 +40,9 @@ class Notifications {
 
 
 exports.init = (cfx) => {
+    if(!cfx.files)
+        return true
+
     cfx.notifications = new Notifications(cfx)
 
     webpush.setVapidDetails('mailto:mrkostinilya@gmail.com', publicVapidKey, privateVapidKey)
