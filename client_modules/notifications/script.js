@@ -9,6 +9,19 @@ function playNotificationSound() {
 
 }
 
+
+function updateMenuUnread(navName, count) {
+    let navButton = document.querySelector(`nav .button[id="nav${navName}"]`)
+
+    if(count > 0) {
+        navButton.classList.remove('zero')
+        navButton.querySelector('.unread').textContent = count
+    } else {
+        navButton.classList.add('zero')
+    }
+}
+
+
 function hideNotification() {
     notificationWindow.style.animation = "notification-close 400ms ease-in-out forwards"
     hideTimeout = setTimeout(() => {

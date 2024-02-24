@@ -20,6 +20,7 @@
     "peer": "^1.0.2",
     "pug": "^3.0.2",
     "socket.io": "^4.7.1",
-    "sqlstring": "^2.3.1"
+    "sqlstring": "^2.3.1",
+    "web-push": "^3.6.7"
   }
 }
