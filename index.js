@@ -153,6 +153,10 @@ cfx.init({
     safeRender: safeRender
 })
 
+app.get('/settings', (req, res) => {
+    render(req, res, 'settings')
+})
+
 app.get('/createchat', (req, res) => {
     const user = login(req, res, true);
     const user2id = req.query.userid;

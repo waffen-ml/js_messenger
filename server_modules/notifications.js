@@ -36,9 +36,6 @@ class Notifications {
 
 }
 
-
-
-
 exports.init = (cfx) => {
     if(!cfx.files)
         return true
