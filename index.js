@@ -37,7 +37,7 @@ function render(req, res, page, params) {
         nav: {
             'messages': {
                 text: 'Сообщения',
-                link: '/ebank'
+                link: '/chatlist'
             },
             'bank': {
                 text: 'Банк CFX',
