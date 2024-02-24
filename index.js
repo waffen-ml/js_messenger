@@ -130,13 +130,15 @@ function safeRender(pattern, onget, reqlogin) {
 
 const cfx = require('./cfx-main.js').cfx;
 
-app.use((req, res, next) => {
+const sessionMiddleware = (req, res, next) => {
     if(cfx.core.sessionMiddleware)
         cfx.core.sessionMiddleware(req, res, next)
     else
         next(req, res)
-});
-//io.engine.use(sessionMiddleware);
+}
+
+app.use(sessionMiddleware);
+io.engine.use(sessionMiddleware);
 
 cfx.init({
     fs: fs,
