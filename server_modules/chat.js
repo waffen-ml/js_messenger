@@ -312,11 +312,6 @@ exports.init = (cfx) => {
     })
 
     cfx.core.app.get('/chatlist', (req, res) => {
-        console.log(req.session)
-        console.log(req.sessionID)
-
-        res.status(200).send('Херес')
-        return
         let user = cfx.core.login(req, res, true)
         if(!user) return
         cfx.core.render(req, res, 'chatlist', {})
