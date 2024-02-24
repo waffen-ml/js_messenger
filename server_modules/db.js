@@ -113,5 +113,6 @@ exports.init = (cfx) => {
     });
     
     cfx.core.app.use(sessionMiddleware);
+    cfx.core.io.engine.use(sessionMiddleware);
 
 }

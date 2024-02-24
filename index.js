@@ -32,8 +32,6 @@ app.use('/public', express.static('public'))
 app.use('/cmodules', express.static('client_modules'))
 app.use('/node_modules', express.static(__dirname + '/node_modules/'));
 
-io.engine.use(sessionMiddleware);
-
 function render(req, res, page, params) {
     res.render(page, {
         nav: {
