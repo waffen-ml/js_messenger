@@ -36,6 +36,7 @@ class Notifications {
         const payload = JSON.stringify(data)
 
         this.cfx.core.sessionStorage.all((sessions) => {
+            console.log(sessions)
             let subs = sessions.filter(s => s.user && s.user.id == userid).filter(s => s.notificationSubscription)
                 .map(s => s.notificationSubscription)
             
