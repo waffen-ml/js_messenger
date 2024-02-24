@@ -65,6 +65,7 @@ function redirectToLogin(req, res) {
 }
 
 function login(req, res, requireLogin) {
+    console.log(req.session)
     let user = req.session.user;
     if (!user && requireLogin)
         redirectToLogin(req, res)
