@@ -315,7 +315,7 @@ exports.init = (cfx) => {
         console.log(req.session)
         console.log(req.sessionID)
 
-        res.send('Херес')
+        res.status(200).send('Херес')
         return
         let user = cfx.core.login(req, res, true)
         if(!user) return
