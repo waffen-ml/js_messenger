@@ -149,8 +149,6 @@ exports.init = (cfx) => {
     ));
 
     cfx.core.app.get('/ebank', (req, res) => {
-        console.log(req.session)
-        return
         let user = cfx.core.login(req, res, true);
         if(!user) return;
 
