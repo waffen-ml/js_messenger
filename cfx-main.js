@@ -1,4 +1,7 @@
 class CfxMain {
+    constructor() {
+        this.core = {}
+    }
     
     as = function(session) {
         const shallow = Object.assign({}, this);

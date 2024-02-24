@@ -103,16 +103,11 @@ exports.init = (cfx) => {
 	    checkExpirationInterval: 1000 * 60 * 30,
 	    expiration: 1000 * 60 * 60 * 24 * 30
     }, cfx.db.conn)
-
-    const sessionMiddleware = cfx.core.session({
+    cfx.core.sessionMiddleware = cfx.core.session({
         store: cfx.core.sessionStorage,
         secret: 'coffee tox',
         cookie: {maxAge: 1000 * 60 * 60 * 24 * 30},
         saveUninitialized: false,
         resave: false
-    });
-    
-    cfx.core.app.use(sessionMiddleware);
-    cfx.core.io.engine.use(sessionMiddleware);
-
+    })
 }
