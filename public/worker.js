@@ -6,6 +6,6 @@ self.addEventListener('push', e => {
         body: data.body ?? 'HEY',
         icon: 'https://coffeetox.ru/public/coffee.png',
         dir: 'ltr',
-        silent:false
+        silent: false
     })
 })
