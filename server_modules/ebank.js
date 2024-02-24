@@ -99,7 +99,7 @@ class Ebank {
 }
 
 exports.init = (cfx) => {
-    if(!cfx.forms)
+    if(!cfx.forms || !cfx.db)
         return true;
 
     cfx.ebank = new Ebank(cfx);
