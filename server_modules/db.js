@@ -98,7 +98,10 @@ exports.init = (cfx) => {
 
     const MySQLStore = require('express-mysql-session')(cfx.core.session)
     cfx.core.sessionStorage = new MySQLStore({
-        createDatabaseTable: true
+        createDatabaseTable: false,
+        clearExpired: true,
+	    checkExpirationInterval: 1000 * 60 * 30,
+	    expiration: 1000 * 60 * 60 * 24 * 30
     }, cfx.db.conn)
 
 }
