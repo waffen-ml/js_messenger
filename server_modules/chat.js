@@ -447,6 +447,10 @@ exports.init = (cfx) => {
         })
     })
 
+    cfx.core.app.get('/test', (req, res) => {
+        throw Error('wewewe')
+        
+    });
 
 }
 

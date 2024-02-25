@@ -79,7 +79,6 @@ function plogin(req, res, requireLogin) {
     })
 }
 
-
 function safeGet(pattern, onget, reqlogin) {
     app.get(pattern, (req, res) => {
         try {
@@ -175,10 +174,6 @@ app.get('/createchat', (req, res) => {
 
 });
 
-app.get('/test', (req, res) => {
-    throw Error('wewewe')
-    render(req, res, 'test');
-});
 
 app.get('/form', (req, res) => {
     const form = cfx.forms.getForm(req.query.name);
