@@ -135,15 +135,18 @@
 
 <script template="post" type="text/x-ejs-template">
     <div class="post block" id="post<%= data.id %>">
-        <a class="top-bar button light" href="/user?id=<%=data.author_id%>">
-            <img class="avatar" src="/getuseravatar?id=<%=data.author_id%>">
-            <span class="finite name">
-                <%= data.author_name %>
-            </span>
-            <span class="datetime">
-                <%= utils.getPostDatetimeLabel(data.datetime, true) %>
-            </span>
-        </a>
+        <div class="top-bar">
+            <a class="author button light" href="/user?id=<%=data.author_id%>">
+                <img class="avatar" src="/getuseravatar?id=<%=data.author_id%>">
+                <span class="finite name">
+                    <%= data.author_name %>
+                </span>
+                <span class="datetime">
+                    <%= utils.getPostDatetimeLabel(data.datetime, true) %>
+                </span>
+            </a>
+            <button class="button dots light">...</button>
+        </div>
         <% if (data.title) { %>
             <span class="title">
                 <%= data.title%>
