@@ -59,6 +59,7 @@
     .user {
         grid-template-columns:auto 1fr;
         grid-template-rows: auto auto;
+        column-gap:10px;
     }
 
     .actions {
