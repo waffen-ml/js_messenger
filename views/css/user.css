@@ -3,12 +3,18 @@
     grid-template-columns: auto auto;
     grid-template-rows: auto;
     column-gap:20px;
+    width:max-content
 }
 
 .user .avatar {
-    height:100px;
+    height:130px;
 }
 
 .user .info > * {
     display:block;
+    margin-bottom:0;
+}
+
+.user .name {
+    margin-top:0;
 }
