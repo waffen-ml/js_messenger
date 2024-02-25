@@ -137,7 +137,6 @@
     <div class="post block" id="post<%= data.id %>">
         <div class="top-bar">
             <% if (!hide_author) { %>
-                <span class="prefix">Новость от</span>
                 <a href="/user?tag=<%= data.author_tag %>" class="finite clean name">
                     <%= data.author_name %>
                 </a>
