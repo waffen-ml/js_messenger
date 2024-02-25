@@ -188,7 +188,7 @@ exports.init = (cfx) => {
             if (user && user.avatar_id)
                 res.redirect('/file?id=' + user.avatar_id)
             else {
-                let capyid = !user? 0 : user.id % 6
+                let capyid = !user? 0 : user.id % 11
                 res.redirect(`/public/useravatar/capybara${capyid}.png`)
             }
         })
