@@ -300,4 +300,19 @@ exports.init = (cfx) => {
        })
     })
 
+    cfx.core.app.get('/exitsessions', (req, res) => {
+        let user = cfx.core.login(req, res, false)
+        if(true || !user) {
+            res.send({
+                error: 'fuck'
+            })
+            return
+        }
+
+        cfx.core.sessionStorage.all((err, sess) => {
+            console.log(sess)
+        })
+
+    })
+
 }

@@ -59,6 +59,17 @@ document.querySelector('.delete-avatar').addEventListener('click', () => {
     })
 })
 
+document.querySelector('.exit-sessions').addEventListener('click', () => {
+    fetch('/exitsessions')
+    .then(r => r.json())
+    .then(r => {
+        if (!r.success)
+            alert('Ошибка...')
+        else
+            alert('Успешно!')
+    })
+})
+
 let user = null
 
 fetch('/auth')
