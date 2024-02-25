@@ -19,6 +19,7 @@
     column-gap:8px;
     width:max-content;
     text-decoration: none;
+    color:black;
 }
 
 .post .top-bar .avatar {
@@ -35,7 +36,8 @@
 }
 
 .post .top-bar .datetime {
-
+    color:#2d2d2d;
+    font-size:0.8em;
 }
 
 .post .title {
