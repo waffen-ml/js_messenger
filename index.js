@@ -241,8 +241,6 @@ app.use((req, res, next) => {
     next(new Error('Not found'))
 })
 
-app.use(())
-
 server.listen(443, () => {
   console.log('CFX is running');
 });
