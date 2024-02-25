@@ -170,7 +170,7 @@ const changePasswordForm = new Form(
             return
         }
 
-        else if (data.newpass != data.newpass) {
+        else if (data.newpass != data.newpassrep) {
             erf('newpass', 'Пароли не совпадают')
             return
         }
