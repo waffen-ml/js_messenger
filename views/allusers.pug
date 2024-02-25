@@ -1,9 +1,9 @@
 extends index
 
 block main
-    ul 
+    ul(style="list-style-type:none;padding:0;")
         each user in users 
             li
-                a.user(href="/user?id=" + user.id) 
-                    img.avatar(src="/getuseravatar?id=" + user.id)
+                a.user(href="/user?id=" + user.id, style="color:black;text-decoration:none;display:flex;align-items:center;") 
+                    img.avatar(src="/getuseravatar?id=" + user.id, style="height:35px;")
                     span.name= user.name 
