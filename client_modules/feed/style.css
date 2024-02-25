@@ -42,9 +42,6 @@
     align-self:center;
 }
 
-.post .top-bar:hover {
-    background:#0000002d;
-}
 
 .post .title {
     font-weight: bold;
