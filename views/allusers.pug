@@ -1,0 +1,9 @@
+extends index
+
+block main
+    ul 
+        each user in users 
+            li
+                a.user(href="/user?id=" + user.id) 
+                    img.avatar(src="/getuseravatar?id=" + user.id)
+                    span.name= user.name 

@@ -196,4 +196,11 @@ exports.init = (cfx) => {
 
     })
 
+    cfx.core.app.get('/allusers', (req, res) => {
+       cfx.query(`select * from user`)
+       .then(users => {
+            cfx.core.render(req, res, 'allusers', {users: users})
+       })
+    })
+
 }
