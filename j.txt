@@ -1,1 +1,6 @@
-Херес
+    if user && target.id == user.id 
+        a.button.set-avatar(style="display:block;margin-bottom:10px;width:max-content") Назначить аватарку
+    
+    .user-info
+        span.tag= '@' + target.tag
+        a.button(href="/direct?with=" + target.id) Сообщение 
