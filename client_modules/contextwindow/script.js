@@ -46,6 +46,15 @@ function makeButtonsCW(buttons, options) {
         className: 'cw-buttons',
         ...options
     })
+    let buttonElements = cw.window.querySelectorAll('.button')
+
+    Object.values(buttons).forEach((f, i) => {
+        buttonElements[i].addEventListener('click', () => {
+            f()
+            cw.close()
+        })
+    })
+
     return cw
 }
 
