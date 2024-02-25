@@ -12,6 +12,8 @@
     <% const c = (w, d) => '/file?' + (d? 'd=1&' : '') + 'id=' + w.id %>
     <% const total = files.image.length + files.video.length %>
     
+    <div class="visual-wrapper">
+    
     <% if (total > 1) { %>
         <% let nlarge = total % 3; %>
         <% if (nlarge == 1) nlarge = 4; %>
@@ -41,6 +43,9 @@
             <source src="/file?id=<%= files.video[0].id %>">
         </video>
     <% } %>
+    
+    </div>
+    
 </script>
 
 <script template="audio" type="text/x-ejs-template">
