@@ -70,6 +70,7 @@ main {
     gap:5px;
     align-items: flex-end;
     width: max-content;
+    max-width: 100%;
 }
 
 .user-message .avatar {
