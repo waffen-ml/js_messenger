@@ -1,14 +1,13 @@
 .user {
-    display:flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap:25px;
-    width:100%;
+    display:grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto;
+    column-gap:25px;
+    width:max-content
 }
 
 .user .avatar {
-    width:130px;
-    max-width: 35%;
+    height:130px;
 }
 
 .user .info > * {
@@ -29,7 +28,5 @@
 }
 
 .user .actions > * {
-    margin-top:5px;
-    margin-bottom:0;
     display:block;
 }
