@@ -1,6 +1,6 @@
 .user {
     display:grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto auto 1fr;
     grid-template-rows: auto;
     column-gap:25px;
     width:max-content;
