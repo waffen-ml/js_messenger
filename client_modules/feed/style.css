@@ -64,3 +64,11 @@
 .post .actions .donate::-ms-expand {
     display: none;
 }
+
+@media (max-width:750px) {
+
+    .post {
+        padding: 7px 10px;
+    }
+
+}
