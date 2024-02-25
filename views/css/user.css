@@ -3,7 +3,7 @@
     grid-template-columns: auto 1fr auto;
     grid-template-rows: auto;
     column-gap:25px;
-    row-gap:10px;
+    row-gap:14px;
     width: 100%;
 }
 
@@ -24,6 +24,7 @@
 
 .user .name {
     margin-top:0;
+
 }
 
 .user .tag {
