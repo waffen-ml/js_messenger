@@ -18,7 +18,7 @@ async function send() {
     })
 }
 
-document.querySelector('.enableNotifications').addEventListener('click', () => {
+document.querySelector('.enable-notifications').addEventListener('click', () => {
     send().catch(err => {
         console.log('Ошибка: ' + err.message)
     })

@@ -1,9 +1,9 @@
 extends index
 
 block main 
-    img.avatar(src="/getuseravatar?id=" + user.id)
-    button.button.set-avatar Сменить аватарку
-    button.button.enable-notifications Включить оповещения
+    img.avatar(src="/getuseravatar?id=" + user.id, style="height:60px;")
+    button.button.set-avatar(style="margin-top:10px;") Сменить аватарку
+    button.button.enable-notifications(style="margin-top:10px;") Включить оповещения
 
 append body
     script 
