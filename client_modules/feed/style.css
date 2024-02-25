@@ -12,7 +12,6 @@
 
 .post .top-bar {
     max-width: 100%;
-    margin:0;
     display:grid;
     grid-template-columns: auto auto;
     grid-template-rows: 1fr 1fr;
@@ -21,6 +20,8 @@
     width:max-content;
     color:black;
     text-decoration: none;
+    margin:0;
+    margin-left:-5px;
 }
 
 .post .top-bar .avatar {
@@ -41,7 +42,6 @@
     font-size:0.8em;
     align-self:center;
 }
-
 
 .post .title {
     font-weight: bold;
