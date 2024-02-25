@@ -11,7 +11,8 @@
     gap:3px;
     width:100%;
     min-width: 100px;
-    max-height:450px;
+    max-height:500px;
+    overflow:hidden;
 }
 
 .visual .tile {
@@ -103,7 +104,7 @@
 
 .semi-image, .semi-video {
     width:100%;
-    max-height:400px;
+    max-height:500px;
     background:#ffffff68;
     border-radius:15px;
     user-select: none;
