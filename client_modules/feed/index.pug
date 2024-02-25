@@ -8,7 +8,7 @@ append body
         include script.js
     script(type="text/x-ejs-template", template="post-reactions")
         ul 
-            <% reactions.forEach(r => %>
+            <% reactions.forEach(r => { %>
             li 
                 a.button.light.user(href!="/user?id=<%=r.user_id%>")
                     img.avatar(src!="/getuseravatar?id=<%=r.user_id%>")

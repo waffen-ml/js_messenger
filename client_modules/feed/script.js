@@ -114,7 +114,7 @@ class FeedHolder {
 
         buttonsCWCaller(dots, {
             'Реакции': () => {
-                this.inspectReactions(pots.id)
+                this.inspectReactions(post.id)
             }
         }, {
             parent: this.holder
