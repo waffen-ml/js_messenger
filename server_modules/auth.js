@@ -195,6 +195,7 @@ exports.init = (cfx) => {
     cfx.forms.addForm(loginForm);
     cfx.forms.addForm(regForm);
     cfx.forms.addForm(editProfileForm);
+    cfx.forms.addForm(changePasswordForm);
 
     cfx.core.app.get('/auth', (req, res) => {
         let user = cfx.core.login(req, res, false)
