@@ -72,42 +72,56 @@ class FeedHolder {
         donate.style.pointerEvents = 'all'
     }
 
+    addPost(post) {
+        let element = templateManager.createElement('post', {
+            data: post,
+            hide_author: this.hideAuthor,
+            me: this.me
+        })
+        
+        setupInspectObjects(element)
+
+        element.querySelector('.like').onclick = () => this.react(post, 1)
+        element.querySelector('.dislike').onclick = () => this.react(post, 0)
+
+        let donate = element.querySelector('.donate')
+
+        donate.addEventListener('change', () => {
+            if (donate.value == 'cancel')   
+                donate.value = 'default'
+            else if(donate.value !=' default') {
+                let amount = parseInt(donate.value)
+                donate.style.pointerEvents = 'none'
+                this.donate(post, amount)
+            }
+        })
+
+        if (post.author_id == this.me.id || !this.me.id) 
+            donate.style.display = 'none'
+
+        let iframe = element.querySelector('.html iframe')
+        if (iframe && false)
+            iframe.srcdoc = templateManager.createHTML('html-srcdoc', {html: post.html})
+
+        this.holder.appendChild(element)
+        this.updatePostReactions(post)
+
+        let dots = element.querySelector('.dots')
+
+        buttonsCWCaller(dots, {
+            'Реакции': () => {
+                alert(post.id)
+            }
+        }, {
+            parent: this.holder
+        })
+
+
+    }
+
     addPosts(posts) {
         posts.forEach(post => {
-            let element = templateManager.createElement('post', {
-                data: post,
-                hide_author: this.hideAuthor,
-                me: this.me
-            })
-            
-            setupInspectObjects(element)
-
-            element.querySelector('.like').onclick = () => this.react(post, 1)
-            element.querySelector('.dislike').onclick = () => this.react(post, 0)
-
-            let donate = element.querySelector('.donate')
-
-            donate.addEventListener('change', () => {
-                if (donate.value == 'cancel')   
-                    donate.value = 'default'
-                else if(donate.value !=' default') {
-                    let amount = parseInt(donate.value)
-                    donate.style.pointerEvents = 'none'
-                    this.donate(post, amount)
-                }
-            })
-
-            if (post.author_id == this.me.id || !this.me.id) 
-                donate.style.display = 'none'
-            
-            
-
-            let iframe = element.querySelector('.html iframe')
-            if (iframe && false)
-                iframe.srcdoc = templateManager.createHTML('html-srcdoc', {html: post.html})
-
-            this.holder.appendChild(element)
-            this.updatePostReactions(post)
+            this.addPost(post)
         })
     }
 

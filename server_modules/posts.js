@@ -138,4 +138,12 @@ exports.init = (cfx) => {
         cfx.core.render(req, res, 'main', {})
     })
 
+    cfx.core.app.get('/getpostreactions', (req, res) => {
+        cfx.query(`select u.id as user_id, u.name as user_name, u.tag as user_tag,
+            r.type from post_reaction r join user u on r.user_id=u.id where r.post_id=?`, [req.query.id])
+        .then(r => {
+            res.send(r)
+        })
+    })
+
 }

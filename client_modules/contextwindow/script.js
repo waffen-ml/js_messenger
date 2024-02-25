@@ -1,5 +1,3 @@
-const button = document.querySelector('#hey')
-
 let openedCW = null
 
 document.addEventListener('click', (e) => {
@@ -12,6 +10,33 @@ document.addEventListener('click', (e) => {
     
     openedCW.close(true)
 })
+
+function buttonsCWCaller(caller, buttons, options) {
+
+    let cw = null
+
+    if(!options.pos) {
+        let brect = caller.getBoundingClientRect()
+        options.pos = {
+            right: document.body.clientWidth - brect.right,
+            top: brect.top + brect.height
+        }
+    }
+
+    options.attachedTo = caller
+    options.transformOrigin ??= 'top right'
+
+    caller.addEventListener('click', () => {
+        if(cw && cw.isOpened()) {
+            cw.close()
+            cw = null
+            return
+        }
+        cw = makeButtonsCW(buttons, options)
+        cw.open()
+    })
+
+}
 
 function makeButtonsCW(buttons, options) {
     let cw = new ContextWindow({

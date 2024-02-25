@@ -50,7 +50,7 @@
 }
 
 .post .dots {
-    
+    align-self:start;
 }
 
 .post .title {
