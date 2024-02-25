@@ -24,7 +24,7 @@
 
 .user .name {
     margin-top:0;
-
+    word-break:break-word;
 }
 
 .user .tag {
