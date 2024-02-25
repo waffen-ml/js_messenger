@@ -19,11 +19,29 @@ async function send() {
 }
 
 document.querySelector('.enableNotifications').addEventListener('click', () => {
-
     send().catch(err => {
         console.log('Ошибка: ' + err.message)
     })
-
-
 })
 
+
+document.querySelector('.set-avatar').addEventListener('click', () => {
+    let maker = new AvatarMaker((blob) => {
+        let formData = new FormData()
+        formData.append('avatar', blob)
+    
+        fetch('/setavatar', {
+            method: 'POST',
+            credentials: 'same-origin',
+            body: formData
+        })
+        .then((r) => r.json())
+        .then((r) => {
+            if (!r.success)
+                alert('Ошибка...')
+            location.reload()
+        })
+    })
+
+    maker.open()
+})

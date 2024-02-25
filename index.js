@@ -27,7 +27,6 @@ const cors = require('cors')
 app.set('view engine', 'pug');
 app.use(cors());
 
-
 app.use('/public', express.static('public'))
 app.use('/cmodules', express.static('client_modules'))
 app.use('/node_modules', express.static(__dirname + '/node_modules/'));
@@ -154,7 +153,8 @@ cfx.init({
 })
 
 app.get('/settings', (req, res) => {
-    render(req, res, 'settings')
+    let user = login(req, res, true)
+    render(req, res, 'settings', {user: user})
 })
 
 app.get('/createchat', (req, res) => {
