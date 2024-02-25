@@ -81,25 +81,24 @@ function plogin(req, res, requireLogin) {
 
 function safeGet(pattern, onget, reqlogin) {
     app.get(pattern, (req, res) => {
-        try {
-            let user = req.session.user
-            if(!user && reqlogin) {
-                res.send({
-                    error: 'User is not authorized'
-                })
-                return
-            }
-            Promise.resolve(onget(user, req, res))
-            .then(r => {
-                if (r)
-                    res.send(r)
+        let user = req.session.user
+        if(!user && reqlogin) {
+            res.send({
+                error: 'User is not authorized'
             })
+            return
         }
-        catch(err) {
+        Promise.resolve(onget(user, req, res))
+        .then(r => {
+            if (r)
+                res.send(r)
+        })
+        .catch(err => {
+            console.log(err)
             res.send({
                 error: err.message
             })
-        }
+        })
     })
 }
 
