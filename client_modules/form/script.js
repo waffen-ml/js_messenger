@@ -177,6 +177,10 @@ class Form {
         });
     }
 
+    getInput(name) {
+        return this.form.querySelector(`[name="${name}"]`)
+    }
+
     checkRequired() {
         let keys = [];
 

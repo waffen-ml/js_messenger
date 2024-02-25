@@ -1,6 +1,8 @@
 extends index
 
-block main 
+block main
+    h1.page-header Настройки
+    
     img.avatar(src="/getuseravatar?id=" + user.id, style="height:90px;")
     button.button.set-avatar(style="margin-top:10px;") Сменить аватарку
     button.button.enable-notifications(style="margin-top:10px;") Включить оповещения

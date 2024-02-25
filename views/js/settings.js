@@ -46,8 +46,20 @@ document.querySelector('.set-avatar').addEventListener('click', () => {
     maker.open()
 })
 
-let form = new Form('editprofile', null, () => {
-    form.addSubmitButton('Сохранить', () => {
-        alert('Сохранено!')
+fetch('/auth')
+.then(r => r.json())
+.then(user => {
+
+    let editProfileForm = new Form('editprofile', null, () => {
+        form.getInput('name').value = user.name
+        form.getInput('tag').value = user.tag
+        form.getInput('bio').value = user.bio
+    
+        form.addSubmitButton('Сохранить', () => {
+            alert('Сохранено!')
+        })
     })
+
+
+
 })
