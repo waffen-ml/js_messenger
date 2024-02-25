@@ -167,7 +167,14 @@ exports.init = (cfx) => {
 
     cfx.core.app.get('/auth', (req, res) => {
         let user = cfx.core.login(req, res, false)
-        res.send(user? user : {})
+        if(!user) {
+            res.send({})
+            return
+        }
+        cfx.auth.getUser(user.id)
+        .then(w => {
+            res.send(w)
+        })
     })
 
     cfx.core.app.get('/user', (req, res, next) => {
