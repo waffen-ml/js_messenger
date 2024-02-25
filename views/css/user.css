@@ -10,10 +10,13 @@
     height:130px;
 }
 
+.user .info {
+    overflow:hidden;
+}
+
 .user .info > * {
     display:block;
     margin-bottom:0;
-    overflow:hidden;
 }
 
 .user .name {
