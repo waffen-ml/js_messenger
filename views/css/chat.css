@@ -70,7 +70,6 @@ main {
     gap:5px;
     align-items: flex-end;
     width: max-content;
-    max-width: 100%;
 }
 
 .user-message .avatar {
@@ -101,8 +100,9 @@ main {
     margin:0;
     flex-shrink: 0;
     background: #e2ccb9d7;
+    max-width: 500px;
     min-width:200px;
-    max-width: min(100%, 500px);
+    width: max-content;
 }
 
 .user-message.minor {
