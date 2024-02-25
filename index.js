@@ -91,7 +91,8 @@ function safeGet(pattern, onget, reqlogin) {
             }
             Promise.resolve(onget(user, req, res))
             .then(r => {
-                res.send(r)
+                if (r)
+                    res.send(r)
             })
         }
         catch(err) {

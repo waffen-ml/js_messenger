@@ -235,20 +235,25 @@ exports.init = (cfx) => {
     let temp = new CallTemp(cfx)
 
     cfx.core.app.post('/sendmsg', cfx.core.upload.array('files'), (req, res) => {
-        let sender = cfx.core.login(req, res, true);
-        if(!sender) return;
+        try {
+            let sender = cfx.core.login(req, res, true);
+            if(!sender) return;
 
-        cfx.chats.getChat(req.query.id)
-        .then(chat => {
-            if(!chat)
-                return;
-            cfx.files.saveFiles(req.files, -1)
-            .then(r => {
-                chat.addMessage(sender.id, req.body.text,
-                    r? r.bundle: null)
-                res.send({success: true});
+            cfx.chats.getChat(req.query.id)
+            .then(chat => {
+                if(!chat)
+                    return;
+                cfx.files.saveFiles(req.files, -1)
+                .then(r => {
+                    chat.addMessage(sender.id, req.body.text,
+                        r? r.bundle: null)
+                    res.send({success: true});
+                })
             })
-        })
+        }
+        catch(err) {
+            console.log('SENDMSGERROR:' + err.message)
+        }
     });
 
     cfx.core.app.post('/createchat', cfx.core.upload.single('avatar'), (req, res) => {
@@ -276,13 +281,13 @@ exports.init = (cfx) => {
         .then(() => {
             res.send({success: true})
         })
+        .catch(err => {
+            console.log(err)
+        })
     })
 
-    cfx.core.app.get('/getchatavatar', (req, res) => {
-
-        let observer = cfx.core.login(req, res, false)
-
-        cfx.chats.accessChat(observer, req.query.id)
+    cfx.core.safeGet('/getchatavatar', (observer, req, res) => {
+        return cfx.chats.accessChat(observer, req.query.id)
         .then(chat => {
             return chat.getInfo()
         })
@@ -303,83 +308,52 @@ exports.init = (cfx) => {
             console.log(err)
             console.log('LOX')
         })
-    })
+    }, false)
 
-    cfx.core.app.get('/getchatlist', (req, res) => {
-        let user = cfx.core.login(req, res, false)
+    cfx.core.safeGet('/getchatlist', (user, req, res) => {
         if(!user)
-            res.send([])
-        cfx.chats.getChatViews(user.id)
-        .then(views => {
-            res.send(views)
-        })
-    })
+            return []
+        return cfx.chats.getChatViews(user.id)
+    }, false)
 
-    cfx.core.app.get('/chatlist', (req, res) => {
-        let user = cfx.core.login(req, res, true)
-        if(!user) return
-        cfx.core.render(req, res, 'chatlist', {})
-    })
+    cfx.core.safeRender('/chatlist', (user, req, res) => {
+        return {
+            render: 'chatlist'
+        }
+    }, true)
 
-    cfx.core.app.get('/chat', (req, res, next) => {
-        let user = cfx.core.login(req, res, true)
-        if(!user) return
-
-        cfx.chats.accessChat(user, req.query.id)
+    cfx.core.safeRender('/chat', (user, req, res) => {
+        return cfx.chats.accessChat(user, req.query.id)
         .then(chat => {
             chat.makeMessageRead([user.id])
-            cfx.core.render(req, res, 'chat', {})
+            return {
+                render: 'chat'
+            }
         })
-        .catch(err => {
-            next(err)
-        })
-    })
+    }, true)
 
-    cfx.core.app.get('/getchatinfo', (req, res) => {
-        cfx.core.plogin(req, res, false)
-        .then(user => {
-            cfx.chats.accessChat(user, req.query.id)
-            .then(chat => {
-                return chat.getInfo()
-            })
-            .then(info => {
-                res.send(info)
-            })
+    cfx.core.safeGet('/getchatinfo', (user, req, res) => {
+        return cfx.chats.accessChat(user, req.query.id)
+        .then(chat => {
+            return chat.getInfo()
         })
-        .catch(err => {
-            console.log(err)
-        })
-    })
+    }, false)
 
-    cfx.core.app.get('/getmessages', (req, res) => {
-        let user = cfx.core.login(req, res, false)
-        if(!user) return
-        cfx.chats.accessChat(user, req.query.chatid)
+    cfx.core.safeGet('/getmessages', (user, req, res) => {
+        return cfx.chats.accessChat(user, req.query.chatid)
         .then(chat => {
             let start = parseInt(req.query.start)
             let count = parseInt(req.query.count)
             return chat.getMessages(start, count)
         })
-        .then(messages => {
-            res.send(messages)
-        })
-        .catch(err => {
-            console.log(err)
-        })
-    })
+    }, true)
 
-    cfx.core.app.get('/direct', (req, res) => {
-        cfx.core.plogin(req, res, true)
-        .then(user => {
-            return cfx.chats.getDirectChat(user.id, req.query.with)
-        })
+    cfx.core.safeRender('/direct', (user, req, res) => {
+        return cfx.chats.getDirectChat(user.id, req.query.with)
         .then(chat => {
             res.redirect('/chat?id=' + chat.id)
         })
-        .catch(err => {
-            console.log(err)
-        })
-    })
+    }, true)
 
     cfx.core.app.get('/getcalltable', (req, res) => {
         cfx.core.plogin(req, res, false)
@@ -450,11 +424,5 @@ exports.init = (cfx) => {
             })
         })
     })
-
-    cfx.core.app.get('/test', (req, res) => {
-        cfx.chats.fuck()
-
-    });
-
 }
 
