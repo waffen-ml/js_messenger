@@ -7,7 +7,9 @@
 }
 
 .user .avatar {
-    height:130px;
+    width:130px;
+    height: unset;
+    max-width: 30%;
 }
 
 .user .info {
@@ -46,7 +48,6 @@
 }
 
 .user .actions {
-    justify-self:end;
 }
 
 .user .actions > * {
