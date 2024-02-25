@@ -306,7 +306,6 @@ exports.init = (cfx) => {
             res.send({
                 error: 'fuck'
             })
-            return
         }
 
         cfx.core.sessionStorage.all((err, sess) => {
