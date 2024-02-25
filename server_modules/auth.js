@@ -156,6 +156,37 @@ const editProfileForm = new Form(
     }
 )
 
+const changePasswordForm = new Form(
+    {name:'changepassword', title: 'Сменить пароль'},
+    [
+        {type: 'password', title: 'Старый пароль', name: 'oldpass'},
+        {type: 'password', title: 'Новый пароль', name: 'newpass'},
+        {type: 'password', title: 'Повторите новый пароль', name:'newpassrep'}
+    ],
+    (data, erf, cfx) => {
+
+        if (data.newpass.length < 4) {
+            erf('newpass', 'Как минимум 4 символа')
+            return
+        }
+
+        else if (data.newpass != data.newpass) {
+            erf('newpass', 'Пароли не совпадают')
+            return
+        }
+
+        return cfx.auth.getUser(cfx.user().id)
+        .then((user) => {
+            if (user.password != data.oldpass)
+                erf('oldpass', 'Неверный пароль')
+        })
+    },
+    (data, _, cfx) => {
+        let userid = cfx.user().id
+        return cfx.query('update user set password=? where id=?', [data.newpass, userid])
+    }
+)
+
 exports.init = (cfx) => {
     if (!cfx.forms || !cfx.db || !cfx.files)
         return true;

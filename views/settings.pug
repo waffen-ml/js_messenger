@@ -6,10 +6,14 @@ block main
     img.avatar(src="/getuseravatar?id=" + user.id, style="height:90px;")
     button.button.set-avatar(style="margin-top:10px;") Сменить аватарку
     button.button.delete-avatar(style="margin-top:10px;") Удалить аватарку
+    button.button.exit-sessions(style="margin-top:10px;") Закончить остальные сессии
     button.button.enable-notifications(style="margin-top:10px;") Включить оповещения
 
     h2 Редактирование профиля
     form(name="editprofile")
+
+    h2 Сменить пароль
+    form(name="changepassword")
 
 append body
     script 

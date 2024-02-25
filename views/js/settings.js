@@ -75,4 +75,10 @@ fetch('/auth')
             alert('Сохранено!')
         })
     })
+
+    let changePasswordForm = new Form('changepassword', null, (form) => {
+        form.addSubmitButton('Сменить', () => {
+            alert('Успешно!')
+        })
+    })
 })
