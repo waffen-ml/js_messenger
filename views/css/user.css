@@ -15,6 +15,7 @@
 
 .user .info {
     overflow:hidden;
+    align-self:center;
 }
 
 .user .info > * {
