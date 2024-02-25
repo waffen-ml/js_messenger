@@ -302,14 +302,24 @@ exports.init = (cfx) => {
 
     cfx.core.app.get('/exitsessions', (req, res) => {
         let user = cfx.core.login(req, res, false)
-        if(true || !user) {
+        if(!user) {
             res.send({
                 error: 'fuck'
             })
+            return
         }
 
         cfx.core.sessionStorage.all((err, sess) => {
-            console.log(sess)
+            Object.keys(sess).forEach(k => {
+                if(k == req.sessionID)
+                    return
+                else if(sess[k].user && sess[k].user.id == user.id)
+                    cfx.core.sessionStorage.destroy(k)
+            })
+        })
+
+        res.send({
+            success:1
         })
 
     })
