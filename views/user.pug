@@ -21,9 +21,12 @@ block main
             span.last-seen Был в сети вчера в 17:23
             p.bio= target.bio
             a.friends(href="#") 25 друзей...
-        .actions 
-            a.button.direct(href="/direct?with=" + target.id) Сообщение...
-            a.button.add-friend(href="#") Добавить в друзья
-            a.button.ebank(href="#") Перевести EBL...
+        .actions
+            if user && user.id == target.id
+                a.button.settings(href="/settings?id=" + target.id) Настроить профиль
+            else 
+                a.button.direct(href="/direct?with=" + target.id) Сообщение...
+                a.button.add-friend(href="#") Добавить в друзья
+                a.button.ebank(href="#") Перевести EBL...
 
     .feed(style="margin-top:20px;")
