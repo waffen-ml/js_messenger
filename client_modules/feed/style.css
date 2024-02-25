@@ -19,7 +19,6 @@
     row-gap:0px;
     column-gap:8px;
     width:max-content;
-    text-decoration: none;
     color:black;
 }
 
@@ -33,12 +32,19 @@
 }
 
 .post .top-bar .name {
-
+    text-decoration: none;
+    align-self:end;
 }
 
 .post .top-bar .datetime {
+    text-decoration: none;
     color:#2d2d2d;
     font-size:0.8em;
+    align-self:center;
+}
+
+.post .top-bar:hover .post .top-bar .name {
+    text-decoration: underline;
 }
 
 .post .title {
