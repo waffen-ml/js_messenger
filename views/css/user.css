@@ -41,8 +41,11 @@
     margin-top:5px;
 }
 
-.user .actions > * {
+.user .actions {
     justify-self:end;
+}
+
+.user .actions > * {
     display:block;
     margin-bottom:0;
     margin-top:5px;
