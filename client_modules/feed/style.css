@@ -11,11 +11,12 @@
 }
 
 .post .top-bar {
+    max-width: 100%;
     margin:0;
     display:grid;
     grid-template-columns: auto auto;
     grid-template-rows: 1fr 1fr;
-    row-gap:3px;
+    row-gap:0px;
     column-gap:8px;
     width:max-content;
     text-decoration: none;
