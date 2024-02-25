@@ -104,6 +104,7 @@ main {
     max-width: 500px;
     min-width:200px;
     width: max-content;
+    max-width: 100%;
 }
 
 .user-message.minor {
