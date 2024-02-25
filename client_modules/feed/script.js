@@ -29,6 +29,10 @@ class FeedHolder {
         })
     }
 
+    initInspectReactionsFunction(f) {
+        this.inspectReactions = f
+    }
+
     onReaction(react) {
         this.react = react    
     }
@@ -110,7 +114,7 @@ class FeedHolder {
 
         buttonsCWCaller(dots, {
             'Реакции': () => {
-                alert(post.id)
+                this.inspectReactions(pots.id)
             }
         }, {
             parent: this.holder
@@ -134,9 +138,23 @@ class Feed {
         this.feed = []
         this.me = me
         this.holder.initLoadFeedFunction(() => this.loadBatch())
+        this.holder.initInspectReactionsFunction((id) => this.inspectReactions(id))
         this.holder.onReaction((p, r) => this.react(p, r))
         this.holder.onDonate((p, d) => this.donate(p, d))
         this.loadBatch()
+    }
+
+    inspectReactions(id) {
+        fetch('/getpostreactions?id=' + id)
+        .then(r => r.json())
+        .then(r => {
+            let popup = new Popup({
+                html: templateManager.createHTML('post-reactions', {reactions: r}),
+                closable: true,
+                title: 'Реакции'
+            })
+            popup.open()
+        })
     }
 
     donate(post, amount) {
