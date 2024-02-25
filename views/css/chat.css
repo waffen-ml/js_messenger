@@ -99,11 +99,12 @@ main {
 
 .content-block {
     margin:0;
-    flex-shrink: 0;
     background: #e2ccb9d7;
     max-width: 500px;
     min-width:200px;
     width: max-content;
+    flex-shrink: 1;
+    
 }
 
 .user-message.minor {
