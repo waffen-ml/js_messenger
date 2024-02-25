@@ -176,6 +176,10 @@ class ChatSystem {
             })
         })
     }
+
+    fuck() {
+        throw Error('wewewe')
+    }
 }
 
 class CallTemp {
@@ -448,8 +452,8 @@ exports.init = (cfx) => {
     })
 
     cfx.core.app.get('/test', (req, res) => {
-        throw Error('wewewe')
-        
+        cfx.chats.fuck()
+
     });
 
 }
