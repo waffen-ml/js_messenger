@@ -9,7 +9,7 @@
 .user .avatar {
     width:130px;
     height: unset;
-    max-width: 30%;
+    max-width: 30vw;
 }
 
 .user .info {
