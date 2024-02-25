@@ -11,6 +11,7 @@
     width:130px;
     height: unset;
     max-width: 30vw;
+    align-self:center;
 }
 
 .user .info {
