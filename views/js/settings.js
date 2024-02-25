@@ -26,6 +26,7 @@ document.querySelector('.enable-notifications').addEventListener('click', () => 
 
 
 document.querySelector('.set-avatar').addEventListener('click', () => {
+    console.log('hey')
     let maker = new AvatarMaker((blob) => {
         let formData = new FormData()
         formData.append('avatar', blob)
