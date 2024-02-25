@@ -65,12 +65,12 @@ main {
 }
 
 .user-message {
-    max-width: 100%;
     margin-top:10px;
     display:flex;
     gap:5px;
     align-items: flex-end;
     width: max-content;
+    max-width: 100%;
 }
 
 .user-message .avatar {
@@ -101,10 +101,9 @@ main {
     margin:0;
     flex-shrink: 0;
     background: #e2ccb9d7;
-    max-width: 500px;
     min-width:200px;
-    width: max-content;
-    max-width: 100%;
+    width: 100%;
+    max-width: min(100%, 500px);
 }
 
 .user-message.minor {
