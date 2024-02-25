@@ -56,7 +56,7 @@ const regForm = new Form(
 
         if (!(/^[a-z0-9_]*$/.test(data.tag)))
             erf('tag', 'Допустимые символы: a-z, 0-9, _');
-        else if (data.tag.length < 1)
+        else if (data.tag.length < 4)
             erf('tag', 'Как минимум 4 символа');
         
         if (data.name.length < 4)
@@ -124,6 +124,38 @@ const banForm = new Form(
     }
 )
 
+const editProfileForm = new Form(
+    {name:'editprofile', title: 'Редактировать профиль'},
+    [
+        {type: 'text', title: 'Имя', name: 'name'},
+        {type: 'text', title: 'Тег', name: 'tag'},
+        {type: 'text', title: 'Описание', name:'bio', optional: true}
+    ],
+    (data, erf, cfx) => {
+        if (!(/^[a-z0-9_]*$/.test(data.tag)))
+            erf('tag', 'Допустимые символы: a-z, 0-9, _')
+        else if (data.tag.length < 4)
+            erf('tag', 'Как минимум 4 символа')
+        
+        if (data.name.length < 4)
+            erf('name', 'Как минимум 4 символа')
+
+        return cfx.auth.getUserByTag(data.tag)
+        .then((user) => {
+            if (user && user.id != cfx.user().id)
+                erf('tag', 'Этот тег занят')
+        })
+    },
+    (data, _, cfx) => {
+        let userid = cfx.user().id
+        return Promise.all([
+            cfx.query('update user set name=? where id=?', [data.name, userid]),
+            cfx.query('update user set tag=? where id=?', [data.tag, userid]),
+            cfx.query('update user set bio=? where id=?', [data.bio ?? '', userid])
+        ])
+    }
+)
+
 exports.init = (cfx) => {
     if (!cfx.forms || !cfx.db || !cfx.files)
         return true;
@@ -131,6 +163,7 @@ exports.init = (cfx) => {
     cfx.auth = new Auth(cfx);
     cfx.forms.addForm(loginForm);
     cfx.forms.addForm(regForm);
+    cfx.forms.addForm(editProfileForm);
 
     cfx.core.app.get('/auth', (req, res) => {
         let user = cfx.core.login(req, res, false)

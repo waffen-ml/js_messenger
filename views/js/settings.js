@@ -24,9 +24,8 @@ document.querySelector('.enable-notifications').addEventListener('click', () => 
     })
 })
 
-
 document.querySelector('.set-avatar').addEventListener('click', () => {
-    let maker = new AvatarMaker((blob) => {
+    let maker = new AvatarMaker((blob, src) => {
         let formData = new FormData()
         formData.append('avatar', blob)
     
@@ -39,9 +38,16 @@ document.querySelector('.set-avatar').addEventListener('click', () => {
         .then((r) => {
             if (!r.success)
                 alert('Ошибка...')
-            location.reload()
+            else
+                document.querySelector('.avatar').src = src
         })
     })
 
     maker.open()
+})
+
+let form = new Form('editprofile', null, () => {
+    form.addSubmitButton('Сохранить', () => {
+        alert('Сохранено!')
+    })
 })
