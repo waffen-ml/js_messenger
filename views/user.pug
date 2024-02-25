@@ -16,14 +16,14 @@ block main
     .user 
         img.avatar(src='/getuseravatar?id=' + target.id)
         .info 
-            h2.name Coffeetox.ru Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae, doloremque!
-            span.tag @coffeetox
+            h2.name= target.name 
+            span.tag= '@' + target.tag
             span.last-seen Был в сети вчера в 17:23
-            p.bio I'm cringe but I am free Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptates.
+            p.bio= target.bio
             a.friends(href="#") 25 друзей...
         .actions 
-            a.button.direct Сообщение...
-            a.button.add-friend Добавить в друзья
-            a.button.ebank Перевести EBL...
+            a.button.direct(href="/direct?with=" + target.id) Сообщение...
+            a.button.add-friend(href="#") Добавить в друзья
+            a.button.ebank(href="#") Перевести EBL...
 
     .feed(style="margin-top:20px;")
