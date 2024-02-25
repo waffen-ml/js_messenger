@@ -104,25 +104,23 @@ function safeGet(pattern, onget, reqlogin) {
 
 function safeRender(pattern, onget, reqlogin) {
     app.get(pattern, (req, res, next) => {
-        try {
-            let user = req.session.user
-            if(!user && reqlogin) {
-                res.redirect('/form?name=login&next='
-                + encodeURIComponent(req.url))
-                return
-            }
-    
-            Promise.resolve(onget(user, req, res))
-            .then(data => {
-                render(req, res, data.render, data)
-            })
+        let user = req.session.user
+        if(!user && reqlogin) {
+            res.redirect('/form?name=login&next='
+            + encodeURIComponent(req.url))
+            return
         }
-        catch(err) {
-            res.status(500);
+    
+        Promise.resolve(onget(user, req, res))
+        .then(data => {
+            render(req, res, data.render, data)
+        })
+        .catch(err => {
+            res.status(500)
             render(req, res, 'error', {
                 error: err.message
             })
-        }
+        })
     })
 }
 
