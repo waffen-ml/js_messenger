@@ -54,3 +54,14 @@
     margin-bottom:0;
     margin-top:5px;
 }
+
+@media (max-width:575px) {
+    .user {
+        grid-template-columns:auto 1fr;
+        grid-template-rows: auto auto;
+    }
+
+    .actions {
+        grid-column:1/3;
+    }
+}
