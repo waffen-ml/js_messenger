@@ -15,6 +15,12 @@ append body
 block main
     .user 
         img.avatar(src='/getuseravatar?id=' + target.id)
+        .info 
+            h2.name Coffeetox.ru
+            span.tag @coffeetox
+            span.last-online Был в сети вчера в 17:23
+            p.bio I'm cringe but I am free 
+            a(href="#") 25 друзей...
     
     if user && target.id == user.id 
         a.button.set-avatar(style="display:block;margin-bottom:10px;width:max-content") Назначить аватарку
