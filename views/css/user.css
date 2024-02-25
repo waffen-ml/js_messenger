@@ -3,8 +3,7 @@
     grid-template-columns: auto auto 1fr;
     grid-template-rows: auto;
     column-gap:25px;
-    width:max-content;
-    max-width:100%;
+    width: 100%;
 }
 
 .user .avatar {
