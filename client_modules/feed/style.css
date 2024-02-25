@@ -11,22 +11,24 @@
 }
 
 .post .top-bar {
-    display:flex;
+    display:grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: 1fr 1fr;
+    row-gap:5px;
+    column-gap:8px;
 }
 
-.post .top-bar > * {
-    white-space:nowrap;
-}
-
-.post .top-bar .prefix {
-    margin-right:5px;
+.post .top-bar .avatar {
+    height:40px;
+    grid-row:1/3;
 }
 
 .post .top-bar .name {
-    margin-right:10px;
+
 }
 
 .post .top-bar .datetime {
+    
 }
 
 .post .title {

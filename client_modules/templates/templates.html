@@ -135,16 +135,15 @@
 
 <script template="post" type="text/x-ejs-template">
     <div class="post block" id="post<%= data.id %>">
-        <div class="top-bar">
-            <% if (!hide_author) { %>
-                <a href="/user?tag=<%= data.author_tag %>" class="finite clean name">
-                    <%= data.author_name %>
-                </a>
-            <% } %>
+        <a class="top-bar" href="/user?id=<%=data.author_id%>">
+            <img class="avatar" src="/getuseravatar?id=<%=data.author_id%>">
+            <span class="finite name">
+                <%= data.author_name %>
+            </span>
             <span class="datetime">
                 <%= utils.getPostDatetimeLabel(data.datetime, true) %>
             </span>
-        </div>
+        </a>
         <% if (data.title) { %>
             <span class="title">
                 <%= data.title%>
