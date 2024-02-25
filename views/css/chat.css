@@ -101,7 +101,7 @@ main {
     margin:0;
     flex-shrink: 0;
     background: #e2ccb9d7;
-    min-width:200px;
+    min-width:100px;
     width: 100%;
     max-width: min(100%, 500px);
 }
