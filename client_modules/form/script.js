@@ -85,7 +85,7 @@ class Form {
         }
         else if (this.form.innerHTML) {
             if(onCreate)
-                onCreate();
+                onCreate(this);
             this.process();
             return;
         }
@@ -103,7 +103,7 @@ class Form {
             this.form.innerHTML = r.html + this.form.innerHTML;
             delete r.html;
             if(onCreate)
-                onCreate(r);
+                onCreate(this, r);
             this.process();
         });
         

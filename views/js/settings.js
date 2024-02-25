@@ -63,7 +63,7 @@ fetch('/auth')
 .then(r => r.json())
 .then(user => {
 
-    let editProfileForm = new Form('editprofile', null, () => {
+    let editProfileForm = new Form('editprofile', null, (form) => {
         form.getInput('name').value = user.name
         form.getInput('tag').value = user.tag
         form.getInput('bio').value = user.bio
