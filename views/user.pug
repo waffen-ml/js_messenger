@@ -5,14 +5,16 @@ include units
 append header
     style 
         include css/content.css
+    style 
+        include css/user.css
 
 append body 
     script 
         include js/user.js
 
 block main
-    p1.page-header= `Пользователь ${target.name}`
-    img.avatar(style="display:block;height:100px;margin-top:10px;margin-bottom:20px;border-radius:50%" src='/file?id=' + target.avatar_id)
+    .user 
+        img.avatar(src='/getuseravatar?id=' + target.id)
     
     if user && target.id == user.id 
         a.button.set-avatar(style="display:block;margin-bottom:10px;width:max-content") Назначить аватарку

@@ -1,0 +1,9 @@
+.user {
+    display:grid;
+    grid-template-columns: auto auto;
+    column-gap:20px;
+}
+
+.user .avatar {
+    height:100px;
+}
