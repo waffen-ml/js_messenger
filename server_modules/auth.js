@@ -215,6 +215,31 @@ exports.init = (cfx) => {
         })
     })
 
+    cfx.core.app.get('/deleteuseravatar', (req, res) => {
+        let u = cfx.core.login(req, res, false)
+
+        if(!u) {
+            res.send({
+                error: 'fuck'
+            })
+            return
+        }
+
+        cfx.auth.getUser(u.id)
+        .then(user => {
+            return Promise.all([
+                cfx.query('delete from file where id=?', [user.avatar_id])
+                cfx.query('update user set avatar_id=null where id=?', [user.id])
+            ])
+        })
+        .then(() => {
+            res.send({
+                success:1
+            })
+        })
+
+    })
+
     cfx.core.app.get('/getuseravatar', (req, res) => {
         cfx.auth.getUserById(req.query.id)
         .then(user => {

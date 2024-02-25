@@ -2,9 +2,10 @@ extends index
 
 block main
     h1.page-header Настройки
-    
+
     img.avatar(src="/getuseravatar?id=" + user.id, style="height:90px;")
     button.button.set-avatar(style="margin-top:10px;") Сменить аватарку
+    button.button.delete-avatar(style="margin-top:10px;") Удалить аватарку
     button.button.enable-notifications(style="margin-top:10px;") Включить оповещения
 
     h2 Редактирование профиля
