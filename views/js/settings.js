@@ -55,13 +55,16 @@ document.querySelector('.delete-avatar').addEventListener('click', () => {
         if (!r.success)
             alert('Ошибка...')
         else
-            avatarImg.src += '#'
+            avatarImg.src = `/getuseravatar?id=${user.id}&w=` + new Date().getTime()
     })
 })
 
+let user = null
+
 fetch('/auth')
 .then(r => r.json())
-.then(user => {
+.then(r => {
+    user = r
 
     let editProfileForm = new Form('editprofile', null, (form) => {
         form.getInput('name').value = user.name
@@ -72,7 +75,4 @@ fetch('/auth')
             alert('Сохранено!')
         })
     })
-
-
-
 })

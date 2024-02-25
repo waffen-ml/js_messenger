@@ -228,7 +228,7 @@ exports.init = (cfx) => {
         cfx.auth.getUser(u.id)
         .then(user => {
             return Promise.all([
-                cfx.query('delete from file where id=?', [user.avatar_id]),
+                //cfx.query('delete from file where id=?', [user.avatar_id]),
                 cfx.query('update user set avatar_id=null where id=?', [user.id])
             ])
         })
