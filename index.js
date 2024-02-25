@@ -176,6 +176,7 @@ app.get('/createchat', (req, res) => {
 });
 
 app.get('/test', (req, res) => {
+    throw Error('wewewe')
     render(req, res, 'test');
 });
 
@@ -239,6 +240,8 @@ app.get('/croptest', (req, res) => {
 app.use((req, res, next) => {
     next(new Error('Not found'))
 })
+
+app.use(())
 
 server.listen(443, () => {
   console.log('CFX is running');
