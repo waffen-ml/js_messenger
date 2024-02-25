@@ -148,67 +148,49 @@ exports.init = (cfx) => {
         }, () => {}
     ));
 
-    cfx.core.app.get('/ebank', (req, res) => {
-        let user = cfx.core.login(req, res, true);
-        if(!user) return;
-
-        cfx.ebank.getStats(user.id)
+    cfx.core.safeRender('/ebank', (user, req, res) => {
+        return cfx.ebank.getStats(user.id)
         .then(s => {
-            cfx.core.render(req, res, 'ebank', {
+            return {
+                render: 'ebank',
                 balance: s.balance,
-                capital: s.capital,
-            })
+                capital: s.capital
+            }
         })
-    })
+    }, true)
 
-    cfx.core.app.get('/gettransactions', (req, res) => {
-        let user = cfx.core.login(req, res, true);
-        if(!user) return;
+    cfx.core.safeGet('/gettransactions', (user, req, res) => {
+        return cfx.ebank.getUserTransactions(user.id)
+    }, true)
 
-        cfx.ebank.getUserTransactions(user.id)
-        .then(t => {
-            res.send(t)
-        })
-    })
-
-    cfx.core.app.get('/capitallb', (req, res) => {
-        cfx.ebank.getCapitalLeaderboard()
+    cfx.core.safeRender('/capitallb', (_, req, res) => {
+        return cfx.ebank.getCapitalLeaderboard()
         .then(lb => {
-            cfx.core.render(req, res, 'capitallb', {
+            return {
+                render: 'capitallb',
                 lb: lb
-            })
+            }
         })
     })
 
-    cfx.core.app.get('/maketransaction', (req, res) => {
-        let user = cfx.core.login(req, res, false)
-
-        if(!user) {
-            res.send({
+    cfx.core.safeGet('/maketransaction', (user, req, res) => {
+        if(!user)
+            return {
                 success: false,
                 error: ebankErrors.UNKNOWN_SENDER
-            })
-            return
-        }
+            }
 
         let to_id = req.query.id
         let amount = parseInt(req.query.amount)
         let comment = req.query.comment
-        cfx.ebank.makeTransaction(user.id, to_id, amount, comment)
+
+        return cfx.ebank.makeTransaction(user.id, to_id, amount, comment)
         .then(r => {
-            res.send({
+            return {
                 success: true,
                 error: null
-            })
+            }
         })
-        .catch((err) => {
-            res.send({
-                success: false,
-                error: err.message
-            })
-        })
-        
-    })
-
+    }, false)
 
 }

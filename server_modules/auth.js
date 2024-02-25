@@ -197,33 +197,25 @@ exports.init = (cfx) => {
     cfx.forms.addForm(editProfileForm);
     cfx.forms.addForm(changePasswordForm);
 
-    cfx.core.app.get('/auth', (req, res) => {
-        let user = cfx.core.login(req, res, false)
-        if(!user) {
-            res.send({})
-            return
-        }
-        cfx.auth.getUser(user.id)
-        .then(w => {
-            res.send(w)
-        })
+    cfx.core.safeGet('/auth', (user, req, res) => {
+        if(!user)
+            return {}
+        return cfx.auth.getUser(user.id)
     })
 
-    cfx.core.app.get('/user', (req, res, next) => {
+    cfx.core.safeRender('/user', (_, req, res) => {
         return cfx.auth.getUser(req.query.id, req.query.tag)
         .then((user) => {
             if(!user)
                 throw Error('Пользователь не найден')
-            cfx.core.render(req, res, 'user', {
+            return {
+                render: 'user',
                 target: user
-            })
-        })
-        .catch(err => {
-            next(err);
+            }
         })
     })
 
-    cfx.core.safeGet('/getuser', (req, res) => {
+    cfx.core.safeGet('/getuser', (_, req, res) => {
         return cfx.auth.getUser(req.query.id, req.query.tag)
         .then(data => {
             if(!data)
@@ -232,39 +224,35 @@ exports.init = (cfx) => {
                 id: data.id,
                 name: data.name,
                 tag: data.tag,
+                bio: data.bio,
                 avatar_id: data.avatar_id
             }
         })
     })
 
     cfx.core.app.post('/setavatar', cfx.core.upload.single('avatar'), (req, res) => {
-        let user = cfx.core.login(req, res, false)
-        if(!user) {
-            res.send({success:false})
-            return
+        try {
+            let user = cfx.core.login(req, res, false)
+            if(!user) {
+                res.send({success:false})
+                return
+            }
+            req.file.originalname = 'avatar.jpg'
+            cfx.files.saveFiles([req.file])
+            .then(r => {
+                let avatarId = r.ids[0]
+                return cfx.query('update user set avatar_id=? where id=?', [avatarId, user.id])
+            })
+            .then(r => {
+                res.send({success: true})
+            })
+        catch(err) {
+            console.log(err)
         }
-        req.file.originalname = 'avatar.jpg'
-        cfx.files.saveFiles([req.file])
-        .then(r => {
-            let avatarId = r.ids[0]
-            return cfx.query('update user set avatar_id=? where id=?', [avatarId, user.id])
-        })
-        .then(r => {
-            res.send({success: true})
-        })
     })
 
-    cfx.core.app.get('/deleteuseravatar', (req, res) => {
-        let u = cfx.core.login(req, res, false)
-
-        if(!u) {
-            res.send({
-                error: 'fuck'
-            })
-            return
-        }
-
-        cfx.auth.getUser(u.id)
+    cfx.core.safeGet('/deleteuseravatar', (user, req, res) => {
+        return cfx.auth.getUser(u.id)
         .then(user => {
             return Promise.all([
                 //cfx.query('delete from file where id=?', [user.avatar_id]),
@@ -272,15 +260,14 @@ exports.init = (cfx) => {
             ])
         })
         .then(() => {
-            res.send({
+            return {
                 success:1
-            })
+            }
         })
+    }, true)
 
-    })
-
-    cfx.core.app.get('/getuseravatar', (req, res) => {
-        cfx.auth.getUserById(req.query.id)
+    cfx.core.safeGet('/getuseravatar', (_, req, res) => {
+        return cfx.auth.getUserById(req.query.id)
         .then(user => {
             if (user && user.avatar_id)
                 res.redirect('/file?id=' + user.avatar_id)
@@ -293,22 +280,17 @@ exports.init = (cfx) => {
 
     })
 
-    cfx.core.app.get('/allusers', (req, res) => {
-       cfx.query(`select * from user`)
+    cfx.core.safeRender('/allusers', (_, req, res) => {
+       return cfx.query(`select * from user`)
        .then(users => {
-            cfx.core.render(req, res, 'allusers', {users: users})
+            return {
+                render: 'allusers',
+                users: users
+            }
        })
     })
 
-    cfx.core.app.get('/exitsessions', (req, res) => {
-        let user = cfx.core.login(req, res, false)
-        if(!user) {
-            res.send({
-                error: 'fuck'
-            })
-            return
-        }
-
+    cfx.core.safeGet('/exitsessions', (user, req, res) => {
         cfx.core.sessionStorage.all((err, sess) => {
             Object.keys(sess).forEach(k => {
                 if(k == req.sessionID)
@@ -317,11 +299,10 @@ exports.init = (cfx) => {
                     cfx.core.sessionStorage.destroy(k)
             })
         })
+        return {
+            success: 1
+        }
 
-        res.send({
-            success:1
-        })
-
-    })
+    }, true)
 
 }

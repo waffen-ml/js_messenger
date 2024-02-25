@@ -75,8 +75,8 @@ exports.init = (cfx) => {
     }
     ))
 
-    cfx.core.app.get('/file', (req, res, next) => {
-        cfx.files.getFile(req.query.id)
+    cfx.core.safeGet('/file', (_, req, res) => {
+        return cfx.files.getFile(req.query.id)
         .then(file => {
             if (!file)
                 throw Error('Unknown file')
@@ -94,10 +94,7 @@ exports.init = (cfx) => {
 
             res.send(buffer)
         })
-        .catch(err => {
-            next(err)
-        }) 
-    });
+    })
 
     cfx.core.upload = upload;
     cfx.files = new Files(cfx);

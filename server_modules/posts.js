@@ -86,64 +86,45 @@ exports.init = (cfx) => {
         }
     ))
 
-    cfx.core.app.get('/getfeed', (req, res) => {
-        let user = cfx.core.login(req, res, false)
+    cfx.core.safeGet('/getfeed', (user, req, res) => {
         let start = parseInt(req.query.start)
         let count = parseInt(req.query.count)
         let author_id = req.query.author_id
         let observer_id = user? user.id : -1
         
-        cfx.posts.getFeed(start, count, observer_id, author_id)
-        .then(feed => {
-            res.send(feed)
-        })
+        return cfx.posts.getFeed(start, count, observer_id, author_id)
     })
 
-    cfx.core.app.get('/create_post', (req, res) => {
-        if(!cfx.core.login(req, res, true)) return;
-        cfx.core.render(req, res, 'create_post', {
+    cfx.core.safeRender('/create_post', (user, req, res) => {
+        return {
+            render: 'create_post',
             form: cfx.forms.getForm('create_post')
-        });
-    })
-
-    cfx.core.app.get('/set_reaction', (req, res) => {
-        let user = cfx.core.login(req, res, false)
-        if(!user) {
-            res.send({success:0})
-            return
         }
-        cfx.posts.setReaction(user.id, req.query.post_id, req.query.reaction)
-        .then(() => res.send({success:1}))
-        .catch(err => {
-            console.log(err)
-            res.send({success:0})
+    }, true)
+
+    cfx.core.safeGet('/set_reaction', (user, req, res) => {
+        return cfx.posts.setReaction(user.id, req.query.post_id, req.query.reaction)
+        .then(() => {
+            return {success:1}
         })
-    })
+    }, true)
     
-    cfx.core.app.get('/remove_reaction', (req, res) => {
-        let user = cfx.core.login(req, res, false)
-        if(!user) {
-            res.send({success:0})
-            return
+    cfx.core.safeGet('/remove_reaction', (user, req, res) => {
+        return cfx.posts.removeReaction(user.id, req.query.post_id, req.query.reaction)
+        .then(() => {
+            return {success:1}
+        })
+    }, true)
+
+    cfx.core.safeRender('/', (user, req, res) => {
+        return {
+            render: 'main'
         }
-        cfx.posts.removeReaction(user.id, req.query.post_id, req.query.reaction)
-        .then(() => res.send({success:1}))
-        .catch(err => {
-            console.log(err)
-            res.send({success:0})
-        })
     })
 
-    cfx.core.app.get('/', (req, res) => {
-        cfx.core.render(req, res, 'main', {})
-    })
-
-    cfx.core.app.get('/getpostreactions', (req, res) => {
-        cfx.query(`select u.id as user_id, u.name as user_name, u.tag as user_tag,
+    cfx.core.safeGet('/getpostreactions', (_, req, res) => {
+        return cfx.query(`select u.id as user_id, u.name as user_name, u.tag as user_tag,
             r.type from post_reaction r join user u on r.user_id=u.id where r.post_id=?`, [req.query.id])
-        .then(r => {
-            res.send(r)
-        })
     })
 
 }
