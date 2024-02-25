@@ -7,7 +7,7 @@
 }
 
 .post {
-    padding:13px;
+    padding:8px 10px;
 }
 
 .post .top-bar {
@@ -77,12 +77,4 @@
 
 .post .actions .donate::-ms-expand {
     display: none;
-}
-
-@media (max-width:750px) {
-
-    .post {
-        padding: 7px 10px;
-    }
-
 }
