@@ -34,7 +34,6 @@ class FeedHolder {
     }
 
     initDeletePostFunction(f) {
-        this.
     }
 
     onReaction(react) {
