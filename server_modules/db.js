@@ -24,6 +24,8 @@ class Database {
                 else
                     throw err
             })
+        }).catch(w => {
+            console.log('CATCHED')
         })
     }
 
