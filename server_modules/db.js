@@ -22,7 +22,7 @@ class Database {
                 if (!err) 
                     resolve(result, field);
                 else
-                    reject(err);
+                    throw err
             })
         })
     }
