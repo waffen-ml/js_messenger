@@ -15,14 +15,6 @@ function buttonsCWCaller(caller, buttons, options) {
 
     let cw = null
 
-    if(!options.pos) {
-        let brect = caller.getBoundingClientRect()
-        options.pos = {
-            right: document.body.clientWidth - brect.right,
-            top: brect.top + brect.height
-        }
-    }
-
     options.attachedTo = caller
     options.transformOrigin ??= 'top right'
 
@@ -32,6 +24,14 @@ function buttonsCWCaller(caller, buttons, options) {
             cw = null
             return
         }
+
+        let brect = caller.getBoundingClientRect()
+
+        options.pos = {
+            right: document.body.clientWidth - brect.right,
+            top: brect.top + brect.height
+        }
+
         cw = makeButtonsCW(buttons, options)
         cw.open()
     })

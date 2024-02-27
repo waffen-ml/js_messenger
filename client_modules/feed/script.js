@@ -113,7 +113,16 @@ class FeedHolder {
         let dots = element.querySelector('.dots')
 
         dots.addEventListener('click', () => {
-            this.inspectReactions(post.id)
+
+            buttonsCWCaller(dots, {
+                'Реакции': () => this.inspectReactions(post.id),
+                'Редактировать': () => {
+                    alert('edit')
+                },
+                'Удалить': () => {
+                    alert('delete')
+                }
+            })
         })
 
 
