@@ -34,6 +34,7 @@ class FeedHolder {
     }
 
     initDeletePostFunction(f) {
+        this.deletePost = f
     }
 
     onReaction(react) {
@@ -79,8 +80,10 @@ class FeedHolder {
         donate.style.pointerEvents = 'all'
     }
 
-    removePost(post) {
-        
+    removePost(id) {
+        let postElement = this.holder.querySelector('#post' + id)
+        if(postElement)
+            this.holder.removeChild(postElement)
     }
 
     addPost(post) {
@@ -121,12 +124,8 @@ class FeedHolder {
 
         buttonsCWCaller(dots, {
             'Реакции': () => this.inspectReactions(post.id),
-            'Редактировать': () => {
-                alert('edit')
-            },
-            'Удалить': () => {
-                alert('delete')
-            }
+            'Редактировать': () => {},
+            'Удалить': () => this.deletePost(post.id)
         }, {parent: this.scrollPage})
 
 
@@ -148,9 +147,22 @@ class Feed {
         this.me = me
         this.holder.initLoadFeedFunction(() => this.loadBatch())
         this.holder.initInspectReactionsFunction((id) => this.inspectReactions(id))
+        this.holder.initDeletePostFunction((id) => this.deletePost(id))
         this.holder.onReaction((p, r) => this.react(p, r))
         this.holder.onDonate((p, d) => this.donate(p, d))
         this.loadBatch()
+    }
+
+    deletePost(id) {
+        fetch(`/deletepost?id=${id}`)
+        .then(r => r.json())
+        .then(r => {
+            if (!r.success) {
+                alert('Ошибка: ' + r.error)
+                return
+            }
+            this.holder.removePost(id)
+        })
     }
 
     inspectReactions(id) {
