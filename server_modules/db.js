@@ -26,7 +26,7 @@ class Database {
             })
         })
         .catch(err => {
-            console.log('Херес')
+            throw err
         })
     }
 
