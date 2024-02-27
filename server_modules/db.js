@@ -22,10 +22,11 @@ class Database {
                 if (!err) 
                     resolve(result, field);
                 else
-                    throw err
+                    reject(err)
             })
-        }).catch(w => {
-            console.log('CATCHED')
+        })
+        .catch(err => {
+            console.log('Херес')
         })
     }
 
