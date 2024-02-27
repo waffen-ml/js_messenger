@@ -120,7 +120,7 @@ class FeedHolder {
             'Удалить': () => {
                 alert('delete')
             }
-        }, {parent: this.holder})
+        }, {parent: this.scrollPage})
 
 
     }
