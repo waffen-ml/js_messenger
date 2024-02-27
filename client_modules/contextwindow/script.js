@@ -12,8 +12,8 @@ document.addEventListener('click', (e) => {
 })
 
 function buttonsCWCaller(caller, buttons, options) {
-
     let cw = null
+    options ??= {}
 
     options.attachedTo = caller
     options.transformOrigin ??= 'top right'
