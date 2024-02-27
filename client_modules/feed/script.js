@@ -154,6 +154,9 @@ class Feed {
     }
 
     deletePost(id) {
+        if(!confirm('Подтвердите удаление.'))
+            return
+        
         fetch(`/deletepost?id=${id}`)
         .then(r => r.json())
         .then(r => {
