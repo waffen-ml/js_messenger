@@ -33,6 +33,10 @@ class FeedHolder {
         this.inspectReactions = f
     }
 
+    initDeletePostFunction(f) {
+        this.
+    }
+
     onReaction(react) {
         this.react = react    
     }
@@ -74,6 +78,10 @@ class FeedHolder {
         let donate = this.getPostElement(post).querySelector('.donate')
         donate.value = 'default'
         donate.style.pointerEvents = 'all'
+    }
+
+    removePost(post) {
+        
     }
 
     addPost(post) {

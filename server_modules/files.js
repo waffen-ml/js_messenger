@@ -53,6 +53,11 @@ class Files {
         })
 
     }
+
+    deleteBundle(bundle_id) {
+        return this.cfx.query(`delete from file where bundle_id=?`, [bundle_id ?? -1])   
+    }
+
 }
 
 const Form = require('./forms').Form

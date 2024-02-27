@@ -55,6 +55,51 @@ class Posts {
         })
     }
 
+    getPost(id) {
+        return this.cfx.query(`select p.*, f.id as file_id, f.name as file_name, f.mimetype 
+        as file_mimetype from post p left join file f on f.bundle_id=p.bundle_id where id=?`, [id])
+        .then(raw_post => {
+            return utils.parseArrayOutput(raw_post, 'files', {
+                file_mimetype: 'mimetype',
+                file_id: 'id',
+                file_name: 'name'
+            })
+        })
+    }
+
+    hasPermissions(userid, postid) {
+        return new Promise((resolve) => {
+            this.cfx.auth.getUser(userid)
+            .then(user => {
+                if(user.admin)
+                    resolve(true)
+                return this.getPostInfo(postid)
+            })
+            .then(post => {
+                if(!post)
+                    throw Error('Invalid post')
+                resolve(post.author_id == userid)
+            })
+        })
+    }
+
+    deletePost(postid) {
+        return this.getPostInfo(postid)
+        .then(post => {
+            if(!post)
+                throw Error('Invalid post')
+            return post.bundle_id? this.cfx.files.deleteBundle(post.bundle_id)
+                : null
+        }).then(() => {
+            return this.cfx.query(`delete from post where id=?`, [postid])
+        })
+    }
+
+    getPostInfo(id) {
+        return this.cfx.query(`select * from post where id=?`, [id])
+        .then(r => r[0])
+    }
+
 }
 
 exports.init = (cfx) => {
@@ -126,5 +171,19 @@ exports.init = (cfx) => {
         return cfx.query(`select u.id as user_id, u.name as user_name, u.tag as user_tag,
             r.type from post_reaction r join user u on r.user_id=u.id where r.post_id=?`, [req.query.id])
     })
+
+    cfx.core.safeGet('/deletepost', (u, req, res) => {
+        return cfx.posts.hasPermissions(u.id, req.query.id)
+        .then(w => {
+            if(!w)
+                throw Error('Lack permissions')
+            return cfx.posts.deletePost(req.query.id)
+        })
+        .then(() => {
+            return {
+                success: 1
+            }
+        })
+    }, true)
 
 }
