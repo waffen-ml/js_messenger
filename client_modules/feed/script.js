@@ -44,7 +44,7 @@ class Post {
                 this.addComment(c, true)
             })
 
-            this.commentHolder.scroll({behaviour: 'smooth', top:0})
+            this.commentHolder.scrollTo({behaviour: 'smooth', top:0})
         })
     }
 
