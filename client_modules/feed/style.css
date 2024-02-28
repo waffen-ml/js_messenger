@@ -135,6 +135,11 @@
     color:#313131;
 }
 
+.comment-section li .text {
+    grid-column: 2/4;
+}
+
+
 .comment-section .add-comment {
     display:flex;
     gap:5px;
@@ -151,8 +156,6 @@
 
 .comment-section .delete {
     color:#3e3e3e;
-    grid-column:3;
-    grid-row:1;
 }
 
 @media(max-width:400px) {
