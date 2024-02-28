@@ -178,6 +178,7 @@
 
     .comment-section li {
         margin-top:8px;
+        row-gap:5px;
     }
 
 }
