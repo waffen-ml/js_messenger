@@ -43,6 +43,8 @@ class Post {
                 c.datetime = new Date(c.datetime)
                 this.addComment(c, true)
             })
+
+            this.commentHolder.scroll({behaviour: 'smooth', top:0})
         })
     }
 
