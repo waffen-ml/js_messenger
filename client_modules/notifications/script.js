@@ -4,9 +4,9 @@ const imageHolder = notificationWindow.querySelector('.avatar')
 const titleHolder = notificationWindow.querySelector('.title')
 let hideTimeout = null
 
-function updateMenuUnread(unread) {
+function updateMenuUnread(unread, menu) {
     Object.keys(unread).forEach(name => {
-        let navButton = document.querySelector(`nav .button[id="nav${name}"]`)
+        let navButton = menu.querySelector(`.button[id="nav${name}"]`)
         let unreadSpan = navButton.querySelector('.unread')
         let count = unread[name].count
 
@@ -16,17 +16,24 @@ function updateMenuUnread(unread) {
         } else {
             unreadSpan.classList.add('zero')
         }
-    })
+    }) 
+}
 
+function updateUnread(unread) {
+    document.querySelectorAll('nav').forEach(nav => {
+        updateMenuUnread(nav)
+    })
 }
 
 socket.on('update_unread', (unread) => {
-    updateMenuUnread(unread)
+    updateUnread(unread)
 })
 
 fetch('/getunread')
 .then(r => r.json())
-.then(unread => updateMenuUnread(unread))
+.then(unread => {
+    updateUnread(unread)
+})
 
 function hideNotification() {
     notificationWindow.style.animation = "notification-close 400ms ease-in-out forwards"
