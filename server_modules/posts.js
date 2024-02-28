@@ -125,6 +125,7 @@ class Posts {
 
     getComment(comment_id) {
         return this.cfx.query(`select * from post_comment where id=?`, [comment_id])
+        .then(r => r[0])
     }
 
     deleteComment(comment_id) {
@@ -238,7 +239,6 @@ exports.init = (cfx) => {
     cfx.core.safeGet('/deletecomment', (u, req, res) => {
         return cfx.posts.getComment(req.query.id)
         .then(comment => {
-            console.log(comment)
             if (comment.author_id != u.id)
                 throw Error('Lack permissions')
             return cfx.posts.deleteComment(req.query.id)
