@@ -234,7 +234,7 @@ exports.init = (cfx) => {
     cfx.chats = new ChatSystem(cfx);
     let temp = new CallTemp(cfx)
 
-    cfx.notifications.addUnreadChecker(userid => {
+    cfx.notifications.addUnreadChecker('messages', userid => {
         return cfx.db.executeFile('unreadchats', {userid: userid})
         .then(r => {
             return r ?? 0
