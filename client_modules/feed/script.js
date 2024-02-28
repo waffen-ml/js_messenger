@@ -2,17 +2,104 @@ const loadBatchSize = 15
 const loadDistance = 500
 
 
-class FeedHolder {
-    constructor(me, hideAuthor, holder, scrollPage) {
-        this.scrollPage = scrollPage
-        this.holder = holder
-        this.loadedAll = false
-        this.loadingMore = false
-        this.hideAuthor = hideAuthor
-        this.me = me
+class Post {
+    constructor(data, feed) {
+        this.data = data
+        this.id = data.id
+        this.feed = feed
+        this.element = templateManager.createElement('post', {
+            data: post,
+            me: feed.me
+        })
+        this.setupElement()
     }
 
-    initLoadFeedFunction(load) {
+    setupElement() {
+        setupInspectObjects(this.element)
+
+        this.element.querySelector('.like').onclick = () => this.feed.react(this.data, 1)
+        this.element.querySelector('.dislike').onclick = () => this.feed.react(this.data, 0)
+
+        let donate = this.element.querySelector('.donate')
+
+        donate.addEventListener('change', () => {
+            if (donate.value == 'cancel')   
+                donate.value = 'default'
+            else if(donate.value !=' default') {
+                let amount = parseInt(donate.value)
+                donate.style.pointerEvents = 'none'
+                this.feed.donate(this.data, amount)
+            }
+        })
+
+        if (this.data.author_id == this.feed.me.id || !this.feed.me.id) 
+            donate.style.display = 'none'
+
+        let iframe = this.element.querySelector('.html iframe')
+        if (iframe && false)
+            iframe.srcdoc = templateManager.createHTML('html-srcdoc', {html: this.data.html})
+
+        this.feed.holder.element.appendChild(this.element)
+        this.updateReactions()
+
+        let dots = this.element.querySelector('.dots')
+
+        buttonsCWCaller(dots, {
+            'Реакции': () => this.feed.inspectReactions(this.id),
+            'Редактировать': () => {},
+            'Удалить': () => this.feed.deletePost(this.id)
+        }, {parent: this.feed.holder.scrollPage})
+    }
+
+    destroy() {
+        this.feed.holder.element.removeChild(this.element)
+    }
+
+    resetDonate() {
+        let donate = this.element.querySelector('.donate')
+        donate.value = 'default'
+        donate.style.pointerEvents = 'all'
+    }
+
+    updateReactions() {
+        let dislike = this.element.querySelector('.dislike')
+        let like = this.element.querySelector('.like')
+
+        like.textContent = '👍' + (this.data.like_count > 0? this.data.like_count : '')
+        dislike.textContent = '👎' + (this.data.dislike_count > 0? this.data.dislike_count : '')
+
+        like.classList.remove('chosen')
+        dislike.classList.remove('chosen')
+
+        if (this.data.my_reaction === 0)
+            dislike.classList.add('chosen')
+        else if(this.data.my_reaction === 1)
+            like.classList.add('chosen')
+    }
+
+    updateDonate(amount) {
+        let donate = this.element.querySelector('.donate')
+        donate.style.pointerEvents = 'none'
+        donate.querySelector('option[value="default"]').textContent = '✅' + amount + 'EBL'
+        donate.value = 'default'
+    }
+
+}
+
+
+class FeedHolder {
+    constructor(feed, element, scrollPage) {
+        this.scrollPage = scrollPage
+        this.element = element
+        this.loadedAll = false
+        this.loadingMore = false
+        this.feed = feed
+        this.posts = {}
+
+        this.setupScrollLoad()
+    }
+
+    setupScrollLoad() {
         this.scrollPage.addEventListener('scroll', (e) => {
             if(this.loadedAll || this.loadingMore)
                 return
@@ -22,118 +109,24 @@ class FeedHolder {
 
             if (reminder < loadDistance) {
                 this.loadingMore = true
-                load().then(() => {
+                this.feed.loadBatch().then(() => {
                     this.loadingMore = false
                 })
             }
         })
     }
 
-    initInspectReactionsFunction(f) {
-        this.inspectReactions = f
+    getPost(id) {
+        return this.posts[id]
     }
 
-    initDeletePostFunction(f) {
-        this.deletePost = f
+    destroyPost(id) {
+        this.getPost(id).destroy()
     }
 
-    onReaction(react) {
-        this.react = react    
-    }
-
-    onDonate(donate) {
-        this.donate = donate
-    }
-
-    getPostElement(post) {
-        return this.holder.querySelector('#post' + post.id)
-    }
-
-    updatePostReactions(post) {
-        let postElement = this.getPostElement(post)
-        let dislike = postElement.querySelector('.dislike')
-        let like = postElement.querySelector('.like')
-
-        like.textContent = '👍' + (post.like_count > 0? post.like_count : '')
-        dislike.textContent = '👎' + (post.dislike_count > 0? post.dislike_count : '')
-
-        like.classList.remove('chosen')
-        dislike.classList.remove('chosen')
-
-        if (post.my_reaction === 0)
-            dislike.classList.add('chosen')
-        else if(post.my_reaction === 1)
-            like.classList.add('chosen')
-    }
-
-    updateDonate(post, amount) {
-        let donate = this.getPostElement(post).querySelector('.donate')
-
-        donate.style.pointerEvents = 'none'
-        donate.querySelector('option[value="default"]').textContent = '✅' + amount + 'EBL'
-        donate.value = 'default'
-    }
-
-    resetDonate(post) {
-        let donate = this.getPostElement(post).querySelector('.donate')
-        donate.value = 'default'
-        donate.style.pointerEvents = 'all'
-    }
-
-    removePost(id) {
-        let postElement = this.holder.querySelector('#post' + id)
-        if(postElement)
-            this.holder.removeChild(postElement)
-    }
-
-    addPost(post) {
-        let element = templateManager.createElement('post', {
-            data: post,
-            hide_author: this.hideAuthor,
-            me: this.me
-        })
-        
-        setupInspectObjects(element)
-
-        element.querySelector('.like').onclick = () => this.react(post, 1)
-        element.querySelector('.dislike').onclick = () => this.react(post, 0)
-
-        let donate = element.querySelector('.donate')
-
-        donate.addEventListener('change', () => {
-            if (donate.value == 'cancel')   
-                donate.value = 'default'
-            else if(donate.value !=' default') {
-                let amount = parseInt(donate.value)
-                donate.style.pointerEvents = 'none'
-                this.donate(post, amount)
-            }
-        })
-
-        if (post.author_id == this.me.id || !this.me.id) 
-            donate.style.display = 'none'
-
-        let iframe = element.querySelector('.html iframe')
-        if (iframe && false)
-            iframe.srcdoc = templateManager.createHTML('html-srcdoc', {html: post.html})
-
-        this.holder.appendChild(element)
-        this.updatePostReactions(post)
-
-        let dots = element.querySelector('.dots')
-
-        buttonsCWCaller(dots, {
-            'Реакции': () => this.inspectReactions(post.id),
-            'Редактировать': () => {},
-            'Удалить': () => this.deletePost(post.id)
-        }, {parent: this.scrollPage})
-
-
-    }
-
-    addPosts(posts) {
-        posts.forEach(post => {
-            this.addPost(post)
+    addPosts(dataArr) {
+        dataArr.forEach(data => {
+            this.posts[data.id] = new Post(data, this.feed)
         })
     }
 
@@ -142,14 +135,9 @@ class FeedHolder {
 class Feed {
     constructor(me, authorId, holder, scrollPage) {
         this.authorId = authorId
-        this.holder = new FeedHolder(me, Boolean(authorId), holder, scrollPage)
-        this.feed = []
+        this.holder = new FeedHolder(this, holder, scrollPage)
+        this.posts = []
         this.me = me
-        this.holder.initLoadFeedFunction(() => this.loadBatch())
-        this.holder.initInspectReactionsFunction((id) => this.inspectReactions(id))
-        this.holder.initDeletePostFunction((id) => this.deletePost(id))
-        this.holder.onReaction((p, r) => this.react(p, r))
-        this.holder.onDonate((p, d) => this.donate(p, d))
         this.loadBatch()
     }
 
@@ -164,7 +152,7 @@ class Feed {
                 alert('Ошибка: ' + r.error)
                 return
             }
-            this.holder.removePost(id)
+            this.holder.destroyPost(id)
         })
     }
 
@@ -190,11 +178,13 @@ class Feed {
         fetch(`/maketransaction?id=${to_id}&comment=Пожертвование&amount=${amount}`)
         .then(r => r.json())
         .then(r => {
+            let postObj = this.holder.getPost(post.id)
+
             if (r.success) {
-                this.holder.updateDonate(post, amount)
+                postObj.updateDonate(amount)
                 return
             }
-            this.holder.resetDonate(post)
+            postObj.resetDonate()
 
             if (r.error == 'LACKING_BALANCE')
                 alert('Недостаточно средств.')
@@ -233,7 +223,7 @@ class Feed {
             fetch(`/set_reaction?post_id=${post.id}&reaction=${reaction}`)
         }
 
-        this.holder.updatePostReactions(post)
+        this.holder.getPost(post.id).updateReactions()
     }
 
     loadBatch() {
