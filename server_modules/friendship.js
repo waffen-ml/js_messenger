@@ -58,6 +58,9 @@ class Friendship {
             return this.cfx.query(`insert into friend_request(from_id, to_id) select ${from_id}, ${to_id} 
             from dual where not exists(select * from friend_request where from_id=${from_id} and to_id=${to_id} limit 1)`)
         })
+        .then(() => {
+            return this.cfx.notifications.sendSpecificUnread(to_id, 'friends')
+        })
     }
 
     deleteRequestsBetween(a, b) {
@@ -88,6 +91,9 @@ class Friendship {
         .then(r => {
             return this.addFriendship(accepter, sender);
         })
+        .then(r => {
+            return this.cfx.notifications.sendSpecificUnread(accepter, 'friends')
+        })
     }
 
 }
@@ -113,8 +119,13 @@ const addFriendForm = new Form(
 )
 
 exports.init = (cfx) => {
-    if(!cfx.db || !cfx.forms)
+    if(!cfx.db || !cfx.forms || !cfx.notifications)
         return true;
+
+    cfx.notifications.addUnreadChecker((userid) => {
+        return cfx.query(`select count(*) as count From friend_request where to_id=?`, [userid])
+        .then(r => r.length? r[0].count : 0)
+    })
 
     cfx.core.app.get('/getfriends', (req, res) => {
         let user = cfx.core.login(req, res, false)
@@ -125,7 +136,6 @@ exports.init = (cfx) => {
         cfx.friendship.getFriends(user.id)
         .then(friends => res.send(friends))
     })
-    
 
     cfx.core.app.get('/friends', (req, res) => {
         let user = cfx.core.login(req, res, true);
