@@ -23,7 +23,7 @@ class Post {
     }
 
     loadCommentBatch() {
-        this.feed.loadComments(this.id, this.commentLoadStart, commentLoadBatchSize)
+        return this.feed.loadComments(this.id, this.commentLoadStart, commentLoadBatchSize)
         .then(comments => {
             console.log(comments)
         })
@@ -203,7 +203,7 @@ class Feed {
     }
 
     loadComments(post_id, start, count) {
-        fetch(`/getcomments?post_id=${post_id}&start=${start}&count=${count}`)
+        return fetch(`/getcomments?post_id=${post_id}&start=${start}&count=${count}`)
         .then(r => r.json())
     }
 
