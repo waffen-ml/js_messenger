@@ -97,10 +97,10 @@ class Post {
         const sendComment = () => {
             this.feed.addComment(this.id, commentInput.value)
             .then(w => {
-                console.log(w)
-                if(!w && w > 0)
+                if(!w || w < 0)
                     return
                 this.addComment({
+                    id: w,
                     author_id: this.feed.me.id,
                     author_name: this.feed.me.name,
                     datetime: new Date(),
