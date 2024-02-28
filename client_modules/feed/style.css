@@ -120,5 +120,9 @@
 
 .comment-section li .info {
     display:flex;
-    justify-content: space-between;
+    gap:8px;
+}
+
+.comment-section li .datetime {
+    color:#313131;
 }
