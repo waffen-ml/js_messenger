@@ -133,41 +133,6 @@
     </div>
 </script>
 
-<script template="post" type="text/x-ejs-template">
-    <div class="post block" id="post<%= data.id %>">
-        <div class="top-bar">
-            <a class="author button light" href="/user?id=<%=data.author_id%>">
-                <img class="avatar" src="/getuseravatar?id=<%=data.author_id%>">
-                <span class="finite name">
-                    <%= data.author_name %>
-                </span>
-                <span class="datetime">
-                    <%= utils.getPostDatetimeLabel(data.datetime, true) %>
-                </span>
-            </a>
-            <button class="button dots light">...</button>
-        </div>
-        <% if (data.title) { %>
-            <span class="title">
-                <%= data.title%>
-            </span>
-        <% } %>
-        <%- templateManager.createHTML("post-content", data) %>
-        <div class="actions">
-            <button class="button like">👍</button>
-            <button class="button dislike">👎</button>
-            <select class="button donate">
-                <option style="display:none;" value="default" selected>Пожертвовать</option>
-                <option value="10">10EBL</option>
-                <option value="25">25 EBL</option>
-                <option value="50">50 EBL</option>
-                <option value="100">100 EBL</option>
-                <option value="cancel">Отмена</option>
-            </select>
-        </div>
-    </div>
-</script>
-
 <script template="html-srcdoc" type="text/x-ejs-template">
     <html><body style="margin:0;padding:0;"><%- html %></body></html>
 </script>

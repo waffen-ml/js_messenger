@@ -6,6 +6,29 @@ append header
 append body
     script 
         include script.js
+    script(type="text/x-ejs-template", template="post")
+        .post.block(id!="post<%=data.id%>")
+            .top-bar 
+                a.author.button.light(href!="/user?id=<%=data.author_id%>")
+                    img.avatar(src!="/getuseravatar?id=<%=data.author_id%>")
+                    span.finite.name <%=data.author_name%>
+                    span.datetime <%=utils.getPostDatetimeLabel(data.datetime, true)%>
+                button.button.dots.light ...
+            <% if (data.title) { %>
+                span.title <%=data.title%>
+            <% } %>
+            <%- templateManager.createHTML("post-content", data) %>
+            .actions 
+                button.button.like 👍
+                button.button.dislike 👎
+                select.button.donate
+                    option(style="display:none", value="default", selected) Пожертвовать
+                    option(value="10") 10EBL
+                    option(value="25") 10EBL
+                    option(value="50") 10EBL
+                    option(value="100") 10EBL
+
+    
     script(type="text/x-ejs-template", template="post-reactions")
         ul.styled-scroll(style="margin:0;overflow-y:auto;max-height:500px; width:max-content;list-style-type:none;padding:0;")
             <% reactions.forEach(r => { %>
