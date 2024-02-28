@@ -99,6 +99,8 @@
 .comment-section .comments {
     padding:0;
     list-style-type: none;
+    max-height:400px;
+    overflow-y:auto;
 }
 
 .comment-section li {
@@ -107,7 +109,7 @@
     grid-template-rows:auto auto;
     row-gap:3px;
     column-gap:10px;
-    margin-top:10px;
+    margin-top:5px;
 }
 
 .comment-section li:first-child {
