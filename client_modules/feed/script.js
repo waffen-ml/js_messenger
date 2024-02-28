@@ -43,8 +43,6 @@ class Post {
                 c.datetime = new Date(c.datetime)
                 this.addComment(c, true)
             })
-
-            this.commentHolder.scrollTo({top:0})
         })
     }
 
@@ -70,10 +68,14 @@ class Post {
             })
         }
 
-        if(before)
+        if(before) {
             this.commentHolder.insertBefore(commentElement, this.commentHolder.firstChild)
-        else
+            this.commentHolder.scrollTo({top:0})
+        }
+        else {
             this.commentHolder.appendChild(commentElement)
+            this.commentHolder.scrollTo({top:this.commentHolder.scrollHeight})
+        }
     }
 
     setupCommentSection() {
