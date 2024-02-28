@@ -101,6 +101,13 @@
     list-style-type: none;
 }
 
-.comment-section li > *{
-    display:inline;
+.comment-section li {
+    display:grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows:auto auto;
+
+}
+
+.comment-section li .avatar {
+    grid-row:1/3;
 }
