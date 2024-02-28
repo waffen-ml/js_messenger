@@ -39,6 +39,7 @@ class Post {
                     text: commentInput.value
                 })
                 commentInput.value = ""
+                commentInput.blur()
             })
         }
 
