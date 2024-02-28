@@ -1,0 +1,2 @@
+select sum(b.last_read < coalesce((select max(local_id) from message m where m.chat_id=b.chat_id), -1)) 
+as unread from chat_member b where b.user_id={userid} and b.last_read is not null

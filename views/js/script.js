@@ -1,4 +1,5 @@
-const urlParams = new URLSearchParams(window.location.search);
+const urlParams = new URLSearchParams(window.location.search)
+const socket = io()
 
 document.querySelectorAll('a[recurrent]').forEach((link) => {
     let url = new URL(link.href);

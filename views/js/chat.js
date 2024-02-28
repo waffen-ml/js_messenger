@@ -1,5 +1,4 @@
-const chatid = new URLSearchParams(window.location.search).get('id');
-const socket = io();
+const chatid = new URLSearchParams(window.location.search).get('id')
 const loadWindow = 15
 
 class ChatInterface {

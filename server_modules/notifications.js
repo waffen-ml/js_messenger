@@ -32,6 +32,22 @@ class Notifications {
         })
     }
 
+    sendAllUnread(userid) {
+        return this.getAllUnread(userid)
+        .then(unread => {
+            this.cfx.socket.io.to('u:' + userid).emit('update_unread', unread)
+        })
+    }
+
+    sendSpecificUnread(userid, name, data) {
+        return this.getUnread(name, userid)
+        .then(count => {
+            data ??= {}
+            data.count = count
+            this.cfx.socket.io.to('u:' + userid).emit('update_unread', data)
+        })
+    }
+
     notify(userid, data) {
         const payload = JSON.stringify(data)
 
@@ -61,6 +77,10 @@ exports.init = (cfx) => {
 
     webpush.setVapidDetails('mailto:mrkostinilya@gmail.com', publicVapidKey, privateVapidKey)
 
+    cfx.core.safeGet('/getunread', (u, req, res) => {
+        return cfx.notifications.getAllUnread(u.id)
+    }, true)
+
     cfx.core.app.post('/subnotif', cfx.core.upload.none(), (req, res) => {
         const subscription = JSON.parse(req.body.subscription)
         req.session.notificationSubscription = subscription
@@ -70,7 +90,4 @@ exports.init = (cfx) => {
     cfx.core.app.get('/unsubnotif', (req, res) => {
         req.session.notificationSubscription = null
     })
-
-    cfx.notifications.notify(94, {title: 'ХЕРЕС', body: 'ХЕРЕС ХЕРЕС'})
-
 }

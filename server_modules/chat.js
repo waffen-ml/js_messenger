@@ -228,11 +228,18 @@ class CallTemp {
 }
 
 exports.init = (cfx) => {
-    if(!cfx.socket || !cfx.files)
+    if(!cfx.socket || !cfx.files || !cfx.notifications)
         return true
 
     cfx.chats = new ChatSystem(cfx);
     let temp = new CallTemp(cfx)
+
+    cfx.notifications.addUnreadChecker(userid => {
+        return cfx.db.executeFile('unreadchats', {userid: userid})
+        .then(r => {
+            return r ?? 0
+        })
+    })
 
     cfx.core.app.post('/sendmsg', cfx.core.upload.array('files'), (req, res) => {
         try {
