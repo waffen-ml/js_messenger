@@ -88,3 +88,8 @@
 .post .actions .donate::-ms-expand {
     display: none;
 }
+
+.comment-section .load-more {
+    text-align: center;
+    margin: 0 auto;
+}
