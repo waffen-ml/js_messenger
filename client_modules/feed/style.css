@@ -116,10 +116,6 @@
     margin-top:0;
 }
 
-.comment-section li:nth-child(2n) {
-    background:#0000001e;
-}
-
 .comment-section li * {
     margin:0;
 }
@@ -153,7 +149,9 @@
     width:max-content;
 }
 
-.comment-section 
+.comment-section  {
+
+}
 
 @media(max-width:400px) {
     .comment-section li .avatar {
