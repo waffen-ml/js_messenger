@@ -23,6 +23,36 @@ class Post {
             this.commentHolder.appendChild(commentElement)
     }
 
+    setupCommentSection() {
+        let addCommentButton = this.element.querySelector('.add-comment .button')
+        let commentInput = this.element.querySelector('.add-comment input')
+
+        function sendComment() {
+            this.feed.addComment(this.id, commentInput.value)
+            .then(w => {
+                if(!w)
+                    return
+                this.addComment({
+                    author_id: this.feed.me.id,
+                    author_name: this.feed.me.name,
+                    datetime: new Date(),
+                    text: commentInput.value
+                })
+                commentInput.value = ""
+            })
+        }
+
+        addCommentButton.addEventListener('click', () => sendComment())
+        commentInput.addEventListener('keydown', (e) => {
+            if(e.key == 'Enter') {
+                e.preventDefault()
+                sendComment()
+            }
+        })
+
+
+    }
+
     setupElement() {
         setupInspectObjects(this.element)
 
@@ -59,24 +89,7 @@ class Post {
             'Удалить': () => this.feed.deletePost(this.id)
         }, {parent: this.feed.holder.scrollPage})
 
-        let addCommentButton = this.element.querySelector('.add-comment .button')
-        let commentInput = this.element.querySelector('.add-comment input')
-
-        addCommentButton.addEventListener('click', () => {
-            this.feed.addComment(this.id, commentInput.value)
-            .then(w => {
-                if(!w)
-                    return
-                this.addComment({
-                    author_id: this.feed.me.id,
-                    author_name: this.feed.me.name,
-                    datetime: new Date(),
-                    text: commentInput.value
-                })
-                commentInput.value = ""
-            })
-        })
-
+        this.setupCommentSection()
     }
 
     destroy() {
