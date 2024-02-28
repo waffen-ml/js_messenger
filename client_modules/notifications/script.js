@@ -6,7 +6,7 @@ let hideTimeout = null
 
 function updateMenuUnread(unread) {
     Object.keys(unread).forEach(name => {
-        let navButton = document.querySelector(`nav .button[id="nav${navName}"]`)
+        let navButton = document.querySelector(`nav .button[id="nav${name}"]`)
         let count = unread[name].count
 
         if(count > 0) {
