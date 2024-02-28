@@ -95,3 +95,12 @@
     display: block;
     width:max-content;
 }
+
+.comment-section .comments {
+    padding:0;
+    list-style-type: none;
+}
+
+.comment-section li > *{
+    display:inline;
+}
