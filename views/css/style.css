@@ -200,6 +200,10 @@ input, .block, textarea {
     background-color:#3b2f2f30;
 }
 
+.button.shifted {
+    margin-left:-5px;
+}
+
 input, textarea {
     padding:7px 11px;
     display:block;
