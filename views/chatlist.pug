@@ -15,7 +15,7 @@ block main
 
 append body
     script(template="chat-view", type="text/x-ejs-template")
-        <% let cls = voice && 'voice' + ' ' + unread && 'unread' %>
+        <% let cls = (voice && 'voice') + ' ' + (unread && 'unread') %>
         li.block.chat(chatid!="<%=chat_id%>", class!="<%=cls%>")
             img.avatar(src!="/getchatavatar?id=<%=chat_id%>")
             span.finite.title <%= chat_name %>
