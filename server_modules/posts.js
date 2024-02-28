@@ -118,7 +118,7 @@ class Posts {
         .then(s => {
             return this.cfx.query(`select c.*, u.name as author_name, 
                 u.id as author_id, u.tag as author_tag from post_comment c 
-                join user u on u.id=c.author_id where post_id=? and id<=? order by id desc limit ?`, [post_id, start, count])
+                join user u on u.id=c.author_id where post_id=? and id<=? order by c.id desc limit ?`, [post_id, start, count])
         })
     }
 
