@@ -1,6 +1,6 @@
 const loadBatchSize = 15
 const loadDistance = 500
-const commentLoadBatchSize = 4
+const commentLoadBatchSize = 2
 
 
 class Post {
