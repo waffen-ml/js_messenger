@@ -26,7 +26,7 @@ class Database {
             })
         })
         .then((...args) => new Promise((r) => r(...args)),
-        () => {
+        (err) => {
             console.log('Херес')
             console.log(err)
         })
