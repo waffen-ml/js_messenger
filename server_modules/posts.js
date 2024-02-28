@@ -109,16 +109,17 @@ class Posts {
         return new Promise((resolve) => {
             if(start > 0) {
                 resolve(start)
+                return
             }
-            this.cfx.query('select max(id) from post_comment where post_id=?', [post_id])
+            this.cfx.query('select max(id) as k from post_comment where post_id=?', [post_id])
             .then(w => {
-                resolve(w[0] ?? 0)
+                resolve(w[0].k ?? 0)
             })
         })
         .then(s => {
             return this.cfx.query(`select c.*, u.name as author_name, 
                 u.id as author_id, u.tag as author_tag from post_comment c 
-                left join user u on u.id=c.author_id where post_id=? and c.id<=? ordedsafdsr by c.id desc limit ?`, [post_id, start, count])
+                left join user u on u.id=c.author_id where post_id=? and c.id<=? order by c.id desc limit ?`, [post_id, start, count])
         })
     }
 
