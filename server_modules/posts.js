@@ -120,6 +120,10 @@ class Posts {
                 u.id as author_id, u.tag as author_tag from post_comment c 
                 join user u on u.id=c.author_id where post_id=? and c.id<=? order by c.id desc limit ?`, [post_id, start, count])
         })
+        .then(c => {
+            console.log(c)
+            return c
+        })
     }
 
 }
