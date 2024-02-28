@@ -233,7 +233,6 @@ class Feed {
         return fetch(`/getfeed?start=${start}&count=${loadBatchSize}&author_id=${authorId}`)
         .then(r => r.json())
         .then(posts => {
-            console.log(posts)
             if (posts.length < loadBatchSize)
                 this.holder.loadedAll = true
 
