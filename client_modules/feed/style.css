@@ -155,7 +155,9 @@
 }
 
 .comment-section .delete {
-    color:#3e3e3e;
+    text-decoration: underline;
+    font-size: 18px;
+    color:#3b3b3b;
 }
 
 @media(max-width:400px) {
