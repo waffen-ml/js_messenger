@@ -136,7 +136,7 @@ class Feed {
     constructor(me, authorId, holder, scrollPage) {
         this.authorId = authorId
         this.holder = new FeedHolder(this, holder, scrollPage)
-        this.posts = []
+        this.feed = []
         this.me = me
         this.loadBatch()
     }
