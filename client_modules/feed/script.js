@@ -97,7 +97,8 @@ class Post {
         const sendComment = () => {
             this.feed.addComment(this.id, commentInput.value)
             .then(w => {
-                if(!w)
+                console.log(w)
+                if(!w && w > 0)
                     return
                 this.addComment({
                     author_id: this.feed.me.id,
@@ -278,11 +279,11 @@ class Feed {
     addComment(post_id, text) {
         return new Promise((resolve) => {
             if (!utils.strweight(text)) {
-                resolve(false)
+                resolve(-1)
                 return
             } else if(!this.isAuthorized()) {
                 alert('Войдите в аккаунт!')
-                resolve(false)
+                resolve(-1)
                 return
             }
 
@@ -290,10 +291,10 @@ class Feed {
             .then(r => r.json())
             .then(r => {
                 if(r.success)
-                    resolve(true)
+                    resolve(r.id)
                 else {
                     alert('Ошибка!')
-                    resolve(false)
+                    resolve(-1)
                 }
             })
         })

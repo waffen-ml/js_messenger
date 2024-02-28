@@ -231,7 +231,8 @@ exports.init = (cfx) => {
             u.id, req.query.text)
         .then(r => {
             return {
-                success:1
+                success:1,
+                id: r.insertId
             }
         })
     }, true)
