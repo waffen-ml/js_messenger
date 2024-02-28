@@ -33,11 +33,9 @@ append body
                 hr
                 a.load-more.button.light(href="#") Загрузить ещё комментарии
                 ul.comments.styled-scroll
-                <% if (this.me && this.me.id) { %>
                 .add-comment 
                     input(type="text", placeholder="Ваш комментарий")
                     button.button(href="#") 📨
-                <% } %>
 
     script(type="text/x-ejs-template", template="post-comment")
         li(id!="comment<%=data.id%>")

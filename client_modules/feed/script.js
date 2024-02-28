@@ -79,6 +79,11 @@ class Post {
     }
 
     setupCommentSection() {
+
+        if(!this.feed.isAuthorized()) {
+            this.element.querySelector('.add-comment').style.display='none'
+        }
+
         let addCommentButton = this.element.querySelector('.add-comment .button')
         let commentInput = this.element.querySelector('.add-comment input')
 
@@ -98,15 +103,13 @@ class Post {
             })
         }
 
-        if (this.feed.isAuthorized()) {
-            addCommentButton.addEventListener('click', () => sendComment())
-            commentInput.addEventListener('keydown', (e) => {
-                if(e.key == 'Enter') {
-                    e.preventDefault()
-                    sendComment()
-                }
-            })
-        }
+        addCommentButton.addEventListener('click', () => sendComment())
+        commentInput.addEventListener('keydown', (e) => {
+            if(e.key == 'Enter') {
+                e.preventDefault()
+                sendComment()
+            }
+        })
 
         this.element.querySelector('.load-more').addEventListener('click', () => {
             this.loadCommentBatch()
