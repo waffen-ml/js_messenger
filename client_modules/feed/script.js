@@ -1,7 +1,7 @@
 const loadBatchSize = 15
 const loadDistance = 500
-const commentLoadBatchSize = 2
-
+const defaultCommentBatchSize = 6
+const startCommentBatchSize = 2
 
 class Post {
     constructor(data, feed) {
@@ -30,7 +30,9 @@ class Post {
     loadCommentBatch() {
         this.toggleLoadCommentsButton(false)
 
-        return this.feed.loadComments(this.id, this.commentLoadStart, commentLoadBatchSize + 1)
+        let size = this.commentLoadStart < 0? startCommentBatchSize : defaultCommentBatchSize
+
+        return this.feed.loadComments(this.id, this.commentLoadStart, size + 1)
         .then(comments => {
             // last id is min
 
@@ -40,7 +42,7 @@ class Post {
                 return
             }
 
-            if (comments.length > commentLoadBatchSize) {
+            if (comments.length > size) {
                 this.toggleLoadCommentsButton(true)
                 comments.pop()
             }
