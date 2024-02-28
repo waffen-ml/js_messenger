@@ -44,7 +44,7 @@ append body
                 a.name.finite.button.light.shifted(href!="/user?id=<%=data.author_id%>") <%=data.author_name%>
                 span.datetime <%= utils.getMessageDatetimeLabel(data.datetime) %>
             <% if (me && me.id == data.author_id) { %>
-                button.delete.button.light Удалить
+                a.delete.button.light Удалить
             <% } %>
             p.text <%= data.text %>
 
