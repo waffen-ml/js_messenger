@@ -30,8 +30,8 @@ class Post {
         .then(comments => {
             if (comments.length > commentLoadBatchSize)
                 this.toggleLoadCommentsButton(true)
-
-            comments.pop()
+            
+            this.commentLoadStart.start = comments.pop().id
             comments.reverse().forEach(c => {
                 c.datetime = new Date(c.datetime)
                 this.addComment(c, true)
