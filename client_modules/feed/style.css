@@ -143,6 +143,7 @@
 
 .comment-section .add-comment {
     display:flex;
+    margin-top:8px;
     gap:5px;
 }
 
@@ -178,7 +179,7 @@
     }
 
     .comment-section li {
-        margin-top:10px;
+        margin-top:8px;
     }
 
 }
