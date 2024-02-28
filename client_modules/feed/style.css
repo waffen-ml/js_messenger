@@ -134,9 +134,11 @@
 }
 
 .comment-section .add-comment input {
+    width: 100%;
 }
 
 .comment-section .add-comment .button {
+    width:max-content;
 
 }
 
