@@ -19,10 +19,12 @@ fetch('/getchatlist')
             view.lm_preview = (view.lm_sender_id == view.owner_id? 'Вы' : view.lm_sender_name)
                 + ': ' + view.lm_preview
         }
-        
+
         view.datetime_label = view.lm_datetime && utils.getMessageDatetimeLabel(view.lm_datetime)
 
     })
+
+    console.log(views)
 
     let main = document.querySelector('main')
     let holder = document.querySelector('.chatlist')
