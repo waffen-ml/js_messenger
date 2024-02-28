@@ -24,8 +24,6 @@ fetch('/getchatlist')
 
     })
 
-    console.log(views)
-
     let main = document.querySelector('main')
     let holder = document.querySelector('.chatlist')
 
