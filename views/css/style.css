@@ -112,8 +112,8 @@ nav .button .label {
 }
 
 nav .button .unread {
-    color:#000000;
-    background:#5dd7e0;
+    color:grey;
+    background:#50adff8d;
     border-radius:50%;
     padding:1px;
     min-width:1em;
