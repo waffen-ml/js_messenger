@@ -40,7 +40,6 @@
     max-width:70vw;
     max-height:70vh;
     user-select:none;
-    object-fit: cover;
     background:#00000016;
     outline:none;
 }
