@@ -109,11 +109,7 @@
     grid-template-rows:auto auto;
     row-gap:3px;
     column-gap:10px;
-    margin-top:5px;
-}
-
-.comment-section li:first-child {
-    margin-top:0 !important;
+    margin-bottom:5px;
 }
 
 .comment-section li * {
@@ -177,7 +173,7 @@
     }
 
     .comment-section li {
-        margin-top:8px;
+        margin-bottom:8px;
         row-gap:5px;
     }
 
