@@ -82,11 +82,21 @@ class Chat {
     displayMessage(msg) {
         this.cfx.socket.io.in('c:' + this.id).emit('message', msg)
 
-        this.cfx.socket.getSocketsInRoom('c:' + this.id)
+        return this.cfx.socket.getSocketsInRoom('c:' + this.id)
         .then((sockets) => {
             let ids = sockets.map(s => (s.request.session.user ?? {}).id).filter(id => id)
             return this.makeMessageRead(ids)
         })
+        .then(() => {
+            return this.getInfo()
+        })
+        .then(info => {
+            return Promise.all(info.members.map(member => {
+                return this.cfx.notifications.sendSpecificUnread(member.id, 'messages')
+            }))
+        })
+
+        
     }
 
     getInfo() {
