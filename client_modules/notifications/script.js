@@ -20,6 +20,7 @@ function updateMenuUnread(unread, menu) {
 }
 
 function updateUnread(unread) {
+    console.log(unread)
     document.querySelectorAll('nav').forEach(nav => {
         updateMenuUnread(nav)
     })
