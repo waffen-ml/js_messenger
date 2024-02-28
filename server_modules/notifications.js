@@ -44,7 +44,9 @@ class Notifications {
         .then(count => {
             data ??= {}
             data.count = count
-            this.cfx.socket.io.to('u:' + userid).emit('update_unread', data)
+            this.cfx.socket.io.to('u:' + userid).emit('update_unread', {
+                name: data
+            })
         })
     }
 
