@@ -28,7 +28,7 @@ class Post {
 
         return this.feed.loadComments(this.id, this.commentLoadStart, commentLoadBatchSize + 1)
         .then(comments => {
-            console.log(comments)
+            console.log(comments.reverse())
 
             if(!comments.length)
                 return
