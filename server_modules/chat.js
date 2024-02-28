@@ -247,7 +247,7 @@ exports.init = (cfx) => {
     cfx.notifications.addUnreadChecker('messages', userid => {
         return cfx.db.executeFile('unreadchats', {userid: userid})
         .then(r => {
-            return r[0] ?? 0
+            return r.length? r[0].count ?? 0 : 0
         })
     })
 

@@ -39,13 +39,11 @@ class Notifications {
         })
     }
 
-    sendSpecificUnread(userid, name, data) {
+    sendSpecificUnread(userid, name) {
         return this.getUnread(name, userid)
         .then(count => {
             let output = {}
-            output[name] = data ?? {}
-            output[name].count = count
-
+            output[name] = count
             this.cfx.socket.io.to('u:' + userid).emit('update_unread', output)
         })
     }

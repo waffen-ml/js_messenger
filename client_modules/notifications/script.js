@@ -8,7 +8,7 @@ function updateMenuUnread(unread, menu) {
     Object.keys(unread).forEach(name => {
         let navButton = menu.querySelector(`.button[id="nav${name}"]`)
         let unreadSpan = navButton.querySelector('.unread')
-        let count = unread[name].count
+        let count = unread[name]
 
         if(count > 0) {
             unreadSpan.classList.remove('zero')
