@@ -105,8 +105,8 @@
     display:grid;
     grid-template-columns: auto 1fr;
     grid-template-rows:auto auto;
-    row-gap:7px;
-    column-gap:5px;
+    row-gap:5px;
+    column-gap:8px;
 }
 
 .comment-section li * {
