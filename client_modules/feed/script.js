@@ -23,6 +23,10 @@ class Post {
         button.style.display = state? 'block' : 'none'
     }
 
+    disableHr() {
+        this.element.querySelector('hr').style.display = 'none'
+    }
+
     loadCommentBatch() {
         this.toggleLoadCommentsButton(false)
 
@@ -30,8 +34,11 @@ class Post {
         .then(comments => {
             // last id is min
 
-            if(!comments.length)
+            if(!comments.length) {
+                if(this.commentLoadStart < 0 && !this.feed.isAuthorized())
+                    this.disableHr()
                 return
+            }
 
             if (comments.length > commentLoadBatchSize) {
                 this.toggleLoadCommentsButton(true)
