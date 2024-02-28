@@ -16,7 +16,7 @@ class Post {
     }
 
     addComment(data, before) {
-        let commentElement = templateManager.createElement('comment', data)
+        let commentElement = templateManager.createElement('post-comment', data)
         if(before)
             this.commentHolder.insertBefore(commentElement, this.commentHolder.firstChild)
         else
