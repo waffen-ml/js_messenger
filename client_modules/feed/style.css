@@ -140,6 +140,7 @@
     .comment-section li .info {
         flex-direction: column;
         gap:3px;
+        align-items: baseline;
     }
 
 }
