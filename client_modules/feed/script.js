@@ -8,7 +8,7 @@ class Post {
         this.id = data.id
         this.feed = feed
         this.element = templateManager.createElement('post', {
-            data: post,
+            data: data,
             me: feed.me
         })
         this.setupElement()
