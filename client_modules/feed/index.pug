@@ -31,18 +31,19 @@ append body
             
             .comment-section 
                 hr
-                a.load-more.button.light(href="#") Загрузить еще N комментариев
+                a.load-more.button.light(href="#") Загрузить ещё комментарии
                 ul.comments
-                    li 
-                        img.avatar(src="/getuseravatar?id=70")
-                        .info 
-                            a.name.finite.button.light.shifted(href="/user?id=70") Feydl Ben Smuel Khanin
-                            span.datetime Вчера в 02:39
-                        p.text сосните Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quia tempore reprehenderit modi placeat quae expedita sed magni ut? Deserunt nulla fuga aut placeat ea consequatur facere delectus error debitis cupiditate enim quisquam porro voluptates, provident, ducimus quidem. Repellendus, maxime placeat enim tempore magnam architecto, recusandae dolor deserunt ipsa consequuntur in! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta, ullam. Commodi aliquam dolorem ipsa saepe ea quidem ab, repudiandae et!
-
                 .add-comment 
                     input(type="text", placeholder="Ваш комментарий")
                     button.button(href="#") 📨
+
+    script(type="text/x-ejs-template", template="post-comment")
+        li 
+            img.avatar(src!="/getuseravatar?id=<%=author_id%>")
+            .info 
+                a.name.finite.button.light.shifted(href!="/user?id=<%=author_id%>") <%=author_name%>
+                span.datetime <%= utils.getMessageDatetimeLabel(datetime) %>
+            p.text <%= text %>
 
     
     script(type="text/x-ejs-template", template="post-reactions")

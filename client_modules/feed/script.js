@@ -11,7 +11,16 @@ class Post {
             data: data,
             me: feed.me
         })
+        this.commentHolder = this.element.querySelector('.comments')
         this.setupElement()
+    }
+
+    addComment(data, before) {
+        let commentElement = templateManager.createElement('comment', data)
+        if(before)
+            this.commentHolder.insertBefore(commentElement, this.commentHolder.firstChild)
+        else
+            this.commentHolder.appendChild(commentElement)
     }
 
     setupElement() {
@@ -49,6 +58,25 @@ class Post {
             'Редактировать': () => {},
             'Удалить': () => this.feed.deletePost(this.id)
         }, {parent: this.feed.holder.scrollPage})
+
+        let addCommentButton = this.element.querySelector('.add-comment .button')
+        let commentInput = this.element.querySelector('.add-comment input')
+
+        addCommentButton.addEventListener('click', () => {
+            this.feed.addComment(this.id, commentInput.value)
+            .then(w => {
+                if(!w)
+                    return
+                this.addComment({
+                    author_id: this.feed.me.id,
+                    author_name: this.feed.me.name,
+                    datetime: new Date(),
+                    text: commentInput.value
+                })
+                commentInput.value = ""
+            })
+        })
+
     }
 
     destroy() {
@@ -139,6 +167,34 @@ class Feed {
         this.feed = []
         this.me = me
         this.loadBatch()
+    }
+
+    isAuthorized() {
+        return this.me && this.me.id
+    }
+
+    addComment(post_id, text) {
+        return new Promise((resolve) => {
+            if (!utils.strweight(text)) {
+                resolve(false)
+                return
+            } else if(!this.isAuthorized()) {
+                alert('Войдите в аккаунт!')
+                resolve(false)
+                return
+            }
+
+            fetch(`/addcomment?post_id=${post_id}&text=${encodeURI(text)}`)
+            .then(r => r.json())
+            .then(r => {
+                if(r.success)
+                    resolve(true)
+                else {
+                    alert('Ошибка!')
+                    resolve(false)
+                }
+            })
+        })
     }
 
     deletePost(id) {

@@ -100,6 +100,28 @@ class Posts {
         .then(r => r[0])
     }
 
+    addComment(post_id, author_id, text) {
+        return this.cfx.query(`insert into post_comment(post_id, author_id, text, datetime)
+            values(?, ?, ?, now())`, [post_id, author_id, utils.mysql_escape(text)])
+    }
+
+    getComments(post_id, start, count) {
+        return new Promise((resolve) => {
+            if(start > 0) {
+                resolve(start)
+            }
+            this.cfx.query('select max(id) from post_comment where post_id=?', [post_id])
+            .then(w => {
+                resolve(w[0] ?? 0)
+            })
+        })
+        .then(s => {
+            return this.cfx.query(`select c.*, u.name as author_name, 
+                u.id as author_id, u.tag as author_tag from post_comment c 
+                join user u on u.id=c.author_id where post_id=? and id<=? order by id desc limit ?`, [post_id, start, count])
+        })
+    }
+
 }
 
 exports.init = (cfx) => {
@@ -182,6 +204,24 @@ exports.init = (cfx) => {
         .then(() => {
             return {
                 success: 1
+            }
+        })
+    }, true)
+
+    cfx.core.safeGet('/getcomments', (u, req, res) => {
+        return cfx.posts.getComments(
+            parseInt(req.query.post_id),
+            parseInt(req.query.start),
+            parseInt(req.query.count))
+    })
+
+    cfx.core.safeGet('/addcomment', (u, req, res) => {
+        return cfx.posts.addComment(
+            parseInt(req.query.post_id),
+            u.id, req.query.text)
+        .then(r => {
+            return {
+                success:1
             }
         })
     }, true)
