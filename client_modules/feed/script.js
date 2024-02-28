@@ -18,16 +18,25 @@ class Post {
         this.setupElement()
     }
 
-    hideLoadCommentsButton() {
-        this.element.querySelector('.')
+    toggleLoadCommentsButton(state) {
+        let button = this.element.querySelector('.comment-section .load-more')
+        button.style.display = state? 'block' : 'none'
     }
 
     loadCommentBatch() {
-        return this.feed.loadComments(this.id, this.commentLoadStart, commentLoadBatchSize)
-        .then(comments => {
-            console.log(comments)
-        })
+        this.toggleLoadCommentsButton(false)
 
+        return this.feed.loadComments(this.id, this.commentLoadStart, commentLoadBatchSize + 1)
+        .then(comments => {
+            if (comments.length > commentLoadBatchSize)
+                this.toggleLoadCommentsButton(true)
+
+            comments.pop()
+            comments.reverse().forEach(c => {
+                c.datetime = new Date(c.datetime)
+                this.addComment(c, true)
+            })
+        })
     }
 
     addComment(data, before) {
