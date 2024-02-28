@@ -79,7 +79,7 @@ class Post {
             }
         })
 
-        this.element.querySelector('.load-more').addEventListener(() => {
+        this.element.querySelector('.load-more').addEventListener('click', () => {
             this.loadCommentBatch()
         })
 
