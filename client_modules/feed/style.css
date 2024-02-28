@@ -90,6 +90,7 @@
 }
 
 .comment-section .load-more {
+    margin-top:6px;
     text-align: center;
     margin: 0 auto;
     display: block;
@@ -139,7 +140,6 @@
 .comment-section li .text {
     grid-column: 2/4;
 }
-
 
 .comment-section .add-comment {
     display:flex;
