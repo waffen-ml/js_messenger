@@ -155,7 +155,7 @@
 }
 
 .comment-section .delete {
-    padding-left:10px;
+    margin-right:10px;
     font-size: 15px;
     color:#3b3b3b;
     align-self:start;
