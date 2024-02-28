@@ -236,11 +236,11 @@ exports.init = (cfx) => {
     }, true)
 
     cfx.core.safeGet('/deletecomment', (u, req, res) => {
-        return cfx.getComment(req.query.id)
+        return cfx.posts.getComment(req.query.id)
         .then(comment => {
             if (comment.author_id != u.id)
                 throw Error('Lack permissions')
-            return cfx.deleteComment(req.query.id)
+            return cfx.posts.deleteComment(req.query.id)
         })
         .then(() => {
             return {
