@@ -105,8 +105,8 @@
     display:grid;
     grid-template-columns: auto 1fr;
     grid-template-rows:auto auto;
-    row-gap:5px;
-    column-gap:8px;
+    row-gap:3px;
+    column-gap:10px;
 }
 
 .comment-section li * {
@@ -126,4 +126,20 @@
 
 .comment-section li .datetime {
     color:#313131;
+}
+
+@media(max-width:400px) {
+    .comment-section li .avatar {
+        grid-row:1;
+    }
+
+    .comment-section li .text {
+        grid-column:1/3;
+    }
+
+    .comment-section li .info {
+        flex-direction: column;
+        gap:3px;
+    }
+
 }
