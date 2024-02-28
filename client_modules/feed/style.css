@@ -121,6 +121,7 @@
 .comment-section li .info {
     display:flex;
     gap:8px;
+    align-items: center;
 }
 
 .comment-section li .datetime {
