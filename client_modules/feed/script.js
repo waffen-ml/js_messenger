@@ -1,5 +1,6 @@
 const loadBatchSize = 15
 const loadDistance = 500
+const commentLoadBatchSize = 4
 
 
 class Post {
@@ -12,7 +13,21 @@ class Post {
             me: feed.me
         })
         this.commentHolder = this.element.querySelector('.comments')
+        this.commentLoadStart = -1
+
         this.setupElement()
+    }
+
+    hideLoadCommentsButton() {
+        this.element.querySelector('.')
+    }
+
+    loadCommentBatch() {
+        this.feed.loadComments(this.id, this.commentLoadStart, commentLoadBatchSize)
+        .then(comments => {
+            console.log(comments)
+        })
+
     }
 
     addComment(data, before) {
@@ -51,7 +66,7 @@ class Post {
             }
         })
 
-
+        this.loadCommentBatch()
     }
 
     setupElement() {
@@ -185,6 +200,11 @@ class Feed {
 
     isAuthorized() {
         return this.me && this.me.id
+    }
+
+    loadComments(post_id, start, count) {
+        fetch(`/getcomments?post_id=${post_id}&start=${start}&count=${count}`)
+        .then(r => r.json())
     }
 
     addComment(post_id, text) {
