@@ -92,4 +92,6 @@
 .comment-section .load-more {
     text-align: center;
     margin: 0 auto;
+    display: block;
+    width:max-content;
 }
