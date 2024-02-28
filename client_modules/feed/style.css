@@ -135,6 +135,7 @@
 
 .comment-section .add-comment input {
     width: 100%;
+    max-width:300px;
 }
 
 .comment-section .add-comment .button {
