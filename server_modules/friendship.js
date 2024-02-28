@@ -65,7 +65,13 @@ class Friendship {
 
     deleteRequestsBetween(a, b) {
         return this.cfx.query(`delete from friend_request where from_id=${a} 
-            and to_id=${b} or from_id=${b} and to_id=${a}`)
+            and to_id=${b} or from_id=${b} and to_id=${a}`)  
+        .then(() => {
+            return Promise.all([
+                this.cfx.notifications.sendSpecificUnread(a, 'friends'),
+                this.cfx.notifications.sendSpecificUnread(b, 'friends')
+            ])
+        })
     }
 
     declineFriendRequest(decliner, sender) {
