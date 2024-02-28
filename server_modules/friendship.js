@@ -122,7 +122,7 @@ exports.init = (cfx) => {
     if(!cfx.db || !cfx.forms || !cfx.notifications)
         return true;
 
-    cfx.notifications.addUnreadChecker((userid) => {
+    cfx.notifications.addUnreadChecker('friends', (userid) => {
         return cfx.query(`select count(*) as count From friend_request where to_id=?`, [userid])
         .then(r => r.length? r[0].count : 0)
     })
