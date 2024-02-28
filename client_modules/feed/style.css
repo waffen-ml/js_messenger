@@ -105,9 +105,20 @@
     display:grid;
     grid-template-columns: auto 1fr;
     grid-template-rows:auto auto;
+    row-gap:5px;
+    column-gap:8px;
+}
 
+.comment-section li * {
+    margin:0;
 }
 
 .comment-section li .avatar {
+    height:45px;
     grid-row:1/3;
+}
+
+.comment-section li .info {
+    display:flex;
+    justify-content: space-between;
 }
