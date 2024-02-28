@@ -25,9 +25,10 @@ class Database {
                     reject(err)
             })
         })
-        .catch(err => {
+        .then((...args) => new Promise((r) => r(...args)),
+        () => {
             console.log('Херес')
-            throw err
+            console.log(err)
         })
     }
 
