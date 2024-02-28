@@ -30,6 +30,8 @@ class Post {
         .then(comments => {
             comments.reverse() // first id is min
 
+            console.log(comments)
+
             if(!comments.length)
                 return
 
