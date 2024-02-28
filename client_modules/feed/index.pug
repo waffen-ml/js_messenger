@@ -24,9 +24,25 @@ append body
                 select.button.donate
                     option(style="display:none", value="default", selected) Пожертвовать
                     option(value="10") 10EBL
-                    option(value="25") 10EBL
-                    option(value="50") 10EBL
-                    option(value="100") 10EBL
+                    option(value="25") 25EBL
+                    option(value="50") 50EBL
+                    option(value="100") 100EBL
+                    option(value="cancel") Отмена
+            
+            .comment-section 
+                hr
+                a.load-more Загрузить еще N комментариев
+                ul.comments
+                    li 
+                        img.avatar(href="/getuseravatar?id=70")
+                        .info 
+                            span.name Feydl Ben Smuel Khanin
+                            span.datetime Вчера в 02:39
+                        p.text сосните Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quia tempore reprehenderit modi placeat quae expedita sed magni ut? Deserunt nulla fuga aut placeat ea consequatur facere delectus error debitis cupiditate enim quisquam porro voluptates, provident, ducimus quidem. Repellendus, maxime placeat enim tempore magnam architecto, recusandae dolor deserunt ipsa consequuntur in!
+
+                .add-comment 
+                    input(type="text", placeholder="Ваш комментарий")
+                    button.button.send ОК
 
     
     script(type="text/x-ejs-template", template="post-reactions")
