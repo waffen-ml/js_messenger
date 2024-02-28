@@ -98,13 +98,15 @@ class Post {
             })
         }
 
-        addCommentButton.addEventListener('click', () => sendComment())
-        commentInput.addEventListener('keydown', (e) => {
-            if(e.key == 'Enter') {
-                e.preventDefault()
-                sendComment()
-            }
-        })
+        if (this.feed.isAuthorized()) {
+            addCommentButton.addEventListener('click', () => sendComment())
+            commentInput.addEventListener('keydown', (e) => {
+                if(e.key == 'Enter') {
+                    e.preventDefault()
+                    sendComment()
+                }
+            })
+        }
 
         this.element.querySelector('.load-more').addEventListener('click', () => {
             this.loadCommentBatch()
