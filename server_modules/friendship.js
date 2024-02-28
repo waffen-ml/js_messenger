@@ -69,7 +69,10 @@ class Friendship {
     }
 
     declineFriendRequest(decliner, sender) {
-        return this.deleteRequestsBetween(decliner, sender);
+        return this.deleteRequestsBetween(decliner, sender)
+        .then(r => {
+            return this.cfx.notifications.sendSpecificUnread(decliner, 'friends')
+        })
     }
 
     addFriendship(first, second) {
