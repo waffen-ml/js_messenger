@@ -155,8 +155,7 @@
 }
 
 .comment-section .delete {
-    text-decoration: underline;
-    font-size: 14px;
+    font-size: 15px;
     color:#3b3b3b;
     align-self:start;
 }
