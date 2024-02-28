@@ -92,7 +92,10 @@
 .comment-section .load-more {
     display:block;
     text-align: center;
-    margin: 6px auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:6px;
+    margin-bottom:4px;
     width:max-content;
 }
 
