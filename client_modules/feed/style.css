@@ -128,6 +128,19 @@
     color:#313131;
 }
 
+.comment-section .add-comment {
+    display:flex;
+    gap:5px;
+}
+
+.comment-section .add-comment input {
+    width:100%;
+}
+
+.comment-section .add-comment .button {
+
+}
+
 @media(max-width:400px) {
     .comment-section li .avatar {
         grid-row:1;
@@ -139,7 +152,7 @@
 
     .comment-section li .info {
         flex-direction: column;
-        gap:3px;
+        gap:0;
         align-items: start;
     }
 
