@@ -28,10 +28,14 @@ class Post {
 
         return this.feed.loadComments(this.id, this.commentLoadStart, commentLoadBatchSize + 1)
         .then(comments => {
+            console.log(comments)
+
             if (comments.length > commentLoadBatchSize)
                 this.toggleLoadCommentsButton(true)
+            else if(comments.length == 0)
+                return
             
-            this.commentLoadStart.start = comments.pop().id
+            this.commentLoadStart = comments.pop().id
             comments.reverse().forEach(c => {
                 c.datetime = new Date(c.datetime)
                 this.addComment(c, true)
