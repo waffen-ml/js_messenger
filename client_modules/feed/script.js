@@ -27,7 +27,7 @@ class Post {
         let addCommentButton = this.element.querySelector('.add-comment .button')
         let commentInput = this.element.querySelector('.add-comment input')
 
-        function sendComment() {
+        const sendComment = () => {
             this.feed.addComment(this.id, commentInput.value)
             .then(w => {
                 if(!w)
