@@ -113,6 +113,9 @@
     margin-top:5px;
 }
 
+.comment-section li:first-child {
+    margin-top:10px;
+}
 
 .comment-section li * {
     margin:0;
