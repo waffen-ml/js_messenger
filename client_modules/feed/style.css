@@ -90,6 +90,7 @@
 }
 
 .comment-section .load-more {
+    display:block;
     margin-top:6px;
     text-align: center;
     margin: 0 auto;
