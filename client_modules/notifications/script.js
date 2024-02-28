@@ -5,6 +5,7 @@ const titleHolder = notificationWindow.querySelector('.title')
 let hideTimeout = null
 
 function updateMenuUnread(unread) {
+    console.log(unread)
     Object.keys(unread).forEach(name => {
         let navButton = document.querySelector(`nav .button[id="nav${name}"]`)
         let count = unread[name].count
