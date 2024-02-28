@@ -44,12 +44,19 @@ class Post {
                 this.addComment(c, true)
             })
 
-            this.commentHolder.scrollTo({behaviour: 'smooth', top:0})
+            this.commentHolder.scrollTo({top:0})
         })
     }
 
+    removeComment(id) {
+
+    }
+
     addComment(data, before) {
-        let commentElement = templateManager.createElement('post-comment', data)
+        let commentElement = templateManager.createElement('post-comment', {
+            data: data,
+            me: this.feed.me
+        })
         if(before)
             this.commentHolder.insertBefore(commentElement, this.commentHolder.firstChild)
         else
@@ -218,6 +225,10 @@ class Feed {
         this.feed = []
         this.me = me
         this.loadBatch()
+    }
+
+    deleteComment(post_id, comment_id) {
+
     }
 
     isAuthorized() {
