@@ -123,6 +123,14 @@ class Posts {
         })
     }
 
+    getComment(comment_id) {
+        return this.cfx.query(`select * from post_comment where id=?`, [comment_id])
+    }
+
+    deleteComment(comment_id) {
+        return this.cfx.query(`delete from post_comment where id=?`, [comment_id])
+    }
+
 }
 
 exports.init = (cfx) => {
@@ -221,6 +229,20 @@ exports.init = (cfx) => {
             parseInt(req.query.post_id),
             u.id, req.query.text)
         .then(r => {
+            return {
+                success:1
+            }
+        })
+    }, true)
+
+    cfx.core.safeGet('/deletecomment', (u, req, res) => {
+        return this.cfx.getComment(req.query.id)
+        .then(comment => {
+            if (comment.author_id != u.id)
+                throw Error('Lack permissions')
+            return this.cfx.deleteComment(req.query.id)
+        })
+        .then(() => {
             return {
                 success:1
             }

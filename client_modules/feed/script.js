@@ -49,7 +49,9 @@ class Post {
     }
 
     removeComment(id) {
-
+        let commentElement = this.commentHolder.querySelector('#comment' + id)
+        if(commentElement)
+            this.commentHolder.removeChild(commentElement)
     }
 
     addComment(data, before) {
@@ -57,6 +59,17 @@ class Post {
             data: data,
             me: this.feed.me
         })
+
+        let deleteButton = commentElement.querySelector('.delete')
+        if(deleteButton) {
+            deleteButton.addEventListener('click', () => {
+                this.feed.deleteComment(data.id)
+                .then(r => {
+                    if(r) this.removeComment(data.id)
+                })     
+            })
+        }
+
         if(before)
             this.commentHolder.insertBefore(commentElement, this.commentHolder.firstChild)
         else
@@ -227,8 +240,16 @@ class Feed {
         this.loadBatch()
     }
 
-    deleteComment(post_id, comment_id) {
-
+    deleteComment(comment_id) {
+        return fetch('/deletecomment?id=' + comment_id)
+        .then(r => r.json())
+        .then(r => {
+            if(!r.success) {
+                alert('Ошибка: ' + r.error)
+                return false
+            }
+            return true
+        })
     }
 
     isAuthorized() {
