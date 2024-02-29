@@ -340,6 +340,9 @@ exports.init = (cfx) => {
     }, true)
 
     cfx.core.safeRender('/chat', (user, req, res) => {
+        return {
+            hey: 1
+        }
         return cfx.chats.accessChat(user, req.query.id)
         .then(chat => {
             chat.makeMessageRead([user.id])
