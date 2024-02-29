@@ -20,13 +20,15 @@ class Posts {
         return new Promise((resolve) => {
             if (start > -1) {
                 resolve()
+                return
             }
             this.cfx.query('select max(id) as mxid from post where ' + author_query)
             .then(r => {
                 start = r[0].mxid
                 resolve()
             })
-        }).then(() => {
+        })
+        .then(() => {
             return this.cfx.db.executeFile('getfeed', {
                 start: start,
                 count: count,
