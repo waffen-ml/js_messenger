@@ -341,6 +341,7 @@ exports.init = (cfx) => {
 
     cfx.core.safeRender('/chat', (user, req, res) => {
         return {
+            render: 'chat',
             hey: 1
         }
         return cfx.chats.accessChat(user, req.query.id)
