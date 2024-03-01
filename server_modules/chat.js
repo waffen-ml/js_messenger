@@ -1,5 +1,3 @@
-
-
 class Chat {
     constructor(cfx, id, name) {
         this.cfx = cfx;
@@ -176,12 +174,12 @@ class ChatSystem {
         })
     }
 
-    accessChat(userid, chatid) {
+    accessChat(user, chatid) {
         return this.getChat(chatid)
         .then(chat => {
             if (!chat)
                 throw new Error('Chat was not found')
-            return chat.containsUser(user)
+            return chat.containsUser(user.id)
             .then(r => {
                 if (!r) throw new Error('User is not in the chat')
                 return chat
@@ -342,7 +340,7 @@ exports.init = (cfx) => {
     }, true)
 
     cfx.core.safeRender('/chat', (user, req, res) => {
-        return cfx.chats.accessChat(user.id, req.query.id)
+        return cfx.chats.accessChat(user, req.query.id)
         .then(chat => {
             chat.makeMessageRead([user.id])
             return {
@@ -352,14 +350,14 @@ exports.init = (cfx) => {
     }, true)
 
     cfx.core.safeGet('/getchatinfo', (user, req, res) => {
-        return cfx.chats.accessChat(user.id, req.query.id)
+        return cfx.chats.accessChat(user, req.query.id)
         .then(chat => {
             return chat.getInfo()
         })
     }, false)
 
     cfx.core.safeGet('/getmessages', (user, req, res) => {
-        return cfx.chats.accessChat(user.id, req.query.chatid)
+        return cfx.chats.accessChat(user, req.query.chatid)
         .then(chat => {
             let start = parseInt(req.query.start)
             let count = parseInt(req.query.count)
