@@ -212,8 +212,8 @@ app.get('/croptest', (req, res) => {
     render(req, res, 'croptest')
 })
 
-app.use((req, res, next) => {
-    next(new Error('Not found'))
+app.use((err, req, res, next) => {
+    next(new Error(err))
 })
 
 server.listen(443, () => {
