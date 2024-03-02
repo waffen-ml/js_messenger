@@ -60,25 +60,9 @@ class Files {
 
 }
 
-const Form = require('./forms').Form
-
 exports.init = (cfx) => {
-    if(!cfx.db || !cfx.forms)
+    if(!cfx.db)
         return true;
-    
-    cfx.forms.addForm(new Form({name: 'filetest', title: 'Фаил тест'},
-    [
-        {type: 'text', title: 'Папка', name: 'folder', optional: true, placeholder: 'default'},
-        {type: 'file', title: 'Файлы', name: 'files', limit: 10},
-    ],
-    (data, erf, cfx) => {
-        //console.log(data)
-    },
-    (data, out, cfx) => {
-        cfx.files.saveFiles(data.files, 1)
-        
-    }
-    ))
 
     cfx.core.safeGet('/file', (_, req, res) => {
         return cfx.files.getFile(req.query.id)
