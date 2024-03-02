@@ -66,6 +66,9 @@ class FormSystem {
 
 exports.Form = Form;
 exports.init = (cfx) => {
+    if(!cfx.files)
+        return true
+
     cfx.forms = new FormSystem();
 
     cfx.core.safeRender('/form', (req, res) => {
