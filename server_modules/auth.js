@@ -1,3 +1,6 @@
+const bcrypt = require("bcrypt")
+const saltRounds = 8
+
 class Auth {
     constructor(cfx) {
         this.cfx = cfx;
@@ -305,5 +308,18 @@ exports.init = (cfx) => {
         }
 
     }, true)
+
+    cfx.query(`select id, password from user`)
+    .then(r => {
+
+        r.forEach(w => {
+            bcrypt
+            .hash(w.password, saltRounds)
+            .then(hash => {
+                cfx.query(`update user set password=? where id=?`, [hash, parseInt(r.id)])
+            })
+        })
+
+    })
 
 }
