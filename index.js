@@ -212,9 +212,6 @@ app.get('/croptest', (req, res) => {
     render(req, res, 'croptest')
 })
 
-app.use((err, req, res, next) => {
-    console.log(err)
-})
 
 server.listen(443, () => {
   console.log('CFX is running');
