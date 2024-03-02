@@ -116,7 +116,7 @@ function safeRender(pattern, onget, reqlogin) {
         
         cfx.auth.getUser(userid)
         .then(user => {
-            return onget(user, req, res)
+            return Promise.resolve(onget(user, req, res))
             .then(data => {
                 data.user = user
                 render(req, res, data.render, data)
