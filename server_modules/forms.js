@@ -71,13 +71,13 @@ exports.init = (cfx) => {
 
     cfx.forms = new FormSystem();
 
-    cfx.core.safeRender('/form', (req, res) => {
+    cfx.core.safeRender('/form', (user, req, res) => {
         const form = cfx.forms.getForm(req.query.name)
         return {
             render: 'form',
             form: form
         }
-    });
+    })
     
     cfx.core.app.post('/form', cfx.core.upload.any(), (req, res) => {
         let data = req.body;
