@@ -316,7 +316,7 @@ exports.init = (cfx) => {
             bcrypt
             .hash(w.password, saltRounds)
             .then(hash => {
-                cfx.query(`update user set password=? where id=?`, [hash, parseInt(r.id)])
+                cfx.query(`update user set password=? where id=?`, [hash, parseInt(w.id)])
             })
         })
 
