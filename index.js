@@ -179,31 +179,6 @@ app.get('/createchat', (req, res) => {
 
 });
 
-
-app.get('/form', (req, res) => {
-    const form = cfx.forms.getForm(req.query.name);
-    render(req, res, 'form', { form: form});
-});
-
-app.post('/form', cfx.core.upload.any(), (req, res) => {
-    let data = req.body;
-
-    req.files.forEach(file => {
-        const fn = file.fieldname;
-        if (!data[fn])
-            data[fn] = [];
-        data[fn].push(file);
-    });
-
-    cfx.forms.passData(
-        req.query.name,
-        data, cfx.as(req.session))
-    .then(out => {
-        //console.log(out);
-        res.send(out);
-    })
-});     
-
 app.get('/logout', (req, res) => {
     req.session.destroy();
     let next = req.query.next || '/';

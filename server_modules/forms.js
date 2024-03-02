@@ -67,4 +67,32 @@ class FormSystem {
 exports.Form = Form;
 exports.init = (cfx) => {
     cfx.forms = new FormSystem();
+
+    cfx.core.safeRender('/form', (req, res) => {
+        const form = cfx.forms.getForm(req.query.name)
+        return {
+            render: 'form',
+            form: form
+        }
+    });
+    
+    cfx.core.app.post('/form', cfx.core.upload.any(), (req, res) => {
+        let data = req.body;
+    
+        req.files.forEach(file => {
+            const fn = file.fieldname;
+            if (!data[fn])
+                data[fn] = [];
+            data[fn].push(file);
+        });
+    
+        cfx.forms.passData(
+            req.query.name,
+            data, cfx.as(req.session))
+        .then(out => {
+            //console.log(out);
+            res.send(out);
+        })
+    });     
+    
 }

@@ -26,7 +26,7 @@ html
                     .logo 
                         a.button.light(href="/") ☕tox
                     .current 
-                        if user !== null
+                        if user
                             a.clean(href="/user?id=" + user.id)= user.name
                             a.button.light(href="/logout", recurrent) 🚪
                         else
