@@ -30,6 +30,9 @@ class Database {
             console.log('Херес')
             console.log(err)
         })
+        .catch(err => {
+            throw Error('MySQL error')
+        })
     }
 
     loadFile(queryName) {

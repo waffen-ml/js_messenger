@@ -51,7 +51,6 @@ function render(req, res, page, params) {
                 link: '/friends'
             }
         },
-        user: cfx.as(req.session).user(),
         cfx: cfx,
         utils: cfx.utils,
         ...params
@@ -81,14 +80,18 @@ function plogin(req, res, requireLogin) {
 
 function safeGet(pattern, onget, reqlogin) {
     app.get(pattern, (req, res) => {
-        let user = req.session.user
-        if(!user && reqlogin) {
+        let userid = req.session.userid
+        if(!userid && reqlogin) {
             res.send({
                 error: 'User is not authorized'
             })
             return
         }
-        Promise.resolve(onget(user, req, res))
+
+        cfx.auth.getUser(userid)
+        .then(user => {
+            return Promise.resolve(onget(user, req, res))
+        })
         .then(r => {
             if (r)
                 res.send(r)
@@ -104,16 +107,20 @@ function safeGet(pattern, onget, reqlogin) {
 
 function safeRender(pattern, onget, reqlogin) {
     app.get(pattern, (req, res, next) => {
-        let user = req.session.user
-        if(!user && reqlogin) {
+        let userid = req.session.userid
+        if(!userid && reqlogin) {
             res.redirect('/form?name=login&next='
             + encodeURIComponent(req.url))
             return
         }
-    
-        Promise.resolve(onget(user, req, res))
-        .then(data => {
-            render(req, res, data.render, data)
+        
+        cfx.auth.getUser(userid)
+        .then(user => {
+            return onget(user, req, res)
+            .then(data => {
+                data.user = user
+                render(req, res, data.render, data)
+            })
         })
         .catch(err => {
             res.status(500)

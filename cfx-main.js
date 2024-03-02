@@ -34,8 +34,7 @@ class CfxMain {
 
     authSession = function(data) {
         if (this.empty()) return;
-        this.session.user = data;
-        this.session.authenticated = true;
+        this.session.userid = data.id
     }
 
     loadModule = function(file) {
