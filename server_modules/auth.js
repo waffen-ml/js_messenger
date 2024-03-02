@@ -332,6 +332,4 @@ exports.init = (cfx) => {
 
     }, true)
 
-    cfx.auth.setPassword(70, 'fuckfuckfuck')
-
 }
