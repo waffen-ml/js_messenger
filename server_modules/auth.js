@@ -201,7 +201,7 @@ const changePasswordForm = new Form(
             return
         }
 
-        cfx.auth.comparePassword(cfx.user().id, data.oldpass)
+        return cfx.auth.comparePassword(cfx.user().id, data.oldpass)
         .then(r => {
             if(!r)
                 erf('oldpass', 'Неверный пароль')
