@@ -213,7 +213,7 @@ app.get('/croptest', (req, res) => {
 })
 
 app.use((err, req, res, next) => {
-    next(new Error(err))
+    console.log(err)
 })
 
 server.listen(443, () => {
