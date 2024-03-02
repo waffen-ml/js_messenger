@@ -6,36 +6,37 @@ class Auth {
         this.cfx = cfx;
     }
 
-    _getUserByQuery(query) {
-        return this.cfx.query(`select * from user where ${query}`)
-        .then((result) => {
-            if(!result.length)
-                return null;
-            return result[0];
-        })   
+    getUser(id, tag) {
+        if(!tag && !id)
+            return Promise.resolve(null)
+        let query = id? 'id=' + id : `tag="${tag}"`
+        return this.cfx.query(`select id, tag, name, 
+            avatar_id, balance, admin, bio from user where ${query}`)
+        .then(r => {
+            return r.length? r[0] : null
+        })
     }
 
     getUserById(id) {
-        return this._getUserByQuery('id=' + id)
+        return this.getUser(id, null)
     }
 
     getUserByTag(tag) {
-        return this._getUserByQuery(`tag="${tag}"`)
+        return this.getUser(null, tag)
     }
 
-    getUser(id, tag) {
-        return id? this.getUserById(id) : tag? this.getUserByTag(tag) : Promise.resolve(null)
-    }
-
-    addUser(name, tag, password) {
+    addUser(name, tag, unhashedPassword) {
         return this.getUserByTag(tag)
         .then(u => {
             if (u) return;
-            return this.cfx.query(`insert into user(name, tag, password) 
-                values (?, ?, ?)`, [name, tag, password])
+            return this.cfx.query(`insert into user(name, tag) 
+                values (?, ?)`, [name, tag])
+            .then(r => {
+                return this.setPassword(r.insertId, unhashedPassword)
+            })
             .then(() => {
-                return this.getUserByTag(tag);
-            });
+                return this.getUserByTag(tag)
+            })
         })
     }
 
@@ -45,6 +46,22 @@ class Auth {
             return user && user.admin
         })
     }
+
+    setPassword(userid, unhashedPassword) {
+        return bcrypt.hash(unhashedPassword, saltRounds)
+        .then(hash => {
+            return this.cfx.query(`update user set password=? where id=?`, [hash, userid])
+        })
+    }
+
+    comparePassword(userid, unhashedPassword) {
+        return this.cfx.query(`select password from user where id=?`, [userid])
+        .then(r => r[0].password)
+        .then(hashedPassword => {
+            return bcrypt.compare(unhashedPassword, hashedPassword)
+        })
+    }
+
 }
 
 let Form = require('./forms').Form;
@@ -93,12 +110,18 @@ const loginForm = new Form(
     ], (data, erf, cfx) => {
         return cfx.auth.getUserByTag(data.tag)
         .then(user => {
-            if(!user)
-                erf('tag', 'Не найдено');
-            else if(user.password != data.pw)
-                erf('pw', 'Неверный пароль')
-            else
-                return user;
+            if(!user) {
+                erf('tag', 'Не найдено')
+                return
+            }
+            
+            return cfx.auth.comparePassword(user.id, data.pw)
+            .then(r => {
+                if(!r)
+                    erf('pw', 'Неверный пароль')
+                else
+                    return user
+            })
         })
     }, (_, user, cfx) => {
         cfx.authSession(user);
@@ -308,18 +331,5 @@ exports.init = (cfx) => {
         }
 
     }, true)
-
-    cfx.query(`select id, password from user`)
-    .then(r => {
-
-        r.forEach(w => {
-            bcrypt
-            .hash(w.password, saltRounds)
-            .then(hash => {
-                cfx.query(`update user set password=? where id=?`, [hash, parseInt(w.id)])
-            })
-        })
-
-    })
 
 }
