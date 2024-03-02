@@ -210,8 +210,6 @@ const changePasswordForm = new Form(
         })
     },
     (data, _, cfx) => {
-        let userid = cfx.user().id
-        return cfx.query('update user set password=? where id=?', [data.newpass, userid])
     }
 )
 
