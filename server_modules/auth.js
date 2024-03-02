@@ -201,10 +201,12 @@ const changePasswordForm = new Form(
             return
         }
 
-        return cfx.auth.getUser(cfx.user().id)
-        .then((user) => {
-            if (user.password != data.oldpass)
+        cfx.auth.comparePassword(cfx.user().id, data.oldpass)
+        .then(r => {
+            if(!r)
                 erf('oldpass', 'Неверный пароль')
+            else
+                return cfx.auth.setPassword(cfx.user().id, data.newpass)
         })
     },
     (data, _, cfx) => {
