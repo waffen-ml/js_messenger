@@ -123,6 +123,7 @@ function safeRender(pattern, onget, reqlogin) {
             })
         })
         .catch(err => {
+            console.log(err)
             res.status(500)
             render(req, res, 'error', {
                 error: err.message
