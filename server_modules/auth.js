@@ -156,7 +156,6 @@ exports.init = (cfx) => {
                 })
             })
         }, (data, _, vd, info) => {
-            console.log(vd, _)
             info.req.session.userid = vd.id
         }, {'Создать аккаунт': '/form?name=reg',
             'Забыли пароль?': '#'}

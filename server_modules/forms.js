@@ -26,7 +26,7 @@ class Form {
             return this.ok(data, user, valdata, info)
         })
         .then((out) => {
-            output['_out'] = out ?? null
+            output['_out'] = out
             return output
         })
     }
@@ -38,6 +38,7 @@ class Form {
 
     ok(data, user, valdata, info) {
         return Promise.resolve(this.onOk(data, user, valdata, info))
+        .then(w => w ?? null)
     }
 }
 
