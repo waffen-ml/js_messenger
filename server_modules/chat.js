@@ -251,27 +251,19 @@ exports.init = (cfx) => {
         })
     })
 
-    cfx.core.app.post('/sendmsg', cfx.core.upload.array('files'), (req, res) => {
-        try {
-            let sender = cfx.core.login(req, res, true);
-            if(!sender) return;
-
-            cfx.chats.getChat(req.query.id)
-            .then(chat => {
-                if(!chat)
-                    return;
-                cfx.files.saveFiles(req.files, -1)
-                .then(r => {
-                    chat.addMessage(sender.id, req.body.text,
-                        r? r.bundle: null)
-                    res.send({success: true});
-                })
+    cfx.core.safePost('/sendmsg', (sender, req, res) => {
+        return cfx.chats.getChat(req.query.id)
+        .then(chat => {
+            if(!chat)
+                throw Error('Invalid chat')
+            return cfx.files.saveFiles(req.files, -1)
+            .then(r => {
+                chat.addMessage(sender.id, req.body.text,
+                    r? r.bundle: null)
+                return {success: 1}
             })
-        }
-        catch(err) {
-            console.log('SENDMSGERROR:' + err.message)
-        }
-    });
+        })
+    }, cfx.core.upload.array('files'), true)
 
     cfx.core.app.post('/createchat', cfx.core.upload.single('avatar'), (req, res) => {
         let creator = cfx.core.login(req, res, false)
