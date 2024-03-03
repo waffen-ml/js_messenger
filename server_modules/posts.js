@@ -168,8 +168,6 @@ exports.init = (cfx) => {
     cfx.core.safePost('/addpostapi', (_, req, res) => {
         let data = req.body
 
-        console.log(data)
-        
         return cfx.auth.getUserByTag(data.author_tag)
         .then(user => {
             if(!user)
@@ -178,7 +176,7 @@ exports.init = (cfx) => {
             .then(r => {
                 if (!r)
                     throw Error('Incorrect credentials')
-                return cfx.posts.addPost(user.id, null, data.text, data.html, data.title)
+                return cfx.posts.addPost(user.id, null, data.text ?? '', data.html ?? '', data.title ?? '')
             })
         })
 
