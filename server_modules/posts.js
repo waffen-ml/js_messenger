@@ -167,12 +167,17 @@ exports.init = (cfx) => {
 
     cfx.core.safePost('/addpostapi', (_, req, res) => {
         let data = req.body
-
-        return cfx.auth.comparePassword(data.authorid, data.authorpassword)
-        .then(r => {
-            if (!r)
-                throw Error('Incorrect credentials')
-            return cfx.posts.addPost(data.authorid, null, data.text, data.html, data.title)
+        
+        return cfx.auth.getUserByTag(data.author_tag)
+        .then(user => {
+            if(!user)
+                throw Error('Unknown user')
+            return cfx.auth.comparePassword(user.id, data.author_password)
+            .then(r => {
+                if (!r)
+                    throw Error('Incorrect credentials')
+                return cfx.posts.addPost(user.id, null, data.text, data.html, data.title)
+            })
         })
 
     }, cfx.core.upload.any(), false)
