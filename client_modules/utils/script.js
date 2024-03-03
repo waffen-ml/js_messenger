@@ -50,7 +50,7 @@ class Utils {
         let time = this.hasCurrentYear(datetime)?
             ' в ' + this.formatTime(datetime) : '';
         
-        return this.getLocalizedDateLabel(datetime) + time
+        return this.getLocalizedDateLabel(datetime, true) + time
     }
 
     getMessageDatetimeLabel(datetime) {
