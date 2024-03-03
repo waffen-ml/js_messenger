@@ -121,11 +121,11 @@ exports.init = (cfx) => {
             cfx.friendship.getFriends(user.id),
             cfx.friendship.getFriendRequests(user.id)
         ])
-        .then((friends, requests) => {
+        .then((r) => {
             return {
                 render: 'friends',
-                friends: friends,
-                requests: requests
+                friends: r[0],
+                requests: r[1]
             }
         })
     }, true)
