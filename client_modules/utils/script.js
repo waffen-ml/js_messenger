@@ -167,6 +167,13 @@ class Utils {
             return c
     }
 
+    nItemsLabel(n, a, b, c, hideOne) {
+        let form = this.wordForm(n, a, b, c)
+        if(n == 1 && hideOne)
+            return form
+        return n + ' ' + form
+    }
+
     getLastSeenStatus(datetime) {
         if(datetime === null || isNaN(datetime))
             return 'Был в сети давно'
@@ -179,9 +186,9 @@ class Utils {
         if (minutesAgo < 1)
             return 'Онлайн'
         else if(minutesAgo < 60)
-            return `Был в сети ${minutesAgo} ${this.wordForm(minutesAgo, 'минуту', 'минуты', 'минут')} назад`
+            return `Был в сети ${this.nItemsLabel(minutesAgo, 'минуту', 'минуты', 'минут', true)} назад`
         else if(hoursAgo <= 3)
-            return `Был в сети ${hoursAgo} ${this.wordForm(hoursAgo, 'час', 'часа', 'часов')} назад`
+            return `Был в сети ${this.nItemsLabel(hoursAgo, 'час', 'часа', 'часов', true)} назад`
         else
             return 'Был в сети ' + this.getLocalizedDateLabel(datetime, true)
     }
