@@ -92,69 +92,6 @@ const banForm = new Form(
     }
 )
 
-const editProfileForm = new Form(
-    {name:'editprofile', title: 'Редактировать профиль'},
-    [
-        {type: 'text', title: 'Имя', name: 'name'},
-        {type: 'text', title: 'Тег', name: 'tag'},
-        {type: 'text', title: 'Описание', name:'bio', optional: true}
-    ],
-    (data, erf, cfx) => {
-        if (!(/^[a-z0-9_]*$/.test(data.tag)))
-            erf('tag', 'Допустимые символы: a-z, 0-9, _')
-        else if (data.tag.length < 4)
-            erf('tag', 'Как минимум 4 символа')
-        
-        if (data.name.length < 4)
-            erf('name', 'Как минимум 4 символа')
-
-        return cfx.auth.getUserByTag(data.tag)
-        .then((user) => {
-            if (user && user.id != cfx.user().id)
-                erf('tag', 'Этот тег занят')
-        })
-    },
-    (data, _, cfx) => {
-        let userid = cfx.user().id
-        return Promise.all([
-            cfx.query('update user set name=? where id=?', [data.name, userid]),
-            cfx.query('update user set tag=? where id=?', [data.tag, userid]),
-            cfx.query('update user set bio=? where id=?', [data.bio ?? '', userid])
-        ])
-    }
-)
-
-const changePasswordForm = new Form(
-    {name:'changepassword', title: 'Сменить пароль'},
-    [
-        {type: 'password', title: 'Старый пароль', name: 'oldpass'},
-        {type: 'password', title: 'Новый пароль', name: 'newpass'},
-        {type: 'password', title: 'Повторите новый пароль', name:'newpassrep'}
-    ],
-    (data, erf, cfx) => {
-
-        if (data.newpass.length < 4) {
-            erf('newpass', 'Как минимум 4 символа')
-            return
-        }
-
-        else if (data.newpass != data.newpassrep) {
-            erf('newpass', 'Пароли не совпадают')
-            return
-        }
-
-        return cfx.auth.comparePassword(cfx.user().id, data.oldpass)
-        .then(r => {
-            if(!r)
-                erf('oldpass', 'Неверный пароль')
-            else
-                return cfx.auth.setPassword(cfx.user().id, data.newpass)
-        })
-    },
-    (data, _, cfx) => {
-    }
-)
-
 exports.init = (cfx) => {
     if (!cfx.forms || !cfx.db || !cfx.files)
         return true;
@@ -225,8 +162,67 @@ exports.init = (cfx) => {
             'Забыли пароль?': '#'}
     ))
 
-    //cfx.forms.addForm(editProfileForm);
-    //cfx.forms.addForm(changePasswordForm);
+    cfx.forms.addForm(new Form(
+        {name:'editprofile', title: 'Редактировать профиль'},
+        [
+            {type: 'text', title: 'Имя', name: 'name'},
+            {type: 'text', title: 'Тег', name: 'tag'},
+            {type: 'text', title: 'Описание', name:'bio', optional: true}
+        ],
+        (data, erf, user) => {
+            if (!(/^[a-z0-9_]*$/.test(data.tag)))
+                erf('tag', 'Допустимые символы: a-z, 0-9, _')
+            else if (data.tag.length < 4)
+                erf('tag', 'Как минимум 4 символа')
+            
+            if (data.name.length < 4)
+                erf('name', 'Как минимум 4 символа')
+    
+            return cfx.auth.getUserByTag(data.tag)
+            .then((user2) => {
+                if (user2 && user2.id != user.id)
+                    erf('tag', 'Этот тег занят')
+            })
+        },
+        (data, user, vd) => {
+            return Promise.all([
+                cfx.query('update user set name=? where id=?', [data.name, user.id]),
+                cfx.query('update user set tag=? where id=?', [data.tag, user.id]),
+                cfx.query('update user set bio=? where id=?', [data.bio ?? '', user.id])
+            ])
+        }
+    ))
+
+    cfx.forms.addForm(new Form(
+        {name:'changepassword', title: 'Сменить пароль'},
+        [
+            {type: 'password', title: 'Старый пароль', name: 'oldpass'},
+            {type: 'password', title: 'Новый пароль', name: 'newpass'},
+            {type: 'password', title: 'Повторите новый пароль', name:'newpassrep'}
+        ],
+        (data, erf, user) => {
+    
+            if (data.newpass.length < 4) {
+                erf('newpass', 'Как минимум 4 символа')
+                return
+            }
+    
+            else if (data.newpass != data.newpassrep) {
+                erf('newpass', 'Пароли не совпадают')
+                return
+            }
+    
+            return cfx.auth.comparePassword(user.id, data.oldpass)
+            .then(r => {
+                if(!r)
+                    erf('oldpass', 'Неверный пароль')
+                else
+                    return cfx.auth.setPassword(user.id, data.newpass)
+            })
+        },
+        (data, _, cfx) => {
+        }
+    ));
 
     cfx.core.safeGet('/auth', (user, req, res) => {
         if(!user)

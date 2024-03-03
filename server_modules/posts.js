@@ -150,16 +150,16 @@ exports.init = (cfx) => {
             {type: 'file', title: 'Файлы', name: 'files', optional: true, limit: 10},
             {type: 'custom', title: 'HTML-код', name: 'html', optional: true}
         ],
-        (data, erf, cfx) => {
+        (data, erf, user) => {
             if (!utils.strweight(data.text) && !utils.strweight(data.html) && !data.files)
                 erf('text', 'Нет информации');
         },
-        (data, _, cfx) => {
-            if(!cfx.user())
+        (data, user, cfx) => {
+            if(!user)
                 return;
             cfx.files.saveFiles(data.files, -1)
             .then(r => {
-                return cfx.posts.addPost(cfx.user().id, 
+                return cfx.posts.addPost(user.id, 
                     r.bundle, data.text, data.html, data.title);
             })
         }
