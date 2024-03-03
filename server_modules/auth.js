@@ -140,14 +140,13 @@ exports.init = (cfx) => {
         {name: 'login', title: 'Вход'}, [
             {type: 'text', title: 'Имя аккаунта', name: 'tag'},
             {type: 'password', title: 'Пароль', name: 'pw'}
-        ], (data, erf, user) => {
+        ], (data, erf, _) => {
             return cfx.auth.getUserByTag(data.tag)
             .then(user => {
                 if(!user) {
                     erf('tag', 'Не найдено')
                     return
                 }
-                
                 return cfx.auth.comparePassword(user.id, data.pw)
                 .then(r => {
                     if(!r)
