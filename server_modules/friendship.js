@@ -102,24 +102,6 @@ class Friendship {
 }
 
 const Form = require('./forms').Form;
-const addFriendForm = new Form(
-    {name: 'addfriend'}, [
-        {type: 'text', name: 'tag', title: 'Имя аккаунта'}
-    ], (data, erf, cfx) => {
-        return cfx.auth.getUserByTag(data.tag)
-        .then(user => {
-            if (user == null)
-                erf('tag', 'Не найдено')
-            else if (user.id == cfx.user().id)
-                erf('tag', 'Запрос себе')
-            else
-                return user.id
-        })
-        
-    }, (_, to_id, cfx) => {
-        cfx.friendship.sendFriendRequest(cfx.user().id, to_id)
-    }
-)
 
 exports.init = (cfx) => {
     if(!cfx.db || !cfx.forms || !cfx.notifications)
@@ -130,35 +112,23 @@ exports.init = (cfx) => {
         .then(r => r.length? r[0].count : 0)
     })
 
-    cfx.core.app.get('/getfriends', (req, res) => {
-        let user = cfx.core.login(req, res, false)
-        if(!user) {
-            res.send([])
-            return
-        }
-        cfx.friendship.getFriends(user.id)
-        .then(friends => res.send(friends))
-    })
+    cfx.core.safeGet('/getfriends', (user, req, res) => {
+        return cfx.friendship.getFriends(user.id)
+    }, true)
 
-    cfx.core.app.get('/friends', (req, res) => {
-        let user = cfx.core.login(req, res, true);
-        
-        if(!user)
-            return;
-
-        cfx.friendship.getFriends(user.id)
-        .then(friends => {
+    cfx.core.safeRender('/friends', (user, req, res) => {
+        return Promise.all([
+            cfx.friendship.getFriends(user.id),
             cfx.friendship.getFriendRequests(user.id)
-            .then(requests => {
-
-                cfx.core.render(req, res, 'friends', {
-                    friends: friends,
-                    requests: requests
-                })
-
-            })
+        ])
+        .then((friends, requests) => {
+            return {
+                render: 'friends',
+                friends: friends,
+                requests: requests
+            }
         })
-    })
+    }, true)
 
     cfx.core.app.get('/answer_friend_request', (req, res) => {
         cfx.core.plogin(req, res, true)
@@ -214,6 +184,23 @@ exports.init = (cfx) => {
         })
     })
 
-    cfx.forms.addForm(addFriendForm)
+    cfx.forms.addForm(new Form(
+        {name: 'addfriend'}, [
+            {type: 'text', name: 'tag', title: 'Имя аккаунта'}
+        ], (data, erf, user1) => {
+            return cfx.auth.getUserByTag(data.tag)
+            .then(user2 => {
+                if (user2 == null)
+                    erf('tag', 'Не найдено')
+                else if (user2.id == user1.id)
+                    erf('tag', 'Запрос себе')
+                else
+                    return user2.id
+            })
+            
+        }, (data, user, vd) => {
+            cfx.friendship.sendFriendRequest(user.id, vd)
+        }
+    ))
     cfx.friendship = new Friendship(cfx);
 }
