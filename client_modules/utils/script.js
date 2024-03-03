@@ -183,7 +183,7 @@ class Utils {
 
         console.log(minutesAgo)
         
-        if (minutesAgo < 1)
+        if (minutesAgo < 3)
             return 'Онлайн'
         else if(minutesAgo < 60)
             return `Был в сети ${this.nItemsLabel(minutesAgo, 'минуту', 'минуты', 'минут', true)} назад`
