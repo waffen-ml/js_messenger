@@ -26,7 +26,7 @@ class Form {
             return this.ok(data, user, valdata, info)
         })
         .then((out) => {
-            output['_out'] = out
+            output['_out'] = out ?? null
             return output
         })
     }
@@ -91,9 +91,6 @@ exports.init = (cfx) => {
         return cfx.forms.passData(req.query.name, data, user, {
             req: req,
             res: res
-        })
-        .then(w => {
-            console.log(w)
         })
 
     }, cfx.core.upload.any(), false)
