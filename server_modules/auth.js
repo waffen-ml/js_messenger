@@ -199,7 +199,6 @@ exports.init = (cfx) => {
         })
     )
 
-
     cfx.forms.addForm(new Form(
         {name: 'login', title: 'Вход'}, [
             {type: 'text', title: 'Имя аккаунта', name: 'tag'},

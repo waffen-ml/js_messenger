@@ -99,7 +99,6 @@ function renderlessQuery(req, res, reqlogin, handler) {
         .then(() => handler(user, req, res))
     })
     .then(r => {
-        console.log(r)
         if (r)
             res.send(r)
     })

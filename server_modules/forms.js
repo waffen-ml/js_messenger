@@ -92,6 +92,9 @@ exports.init = (cfx) => {
             req: req,
             res: res
         })
+        .then(w => {
+            console.log(w)
+        })
 
     }, cfx.core.upload.any(), false)
 }
