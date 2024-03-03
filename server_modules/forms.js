@@ -88,14 +88,21 @@ exports.init = (cfx) => {
                 data[fn] = [];
             data[fn].push(file);
         });
-    
-        cfx.forms.passData(
-            req.query.name,
-            data, cfx.as(req.session))
-        .then(out => {
-            //console.log(out);
-            res.send(out);
+
+        cfx.auth.getUser(req.session.userid)
+        .then(user => {
+            cfx.forms.passData(
+                req.query.name,
+                data, cfx.as({
+                    user: user
+                }))
+            .then(out => {
+                //console.log(out);
+                res.send(out);
+            })
         })
+
+
     });     
     
 }
