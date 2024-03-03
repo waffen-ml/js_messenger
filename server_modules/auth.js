@@ -156,8 +156,8 @@ exports.init = (cfx) => {
                         return user
                 })
             })
-        }, (data, user, vd, info) => {
-            info.req.session.userid = user.id
+        }, (data, _, vd, info) => {
+            info.req.session.userid = vd.id
         }, {'Создать аккаунт': '/form?name=reg',
             'Забыли пароль?': '#'}
     ))
