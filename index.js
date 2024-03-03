@@ -153,6 +153,7 @@ const sessionMiddleware = (req, res, next) => {
 app.use(sessionMiddleware);
 io.engine.use(sessionMiddleware);
 
+
 cfx.init({
     fs: fs,
     app: app,
@@ -166,10 +167,11 @@ cfx.init({
     safeRender: safeRender
 })
 
-app.get('/settings', (req, res) => {
-    let user = login(req, res, true)
-    render(req, res, 'settings', {user: user})
-})
+safeRender('/settings', (user, req, res) => {
+    return {
+        render: 'settings',
+    }
+}, true)
 
 app.get('/createchat', (req, res) => {
     const user = login(req, res, true);
@@ -221,6 +223,7 @@ app.get('/croptest', (req, res) => {
     if(!user) return
     render(req, res, 'croptest')
 })
+
 
 
 server.listen(443, () => {
