@@ -230,6 +230,7 @@ class Form {
         })
         .then((r) => r.json())
         .then((r) => {
+            console.log(r)
             if ('_out' in r) {
                 if(onSuccess)
                     onSuccess(r._out);
