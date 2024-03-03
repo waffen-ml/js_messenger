@@ -167,6 +167,8 @@ exports.init = (cfx) => {
 
     cfx.core.safePost('/addpostapi', (_, req, res) => {
         let data = req.body
+
+        console.log(data)
         
         return cfx.auth.getUserByTag(data.author_tag)
         .then(user => {
