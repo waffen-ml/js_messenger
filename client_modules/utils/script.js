@@ -46,18 +46,11 @@ class Utils {
         return datetime.getFullYear() == now.getFullYear()
     }
 
-    getPostDatetimeLabel(datetime, fancy) {
+    getPostDatetimeLabel(datetime) {
         let time = this.hasCurrentYear(datetime)?
             ' в ' + this.formatTime(datetime) : '';
         
-        if (fancy) {
-            if(this.isToday(datetime))
-                return 'Сегодня' + time;
-            else if (this.isYesterday(datetime))
-                return 'Вчера' + time;
-        }
-
-        return this.getLocalizedDateLabel(datetime, 'ru') + time
+        return this.getLocalizedDateLabel(datetime) + time
     }
 
     getMessageDatetimeLabel(datetime) {
@@ -190,7 +183,7 @@ class Utils {
         else if(hoursAgo <= 3)
             return `Был в сети ${this.nItemsLabel(hoursAgo, 'час', 'часа', 'часов', true)} назад`
         else
-            return 'Был в сети ' + this.getLocalizedDateLabel(datetime, true)
+            return 'Был в сети ' + this.getPostDatetimeLabel(datetime).toLowerCase()
     }
 
 }
