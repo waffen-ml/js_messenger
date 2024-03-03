@@ -78,6 +78,13 @@ function plogin(req, res, requireLogin) {
     })
 }
 
+function updateUser(user) {
+    if(!user)
+        return Promise.resolve(null)
+
+    return cfx.auth.updateLastSeen(user.id)
+}
+
 function safeGet(pattern, onget, reqlogin) {
     app.get(pattern, (req, res) => {
         let userid = req.session.userid
@@ -90,7 +97,8 @@ function safeGet(pattern, onget, reqlogin) {
 
         cfx.auth.getUser(userid)
         .then(user => {
-            return Promise.resolve(onget(user, req, res))
+            return updateUser(user)
+            .then(() => onget(user, req, res))
         })
         .then(r => {
             if (r)
@@ -116,7 +124,8 @@ function safeRender(pattern, onget, reqlogin) {
         
         cfx.auth.getUser(userid)
         .then(user => {
-            return Promise.resolve(onget(user, req, res))
+            return updateUser(user)
+            .then(() => onget(user, req, res))
             .then(data => {
                 data.user = user
                 render(req, res, data.render, data)

@@ -25,7 +25,7 @@ class Utils {
             return 'Вчера'
 
         return date.toLocaleString('ru', { month: 'long', day: 'numeric'})
-            + (date.getFullYear() == (new Date()).getFullYear()? '' : ' ' + date.getFullYear());
+            + (this.hasCurrentYear(date)? '' : ' ' + date.getFullYear());
     }
 
     formatTime(dt) {
@@ -143,6 +143,45 @@ class Utils {
           outputArray[i] = rawData.charCodeAt(i);
         }
         return outputArray;
+    }
+
+    getUser(id, tag) {
+        id = id || ''
+        tag = tag || ''
+        return fetch(`/getuser?id=${id}&tag=${tag}`)
+        .then(r => r.json())
+    }
+
+    wordForm(n, a, b, c) {
+        // a -- минуту (1, 21, 31...)
+        // b -- минуты (2, 3, 4, 24...)
+        // c -- минут (5, 6, 7, ...)
+
+        if (10 <= b && b <= 20)
+            return c
+        else if(n % 10 == 1)
+            return a
+        else if(n % 10 <= 4)
+            return b
+        else
+            return c
+    }
+
+    getLastSeenStatus(datetime) {
+        if(datetime === null || isNaN(datetime))
+            return 'Был в сети давно'
+
+        let minutesAgo = Math.floor((new Date() - datetime) / 1000 / 60)
+        let hoursAgo = Math.floor(minutesAgo / 60)
+        
+        if (minutesAgo < 3)
+            return 'Онлайн'
+        else if(minutesAgo < 60)
+            return `Был в сети ${minutesAgo} ${wordForm(minutesAgo, 'минуту', 'минуты', 'минут')} назад`
+        else if(hoursAgo <= 3)
+            return `Был в сети ${hoursAgo} ${wordForm(hoursAgo, 'час', 'часа', 'часов')} назад`
+        else
+            return 'Был в сети ' + this.getLocalizedDateLabel(datetime, true)
     }
 
 }

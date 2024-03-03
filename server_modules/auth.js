@@ -11,7 +11,7 @@ class Auth {
             return Promise.resolve(null)
         let query = id? 'id=' + id : `tag="${tag}"`
         return this.cfx.query(`select id, tag, name, 
-            avatar_id, balance, admin, bio from user where ${query}`)
+            avatar_id, balance, admin, bio, last_seen from user where ${query}`)
         .then(r => {
             return r.length? r[0] : null
         })
@@ -60,6 +60,10 @@ class Auth {
         .then(hashedPassword => {
             return bcrypt.compare(unhashedPassword, hashedPassword)
         })
+    }
+
+    updateLastSeen(userid) {
+        return this.cfx.query(`update user set last_seen=now() where id=?`, [userid])
     }
 
 }
@@ -244,15 +248,7 @@ exports.init = (cfx) => {
     cfx.core.safeGet('/getuser', (_, req, res) => {
         return cfx.auth.getUser(req.query.id, req.query.tag)
         .then(data => {
-            if(!data)
-                return {}
-            return {
-                id: data.id,
-                name: data.name,
-                tag: data.tag,
-                bio: data.bio,
-                avatar_id: data.avatar_id
-            }
+            return data ?? {}
         })
     })
 
@@ -331,4 +327,5 @@ exports.init = (cfx) => {
         }
 
     }, true)
+
 }
