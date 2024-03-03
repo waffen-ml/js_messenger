@@ -265,15 +265,8 @@ exports.init = (cfx) => {
         })
     }, cfx.core.upload.array('files'), true)
 
-    cfx.core.app.post('/createchat', cfx.core.upload.single('avatar'), (req, res) => {
-        let creator = cfx.core.login(req, res, false)
-
-        if(!creator) {
-            res.send({success:false})
-            return
-        }
-
-        new Promise((resolve) => {
+    cfx.core.safePost('/createchat', (creator, req, res) => {
+        return new Promise((resolve) => {
             if (!req.avatar)
                 resolve(null)
             else {
@@ -288,12 +281,11 @@ exports.init = (cfx) => {
             chat.addMessage(null, creator.name + ' создал этот чат', null)
         })
         .then(() => {
-            res.send({success: true})
+            return {
+                success: 1
+            }
         })
-        .catch(err => {
-            console.log(err)
-        })
-    })
+    }, cfx.core.upload.single('avatar'), true)
 
     cfx.core.safeGet('/getchatavatar', (observer, req, res) => {
         return cfx.chats.accessChat(observer, req.query.id)
@@ -364,19 +356,11 @@ exports.init = (cfx) => {
         })
     }, true)
 
-    cfx.core.app.get('/getcalltable', (req, res) => {
-        cfx.core.plogin(req, res, false)
-        .then(user => {
-            if(!user)
-                throw Error('unauthorized user')
-            res.send({
-                table: temp.getTable(req.query.chatid)
-            })
-        })
-        .catch(err => {
-            console.log('Error:' + err)
-        })
-    })
+    cfx.core.safeGet('/getcalltable', (user, req, res) => {
+        return {
+            table: temp.getTable(req.query.chatid)
+        }
+    }, true)
 
     function setVCFlag(chatid, state) {
         state = state? 1 : 0
