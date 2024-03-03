@@ -154,7 +154,7 @@ exports.init = (cfx) => {
             if (!utils.strweight(data.text) && !utils.strweight(data.html) && !data.files)
                 erf('text', 'Нет информации');
         },
-        (data, user, cfx) => {
+        (data, user, vd) => {
             if(!user)
                 return;
             cfx.files.saveFiles(data.files, -1)
