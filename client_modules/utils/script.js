@@ -179,9 +179,9 @@ class Utils {
         if (minutesAgo < 1)
             return 'Онлайн'
         else if(minutesAgo < 60)
-            return `Был в сети ${minutesAgo} ${wordForm(minutesAgo, 'минуту', 'минуты', 'минут')} назад`
+            return `Был в сети ${minutesAgo} ${this.wordForm(minutesAgo, 'минуту', 'минуты', 'минут')} назад`
         else if(hoursAgo <= 3)
-            return `Был в сети ${hoursAgo} ${wordForm(hoursAgo, 'час', 'часа', 'часов')} назад`
+            return `Был в сети ${hoursAgo} ${this.wordForm(hoursAgo, 'час', 'часа', 'часов')} назад`
         else
             return 'Был в сети ' + this.getLocalizedDateLabel(datetime, true)
     }
