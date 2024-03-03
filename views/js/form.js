@@ -7,6 +7,7 @@ function loadForm(onCreate) {
             onCreate(form, r);
     
         form.addSubmitButton('Отправить', (res) => {
+            console.log(res)
             let params = new URLSearchParams(window.location.search);
             location.href = params.get('next') || '/';
         })
