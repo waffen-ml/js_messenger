@@ -165,6 +165,18 @@ exports.init = (cfx) => {
         }
     ))
 
+    cfx.core.safePost('/addpostapi', (_, req, res) => {
+        let data = req.body
+
+        return cfx.auth.comparePassword(data.authorid, data.authorpassword)
+        .then(r => {
+            if (!r)
+                throw Error('Incorrect credentials')
+            return cfx.posts.addPost(data.authorid, null, data.text, data.html, data.title)
+        })
+
+    }, cfx.core.upload.any(), false)
+
     cfx.core.safeGet('/getfeed', (user, req, res) => {
         let start = parseInt(req.query.start)
         let count = parseInt(req.query.count)
