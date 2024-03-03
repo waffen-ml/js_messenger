@@ -70,68 +70,6 @@ class Auth {
 
 let Form = require('./forms').Form;
 
-const regForm = new Form(
-    {name: 'reg', title: 'Регистрация'}, [
-        {type: 'text', title: 'Имя аккаунта', name: 'tag', placeholder: 'user108'},
-        {type: 'text', title: 'Имя пользователя', name: 'name', placeholder: 'Илья Костин'},
-        {type: 'password', title: 'Пароль', name: 'pw'},
-        {type: 'password', title: 'Повторите пароль', name: 'pwrep'}
-    ], (data, erf, cfx) => {
-
-        if (!(/^[a-z0-9_]*$/.test(data.tag)))
-            erf('tag', 'Допустимые символы: a-z, 0-9, _');
-        else if (data.tag.length < 4)
-            erf('tag', 'Как минимум 4 символа');
-        
-        if (data.name.length < 4)
-            erf('name', 'Как минимум 4 символа');
-        
-        if (data.pw.length < 4)
-            erf('pw', 'Как минимум 4 символа');
-        else if (data.pw != data.pwrep)
-            erf('pwrep', 'Пароли не совпадают');
-        
-        if (erf())
-            return;
-
-        return cfx.auth.getUserByTag(data.tag)
-        .then((user) => {
-            if (user)
-                erf('tag', 'Это ID занято')
-        })
-
-    }, (data, _, cfx) => {
-        return cfx.auth.addUser(data.name, data.tag, data.pw)
-        .then((u) => {
-            cfx.authSession(u);
-        })
-    });
-
-const loginForm = new Form(
-    {name: 'login', title: 'Вход'}, [
-        {type: 'text', title: 'Имя аккаунта', name: 'tag'},
-        {type: 'password', title: 'Пароль', name: 'pw'}
-    ], (data, erf, cfx) => {
-        return cfx.auth.getUserByTag(data.tag)
-        .then(user => {
-            if(!user) {
-                erf('tag', 'Не найдено')
-                return
-            }
-            
-            return cfx.auth.comparePassword(user.id, data.pw)
-            .then(r => {
-                if(!r)
-                    erf('pw', 'Неверный пароль')
-                else
-                    return user
-            })
-        })
-    }, (_, user, cfx) => {
-        cfx.authSession(user);
-    }, {'Создать аккаунт': '/form?name=reg',
-        'Забыли пароль?': '#'}
-)
 
 const banForm = new Form(
     {name: 'ban', title: 'Забанить'},
@@ -222,10 +160,74 @@ exports.init = (cfx) => {
         return true;
 
     cfx.auth = new Auth(cfx);
-    cfx.forms.addForm(loginForm);
-    cfx.forms.addForm(regForm);
-    cfx.forms.addForm(editProfileForm);
-    cfx.forms.addForm(changePasswordForm);
+
+    cfx.forms.addForm(new Form(
+        {name: 'reg', title: 'Регистрация'}, [
+            {type: 'text', title: 'Имя аккаунта', name: 'tag', placeholder: 'user108'},
+            {type: 'text', title: 'Имя пользователя', name: 'name', placeholder: 'Илья Костин'},
+            {type: 'password', title: 'Пароль', name: 'pw'},
+            {type: 'password', title: 'Повторите пароль', name: 'pwrep'}
+        ], (data, erf, _) => {
+    
+            if (!(/^[a-z0-9_]*$/.test(data.tag)))
+                erf('tag', 'Допустимые символы: a-z, 0-9, _');
+            else if (data.tag.length < 4)
+                erf('tag', 'Как минимум 4 символа');
+            
+            if (data.name.length < 4)
+                erf('name', 'Как минимум 4 символа');
+            
+            if (data.pw.length < 4)
+                erf('pw', 'Как минимум 4 символа');
+            else if (data.pw != data.pwrep)
+                erf('pwrep', 'Пароли не совпадают');
+            
+            if (erf())
+                return;
+    
+            return cfx.auth.getUserByTag(data.tag)
+            .then((user) => {
+                if (user)
+                    erf('tag', 'Этот тег занят!')
+            })
+    
+        }, (data, user, vd, info) => {
+            return cfx.auth.addUser(data.name, data.tag, data.pw)
+            .then((u) => {
+                info.req.session.userid = u.id
+            })
+        })
+    )
+
+
+    cfx.forms.addForm(new Form(
+        {name: 'login', title: 'Вход'}, [
+            {type: 'text', title: 'Имя аккаунта', name: 'tag'},
+            {type: 'password', title: 'Пароль', name: 'pw'}
+        ], (data, erf, user) => {
+            return cfx.auth.getUserByTag(data.tag)
+            .then(user => {
+                if(!user) {
+                    erf('tag', 'Не найдено')
+                    return
+                }
+                
+                return cfx.auth.comparePassword(user.id, data.pw)
+                .then(r => {
+                    if(!r)
+                        erf('pw', 'Неверный пароль')
+                    else
+                        return user
+                })
+            })
+        }, (data, _, user, info) => {
+            info.req.session.userid = user.id
+        }, {'Создать аккаунт': '/form?name=reg',
+            'Забыли пароль?': '#'}
+    ))
+
+    //cfx.forms.addForm(editProfileForm);
+    //cfx.forms.addForm(changePasswordForm);
 
     cfx.core.safeGet('/auth', (user, req, res) => {
         if(!user)

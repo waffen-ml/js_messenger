@@ -2,40 +2,6 @@ class CfxMain {
     constructor() {
         this.core = {}
     }
-    
-    as = function(session) {
-        const shallow = Object.assign({}, this);
-        shallow.session = session;
-        return shallow;
-    }
-
-    empty = function() {
-        return this.session === undefined;
-    }
-
-    sdata = function(f) {
-        if (this.empty())
-            return undefined;
-        if (typeof f === "string") {
-            let obj = this.session;
-            f.split('.').forEach((p) => {
-                obj = obj[p];
-            });
-            return obj;
-        }
-        return f(this.session);
-    }
-
-    user = function() {
-        if(!this.session)
-            return null;
-        return this.session.user ?? null;
-    }
-
-    authSession = function(data) {
-        if (this.empty()) return;
-        this.session.userid = data.id
-    }
 
     loadModule = function(file) {
         if (!/.*\.js/.test(file)) {

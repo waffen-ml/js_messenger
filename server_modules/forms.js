@@ -11,39 +11,42 @@ class Form {
         })
     }
 
-    passData(data, ...args) {
-        let output = {};
+    passData(data, user, info) {
+        let output = {}
 
         return this.val(data, (field, err) => {
             if (field === undefined)
                 return Object.keys(output).length;
             else if (output[field] === undefined)
-                output[field] = err;
-        }, ...args)
+                output[field] = err
+        }, user, info)
         .then((valdata) => {
             if (Object.keys(output).length > 0)
                 return;
-            return this.ok(data, valdata, ...args);
+            return this.ok(data, user, valdata, info)
         })
         .then((out) => {
-            output['_out'] = out;
-            return output;
+            output['_out'] = out
+            return output
         })
     }
 
-    val(data, erf, ...args) {
+    val(data, erf, user, info) {
         return Promise.resolve(
-            this.onVal? this.onVal(data, erf, ...args) : null)
+            this.onVal? this.onVal(data, erf,  user, info) : null)
     }
 
-    ok(data, ...args) {
-        return Promise.resolve(this.onOk(data, ...args))
-            .then((data) => data ?? null)
+    ok(data, user, valdata, info) {
+        return Promise.resolve(this.onOk(data, user, valdata, info))
     }
 }
 
 class FormSystem {
-    forms = {};
+    forms = {}
+
+    constructor(cfx) {
+        this.cfx = cfx
+    }
 
     addForm(form) {
         if (form.meta.name in this.forms)
@@ -51,16 +54,12 @@ class FormSystem {
         this.forms[form.meta.name] = form;
     }
 
-    removeForm(name) {
-        this.forms[name] = undefined;
-    }
-
     getForm(name) {
         return this.forms[name];
     }
 
-    passData(name, data, cfx) {
-        return this.forms[name].passData(data, cfx);
+    passData(name, data, user, info) {
+        return this.forms[name].passData(data, user, info);
     }
 }
 
@@ -78,31 +77,21 @@ exports.init = (cfx) => {
             form: form
         }
     })
-    
-    cfx.core.app.post('/form', cfx.core.upload.any(), (req, res) => {
+
+    cfx.core.safePost('/form', (user, req, res) => {
         let data = req.body;
     
         req.files.forEach(file => {
-            const fn = file.fieldname;
+            const fn = file.fieldname
             if (!data[fn])
-                data[fn] = [];
-            data[fn].push(file);
-        });
-
-        cfx.auth.getUser(req.session.userid)
-        .then(user => {
-            cfx.forms.passData(
-                req.query.name,
-                data, cfx.as({
-                    user: user
-                }))
-            .then(out => {
-                //console.log(out);
-                res.send(out);
-            })
+                data[fn] = []
+            data[fn].push(file)
         })
 
+        return cfx.forms.passData(req.query.name, data, user, {
+            req: req,
+            res: res
+        })
 
-    });     
-    
+    }, cfx.core.upload.any(), false)
 }

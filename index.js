@@ -85,31 +85,43 @@ function updateUser(user) {
     return cfx.auth.updateLastSeen(user.id)
 }
 
+function renderlessQuery(req, res, reqlogin, handler) {
+    let userid = req.session.userid
+    if(!userid && reqlogin) {
+        res.send({
+            error: 'User is not authorized'
+        })
+        return
+    }
+    cfx.auth.getUser(userid)
+    .then(user => {
+        return updateUser(user)
+        .then(() => handler(user, req, res))
+    })
+    .then(r => {
+        if (r)
+            res.send(r)
+    })
+    .catch(err => {
+        console.log(err)
+        res.send({
+            error: err.message
+        })
+    })
+}
+
+function safePost(pattern, onpost, upl, reqlogin) {
+    upl ??= cfx.core.upload.none()
+
+    app.post(pattern, upl, (req, res) => {
+        renderlessQuery(req, res, reqlogin, onpost)
+    })
+
+}
+
 function safeGet(pattern, onget, reqlogin) {
     app.get(pattern, (req, res) => {
-        let userid = req.session.userid
-        if(!userid && reqlogin) {
-            res.send({
-                error: 'User is not authorized'
-            })
-            return
-        }
-
-        cfx.auth.getUser(userid)
-        .then(user => {
-            return updateUser(user)
-            .then(() => onget(user, req, res))
-        })
-        .then(r => {
-            if (r)
-                res.send(r)
-        })
-        .catch(err => {
-            console.log(err)
-            res.send({
-                error: err.message
-            })
-        })
+        renderlessQuery(req, res, reqlogin, onget)
     })
 }
 
@@ -164,7 +176,8 @@ cfx.init({
     login: login,
     plogin: plogin,
     safeGet: safeGet,
-    safeRender: safeRender
+    safeRender: safeRender,
+    safePost: safePost
 })
 
 safeRender('/settings', (user, req, res) => {
