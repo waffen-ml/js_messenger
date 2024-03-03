@@ -26,6 +26,7 @@ const cors = require('cors')
 
 app.set('view engine', 'pug');
 app.use(cors());
+app.use(express.json())
 
 app.use('/public', express.static('public'))
 app.use('/cmodules', express.static('client_modules'))
