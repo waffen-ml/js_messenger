@@ -173,8 +173,10 @@ class Utils {
 
         let minutesAgo = Math.floor((new Date() - datetime) / 1000 / 60)
         let hoursAgo = Math.floor(minutesAgo / 60)
+
+        console.log(minutesAgo)
         
-        if (minutesAgo < 3)
+        if (minutesAgo < 1)
             return 'Онлайн'
         else if(minutesAgo < 60)
             return `Был в сети ${minutesAgo} ${wordForm(minutesAgo, 'минуту', 'минуты', 'минут')} назад`
