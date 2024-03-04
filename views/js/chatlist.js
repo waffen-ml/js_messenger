@@ -2,16 +2,17 @@ fetch('/getchatlist')
 .then(r => r.json())
 .then(views => {
 
+    console.log(views)
+
     views.forEach(view => {
         view.lm_datetime = view.lm_datetime? new Date(view.lm_datetime) : null
-        view.visible = view.lm_id && view.lm_local_id >= view.focus
-        view.unread = view.lm_local_id - view.last_read
+        view.visible = view.lm_id && view.lm_id >= view.focus
 
         if (!view.chat_name) {
             let names = view.members.filter(m => m.id != view.owner_id).map(m => m.name)
             view.chat_name = names.join(', ')
         }
-        view.lm_preview = view.lm_text? view.lm_text.substr(0, 100) + ' ' : '';
+        view.lm_preview = view.lm_content? view.lm_content.substr(0, 100) + ' ' : '';
 
         if (view.lm_file_count > 0)
             view.lm_preview += `[${view.lm_file_count} файлов]`
