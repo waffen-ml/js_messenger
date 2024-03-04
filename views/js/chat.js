@@ -317,7 +317,8 @@ class Chat {
             return
     
         let data = new FormData();
-        data.append('text', text);
+        data.append('type', 'default')
+        data.append('content', content);
         
         attachedFiles.forEach(f => data.append('files', f));
 

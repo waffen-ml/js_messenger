@@ -107,7 +107,7 @@
             <%- templateManager.apply("other", {other: data.files.other}) %>
             <div class="bottom">
                 <p class="text">
-                    <%- data.text.replace(/\n/g, '<br>') %>
+                    <%- data.content.replace(/\n/g, '<br>') %>
                 </p>
                 <span class="time">
                     <%= utils.formatTime(data.datetime) %>

@@ -6,26 +6,38 @@ class Chat {
     }
 
     addUser(id) {
-        return this.cfx.query(`insert into chat_member(user_id, chat_id) values (${id}, ${this.id})`);
+        return this.cfx.query(`insert into chat_member(user_id, chat_id) values (?, ?)`, [id, this.id]);
     }
 
     removeUser(id) {
-        return this.cfx.query(`delete from chat_member where user_id=${id} and chat_id=${this.id}`);
+        return this.cfx.query(`delete from chat_member where user_id=? and chat_id=?`, [id, this.id]);
     }
 
     containsUser(id) {
-        return this.cfx.query(`select id from chat_member where user_id=${id} and chat_id=${this.id}`)
+        return this.cfx.query(`select id from chat_member where user_id=? and chat_id=?`, [id, this.id])
         .then((r) => {
             return r.length > 0;
         })
     }
 
-    addMessage(sender_id, text, bundle) {
-        return this.cfx.db.executeFile('addmessage', {
-            sender_id: sender_id,
-            chat_id: this.id,
-            text: this.cfx.utils.mysql_escape(text),
-            bundle: bundle ?? null
+    addMessage(type, sender_id, content, files) {
+        return new Promise((resolve) => {
+            if(!files || !files.length) {
+                resolve(null)
+                return
+            }
+            this.cfx.files.createBundle(this.id, null)
+            .then(bundleid => {
+                this.cfx.files.saveFiles(files, id)
+                resolve(bundleid)
+            })
+        })
+        .then(bundle => {
+            content = this.cfx.utils.mysql_escape(content)
+
+            return this.cfx.query(`insert into message
+            (type, sender_id, chat_id, content, bundle_id)
+            values(?, ?, ?, ?, ?)`, [type, sender_id, this.id, content, bundle])
         })
         .then(() => {
             return this.getMessages(-1, 1);
@@ -35,13 +47,13 @@ class Chat {
         })
     }
 
-    addMembers(users) {
-        return this.cfx.query('select max(local_id) as lmlid from message where chat_id=' + this.id)
+    addMembers(userIds) {
+        return this.cfx.query('select max(id) as lmid from message where chat_id=?', [this.id])
         .then((w) => {
-            let lmlid = w[0].lmlid ?? 0
-            users.forEach(u => this.cfx.query(
+            let lmid = w[0].lmid ?? 0
+            usersIds.forEach(uid => this.cfx.query(
                 `insert into chat_member(chat_id, user_id, last_read, focus) 
-                values(${this.id}, ${u}, ${lmlid}, ${lmlid + 1})`))
+                values(?, ?, ?, ?)`, [this.id, uid, lmid, lmid + 1]))
         })
     }
 
@@ -49,9 +61,9 @@ class Chat {
         return new Promise((resolve) => {
             if (start > -1)
                 resolve()
-            this.cfx.query('select max(local_id) as mlid from message where chat_id=' + this.id)
+            this.cfx.query('select max(id) as mid from message where chat_id=?', [this.id])
             .then(r => {
-                start = r[0].mlid
+                start = r[0].mid
                 resolve()
             })
         }).then(() => {
@@ -256,12 +268,8 @@ exports.init = (cfx) => {
         .then(chat => {
             if(!chat)
                 throw Error('Invalid chat')
-            return cfx.files.saveFiles(req.files, -1)
-            .then(r => {
-                chat.addMessage(sender.id, req.body.text,
-                    r? r.bundle: null)
-                return {success: 1}
-            })
+            chat.addMessage(req.body.type, sender.id, req.body.content, req.files)
+            return {success: 1}
         })
     }, cfx.core.upload.array('files'), true)
 

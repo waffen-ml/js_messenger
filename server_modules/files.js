@@ -17,41 +17,26 @@ class Files {
         })
     }
 
+    createBundle(chat_id, post_id) {
+        return this.cfx.query(`insert into bundle(chat_id, post_id)
+        values(?, ?)`, [chat_id, post_id])
+        .then(v => v.insertId)
+    }
+
     saveFiles(files, bundle) {
         if(!files || !files.length)
             return Promise.resolve({bundle: null, ids: []})
 
-        return new Promise((resolve) => {
-            bundle = parseInt(bundle)
-            if (isNaN(bundle))
-                resolve(null)
-            else if(bundle >= 0)
-                resolve(bundle)
-            else {
-                this.cfx.query('select coalesce(max(bundle_id) + 1, 1) as mx from file')
-                .then(r => {
-                    resolve(r[0].mx)
-                })
-            }
-        })
-        .then(bId => {
-            return Promise.all(files.map(f => {
-                let name = Buffer.from(f.originalname, 'latin1').toString('utf8')
+        return Promise.all(files.map(f => {
+            let name = Buffer.from(f.originalname, 'latin1').toString('utf8')
 
-                return this.cfx.query(`insert into file(name, mimetype, 
-                    bundle_id, data) values(?,?,?,binary(?))`,
-                    [name, utils.simplifyMimetype(f.mimetype), bId, f.buffer])
-            }))
-            .then(values => {
-                let ids = []
-                values.forEach(v => ids.push(v.insertId))
-                return {
-                    ids: ids,
-                    bundle: bId
-                }
-            })
+            return this.cfx.query(`insert into file(name, mimetype, 
+                bundle_id, data) values(?,?,?,binary(?))`,
+                [name, utils.simplifyMimetype(f.mimetype), bundle ?? null, f.buffer])
+        }))
+        .then(values => {
+            return values.map(v => v.insertId)
         })
-
     }
 
     deleteBundle(bundle_id) {
