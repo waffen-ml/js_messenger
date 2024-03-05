@@ -9,7 +9,7 @@ class Posts {
     addPost(author_id, files, text, html, title) {
         return this.cfx.query(`insert into post(author_id, text, html, title, datetime)
         values(?, ?, ?, ?, now())`, [
-            author_Id, utils.mysql_escape(text), 
+            author_id, utils.mysql_escape(text), 
             utils.mysql_escape(html), utils.mysql_escape(title)])
         .then(r => {
             if (!files || !files.length)
