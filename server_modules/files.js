@@ -58,10 +58,11 @@ exports.init = (cfx) => {
 
             let buffer = Buffer.from(file.data, 'base64')
             let length = Buffer.byteLength(buffer)
-
-            res.setHeader('Content-Disposition', 'attachment; filename=' + encodeURI(file.name))
+            
+            res.sendStatus(200)
+            res.setHeader('Content-Disposition', 'inline; filename=' + encodeURI(file.name))
             res.setHeader('Content-Length', length)
-            res.setHeader('Content-Range', `bytes 0-${length}`)
+            res.setHeader('Content-Range', `bytes 0-${length}/${length}`)
             res.setHeader('Accept-Ranges', 'bytes')
 
             if (file.mimetype != 'other')
