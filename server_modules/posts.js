@@ -91,15 +91,7 @@ class Posts {
     }
 
     deletePost(postid) {
-        return this.getPostInfo(postid)
-        .then(post => {
-            if(!post)
-                throw Error('Invalid post')
-            return post.bundle_id? this.cfx.files.deleteBundle(post.bundle_id)
-                : null
-        }).then(() => {
-            return this.cfx.query(`delete from post where id=?`, [postid])
-        })
+        return this.cfx.query(`delete from post where id=?`, [postid])
     }
 
     getPostInfo(id) {
