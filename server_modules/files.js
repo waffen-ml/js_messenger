@@ -38,11 +38,6 @@ class Files {
             return values.map(v => v.insertId)
         })
     }
-
-    deleteBundle(bundle_id) {
-        return this.cfx.query(`delete from file where bundle_id=?`, [bundle_id ?? -1])   
-    }
-
 }
 
 exports.init = (cfx) => {

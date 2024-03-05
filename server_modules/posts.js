@@ -6,12 +6,17 @@ class Posts {
         this.cfx = cfx;
     }
 
-    addPost(author_id, bundle_id, text, html, title) {
-        text = utils.mysql_escape(text)
-        html = utils.mysql_escape(html)
-        title = utils.mysql_escape(title)
-        return this.cfx.query('insert into post (author_id, bundle_id, text, html, title, datetime)'
-            + `values (${author_id}, ${bundle_id}, "${text}", "${html}", "${title}", now())`)
+    addPost(author_id, files, text, html, title) {
+        return this.cfx.query(`insert into post(author_id, text, html, title, datetime)
+        values(?, ?, ?, ?, now())`, [
+            author_Id, utils.mysql_escape(text), 
+            utils.mysql_escape(html), utils.mysql_escape(title)])
+        .then(r => {
+            if (!files || !files.length)
+                return
+            return this.cfx.files.createBundle(null, r.insertId)
+            .then(bid => this.cfx.files.saveFiles(files, bid))
+        })
     }
 
     getFeed(start, count, observer_id, author_id) {
@@ -155,13 +160,8 @@ exports.init = (cfx) => {
                 erf('text', 'Нет информации');
         },
         (data, user, vd) => {
-            if(!user)
-                return;
-            cfx.files.saveFiles(data.files, -1)
-            .then(r => {
-                return cfx.posts.addPost(user.id, 
-                    r.bundle, data.text, data.html, data.title);
-            })
+            return cfx.posts.addPost(user.id, 
+                data.files, data.text, data.html, data.title);
         }
     ))
 
