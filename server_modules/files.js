@@ -23,6 +23,11 @@ class Files {
         .then(v => v.insertId)
     }
 
+    setBundleInfo(bundle_id, chat_id, post_id) {
+        return this.cfx.query(`update bundle set chat_id=?, post_id=? where id=?`, 
+            [chat_id, post_id, bundle_id])
+    }
+
     saveFiles(files, bundle) {
         if(!files || !files.length)
             return Promise.resolve({bundle: null, ids: []})

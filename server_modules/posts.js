@@ -7,15 +7,23 @@ class Posts {
     }
 
     addPost(author_id, files, text, html, title) {
-        return this.cfx.query(`insert into post(author_id, text, html, title, datetime)
-        values(?, ?, ?, ?, now())`, [
-            author_id, utils.mysql_escape(text), 
-            utils.mysql_escape(html), utils.mysql_escape(title)])
-        .then(r => {
-            if (!files || !files.length)
+
+        return new Promise((resolve) => {
+            if(!files || !files.length) {
+                resolve(null)
                 return
-            return this.cfx.files.createBundle(null, r.insertId)
-            .then(bid => this.cfx.files.saveFiles(files, bid))
+            }
+            this.cfx.files.createBundle(null, null)
+            .then(bid => {
+                this.cfx.files.saveFiles(files, bid)
+                .then(() => resolve(bid))
+            })
+        })
+        .then(bid => {
+            return this.cfx.query(`insert into post(author_id, text, html, title,
+            datetime, bundle_id) values(?, ?, ?, ?, now(), ?)`, [
+                author_id, utils.mysql_escape(text), 
+                utils.mysql_escape(html), utils.mysql_escape(title), bid])
         })
     }
 
