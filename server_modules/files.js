@@ -59,6 +59,7 @@ exports.init = (cfx) => {
             let buffer = Buffer.from(file.data, 'base64')
             let length = Buffer.byteLength(buffer)
             
+            res.status(200)
             res.setHeader('Content-Disposition', 'inline; filename=' + encodeURI(file.name))
             res.setHeader('Content-Length', length)
             res.setHeader('Content-Range', `bytes 0-${length}/${length}`)
