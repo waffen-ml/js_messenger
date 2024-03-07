@@ -59,7 +59,7 @@ exports.init = (cfx) => {
             let buffer = file.data
             let length = Buffer.byteLength(buffer)
 
-            res.setHeader('Content-Disposition', 'attachment; filename=' + encodeURI(file.name))
+            res.setHeader('Content-Disposition', 'inline; filename=' + encodeURI(file.name))
             res.setHeader('Content-Length', length)
             //res.setHeader('Content-Range', `bytes 0-${length - 1}/${length}`)
             res.setHeader('Accept-Ranges', 'bytes')
