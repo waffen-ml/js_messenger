@@ -37,7 +37,7 @@
     <% } else if (files.image.length) { %>
         <img src="<%= c(files.image[0]) %>" class="semi-image" inspect>
     <% } else if (files.video.length) { %>
-        <video controls class="semi-video" preload="metadata">
+        <video controls class="semi-video">
             <source src="/file?id=<%= files.video[0].id %>">
         </video>
     <% } %>
