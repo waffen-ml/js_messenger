@@ -56,13 +56,13 @@ exports.init = (cfx) => {
             if (!file)
                 throw Error('Unknown file')
 
-            let buffer = file.data
+            let buffer = Buffer.from(data.file, 'base64')
             let length = Buffer.byteLength(buffer)
             
             res.status(200)
             res.setHeader('Content-Disposition', 'inline; filename=' + encodeURI(file.name))
             res.setHeader('Content-Length', length)
-            //res.setHeader('Content-Range', `bytes 0-${length - 1}/${length}`)
+            res.setHeader('Content-Range', `bytes 0-${length - 1}/${length}`)
             res.setHeader('Accept-Ranges', 'bytes')
 
             if (file.mimetype != 'other')
