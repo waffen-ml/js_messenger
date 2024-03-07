@@ -56,7 +56,7 @@ exports.init = (cfx) => {
             if (!file)
                 throw Error('Unknown file')
 
-            let buffer = data.buffer
+            let buffer = file.data
             let length = Buffer.byteLength(buffer)
             
             res.status(200)
