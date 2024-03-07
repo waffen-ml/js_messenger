@@ -68,8 +68,9 @@ exports.init = (cfx) => {
             if (file.mimetype != 'other')
                 res.setHeader('Content-Type', file.mimetype + '/' + path.extname(file.name).substring(1))
             
-            let stream = Readable.from(buffer)
-            stream.pipe(res)
+            //let stream = Readable.from(buffer)
+            //stream.pipe(res)
+            res.send(buffer.toString('base64'))
         })
     })
 
