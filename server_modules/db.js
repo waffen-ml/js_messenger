@@ -29,9 +29,9 @@ class Database {
         (err) => {
             throw err
         })
-        .catch(err => {
-            throw Error('MySQL error')
-        })
+        //.catch(err => {
+        //    throw Error('MySQL error')
+        //})
     }
 
     loadFile(queryName) {
