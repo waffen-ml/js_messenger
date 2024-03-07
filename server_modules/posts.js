@@ -270,4 +270,24 @@ exports.init = (cfx) => {
         })
     }, true)
 
+    cfx.query(`select * from postold`)
+    .then(posts => {
+        posts.forEach(post => {
+            if(post.bundle_id == null)
+                return
+            cfx.query(`select id from fileold where bundle_id=${post.bundle_id}`)
+            .then(files => {
+                cfx.files.createBundle(null, post.id)
+                .then(bid => {
+                    cfx.query(`update post set bundle_id=${bid} where id=${post.id}`)
+                    files.forEach(file => {
+                        cfx.query(`update file set bundle_id=${bid} where id=${file.id}`)
+                    })
+
+
+                })
+            })
+        })
+    })
+
 }
