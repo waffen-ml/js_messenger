@@ -147,8 +147,8 @@ class ContextWindow {
         let border = {
             top: borderElement? utils.bounds(borderElement).top : 0,
             left: borderElement? utils.bounds(borderElement).left : 0,
-            right: borderElement? utils.bounds(borderElement).left + borderElement.clientWidth : window.innerWidth,
-            bottom: borderElement? utils.bounds(borderElement).top + borderElement.clientHeight : window.innerHeight
+            right: borderElement? utils.bounds(borderElement).left + borderElement.clientWidth : this.window.innerWidth,
+            bottom: borderElement? utils.bounds(borderElement).top + borderElement.clientHeight : this.window.innerHeight
         }
 
         let actual = {
