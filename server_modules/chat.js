@@ -58,6 +58,7 @@ class Chat {
     }
 
     getMessages(start, count) {
+        console.log(start)
         return new Promise((resolve) => {
             if (start > -1)
                 resolve()
@@ -80,8 +81,6 @@ class Chat {
                     file_mimetype: 'mimetype',
                     file_name: 'name'
                 }, 'id', 'file_id')
-            console.log(start)
-            console.log(messages.map(m => m.id))
             return messages
         })
     }
