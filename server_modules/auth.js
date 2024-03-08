@@ -248,7 +248,7 @@ exports.init = (cfx) => {
         })
     })
 
-    cfx.core.app.safePost('/setavatar', (user, req, res) => {
+    cfx.core.safePost('/setavatar', (user, req, res) => {
         req.file.originalname = 'avatar.jpg'
         return cfx.files.safeFiles([req.file])
         .then(ids => {
