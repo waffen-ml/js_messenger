@@ -353,10 +353,9 @@ class Chat {
     loadMessageBatch() {
         let first = this.messages.messages[0]
 
-        if (first && first.local_id == 1)
-            return Promise.resolve()
+        let loadStart = first? first.id : -1
 
-        let loadStart = first? first.local_id - 1 : -1
+        console.log(loadStart)
         
         return fetch(`/getmessages?chatid=${chatid}&count=${loadWindow}&start=${loadStart}`)
         .then(r => r.json())
