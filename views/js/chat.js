@@ -53,7 +53,7 @@ class ChatInterface {
 
             cw.setPosition({
                 top:utils.bounds(sb).top - cw.window.clientHeight - 5,
-                left:utils.bounds(sb).left - cw.window.clientWidth - 5
+                left:utils.bounds(sb).left - cw.window.clientWidth / 2 + sb.clientWidth / 2
             })
 
             function showGrid(id) {
