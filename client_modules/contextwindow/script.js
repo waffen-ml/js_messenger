@@ -3,7 +3,7 @@ let openedCW = null
 document.addEventListener('click', (e) => {
     if(!openedCW || openedCW.window.contains(e.target))
         return
-    else if(openedCW.ignoreClicks.any(el => (el.contains(e.target) || el === e.target)))
+    else if(openedCW.ignoreClicks.some(el => (el.contains(e.target) || el === e.target)))
         return
 
     openedCW.close(true)
