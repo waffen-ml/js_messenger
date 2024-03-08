@@ -367,6 +367,10 @@ ul.attached {
     width:100%;
 }
 
+.stickerscw .sticker-grid.disabled {
+    display:none;
+}
+
 .stickerscw .navigation {
     flex-shrink:0;
     display:flex;
@@ -376,8 +380,4 @@ ul.attached {
 
 .stickerscw .page {
     max-width: 100%;
-}
-
-.stickerscw .page.disabled {
-    display:none;
 }
