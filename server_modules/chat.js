@@ -294,6 +294,18 @@ exports.init = (cfx) => {
         })
     }, cfx.core.upload.array('files'), true)
 
+    cfx.core.safeGet('/getstickers', (_, req, res) => {
+
+        return [
+            {
+                name: 'coffee',
+                count: 21
+            }
+        ]
+
+    }, false)
+
+
     cfx.core.safePost('/createchat', (creator, req, res) => {
         return new Promise((resolve) => {
             if (!req.avatar)
@@ -446,5 +458,6 @@ exports.init = (cfx) => {
             })
         })
     })
+
 }
 
