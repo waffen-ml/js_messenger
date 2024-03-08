@@ -377,7 +377,7 @@ ul.attached {
 }
 
 .stickerscw .sticker {
-    height:100%;
+    width:100%;
     padding:2px;
     aspect-ratio:1;
 }
