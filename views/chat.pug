@@ -47,19 +47,19 @@ block main
     
     script(type="text/x-ejs-template", template="stickerscw")
         .page#emoji
-            .sticker-grid
+            .sticker-grid.styled-scroll
                     <% emojiList.forEach(emoji => { %>
                     span.emoji <%=emoji%>
                     <% }) %>
         
         <% packs.forEach(pack => { %>
         .page.disabled(id!="<%=pack.name%>")
-            .sticker-grid
+            .sticker-grid.styled-scroll
                 <% for(let i = 0; i < pack.count; i++) { %>
                 img.sticker(src!="/public/stickers/<%=pack.name%>/<%=i%>.png")
                 <% } %>
         <% }) %>
-
+        hr
         .navigation
             button.button#emoji 😀
             <% packs.forEach(pack => { %>

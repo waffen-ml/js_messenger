@@ -350,11 +350,19 @@ ul.attached {
 
 
 .stickerscw {
-    max-width: 400px;
-    max-height: 200px;
+    max-width: 300px;
+    max-height: 250px;
     display:flex;
     flex-direction: column;
     gap:6px;
+}
+
+.stickerscw > * {
+    flex-shrink: 0;
+}
+
+.stickerscw .sticker-grid {
+    overflow-y:auto;
 }
 
 .stickerscw .navigation {
