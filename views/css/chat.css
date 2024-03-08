@@ -366,15 +366,15 @@ ul.attached {
     height:100%;
     display:grid;
     gap:7px;
-    grid-template-columns:repeat(auto-fill, 50px);
+    justify-content: center;
 }
 
 .stickerscw .stickers {
-
+    grid-template-columns:repeat(auto-fill, 50px);
 }
 
 .stickerscw .emojis {
-
+    grid-template-columns:repeat(auto-fill, 20px);
 }
 
 .stickerscw .sticker {
