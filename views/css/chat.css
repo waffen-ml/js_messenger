@@ -415,9 +415,11 @@ ul.attached {
     padding:2px;
     font-size:19px;
     aspect-ratio: 1;
+    height:36px;
 }
 
 .stickerscw .navigation .preview {
-    height:34px;
-    aspect-ratio: 1;
+    height:100%;
+    object-fit: contain;
+    max-width: 100%;
 }
