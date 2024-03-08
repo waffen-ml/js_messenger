@@ -354,8 +354,6 @@ class Chat {
         let first = this.messages.messages[0]
 
         let loadStart = first? first.id : -1
-
-        console.log(loadStart)
         
         return fetch(`/getmessages?chatid=${chatid}&count=${loadWindow}&start=${loadStart}`)
         .then(r => r.json())
