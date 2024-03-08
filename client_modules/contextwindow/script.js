@@ -82,13 +82,11 @@ class ContextWindow {
         this.checkScroll = !options.checkScroll? [] : Array.isArray(options.checkScroll)?
             options.checkScroll : [options.checkScroll]
 
-        this.axis = options.axis ?? {top:0,left:0}
-
         if (options.transformOrigin)
             this.window.style.transformOrigin = options.transformOrigin
         else {
-            axis = options.axis ?? {top:0,left:0}
-            this.window.style.transformOrigin = `${this.axis.left}px ${this.axis.top}px`
+            let axis = options.axis ?? {top:0,left:0}
+            this.window.style.transformOrigin = `${axis.left}px ${axis.top}px`
         }
 
         this.animLength = options.animLength ?? 300
