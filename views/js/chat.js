@@ -26,7 +26,6 @@ class ChatInterface {
         })
 
         this.setupStickersCW()
-
         this.scrollDown(false)
     }
 
