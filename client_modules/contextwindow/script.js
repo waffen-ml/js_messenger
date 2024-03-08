@@ -84,7 +84,7 @@ function makeButtonsCW(caller, buttons, options) {
 
         cw.setPosition({
             top: utils.bounds(caller).top,
-            left: utils.bouns(caller).left + caller.clientWidth
+            left: utils.bounds(caller).left + caller.clientWidth
         })
 
         let buttonElements = cw.window.querySelectorAll('.button')
