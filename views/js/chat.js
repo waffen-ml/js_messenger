@@ -56,6 +56,12 @@ class ChatInterface {
                 left:utils.bounds(sb).left - cw.window.clientWidth / 2 + sb.clientWidth / 2
             })
 
+            cw.setAxis({
+                top:cw.window.clientHeight,
+                left:cw.window.clientWidth/2
+            })
+
+
             function showGrid(id) {
                 cw.window.querySelectorAll('.grid').forEach(grid => grid.classList.add('disabled'))
                 cw.window.querySelector('.grid#' + id).classList.remove('disabled')

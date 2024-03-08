@@ -84,10 +84,8 @@ class ContextWindow {
 
         if (options.transformOrigin)
             this.window.style.transformOrigin = options.transformOrigin
-        else {
-            let axis = options.axis ?? {top:0,left:0}
-            this.window.style.transformOrigin = `${axis.left}px ${axis.top}px`
-        }
+        else
+            this.setAxis(options.axis ?? {top:0, left:0})
 
         this.animLength = options.animLength ?? 300
         this.destroyOnClose = options.destroyOnClose ?? true
@@ -107,6 +105,10 @@ class ContextWindow {
 
     isOpened() {
         return this == openedCW
+    }
+
+    setAxis(axis) {
+        this.window.style.transformOrigin = `${axis.left}px ${axis.top}px`
     }
 
     setPosition(pos) {
