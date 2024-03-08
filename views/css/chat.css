@@ -412,10 +412,10 @@ ul.attached {
 }
 
 .stickerscw .navigation button {
-    padding:2px;
+    padding:4px;
     font-size:19px;
     aspect-ratio: 1;
-    height:36px;
+    height:40px;
 }
 
 .stickerscw .navigation .preview {
