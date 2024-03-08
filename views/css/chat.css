@@ -347,3 +347,26 @@ ul.attached {
 .actions  {
     align-self:center;
 }
+
+
+.stickerscw {
+    max-width: 400px;
+    max-height: 200px;
+    display:flex;
+    flex-direction: column;
+    gap:6px;
+}
+
+.stickerscw .navigation {
+    display:flex;
+    justify-content: center;
+    gap:5px;
+}
+
+.stickerscw .page {
+    max-width: 100%;
+}
+
+.stickerscw .page.disabled {
+    display:none;
+}

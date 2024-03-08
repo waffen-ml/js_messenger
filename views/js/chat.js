@@ -38,7 +38,8 @@ class ChatInterface {
             let cw = new ContextWindow({
                 html: templateManager.createHTML('stickerscw', {
                     packs: packs,
-                    emojiList: emojiList
+                    emojiList: emojiList,
+                    className: 'stickerscw'
                 }),
                 pos: {
                     top:0,
