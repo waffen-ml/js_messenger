@@ -294,6 +294,7 @@ exports.init = (cfx) => {
                             })))
                         })
                     })
+                    .then(() => resolve())
                 })
             })
         }))
