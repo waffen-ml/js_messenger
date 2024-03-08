@@ -1,6 +1,6 @@
 
 .context-window {
-    position:absolute;
+    position:fixed;
     display:none;
     z-index:100;
     background:white;

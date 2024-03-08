@@ -112,8 +112,28 @@ class ContextWindow {
     }
 
     setPosition(pos) {
-        this.window.style.top = (pos.top ?? 0) + 'px'
-        this.window.style.left = (pos.left ?? 0) + 'px'
+        let w = this.window.clientWidth
+        let h = this.window.clientHeight
+
+        let actual = {
+            top: pos.top,
+            left: pos.left
+        }
+
+        if(actual.top < 0)
+            actual.top = 0
+        else if (actual.top + h > window.innerHeight)
+            actual.top = window.innerHeight - h
+
+        if(actual.left < 0)
+            actual.left = 0
+        else if(actual.left + w > window.innerWidth)
+            actual.left = window.innerWidth - w
+
+        this.window.style.top = (actual.top ?? 0) + 'px'
+        this.window.style.left = (actual.left ?? 0) + 'px'
+
+        return actual
     }
 
     open() {

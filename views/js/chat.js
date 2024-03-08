@@ -51,14 +51,14 @@ class ChatInterface {
                 ignoreClicks: sb
             })
 
-            cw.setPosition({
+            let actual = cw.setPosition({
                 top:utils.bounds(sb).top - cw.window.clientHeight - 5,
                 left:utils.bounds(sb).left - cw.window.clientWidth / 2 + sb.clientWidth / 2
             })
 
             cw.setAxis({
                 top:cw.window.clientHeight,
-                left:cw.window.clientWidth/2
+                left:utils.bounds(sb).left - actual.left + sb.clientWidth / 2
             })
 
 
