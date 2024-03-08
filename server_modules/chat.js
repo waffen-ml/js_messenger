@@ -40,10 +40,10 @@ class Chat {
             values(?, ?, ?, ?, ?, now())`, [type, sender_id, this.id, content, bundle])
         })
         .then(() => {
-            return this.getMessages(-1, 1);
+            return this.getMessages(-1, 1)
         })
         .then(msgs => {
-            this.displayMessage(msgs[0]);
+            this.displayMessage(msgs[0])
         })
     }
 
@@ -283,6 +283,16 @@ exports.init = (cfx) => {
             return r.length? r[0].count ?? 0 : 0
         })
     })
+
+    cfx.core.safeGet('/readmessages', (user, req, res) => {
+        return cfx.chats.accessChat(user, req.query.id)
+        .then(chat => {
+            return chat.makeMessageRead([user.id])
+        })
+        .then(() => {
+            return {success:0}
+        })
+    }, true)
 
     cfx.core.safePost('/sendmsg', (sender, req, res) => {
         return cfx.chats.getChat(req.query.id)
