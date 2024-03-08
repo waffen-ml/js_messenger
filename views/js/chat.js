@@ -117,12 +117,12 @@ class ChatInterface {
 
     initSendFunction(send) {
         this.entry.addEventListener('keydown', (e) => {
-            if (e.key != 'Enter') return;
-            e.preventDefault();
-            send();
+            if (e.key != 'Enter') return
+            e.preventDefault()
+            this.chat.sendDefault()
         })
         
-        document.querySelector('#send').onclick = send;
+        document.querySelector('#send').onclick = this.chat.sendDefault;
     }
 
     initLoadMessagesFunction(load) {
@@ -376,33 +376,45 @@ class Chat {
     }
 
     sendSticker(name, i) {
-        alert(name + ' ' + i)
+        this.send('sticker', `/public/stickers/${name}/${i}.png`)
     }
 
-    send() {
+    sendDefault() {
         let attachedFiles = this.interface.attachedFiles
         let content = this.interface.entry.value
 
-        if (content == '' && !attachedFiles.length)
-            return
+        this.send('default', content, attachedFiles)
+        .then(r => {
+            if(r.success) {
+                this.interface.clearInput()
+                this.interface.updateFileCount();
+            } else  
+                alert('Ошибка!')
+        })
+    }
+
+    send(type, content, files) {
+        files ??= []
+
+        if (!utils.strweight(content) && !files.length)
+            return Promise.resolve({success: 0})
     
         let data = new FormData();
-        data.append('type', 'default')
+        data.append('type', type)
         data.append('content', content);
         
-        attachedFiles.forEach(f => data.append('files', f));
+        files.forEach(f => data.append('files', f));
 
-        fetch('/sendmsg?id=' + chatid, {
+        return fetch('/sendmsg?id=' + chatid, {
             method: 'POST',
             credentials: 'same-origin',
             body: data
         }).then(r => r.json())
         .then(r => {
             console.log(r);
+            return r
         })
-    
-        this.interface.clearInput()
-        this.interface.updateFileCount();
+
     }
 }
 

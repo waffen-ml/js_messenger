@@ -305,7 +305,6 @@ exports.init = (cfx) => {
 
     }, false)
 
-
     cfx.core.safePost('/createchat', (creator, req, res) => {
         return new Promise((resolve) => {
             if (!req.avatar)
