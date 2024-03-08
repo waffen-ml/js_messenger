@@ -357,15 +357,13 @@ ul.attached {
     gap:6px;
 }
 
-.stickerscw > * {
-    flex-shrink: 0;
-}
-
 .stickerscw .sticker-grid {
     overflow-y:auto;
+    height: 100%;
 }
 
 .stickerscw .navigation {
+    flex-shrink:0;
     display:flex;
     justify-content: center;
     gap:5px;
