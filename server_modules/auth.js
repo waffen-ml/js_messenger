@@ -258,7 +258,7 @@ exports.init = (cfx) => {
             return {success:1}
         })
 
-    }, true, cfx.core.upload.single('avatar'))
+    }, cfx.core.upload.single('avatar'), true)
 
     cfx.core.safeGet('/deleteuseravatar', (user, req, res) => {
         return cfx.auth.getUser(u.id)
