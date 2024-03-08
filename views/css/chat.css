@@ -365,7 +365,7 @@ ul.attached {
     overflow-y:auto;
     height:100%;
     display:grid;
-    
+
 }
 
 .stickerscw hr {
@@ -380,6 +380,11 @@ ul.attached {
     display:flex;
     justify-content: center;
     gap:5px;
+}
+
+.stickerscw .navigation .preview {
+    height:30px;
+    aspect-ratio: 1;   
 }
 
 .stickerscw .page {
