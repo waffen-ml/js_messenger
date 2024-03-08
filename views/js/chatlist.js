@@ -12,13 +12,22 @@ fetch('/getchatlist')
             let names = view.members.filter(m => m.id != view.owner_id).map(m => m.name)
             view.chat_name = names.join(', ')
         }
-        view.lm_preview = view.lm_content? view.lm_content.substr(0, 100) + ' ' : '';
+
+        switch(view.lm_type) {
+            case 'default':
+                view.lm_preview = (view.lm_content ?? '').substr(0, 100)
+            case 'sticker':
+                view.lm_preview = 'Стикер'
+        }
 
         if (view.lm_file_count > 0)
             view.lm_preview += `[${view.lm_file_count} файлов]`
-        if (view.lm_sender_id) {
-            view.lm_preview = (view.lm_sender_id == view.owner_id? 'Вы' : view.lm_sender_name)
-                + ': ' + view.lm_preview
+
+        if(view.lm_sender_id == view.owner_id) {
+            view.lm_preview = 'Вы: ' + view.lm_preview
+        }
+        else if(!view.is_chat_direct) {
+            view.lm_preview = view.lm_sender_name + ': ' + view.lm_preview
         }
 
         view.datetime_label = view.lm_datetime && utils.getMessageDatetimeLabel(view.lm_datetime)
