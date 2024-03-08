@@ -32,7 +32,7 @@ class ChatInterface {
         this.scrollDown(false)
     }
 
-    function appendMessageEntry(text) {
+    appendMessageEntry(text) {
 
     }
 
