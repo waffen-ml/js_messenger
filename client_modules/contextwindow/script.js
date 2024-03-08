@@ -79,14 +79,15 @@ function attachButtonToCW(makeCW, button) {
         if(cw && cw.isOpened()) {
             cw.close()
             cw = null
-            console.log('close')
             return
         }
-        cw = makeCW()
-        if(cw.ignoreClicks.every(w => w != button))
-            cw.ignoreClicks.push(button)
-        console.log('open')
-        cw.open()
+        Promise.resolve(makeCW())
+        .then(cw_ => {
+            cw = cw_
+            if(cw.ignoreClicks.every(w => w != button))
+                cw.ignoreClicks.push(button)
+            cw.open()
+        })
     }
 }
 
