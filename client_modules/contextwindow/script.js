@@ -111,24 +111,31 @@ class ContextWindow {
         this.window.style.transformOrigin = `${axis.left}px ${axis.top}px`
     }
 
-    setPosition(pos) {
+    setPosition(pos, borderElement) {
         let w = this.window.clientWidth
         let h = this.window.clientHeight
+
+        let border = {
+            top: borderElement? utils.bounds(borderElement).top : 0,
+            left: borderElement? utils.bounds(borderElement).left : 0,
+            right: borderElement? utils.bounds(borderElement).left + borderElement.clientWidth : this.window.innerWidth,
+            bottom: borderElement? utils.bounds(borderElement).top + borderElement.clientHeight : this.window.innerHeight
+        }
 
         let actual = {
             top: pos.top,
             left: pos.left
         }
 
-        if(actual.top < 0)
-            actual.top = 0
-        else if (actual.top + h > window.innerHeight)
-            actual.top = window.innerHeight - h
+        if(actual.top < border.top)
+            actual.top = border.top
+        else if (actual.top + h > border.bottom)
+            actual.top = border.bottom - h
 
-        if(actual.left < 0)
-            actual.left = 0
-        else if(actual.left + w > window.innerWidth)
-            actual.left = window.innerWidth - w
+        if(actual.left < border.left)
+            actual.left = border.left
+        else if(actual.left + w > border.right)
+            actual.left = border.right - w
 
         this.window.style.top = (actual.top ?? 0) + 'px'
         this.window.style.left = (actual.left ?? 0) + 'px'
