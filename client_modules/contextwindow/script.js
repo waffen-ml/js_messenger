@@ -115,6 +115,7 @@ class ContextWindow {
             this.window.classList.add(options.className)
 
         this.checkScroll.forEach(el => el.addEventListener('scroll', () => this.close(true)))
+        this.window.style.visibility='hidden'
 
         document.body.appendChild(this.window)
 
@@ -166,7 +167,7 @@ class ContextWindow {
         if(openedCW)
             openedCW.close(true)
         openedCW = this
-        this.window.style.display = ''
+        this.window.style.visibility='visible'
         this.window.style.animation = `cw-open ${this.animLength}ms ease-in-out`
 
         return new Promise((r) => setTimeout(() => r(), this.animLength))
@@ -188,7 +189,7 @@ class ContextWindow {
                 resolve()
             }, this.animLength)
         }).then(() => {
-            this.window.style.display = 'none'
+            this.window.style.visibility='hidden'
             if (this.destroyOnClose)
                 document.body.removeChild(this.window)
         })
