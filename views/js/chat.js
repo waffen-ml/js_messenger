@@ -50,6 +50,8 @@ class ChatInterface {
                 className: 'stickerscw',
                 ignoreClicks: sb
             })
+            
+            attachButtonToCW(() => cw, sb)
 
             let actual = cw.setPosition({
                 top:utils.bounds(sb).top - cw.window.clientHeight - 5,

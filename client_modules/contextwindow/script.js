@@ -71,6 +71,24 @@ function makeButtonsCW(buttons, options) {
     return cw
 }
 
+
+function attachButtonToCW(makeCW, button) {
+    let cw = null
+
+    button.addEventListener('click', () => {
+        if(cw && cw.isOpened()) {
+            cw.close()
+            cw = null
+            return
+        }
+        cw = makeCW()
+        if(cw.ignoreClicks.every(w => w != button))
+            cw.ignoreClicks.push(button)
+        cw.open()
+    })
+}
+
+
 class ContextWindow {
 
     constructor(options) {
