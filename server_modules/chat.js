@@ -58,7 +58,6 @@ class Chat {
     }
 
     getMessages(start, count) {
-        console.log(start)
         return new Promise((resolve) => {
             if (start > -1)
                 resolve()

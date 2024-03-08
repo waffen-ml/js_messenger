@@ -248,27 +248,17 @@ exports.init = (cfx) => {
         })
     })
 
-    cfx.core.app.post('/setavatar', cfx.core.upload.single('avatar'), (req, res) => {
-        try {
-            let user = cfx.core.login(req, res, false)
-            if(!user) {
-                res.send({success:false})
-                return
-            }
-            req.file.originalname = 'avatar.jpg'
-            cfx.files.saveFiles([req.file])
-            .then(r => {
-                let avatarId = r.ids[0]
-                return cfx.query('update user set avatar_id=? where id=?', [avatarId, user.id])
-            })
-            .then(r => {
-                res.send({success: true})
-            })
-        }
-        catch(err) {
-            console.log(err)
-        }
-    })
+    cfx.core.app.safePost('/setavatar', (user, req, res) => {
+        req.file.originalname = 'avatar.jpg'
+        return cfx.files.safeFiles([req.file])
+        .then(ids => {
+            return cfx.query(`update user set avatar_id=? where id=?`, [ids[0], user.id])
+        })
+        .then(() => {
+            return {success:1}
+        })
+
+    }, true, cfx.core.upload.single('avatar'))
 
     cfx.core.safeGet('/deleteuseravatar', (user, req, res) => {
         return cfx.auth.getUser(u.id)
