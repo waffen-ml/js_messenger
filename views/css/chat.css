@@ -12,10 +12,10 @@ main {
     display:flex;
     gap:7px;
     width: 100%;
+    flex-shrink:0;
 }
 
 .input-bar * {
-    flex-shrink: 0;
 }
 
 .entry {
