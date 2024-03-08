@@ -168,19 +168,21 @@ class ChatSystem {
         }).then(r => {
             if (r.length > 0)
                 return new Chat(this.cfx, r[0].chat_id, null)
-            return this.cfx.query('insert into chat(is_direct) values(1)')
-            .then(r => {
-                return new Chat(this.cfx, r.insertId, null)
-            }).then(chat => {
-                return chat.addMembers([userid1, userid2])
-                .then(() => chat)
-            })
+            return this.createDirectChat(userid1, userid2)
         })
     }
 
-    createChat(name, isPublic, avatarId, members) {
-        return this.cfx.query('insert into chat(name, is_public, avatar_id) values(?, ?, ?)',
-        [name, isPublic, avatarId])
+    createDirectChat(u1, u2) {
+        return this.createChat(null, false, true, null, [u1, u2])
+    }
+
+    createGroupChat(name, isPublic, avatarId, members) {
+        return this.createChat(name, isPublic, false, avatarId, members)
+    }
+
+    createChat(name, isPublic, isDirect, avatarId, members) {
+        return this.cfx.query('insert into chat(name, is_public, is_direct, avatar_id) values(?, ?, ?, ?)',
+        [name, isPublic, isDirect, avatarId])
         .then((r) => {
             let chat = new Chat(this.cfx, r.insertId, name)
             chat.addMembers(members??[])
@@ -199,10 +201,6 @@ class ChatSystem {
                 return chat
             })
         })
-    }
-
-    fuck() {
-        throw Error('wewewe')
     }
 }
 
@@ -286,7 +284,7 @@ exports.init = (cfx) => {
         }).then(avatarId => {
             req.body.members ??= []
             let members = Array.isArray(req.body.members)? req.body.members : [req.body.members]
-            return cfx.chats.createChat(req.body.name || null, parseInt(req.body.ispublic), avatarId, members)
+            return cfx.chats.createGroupChat(req.body.name || null, parseInt(req.body.ispublic), avatarId, members)
         }).then(chat => {
             chat.addMessage(null, creator.name + ' создал этот чат', null)
         })
