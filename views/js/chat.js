@@ -49,6 +49,15 @@ class ChatInterface {
                 }
             })
 
+            function showGrid(id) {
+                cw.window.querySelectorAll('.sticker-grid').forEach(grid => grid.classList.add('disabled'))
+                cw.window.querySelector('.sticker-grid#' + id).classList.remove('disabled')
+            }
+
+            cw.window.querySelectorAll('.navigation button').forEach(navbutt => {
+                navbutt.addEventListener('click', () => showGrid(navbutt.getAttribute('id')))
+            })
+
             cw.open()
 
         })

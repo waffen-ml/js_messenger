@@ -355,8 +355,7 @@ ul.attached {
     left:0;
 
     width: 300px;
-    max-height:400px;
-
+    max-height:300px;
     display:flex;
     flex-direction: column;
     gap:6px;
@@ -365,6 +364,8 @@ ul.attached {
 .stickerscw .sticker-grid {
     overflow-y:auto;
     height:100%;
+    display:grid;
+    
 }
 
 .stickerscw hr {
