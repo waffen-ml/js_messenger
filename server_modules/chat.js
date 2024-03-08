@@ -151,6 +151,7 @@ class ChatSystem {
     getChatViews(userid) {
         return this.cfx.db.executeFile('views', {id: userid, max_members: 4})
         .then((views_raw) => {
+            console.log(views_raw)
             return this.cfx.utils.parseArrayOutput(views_raw, 'members', {
                 member_id: 'id',
                 member_name: 'name',
