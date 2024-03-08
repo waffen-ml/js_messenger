@@ -40,7 +40,7 @@ class ChatInterface {
         fetch('/getstickerpacks')
         .then(r => r.json())
         .then(packs => {
-            let sb = document.querySelector('button #stickers')
+            let sb = document.querySelector('button#stickers')
 
             let cw = new ContextWindow({
                 html: templateManager.createHTML('stickerscw', {
