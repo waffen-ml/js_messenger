@@ -115,7 +115,6 @@ class ContextWindow {
             this.window.classList.add(options.className)
 
         this.checkScroll.forEach(el => el.addEventListener('scroll', () => this.close(true)))
-        this.window.style.display = 'none'
 
         document.body.appendChild(this.window)
 
