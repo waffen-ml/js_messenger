@@ -164,6 +164,7 @@ class ContextWindow {
     }
 
     open() {
+        console.log('OPEN')
         if(openedCW)
             openedCW.close(true)
         openedCW = this
@@ -174,6 +175,7 @@ class ContextWindow {
     }
 
     close(instantly) {
+        console.log('CLOSE')
         if (openedCW != this)
             return Promise.resolve()
         
