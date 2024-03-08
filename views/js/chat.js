@@ -52,8 +52,8 @@ class ChatInterface {
             })
 
             cw.setPosition({
-                top:sb.clientTop,
-                left:sb.clientLeft
+                top:utils.bounds(sb).top,
+                left:utils.bounds(sb).left
             })
 
             function showGrid(id) {

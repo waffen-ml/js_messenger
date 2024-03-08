@@ -186,6 +186,10 @@ class Utils {
             return 'Был в сети ' + this.getPostDatetimeLabel(datetime).toLowerCase()
     }
 
+    bounds(element) {
+        return element.getBoundingClientRect()
+    }
+
 }
 
 const utils = new Utils();
