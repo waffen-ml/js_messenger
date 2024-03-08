@@ -366,7 +366,7 @@ ul.attached {
     height:100%;
     display:grid;
     gap:7px;
-    grid-template-rows:max-content;
+    grid-auto-rows:max-content;
 }
 
 .stickerscw .stickers {
@@ -391,7 +391,7 @@ ul.attached {
 }
 
 .stickerscw .grid .emoji {
-    
+
 }
 
 .stickerscw hr {
