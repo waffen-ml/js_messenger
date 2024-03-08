@@ -321,15 +321,15 @@ exports.init = (cfx) => {
             if (!req.avatar)
                 resolve(null)
             else {
-                return cfx.files.saveFiles([req.file], null)
-                .then(r => r.ids[0])
+                cfx.files.saveFiles([req.file], null)
+                .then(r => resolve(r.ids[0]))
             }
         }).then(avatarId => {
             req.body.members ??= []
             let members = Array.isArray(req.body.members)? req.body.members : [req.body.members]
             return cfx.chats.createGroupChat(req.body.name || null, parseInt(req.body.ispublic), avatarId, members)
         }).then(chat => {
-            chat.addMessage(null, creator.name + ' создал этот чат', null)
+            //chat.addMessage('system', null, creator.name + ' создал этот чат', null)
         })
         .then(() => {
             return {
