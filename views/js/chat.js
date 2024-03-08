@@ -32,6 +32,10 @@ class ChatInterface {
         this.scrollDown(false)
     }
 
+    function appendMessageEntry(text) {
+
+    }
+
     openStickersCW() {
         fetch('/getstickerpacks')
         .then(r => r.json())
@@ -56,6 +60,17 @@ class ChatInterface {
 
             cw.window.querySelectorAll('.navigation button').forEach(navbutt => {
                 navbutt.addEventListener('click', () => showGrid(navbutt.getAttribute('id')))
+            })
+
+            cw.window.querySelectorAll('.sticker-grid#emoji button').forEach(emojiButton => {
+                emojiButton.addEventListener('click', () => this.appendMessageEntry(emojiButton.textContent))
+            })
+
+            packs.forEach(pack => {
+                cw.window.querySelectorAll(`.sticker-grid#${pack.name} button`).forEach(stickerButton => {
+                    stickerButton.addEventListener('click', () => 
+                    this.chat.sendSticker(pack.name, parseInt(stickerButton.getAttribute('id'))))
+                })
             })
 
             cw.open()
@@ -349,6 +364,10 @@ class Chat {
         socket.on('message', msg => {
             this.messages.addMessages([msg], true, false, true)
         })
+    }
+
+    sendSticker(name, i) {
+        alert(name + ' ' + id)
     }
 
     send() {
