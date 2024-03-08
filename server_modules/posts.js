@@ -270,36 +270,4 @@ exports.init = (cfx) => {
         })
     }, true)
 
-    cfx.query(`select * from postold`)
-    .then(posts => {
-        return Promise.all(posts.map(post => {
-            return new Promise((resolve) =>  {
-                if(post.bundle_id == null) {
-                    resolve()
-                    return
-                }
-                cfx.query(`select id from post where id=${post.id}`)
-                .then((r) => {
-                    if (r.length == 0) {
-                        resolve()
-                        return
-                    }
-                    cfx.query(`select id from fileold where bundle_id=${post.bundle_id}`)
-                    .then(files => {
-                        return cfx.files.createBundle(null, post.id)
-                        .then(bid => {
-                            return cfx.query(`update post set bundle_id=${bid} where id=${post.id}`)
-                            .then(() => Promise.all(files.map(file => {
-                                return cfx.query(`update file set bundle_id=${bid} where id=${file.id}`)
-                            })))
-                        })
-                    })
-                    .then(() => resolve())
-                })
-            })
-        }))
-    })
-    .then(() => {
-        console.log('hey!')
-    })
 }

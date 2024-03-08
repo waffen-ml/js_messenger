@@ -10,6 +10,7 @@ utils.getUser(url.get('id'), url.get('tag'))
     fetch('/auth')
     .then(r => r.json())
     .then(r => {
+        console.log(user)
         let feed = new Feed(r, user.d, 
             document.querySelector('.feed'), 
             document.querySelector('main'))
