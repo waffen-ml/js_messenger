@@ -366,8 +366,8 @@ ul.attached {
     height:100%;
     display:grid;
     gap:7px;
-    grid-template-columns:repeat(auto-fit, 1fr);
-    
+    grid-template-columns:repeat(auto-fill, 50px);
+    grid-template-rows:repeat(auto-fill, 50px);
 }
 
 .stickerscw .stickers {
@@ -379,8 +379,10 @@ ul.attached {
 }
 
 .stickerscw .sticker {
-    aspect-ratio: 1;
-    height:50px;
+    height:100%;
+    max-width: 100%;
+    object-fit: contain;
+    justify-self:center;
 }
 
 .stickerscw .grid .emoji {
