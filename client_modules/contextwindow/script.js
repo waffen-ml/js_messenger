@@ -156,7 +156,7 @@ class ContextWindow {
             left: pos.left !== undefined? pos.left : pos.right !== undefined? window.innerWidth - pos.right : 0
         }
 
-        console.log(top)
+        console.log(pos)
         console.log(actual)
 
         if(actual.top < border.top)
