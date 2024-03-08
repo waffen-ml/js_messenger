@@ -22,7 +22,7 @@ class Posts {
         .then(bid => {
             return this.cfx.query(`insert into post(author_id, text, html, title,
             datetime, bundle_id) values(?, ?, ?, ?, now(), ?)`, [
-                author_id, utils.mysql_escape(text), 
+                author_id, text, 
                 utils.mysql_escape(html), utils.mysql_escape(title), bid])
         })
     }
