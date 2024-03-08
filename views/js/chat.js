@@ -54,20 +54,20 @@ class ChatInterface {
             })
 
             function showGrid(id) {
-                cw.window.querySelectorAll('.sticker-grid').forEach(grid => grid.classList.add('disabled'))
-                cw.window.querySelector('.sticker-grid#' + id).classList.remove('disabled')
+                cw.window.querySelectorAll('.grid').forEach(grid => grid.classList.add('disabled'))
+                cw.window.querySelector('.grid#' + id).classList.remove('disabled')
             }
 
             cw.window.querySelectorAll('.navigation button').forEach(navbutt => {
                 navbutt.addEventListener('click', () => showGrid(navbutt.getAttribute('id')))
             })
 
-            cw.window.querySelectorAll('.sticker-grid#emoji button').forEach(emojiButton => {
+            cw.window.querySelectorAll('.grid#emoji button').forEach(emojiButton => {
                 emojiButton.addEventListener('click', () => this.appendMessageEntry(emojiButton.textContent))
             })
 
             packs.forEach(pack => {
-                cw.window.querySelectorAll(`.sticker-grid#${pack.name} button`).forEach(stickerButton => {
+                cw.window.querySelectorAll(`.grid#${pack.name} button`).forEach(stickerButton => {
                     stickerButton.addEventListener('click', () => 
                     this.chat.sendSticker(pack.name, parseInt(stickerButton.getAttribute('id'))))
                 })

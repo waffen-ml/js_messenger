@@ -46,13 +46,13 @@ block main
         button.button#send 📨
     
     script(type="text/x-ejs-template", template="stickerscw")
-        .sticker-grid#emoji.styled-scroll
+        .grid.emojis#emoji.styled-scroll
                 <% emojiList.forEach((emoji, i) => { %>
                 button.button.emoji <%=emoji%>
                 <% }) %>
         
         <% packs.forEach(pack => { %>
-        .sticker-grid(id!="<%=pack.name%>").disabled.styled-scroll
+        .grid.stickers(id!="<%=pack.name%>").disabled.styled-scroll
             <% for(let i = 0; i < pack.count; i++) { %>
             button.button(id!="<%=i%>")
                 img.sticker(src!="/public/stickers/<%=pack.name%>/<%=i%>.png")

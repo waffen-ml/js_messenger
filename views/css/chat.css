@@ -361,11 +361,26 @@ ul.attached {
     gap:6px;
 }
 
-.stickerscw .sticker-grid {
+.stickerscw .grid {
     overflow-y:auto;
     height:100%;
     display:grid;
+    gap:7px;
+    grid-auto-columns: auto;
 
+}
+
+.stickerscw .sticker {
+    aspect-ratio: 1;
+    height:50px;
+}
+
+.stickerscw .sticker-grid#emoji {
+
+}
+
+.stickerscw .sticker-grid .emoji {
+    
 }
 
 .stickerscw hr {
