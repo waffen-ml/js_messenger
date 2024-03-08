@@ -25,7 +25,8 @@ class ChatInterface {
             this.openFilePopup()
         })
 
-        this.setupStickersCW()
+        attachButtonToCW(() => this.makeStickersCW(), document.querySelector('button#stickers'))
+
         this.scrollDown(false)
     }
 
@@ -33,7 +34,9 @@ class ChatInterface {
         this.entry.value += text
     }
 
-    setupStickersCW() {
+    makeStickersCW() {
+        let sb = document.querySelector('button#stickers')
+
         fetch('/getstickerpacks')
         .then(r => r.json())
         .then(packs => {
@@ -60,7 +63,6 @@ class ChatInterface {
                 left:utils.bounds(sb).left - actual.left + sb.clientWidth / 2
             })
 
-
             function showGrid(id) {
                 cw.window.querySelectorAll('.grid').forEach(grid => grid.classList.add('disabled'))
                 cw.window.querySelector('.grid#' + id).classList.remove('disabled')
@@ -81,6 +83,7 @@ class ChatInterface {
                 })
             })
 
+            return cw
         })
     }
 
