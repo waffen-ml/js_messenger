@@ -311,9 +311,9 @@ class Chat {
 
     send() {
         let attachedFiles = this.interface.attachedFiles
-        let text = this.interface.entry.value
+        let content = this.interface.entry.value
 
-        if (text == '' && !attachedFiles.length)
+        if (content == '' && !attachedFiles.length)
             return
     
         let data = new FormData();
