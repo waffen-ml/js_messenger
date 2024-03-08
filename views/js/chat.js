@@ -25,9 +25,7 @@ class ChatInterface {
             this.openFilePopup()
         })
 
-        document.querySelector('#stickers').addEventListener('click', () => {
-            this.openStickersCW()
-        })
+        this.setupStickersCW()
 
         this.scrollDown(false)
     }
@@ -36,11 +34,12 @@ class ChatInterface {
         this.entry.value += text
     }
 
-    openStickersCW() {
+    setupStickersCW() {
+        let sb = document.querySelector('button#stickers')
+
         fetch('/getstickerpacks')
         .then(r => r.json())
         .then(packs => {
-            let sb = document.querySelector('button#stickers')
 
             let cw = new ContextWindow({
                 html: templateManager.createHTML('stickerscw', {
@@ -50,17 +49,6 @@ class ChatInterface {
                 className: 'stickerscw',
                 ignoreClicks: sb
             })
-
-            let actual = cw.setPosition({
-                top:utils.bounds(sb).top - cw.window.clientHeight - 5,
-                left:utils.bounds(sb).left - cw.window.clientWidth / 2 + sb.clientWidth / 2
-            }, document.querySelector('main'))
-
-            cw.setAxis({
-                top:cw.window.clientHeight,
-                left:utils.bounds(sb).left - actual.left + sb.clientWidth / 2
-            })
-
 
             function showGrid(id) {
                 cw.window.querySelectorAll('.grid').forEach(grid => grid.classList.add('disabled'))
@@ -82,7 +70,24 @@ class ChatInterface {
                 })
             })
 
-            cw.open()
+            sb.addEventListener('click', () => {
+                if(cw.isOpened()) {
+                    cw.close()
+                    return
+                }
+                
+                let actual = cw.setPosition({
+                    top:utils.bounds(sb).top - cw.window.clientHeight - 5,
+                    left:utils.bounds(sb).left - cw.window.clientWidth / 2 + sb.clientWidth / 2
+                }, document.querySelector('main'))
+    
+                cw.setAxis({
+                    top:cw.window.clientHeight,
+                    left:utils.bounds(sb).left - actual.left + sb.clientWidth / 2
+                })
+
+                cw.open()
+            })
 
         })
     }
