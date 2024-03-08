@@ -33,7 +33,7 @@ class ChatInterface {
     }
 
     appendMessageEntry(text) {
-        this.entry.textContent += text
+        this.entry.textContent = this.entry.textContent + text
     }
 
     openStickersCW() {
