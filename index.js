@@ -140,6 +140,8 @@ function safeRender(pattern, onget, reqlogin) {
             return updateUser(user)
             .then(() => onget(user, req, res))
             .then(data => {
+                if(!data)
+                    return
                 data.user = user
                 render(req, res, data.render, data)
             })
