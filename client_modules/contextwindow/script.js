@@ -100,7 +100,7 @@ class ContextWindow {
         if(openedCW)
             openedCW.close(true)
         openedCW = this
-        this.window.style.display = 'block'
+        this.window.style.display = ''
         this.window.style.animation = `cw-open ${this.animLength}ms ease-in-out`
 
         return new Promise((r) => setTimeout(() => r(), this.animLength))

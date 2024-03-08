@@ -365,6 +365,10 @@ ul.attached {
     height:200px;
 }
 
+.stickerscw hr {
+    margin:0;
+}
+
 .stickerscw .sticker-grid.disabled {
     display:none;
 }
