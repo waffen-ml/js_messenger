@@ -56,7 +56,7 @@ block main
         .page.disabled(id!="<%=pack.name%>")
             .sticker-grid
                 <% for(let i = 0; i < pack.count; i++) { %>
-                img.sticker(src!="/public/stickers/<%=pack.name%>/<%=i%>")
+                img.sticker(src!="/public/stickers/<%=pack.name%>/<%=i%>.png")
                 <% } %>
         <% }) %>
 
