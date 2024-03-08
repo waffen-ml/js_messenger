@@ -411,11 +411,12 @@ ul.attached {
     gap:5px;
 }
 
-.stickerscw .navigation .preview {
-    height:30px;
-    aspect-ratio: 1;   
+.stickercw .navigation button {
+    padding:2px;
+    font-size:19px;
 }
 
-.stickerscw .page {
-    max-width: 100%;
+.stickerscw .navigation .preview {
+    height:34px;
+    aspect-ratio: 1;
 }
