@@ -44,3 +44,20 @@ block main
         button.button#stickers 😀 
         button.button#file 📁
         button.button#send 📨
+    
+    script(type="text/x-ejs-template", template="stickerscw")
+        .page(id="emoji")
+            .emoji-grid
+                    <% emojiList.forEach(emoji => { %>
+                    span.emoji <%emoji%>
+                    <% }) %>
+        
+        <% packs.forEach(pack => { %>
+        .page(class="disabled")
+
+        <% }) %>
+
+        .navigator 
+            button.button 😀
+
+    script(type="text/x-ejs-template", template="stickerpack")

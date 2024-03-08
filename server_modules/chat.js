@@ -294,7 +294,7 @@ exports.init = (cfx) => {
         })
     }, cfx.core.upload.array('files'), true)
 
-    cfx.core.safeGet('/getstickers', (_, req, res) => {
+    cfx.core.safeGet('/getstickerpacks', (_, req, res) => {
 
         return [
             {

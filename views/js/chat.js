@@ -1,8 +1,12 @@
 const chatid = new URLSearchParams(window.location.search).get('id')
 const loadWindow = 15
+const emojiList = `😀😃😄😁😆😅😂🤣☺️😊😇🙂🙃😉😌😍🥰😘😗😙😚😋😛😝
+😜🤪🤨🧐🤓😎🤩🥳😏😒😞😔😟😕🙁☹️😣😖😫😩🥺😢😭😮‍💨😤😠😡🤬🤯
+😳🥵🥶😱😨😰😥😓🤗🤔🤭🤫🤥😶😶‍🌫️😐😑😬🙄😯😦😧😮😲🥱😴🤤😪😵
+😵‍💫🤐🥴🤢🤮🤧😷🤒🤕🤑🤠😈👿👹👺🤡💩👻💀☠️👽👾🤖🎃😺😸😹😻😼😽🙀😿😾`
 
 class ChatInterface {
-    constructor(isdirect) {
+    constructor(chat) {
         this.holder = document.querySelector('.holder')
         this.holderWrapper = document.querySelector('.holder-wrapper')
         this.loadZone = document.querySelector('.load-zone')
@@ -10,15 +14,41 @@ class ChatInterface {
         this.loadedAll = false
         this.loadingMore = false
         this.attachedFiles = []
+        this.chat = chat
 
-        if(isdirect)
+        if(chat.info.isdirect)
             this.holder.classList.add('direct')
 
         document.querySelector('#file').addEventListener('click', () => {
             this.openFilePopup()
-        });
+        })
+
+        document.querySelector('#stickers').addEventListener('click', () => {
+            this.openStickersCW()
+        })
 
         this.scrollDown(false)
+    }
+
+    openStickersCW() {
+        fetch('/getstickerpacks')
+        .then(r => r.json())
+        .then(packs => {
+
+            let cw = new ContextWindow({
+                html: templateManager.createHTML({
+                    packs: packs,
+                    emojiList: emojiList
+                }),
+                pos: {
+                    top:0,
+                    left:0
+                }
+            })
+
+            cw.open()
+
+        })
     }
 
     openFilePopup() {
@@ -251,7 +281,7 @@ class Chat {
         this.chatid = info.id
         this.socket = socket
         this.me = me
-        this.interface = new ChatInterface(info.is_direct)
+        this.interface = new ChatInterface(this)
         this.messages = new ChatMessages(this.interface, me)
 
         this.interface.initSendFunction(() => this.send())
