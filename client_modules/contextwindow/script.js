@@ -142,7 +142,7 @@ class ContextWindow {
         }).then(() => {
             this.window.style.display = 'none'
             if (this.destroyOnClose)
-                this.parent.removeChild(this.window)
+                document.body.removeChild(this.window)
         })
     }
 
