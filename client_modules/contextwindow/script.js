@@ -164,10 +164,10 @@ class ContextWindow {
     }
 
     open() {
-        console.log('OPEN')
         if(openedCW)
             openedCW.close(true)
         openedCW = this
+        void this.window.offsetWidth
         this.window.style.visibility='visible'
         this.window.style.animation = `cw-open ${this.animLength}ms ease-in-out`
 
@@ -175,7 +175,6 @@ class ContextWindow {
     }
 
     close(instantly) {
-        console.log('CLOSE')
         if (openedCW != this)
             return Promise.resolve()
         
