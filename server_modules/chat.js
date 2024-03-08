@@ -51,7 +51,7 @@ class Chat {
         return this.cfx.query('select max(id) as lmid from message where chat_id=?', [this.id])
         .then((w) => {
             let lmid = w[0].lmid ?? 0
-            usersIds.forEach(uid => this.cfx.query(
+            userIds.forEach(uid => this.cfx.query(
                 `insert into chat_member(chat_id, user_id, last_read, focus) 
                 values(?, ?, ?, ?)`, [this.id, uid, lmid, lmid + 1]))
         })
@@ -160,6 +160,8 @@ class ChatSystem {
     }
 
     getDirectChat(userid1, userid2) {
+        if(userid1 == userid2)
+            return Promise.resolve(null)
         return this.cfx.db.executeFile('getdirectchat', {
             user1: userid1,
             user2: userid2
