@@ -84,7 +84,7 @@ function makeButtonsCW(caller, buttons, options) {
 
         cw.setPosition({
             top: utils.bounds(caller).top,
-            left: utils.bounds(caller).left + caller.clientWidth
+            left: utils.bounds(caller).left + caller.clientWidth - cw.window.clientWidth
         })
 
         let buttonElements = cw.window.querySelectorAll('.button')
@@ -107,11 +107,13 @@ function attachButtonToCW(makeCW, button) {
         if(cw && cw.isOpened()) {
             cw.close()
             cw = null
+            console.log('close')
             return
         }
         Promise.resolve(makeCW())
         .then(cw_ => {
             cw = cw_
+            console.log('open')
             if(cw.ignoreClicks.every(w => w != button))
                 cw.ignoreClicks.push(button)
             cw.open()
