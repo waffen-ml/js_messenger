@@ -47,10 +47,9 @@ class ChatInterface {
                     packs: packs,
                     emojiList: emojiList
                 }),
-                className: 'stickerscw',
-                ignoreClicks: sb
+                className: 'stickerscw'
             })
-            
+
             attachButtonToCW(() => cw, sb)
 
             let actual = cw.setPosition({

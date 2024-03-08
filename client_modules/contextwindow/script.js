@@ -75,17 +75,19 @@ function makeButtonsCW(buttons, options) {
 function attachButtonToCW(makeCW, button) {
     let cw = null
 
-    button.addEventListener('click', () => {
+    button.onclick = () => {
         if(cw && cw.isOpened()) {
             cw.close()
             cw = null
+            console.log('close')
             return
         }
         cw = makeCW()
         if(cw.ignoreClicks.every(w => w != button))
             cw.ignoreClicks.push(button)
+        console.log('open')
         cw.open()
-    })
+    }
 }
 
 
