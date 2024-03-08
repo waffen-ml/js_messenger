@@ -33,7 +33,7 @@ class ChatInterface {
     }
 
     appendMessageEntry(text) {
-
+        this.entry.textContent += text
     }
 
     openStickersCW() {
@@ -367,7 +367,7 @@ class Chat {
     }
 
     sendSticker(name, i) {
-        alert(name + ' ' + id)
+        alert(name + ' ' + i)
     }
 
     send() {
