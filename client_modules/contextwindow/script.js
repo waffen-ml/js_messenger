@@ -65,7 +65,7 @@ function makeButtonsCW(caller, buttons, options) {
 
         cw.setPosition({
             top: utils.bounds(caller).top + caller.clientHeight / 2,
-            left: utils.bounds(caller).left + caller.clientWidth / 2 - cw.window.clientWidth
+            right: utils.bounds(caller).left + caller.clientWidth / 2
         })
 
         let buttonElements = cw.window.querySelectorAll('.button')
@@ -147,13 +147,13 @@ class ContextWindow {
         let border = {
             top: borderElement? utils.bounds(borderElement).top : 0,
             left: borderElement? utils.bounds(borderElement).left : 0,
-            right: borderElement? utils.bounds(borderElement).left + borderElement.clientWidth : this.window.innerWidth,
-            bottom: borderElement? utils.bounds(borderElement).top + borderElement.clientHeight : this.window.innerHeight
+            right: borderElement? utils.bounds(borderElement).left + borderElement.clientWidth : window.innerWidth,
+            bottom: borderElement? utils.bounds(borderElement).top + borderElement.clientHeight : window.innerHeight
         }
 
         let actual = {
-            top: pos.top,
-            left: pos.left
+            top: pos.top !== undefined? pos.top : pos.bottom !== undefined? window.innerHeight - pos.bottom : 0,
+            left: pos.left !== undefined? pos.left : pos.right !== undefined? window.innerWidth - pos.right : 0
         }
 
         if(actual.top < border.top)
