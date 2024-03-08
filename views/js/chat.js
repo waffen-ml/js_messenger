@@ -378,6 +378,7 @@ class Chat {
 
         socket.on('message', msg => {
             this.messages.addMessages([msg], true, false, true)
+            fetch('/readmessages?id=' + this.chatid)
         })
     }
 
