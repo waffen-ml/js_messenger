@@ -250,7 +250,7 @@ exports.init = (cfx) => {
 
     cfx.core.safePost('/setavatar', (user, req, res) => {
         req.file.originalname = 'avatar.jpg'
-        return cfx.files.safeFiles([req.file])
+        return cfx.files.saveFiles([req.file])
         .then(ids => {
             return cfx.query(`update user set avatar_id=? where id=?`, [ids[0], user.id])
         })
