@@ -4,17 +4,18 @@ w.*, b.user_id as member_id, u.name as member_name, u.tag as member_tag,
 (select count(*) from message q where q.chat_id=v.chat_id and q.id > v.last_read)
 as unread from chat_member v left join
 
-(select m.chat_id as lm_cid, m.id as lm_id, m.type as lm_type,
-	m.sender_id as lm_sender_id, m.content as lm_content, m.datetime as lm_datetime,
-    u.name as lm_sender_name, u.tag as lm_sender_tag,
+(select m.chat_id as lm_cid, m.id as lm_id, m.type as lm_type, 
+	m.sender_id as lm_sender_id,
+	m.content as lm_content, m.datetime as lm_datetime,
+    u1.name as lm_sender_name, u1.tag as lm_sender_tag,
 	(select count(*) from file f where f.bundle_id=m.bundle_id) as lm_file_count
-	from message m 
-    left join user u on u.id = m.sender_id
+	from message m left join user u1 on u1.id = m.sender_id
 ) w on w.lm_cid=v.chat_id
 
-
 left join chat c on c.id=v.chat_id
+
 left join (select (select count(*) from chat_member b2 where b1.chat_id=b2.chat_id and b2.id<b1.id) 
 	as rnk, b1.* from chat_member b1) b on b.chat_id=c.id
+
 left join user u on u.id=b.user_id
 where v.user_id={id} and b.rnk < {max_members} order by w.lm_datetime desc

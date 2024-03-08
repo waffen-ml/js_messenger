@@ -149,14 +149,34 @@ class ChatSystem {
     }
 
     getChatViews(userid) {
-        return this.cfx.db.executeFile('views', {id: userid, max_members: 4})
-        .then((views_raw) => {
-            console.log(views_raw)
-            return this.cfx.utils.parseArrayOutput(views_raw, 'members', {
-                member_id: 'id',
-                member_name: 'name',
-                member_tag: 'tag'
-            }, 'id')
+        return this.cfx.query(`select v.id, v.user_id as owner_id, v.chat_id,
+        v.focus, v.last_read, c.is_direct as is_chat_direct, c.voice
+        from chat_view v join chat c on v.chat_id=c.id where user_id=?`, [userid])
+        .then(r => {
+            return Promise.all(r.map(view => {
+                return this.cfx.query(`select * from chat_view v join user u on v.user_id=u.id where v.id=? limit ?`, [view.id, 4])
+                .then(members => {
+                    view.members = members
+                    return this.cfx.query(`select m.id, m.type, m.content, m.datetime, m.sender_id, 
+                    u.name as sender_name, u.tag as sender_tag,
+                    (select count(*) from file f where f.bundle_id=m.bundle_id) as file_count
+                    from message m left join user u on m.sender_id=u.id 
+                    where chat_id=? order by id desc limit 1`, [view.chat_id])
+                })
+                .then(lm => {
+                    lm = lm[0]
+                    if (lm)
+                        Object.keys(lm).forEach(k => view['lm_' + k] = lm[k])
+                    return this.cfx.query(`select count(*) as unread from message where chat_id=? and id > ?`, 
+                    [view.chat_id, view.last_seen ?? 0])
+                })
+                .then(c => {
+                    view.unread = c[0].unread
+                })
+            }))
+            .then(() => {
+                return r
+            })
         })
     }
 
