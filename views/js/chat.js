@@ -47,7 +47,8 @@ class ChatInterface {
                     packs: packs,
                     emojiList: emojiList
                 }),
-                className: 'stickerscw'
+                className: 'stickerscw',
+                ignoreClicks: sb
             })
 
             cw.setPosition({
