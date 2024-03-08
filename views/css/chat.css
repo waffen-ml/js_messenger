@@ -366,8 +366,8 @@ ul.attached {
     height:100%;
     display:grid;
     gap:7px;
-    grid-auto-columns: auto;
-
+    grid-template-columns:repeat(auto-fit, 1fr);
+    
 }
 
 .stickerscw .stickers {
