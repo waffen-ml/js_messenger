@@ -154,7 +154,7 @@ class ChatSystem {
         from chat_member v join chat c on v.chat_id=c.id where user_id=?`, [userid])
         .then(r => {
             return Promise.all(r.map(view => {
-                return this.cfx.query(`select * from chat_member v join user u on v.user_id=u.id where v.id=? limit ?`, [view.id, 4])
+                return this.cfx.query(`select u.id, u.name, u.tag from chat_member v join user u on v.user_id=u.id where v.id=? limit ?`, [view.id, 4])
                 .then(members => {
                     view.members = members
                     return this.cfx.query(`select m.id, m.type, m.content, m.datetime, m.sender_id, 
