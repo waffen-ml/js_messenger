@@ -158,11 +158,11 @@ class Post {
 
         let dots = this.element.querySelector('.dots')
 
-        buttonsCWCaller(dots, {
+        makeButtonsCW(dots, {
             'Реакции': () => this.feed.inspectReactions(this.id),
             'Редактировать': () => {},
             'Удалить': () => this.feed.deletePost(this.id)
-        }, {parent: this.feed.holder.scrollPage})
+        }, {checkScroll: this.feed.holder.scrollPage})
 
         this.setupCommentSection()
     }
@@ -201,7 +201,6 @@ class Post {
     }
 
 }
-
 
 class FeedHolder {
     constructor(feed, element, scrollPage) {

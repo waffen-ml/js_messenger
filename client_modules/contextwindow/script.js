@@ -51,7 +51,7 @@ function buttonsCWCaller(caller, buttons, options) {
 
 }
 
-function makeButtonsCW(buttons, options) {
+function makeButtonsCW2(buttons, options) {
     let cw = new ContextWindow({
         html: templateManager.createHTML('buttons-cw', {
             labels: Object.keys(buttons)
@@ -71,6 +71,34 @@ function makeButtonsCW(buttons, options) {
     return cw
 }
 
+function makeButtonsCW(caller, buttons, options) {
+    attachButtonToCW(() => {
+        let cw = new ContextWindow({
+            html: templateManager.createHTML('buttons-cw', {
+                labels: Object.keys(buttons)
+            }),
+            className: 'cw-buttons',
+            transformOrigin: 'top right',
+            ...options
+        })
+
+        cw.setPosition({
+            top: utils.bounds(caller).top,
+            left: utils.bouns(caller).left + caller.clientWidth
+        })
+
+        let buttonElements = cw.window.querySelectorAll('.button')
+
+        Object.values(buttons).forEach((f, i) => {
+            buttonElements[i].addEventListener('click', () => {
+                f()
+                cw.close()
+            })
+        })
+
+        return cw
+    }, caller)
+}
 
 function attachButtonToCW(makeCW, button) {
     let cw = null
