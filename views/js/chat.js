@@ -25,9 +25,7 @@ class ChatInterface {
             this.openFilePopup()
         })
 
-        document.querySelector('#stickers').addEventListener('click', () => {
-            this.openStickersCW()
-        })
+        this.setupStickersCW()
 
         this.scrollDown(false)
     }
@@ -36,7 +34,7 @@ class ChatInterface {
         this.entry.value += text
     }
 
-    openStickersCW() {
+    setupStickersCW() {
         fetch('/getstickerpacks')
         .then(r => r.json())
         .then(packs => {
@@ -47,6 +45,7 @@ class ChatInterface {
                     packs: packs,
                     emojiList: emojiList
                 }),
+                destroyOnClose: false,
                 className: 'stickerscw'
             })
 
