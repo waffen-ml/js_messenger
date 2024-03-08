@@ -45,7 +45,6 @@ class ChatInterface {
                     packs: packs,
                     emojiList: emojiList
                 }),
-                destroyOnClose: false,
                 className: 'stickerscw'
             })
 
