@@ -370,7 +370,7 @@ ul.attached {
 }
 
 .stickerscw .stickers {
-    grid-template-columns:repeat(auto-fill, 50px);
+    grid-template-columns:repeat(4, 1fr);
 }
 
 .stickerscw .emojis {
