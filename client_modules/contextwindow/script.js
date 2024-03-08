@@ -147,14 +147,17 @@ class ContextWindow {
         let border = {
             top: borderElement? utils.bounds(borderElement).top : 0,
             left: borderElement? utils.bounds(borderElement).left : 0,
-            right: borderElement? utils.bounds(borderElement).left + borderElement.clientWidth : this.window.innerWidth,
-            bottom: borderElement? utils.bounds(borderElement).top + borderElement.clientHeight : this.window.innerHeight
+            right: borderElement? utils.bounds(borderElement).left + borderElement.clientWidth : window.innerWidth,
+            bottom: borderElement? utils.bounds(borderElement).top + borderElement.clientHeight : window.innerHeight
         }
 
         let actual = {
             top: pos.top !== undefined? pos.top : pos.bottom !== undefined? window.innerHeight - pos.bottom : 0,
             left: pos.left !== undefined? pos.left : pos.right !== undefined? window.innerWidth - pos.right : 0
         }
+
+        console.log(top)
+        console.log(actual)
 
         if(actual.top < border.top)
             actual.top = border.top
