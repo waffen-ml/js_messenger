@@ -1,9 +1,11 @@
 const chatid = new URLSearchParams(window.location.search).get('id')
 const loadWindow = 15
+
 const emojiList = Array.from(`😀😃😄😁😆😅😂🤣☺️😊😇🙂🙃😉😌😍🥰😘😗😙😚😋😛😝
 😜🤪🤨🧐🤓😎🤩🥳😏😒😞😔😟😕🙁☹️😣😖😫😩🥺😢😭😮‍💨😤😠😡🤬🤯
 😳🥵🥶😱😨😰😥😓🤗🤔🤭🤫🤥😶😶‍🌫️😐😑😬🙄😯😦😧😮😲🥱😴🤤😪😵
 😵‍💫🤐🥴🤢🤮🤧😷🤒🤕🤑🤠😈👿👹👺🤡💩👻💀☠️👽👾🤖🎃😺😸😹😻😼😽🙀😿😾`)
+.filter(w => w != '\n')
 
 class ChatInterface {
     constructor(chat) {
@@ -38,9 +40,9 @@ class ChatInterface {
             let cw = new ContextWindow({
                 html: templateManager.createHTML('stickerscw', {
                     packs: packs,
-                    emojiList: emojiList,
-                    className: 'stickerscw'
+                    emojiList: emojiList
                 }),
+                className: 'stickerscw',
                 pos: {
                     top:0,
                     left:0
