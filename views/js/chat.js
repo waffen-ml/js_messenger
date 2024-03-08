@@ -40,6 +40,7 @@ class ChatInterface {
         fetch('/getstickerpacks')
         .then(r => r.json())
         .then(packs => {
+            let sb = document.querySelector('button #stickers')
 
             let cw = new ContextWindow({
                 html: templateManager.createHTML('stickerscw', {
@@ -51,6 +52,11 @@ class ChatInterface {
                     top:0,
                     left:0
                 }
+            })
+
+            cw.setPosition({
+                top:sb.clientTop,
+                left:sb.clientLeft
             })
 
             function showGrid(id) {

@@ -1,18 +1,27 @@
 let openedCW = null
 
 document.addEventListener('click', (e) => {
-    if(!openedCW)
+    if(!openedCW || openedCW.window.contains(e.target))
+        return
+    else if(openedCW.ignoreClicks.every(el => el.contains(e.target) || el === e.target))
         return
 
-    if(openedCW.window.contains(e.target) || openedCW.attachedTo 
-        && openedCW.attachedTo.contains(e.target))
-        return
-    
     openedCW.close(true)
 })
 
 window.addEventListener('resize', () => {
-    console.log('hell')
+    if(openedCW)
+        openedCW.close(true)
+})
+
+document.body.addEventListener('scroll', (e) => {
+    if(openedCW)
+        openedCW.close(true)
+})
+
+document.body.querySelector('main').addEventListener('scroll', e => {
+    if(openedCW)
+        openedCW.close(true)
 })
 
 function buttonsCWCaller(caller, buttons, options) {
@@ -88,11 +97,13 @@ class ContextWindow {
         if (options.className)
             this.window.classList.add(options.className)
 
-        this.setPosition(options.pos ?? {top:0, left:0})
-
         this.checkScroll.forEach(el => el.addEventListener('scroll', () => this.close(true)))
 
         document.body.appendChild(this.window)
+
+        this.setPosition(options.pos ?? {top:0, left:0})
+
+
 
     }
 
@@ -101,10 +112,8 @@ class ContextWindow {
     }
 
     setPosition(pos) {
-        ['top', 'left', 'right', 'bottom'].forEach(dir => {
-            if (pos[dir])
-                this.window.style[dir] = pos[dir] + 'px'
-        })
+        this.window.style.top = (pos.top ?? 0) + 'px'
+        this.window.style.left = (pos.left ?? 0) + 'px'
     }
 
     open() {
