@@ -311,6 +311,10 @@ exports.init = (cfx) => {
             {
                 name: 'coffee',
                 count: 21
+            },
+            {
+                name: 'capybara',
+                count:48
             }
         ]
 
