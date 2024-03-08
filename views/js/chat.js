@@ -128,7 +128,7 @@ class ChatInterface {
             this.chat.sendDefault()
         })
         
-        document.querySelector('#send').onclick = this.chat.sendDefault;
+        document.querySelector('#send').onclick = () => this.chat.sendDefault();
     }
 
     initLoadMessagesFunction(load) {
