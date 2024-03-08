@@ -370,16 +370,20 @@ ul.attached {
 
 }
 
+.stickerscw .stickers {
+
+}
+
+.stickerscw .emojis {
+
+}
+
 .stickerscw .sticker {
     aspect-ratio: 1;
     height:50px;
 }
 
-.stickerscw .sticker-grid#emoji {
-
-}
-
-.stickerscw .sticker-grid .emoji {
+.stickerscw .grid .emoji {
     
 }
 
@@ -387,7 +391,7 @@ ul.attached {
     margin:0;
 }
 
-.stickerscw .sticker-grid.disabled {
+.stickerscw .grid.disabled {
     display:none;
 }
 
