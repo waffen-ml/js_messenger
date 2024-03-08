@@ -83,8 +83,6 @@ class ChatInterface {
                 })
             })
 
-            cw.open()
-
         })
     }
 

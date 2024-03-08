@@ -119,8 +119,6 @@ class ContextWindow {
 
         this.setPosition(options.pos ?? {top:0, left:0})
 
-
-
     }
 
     isOpened() {
@@ -191,7 +189,7 @@ class ContextWindow {
         }).then(() => {
             this.window.style.display = 'none'
             if (this.destroyOnClose)
-                document.body.removeChild(this.window)
+                this.window.remove()
         })
     }
 
