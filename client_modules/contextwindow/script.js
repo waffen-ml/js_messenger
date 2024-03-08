@@ -11,6 +11,10 @@ document.addEventListener('click', (e) => {
     openedCW.close(true)
 })
 
+window.addEventListener('resize', () => {
+    console.log('hell')
+})
+
 function buttonsCWCaller(caller, buttons, options) {
     let cw = null
     options ??= {}
@@ -64,25 +68,32 @@ class ContextWindow {
         this.window = templateManager.createElement('context-window', {
             html: options.html ?? ''
         })
-        this.attachedTo = options.attachedTo ?? null
-        this.parent = options.parent ?? document.body
-        this.parent.appendChild(this.window)
+        this.ignoreClicks = !options.ignoreClicks? [] : Array.isArray(options.ignoreClicks)? 
+            options.ignoreClicks : [options.ignoreClicks]
+        this.checkScroll = !options.checkScroll? [] : Array.isArray(options.checkScroll)?
+            options.checkScroll : [options.checkScroll]
+
+        this.axis = options.axis ?? {top:0,left:0}
+
+        if (options.transformOrigin)
+            this.window.style.transformOrigin = options.transformOrigin
+        else {
+            axis = options.axis ?? {top:0,left:0}
+            this.window.style.transformOrigin = `${this.axis.left}px ${this.axis.top}px`
+        }
+
         this.animLength = options.animLength ?? 300
         this.destroyOnClose = options.destroyOnClose ?? true
-        this.window.style.transformOrigin = options.transformOrigin ?? 'top left'
 
         if (options.className)
             this.window.classList.add(options.className)
 
-        this.setPosition(options.pos ?? {})
+        this.setPosition(options.pos ?? {top:0, left:0})
 
-        this.parent.addEventListener('scroll', () => {
-            this.close(true)
-        })
+        this.checkScroll.forEach(el => el.addEventListener('scroll', () => this.close(true)))
 
-        this.parent.addEventListener('resize', () => {
-            this.close(true)
-        })
+        document.body.appendChild(this.window)
+
     }
 
     isOpened() {
