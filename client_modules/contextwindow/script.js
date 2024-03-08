@@ -152,8 +152,8 @@ class ContextWindow {
         }
 
         let actual = {
-            top: pos.top !== undefined? pos.top : pos.bottom !== undefined? window.innerHeight - pos.bottom : 0,
-            left: pos.left !== undefined? pos.left : pos.right !== undefined? window.innerWidth - pos.right : 0
+            top: pos.top !== undefined? pos.top : pos.bottom !== undefined? pos.bottom - h : 0,
+            left: pos.left !== undefined? pos.left : pos.right !== undefined? pos.right - w : 0
         }
 
         console.log(pos)
