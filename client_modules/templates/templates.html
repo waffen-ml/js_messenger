@@ -107,7 +107,7 @@
             <%- templateManager.apply("visual", {files: data.files}) %>
             <%- templateManager.apply("audio", {audio: data.files.audio}) %>
             <%- templateManager.apply("other", {other: data.files.other}) %>
-            <div class="bottom">
+            <div class="bottom" style="min-width:150px;">
                 <p class="text">
                     <%- data.content.replace(/\n/g, '<br>') %>
                 </p>
