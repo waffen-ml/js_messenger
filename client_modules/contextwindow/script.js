@@ -168,6 +168,7 @@ class ContextWindow {
             openedCW.close(true)
         openedCW = this
         this.window.style.visibility='visible'
+        this.window.style.animation = ''
         void this.window.offsetWidth;
         this.window.style.animation = `cw-open ${this.animLength}ms ease-in-out`
 
