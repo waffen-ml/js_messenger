@@ -46,18 +46,24 @@ block main
         button.button#send 📨
     
     script(type="text/x-ejs-template", template="stickerscw")
-        .page(id="emoji")
-            .emoji-grid
+        .page#emoji
+            .sticker-grid
                     <% emojiList.forEach(emoji => { %>
                     span.emoji <%emoji%>
                     <% }) %>
         
         <% packs.forEach(pack => { %>
-        .page(class="disabled")
-
+        .page.disabled(id!="<%=pack.name%>")
+            .sticker-grid
+                <% for(let i = 0; i < pack.count; i++) { %>
+                img.sticker(src!="/public/stickers/<%=pack.name%>/<%=i%>")
+                <% } %>
         <% }) %>
 
         .navigator 
-            button.button 😀
+            button.button#emoji 😀
+            <% packs.forEach(pack => { %>
+            button.button(id!="<%=pack.name%>") <%=pack.name%>
+            <% }) %>
 
     script(type="text/x-ejs-template", template="stickerpack")
