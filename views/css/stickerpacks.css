@@ -6,9 +6,15 @@
     gap:12px;
 }
 
-@media(max-width:400px) {
+@media(max-width:600px) {
     .stickerpacks {
         grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media(max-width:400px) {
+    .stickerpacks {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
