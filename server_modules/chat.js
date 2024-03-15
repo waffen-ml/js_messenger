@@ -143,6 +143,23 @@ class Stickerpacks {
         on sp.id=ow.stickerpack_id`, [userid ?? null])
     }
 
+    hasStickerpack(userid, spid) {
+        return this.getAvailableStickerpacks(userid)
+        .then(spacks => {
+            return spacks.some(w => w.id == spid)
+        })
+    }
+
+    buyStickerpack(userid, spid) {
+        if(!userid)
+            throw Error('User must be authorized')
+        return this.hasStickerpack(userid)
+        .then(w => {
+            if(w)
+                throw Error('User already has the ')
+        })
+    }
+
 }
 
 class ChatSystem {
@@ -490,6 +507,10 @@ exports.init = (cfx) => {
         return {
             render: 'stickerpacks'
         }
+    }, true)
+
+    cfx.core.safeGet('/buystickerpack', (user, req, res) => {
+
     }, true)
 
 }
