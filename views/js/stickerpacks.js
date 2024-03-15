@@ -3,7 +3,7 @@ const stickerpackHolder = document.querySelector('.stickerpacks')
 
 function openStickerpack(spack) {
     let popup = new Popup({
-        html: '<div class="stickers"></div>',
+        html: '<div class="stickers styled-scroll"></div>',
         className: 'inspect-stickerpack',
         closable: true
     })

@@ -6,18 +6,6 @@
     gap:12px;
 }
 
-@media(max-width:600px) {
-    .stickerpacks {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media(max-width:400px) {
-    .stickerpacks {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
 .stickerpack {
     display:flex;
     flex-direction: column;
@@ -49,4 +37,32 @@
 .stickerpack .price {
     font-weight:bold;
     font-size:19px;
+}
+
+.inspect-stickerpack .stickers {
+    display:grid;
+    grid-auto-rows: max-content;
+    grid-template-columns:repeat(4, 1fr)
+    gap:10px;
+    overflow-y:auto;
+    max-height:min(400px, 100%);
+}
+
+.inspect-stickerpack .sticker {
+    width:100%;
+    object-fit:contain;
+}
+
+
+
+@media(max-width:600px) {
+    .stickerpacks {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media(max-width:400px) {
+    .stickerpacks {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
