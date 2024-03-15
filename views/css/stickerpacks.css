@@ -1,0 +1,32 @@
+.stickerpacks {
+    display:grid;
+    margin-top:10px;
+    grid-auto-rows:max-content;
+    grid-template-columns: repeat(4, 1fr);
+
+}
+
+.stickerpack {
+
+}
+
+.stickerpack .preview {
+    width:100%;
+    max-height:120px;
+    object-fit:contain;
+    margin:0;
+}
+
+.stickerpack .name {
+    margin-top:10px;
+
+}
+
+.stickerpack .available {
+
+}
+
+.stickerpack .price {
+    font-weight:bold;
+    font-size:19px;
+}
