@@ -487,13 +487,9 @@ exports.init = (cfx) => {
     }, false)
 
     cfx.core.safeRender('/stickerpacks', (user, req, res) => {
-        return cfx.stickerpacks.getAllStickerpacks(user? user.id : null)
-        .then(stickerpacks => {
-            return {
-                render: 'stickerpacks',
-                stickerpacks: stickerpacks
-            }
-        })
+        return {
+            render: 'stickerpacks'
+        }
     }, true)
 
 }
