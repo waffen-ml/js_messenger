@@ -14,7 +14,7 @@ function openStickerpack(spack) {
         })
     }
 
-    let stickerHolder = popup.querySelector('stickers')
+    let stickerHolder = popup.querySelector('.stickers')
 
     for(let i = 0; i < spack.count; i++)
         stickerHolder.innerHTML += `<img class="sticker" src="/public/stickers/${spack.tag}/${i}.png">`
