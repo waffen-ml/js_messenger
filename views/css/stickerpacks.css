@@ -7,7 +7,12 @@
 }
 
 .stickerpack {
+    
+}
 
+.stickerpacks > * {
+    user-select: none;
+    pointer-events: none;
 }
 
 .stickerpack .preview {

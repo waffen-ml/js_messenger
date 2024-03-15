@@ -10,7 +10,7 @@ block main
     h1.page-header Стикеры
     .stickerpacks
         each spack in stickerpacks 
-            .stickerpack.block 
+            .stickerpack.button 
                 img.preview(src=`/public/stickers/${spack.tag}/0.png`)
                 span.finite.name= spack.name 
                 if spack.available 
