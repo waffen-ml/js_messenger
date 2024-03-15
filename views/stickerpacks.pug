@@ -17,6 +17,22 @@ block main
                     span.available Доступно ✅
                 else 
                     span.price= spack.price + ' EBL'
+        each spack in stickerpacks 
+            .stickerpack.button 
+                img.preview(src=`/public/stickers/${spack.tag}/0.png`)
+                span.finite.name= spack.name 
+                if spack.available 
+                    span.available Доступно ✅
+                else 
+                    span.price= spack.price + ' EBL'
+        each spack in stickerpacks 
+            .stickerpack.button 
+                img.preview(src=`/public/stickers/${spack.tag}/0.png`)
+                span.finite.name= spack.name 
+                if spack.available 
+                    span.available Доступно ✅
+                else 
+                    span.price= spack.price + ' EBL'
 
 append body 
     script
