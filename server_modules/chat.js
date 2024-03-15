@@ -125,6 +125,26 @@ class Chat {
     }
 }
 
+class Stickerpacks {
+    constructor(cfx) {
+        this.cfx = cfx
+    }
+
+    getAvailableStickerpacks(userid) {
+        return this.getAllStickerpacks(userid)
+        .then(stickerpacks => {
+            return stickerpacks.filter(s => s.available)
+        })
+    }
+
+    getAllStickerpacks(userid) {
+        return this.cfx.query(`select sp.*, (sp.price=0 or ow.id is not null) as available
+        from stickerpack sp left join (select * from stickerpack_ownership where user_id=?) ow
+        on sp.id=ow.stickerpack_id`, [userid ?? null])
+    }
+
+}
+
 class ChatSystem {
     constructor(cfx) {
         this.cfx = cfx;
@@ -275,6 +295,7 @@ exports.init = (cfx) => {
         return true
 
     cfx.chats = new ChatSystem(cfx);
+    cfx.stickerpacks = new Stickerpacks(cfx)
     let temp = new CallTemp(cfx)
 
     cfx.notifications.addUnreadChecker('messages', userid => {
@@ -303,21 +324,6 @@ exports.init = (cfx) => {
             return {success: 1}
         })
     }, cfx.core.upload.array('files'), true)
-
-    cfx.core.safeGet('/getstickerpacks', (_, req, res) => {
-
-        return [
-            {
-                name: 'coffee',
-                count: 21
-            },
-            {
-                name: 'capybara',
-                count:48
-            }
-        ]
-
-    }, false)
 
     cfx.core.safePost('/createchat', (creator, req, res) => {
         return new Promise((resolve) => {
@@ -471,6 +477,24 @@ exports.init = (cfx) => {
             })
         })
     })
+
+    cfx.core.safeGet('/getallstickerpacks', (user, req, res) => {
+        return cfx.stickerpacks.getAllStickerpacks(user? user.id : null)
+    }, false)
+
+    cfx.core.safeGet('/getavailablestickerpacks', (user, req, res) => {
+        return cfx.stickerpacks.getAvailableStickerpacks(user? user.id : null)
+    }, false)
+
+    cfx.core.safeRender('/stickerpacks', (user, req, res) => {
+        return cfx.stickerpacks.getAllStickerpacks(user? user.id : null)
+        .then(stickerpacks => {
+            return {
+                render: 'stickerpacks',
+                stickerpacks: stickerpacks
+            }
+        })
+    }, true)
 
 }
 

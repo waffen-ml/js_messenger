@@ -1,0 +1,34 @@
+extends index 
+
+include units
+
+append header
+    style 
+        include css/stickerpacks.css
+
+block main
+    h1.page-header Стикеры
+    .holder
+        .stickerpack 
+            img.avatar(src="/getuseravatar?id=1")
+            span.name
+            span.status
+        
+        .stickerpack 
+            img.avatar(src="/getuseravatar?id=1")
+            span.name
+            span.status
+            
+        .stickerpack 
+            img.avatar(src="/getuseravatar?id=1")
+            span.name
+            span.status
+
+        .stickerpack 
+            img.avatar(src="/getuseravatar?id=1")
+            span.name
+            span.status
+
+append body 
+    script
+        include js/stickerpacks.js
