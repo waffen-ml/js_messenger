@@ -45,7 +45,8 @@
     grid-template-columns:repeat(4, 1fr);
     gap:10px;
     overflow-y:auto;
-    max-height:min(400px, 100%);
+    height:400px;
+    width:400px;
 }
 
 .inspect-stickerpack .sticker {
