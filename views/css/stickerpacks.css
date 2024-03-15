@@ -4,14 +4,14 @@
     grid-auto-rows:max-content;
     grid-template-columns: repeat(4, 1fr);
     gap:12px;
-
 }
 
 .stickerpack {
     display:flex;
     flex-direction: column;
     align-items: flex-start;
-    gap:10px;
+    gap:3px;
+    padding:4px;
 }
 
 .stickerpack > * {
@@ -28,11 +28,10 @@
 
 .stickerpack .name {
     font-size:20px;
-
+    max-width: 100%;
 }
 
 .stickerpack .available {
-
 }
 
 .stickerpack .price {
