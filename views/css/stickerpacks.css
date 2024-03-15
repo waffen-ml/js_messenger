@@ -1,6 +1,6 @@
 .stickerpacks {
     display:grid;
-    margin-top:10px;
+    margin-top:20px;
     grid-auto-rows:max-content;
     grid-template-columns: repeat(4, 1fr);
     gap:12px;
