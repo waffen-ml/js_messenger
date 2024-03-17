@@ -4,7 +4,7 @@ self.addEventListener('push', e => {
     let data = e.data.json()
 
     e.waitUntil(
-        self.registration.showNotification(data.title ?? 'CoffeeTox', {
+        self.registration.showNotification('CoffeeTox', {
             body: data.body ?? 'HEY',
             icon: data.icon ?? 'https://coffeetox.ru/public/coffee.png',
             tag: data.tag,
@@ -16,6 +16,7 @@ self.addEventListener('push', e => {
 })
 
 self.addEventListener('notificationclick', function(event) {
+    alert('hey')
     if (!event.notification.link)
         return
 
