@@ -48,6 +48,11 @@ body {
     .main-grid > * {
         outline:none;
     }
+
+    .main-grid {
+        padding-bottom:0;
+        gap:0;
+    }
 }
 
 a.clean, a.button {
