@@ -98,7 +98,6 @@ class Chat {
         return this.getInfo()
         .then(info => {
             info.members.forEach(m => {
-                console.log(m)
                 this.cfx.socket.io.in('u:' + m.id).emit('message', msg)
             })
 

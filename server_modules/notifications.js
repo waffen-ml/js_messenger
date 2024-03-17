@@ -60,10 +60,10 @@ class Notifications {
 
         this.cfx.core.sessionStorage.all((err, sessions) => {
             let subs = Object.values(sessions)
-                .filter(s => s.user && s.user.id == userid)
+                .filter(s => s.userid && s.userid == userid)
                 .filter(s => s.notificationSubscription)
                 .map(s => s.notificationSubscription)
-            
+
             subs.forEach(sub => {
                 webpush.sendNotification(sub, payload)
                 .catch(err => {
