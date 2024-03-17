@@ -6,8 +6,7 @@ class Socket {
         this.listeners = []
         
         this.io.on('connection', socket => {
-            let user = socket.request.session.user
-            let userid = user? user.id : null
+            let userid = socket.request.session.userid
 
             if (userid) {
                 console.log(userid)
