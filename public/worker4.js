@@ -9,8 +9,7 @@ self.addEventListener('push', e => {
             icon: data.icon ?? 'https://coffeetox.ru/public/coffee.png',
             tag: data.tag,
             silent: false,
-            dir: 'ltr',
-            link: data.link
+            dir: 'ltr'
         })
     )
 })
@@ -31,10 +30,13 @@ self.addEventListener('notificationclick', function(event) {
                 return true
             })
 
+            event.notification.close()
+
             if(cfxClient)
-                return cfxClient.focus()
+                return cfxClient.focus().then(() => cfxClient.navigate('https://coffeetox.ru'))
             else
                 return self.clients.openWindow('https://youtube.com')
+
         })
     )
 })
