@@ -31,15 +31,10 @@ self.addEventListener('notificationclick', function(event) {
                 return true
             })
 
-            if(cfxClient) {
-                self.clients.openWindow('https://vk.com')
-                return
-            }
-
-            cfxClient = cfxClient ?? self.clients.openWindow('https://youtube.com')
-
-            cfxClient.postMessage('hey')
-
+            if(cfxClient)
+                return cfxClient.focus()
+            else
+                return self.clients.openWindow('https://youtube.com')
         })
     )
 })
