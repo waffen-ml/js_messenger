@@ -34,7 +34,7 @@ class ChatInterface {
         let actual = cw.setPosition({
             top:utils.bounds(butt).top - cw.window.clientHeight - 5,
             left:utils.bounds(butt).left - cw.window.clientWidth / 2 + butt.clientWidth / 2
-        }, document.querySelector('main'))
+        }, document.querySelector('main'), true, false)
 
         cw.setAxis({
             top:cw.window.clientHeight,
@@ -116,34 +116,6 @@ class ChatInterface {
 
     
     }
-
-    openFilePopup() {
-        let popup = new Popup({
-            title: 'Файлы',
-            closable: true
-        })
-
-        let uploader = uplManager.createUploader({
-            files: this.attachedFiles,
-            onInspect: (file) => {
-                inspectFile(file, (inspect) => {
-                    inspect.popup.addOption('Назад', () => true)
-                })
-            }
-        })
-
-        popup.content.appendChild(uploader.element)
-
-        popup.on('hidden', () => {
-            this.attachedFiles = uploader.files
-            this.updateFileCount()
-        })
-
-        popup.addOption('OK', () => true)
-
-        popup.open()
-
-    }    
 
     initSendFunction(send) {
         this.entry.addEventListener('keydown', (e) => {

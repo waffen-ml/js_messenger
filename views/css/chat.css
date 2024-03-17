@@ -423,3 +423,8 @@ ul.attached {
     object-fit: contain;
     max-width: 100%;
 }
+
+.filescw .uploader {
+    width:220px;
+    min-height:150px;
+}
