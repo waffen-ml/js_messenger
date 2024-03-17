@@ -15,7 +15,6 @@ class ChatInterface {
         this.entry = document.querySelector('.entry')
         this.loadedAll = false
         this.loadingMore = false
-        this.attachedFiles = []
         this.chat = chat
 
         if(chat.info.isdirect)
@@ -50,27 +49,27 @@ class ChatInterface {
     setupFileCW() {
         let fb = document.querySelector('.input-bar button#file')
 
-        let uploader = uplManager.createUploader({
-            files: this.attachedFiles,
-            onInspect: (file) => {
-                inspectFile(file, (inspect) => {
+        this.fileUploader = uplManager.createUploader({})
 
-                })
-            }
-        })
+        this.fileUploader.on('append', () => this.updateFileCount())
+        this.fileUploader.on('remove', () => this.updateFileCount())
 
         let cw = new ContextWindow({
             destroyOnClose: false,
             className: 'filescw'
         })
 
-        cw.window.appendChild(uploader.element)
+        cw.window.appendChild(this.fileUploader.element)
 
         attachButtonToCW(() => {
             this.repositionInputCW(cw, fb)
             return cw
         }, fb)
 
+    }
+
+    getAttachedFiles() {
+        return this.fileUploader.files
     }
 
     setupStickersCW() {
@@ -192,9 +191,9 @@ class ChatInterface {
     }
 
     updateFileCount() {
-        const btn = document.querySelector('.input-bar #file');
-        const count = this.attachedFiles.length;
-        btn.value = (count? count + ' ' : '') + '📁';
+        const btn = document.querySelector('.input-bar #file')
+        const count = this.getAttachedFiles().length
+        btn.value = (count? count + ' ' : '') + '📁'
     }
 
     delayedScroll() {

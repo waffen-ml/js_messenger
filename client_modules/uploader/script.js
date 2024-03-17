@@ -41,19 +41,20 @@ function preventDefault(e) {
 
 class Uploader {
     constructor(element, cfg) {
-        this.cfg = cfg ??= {};
-        this.element = element;
+        this.cfg = cfg ??= {}
+        this.element = element
+        this.events = {}
 
         element.setAttribute('class', 'block uploader');
         element.innerHTML = getHidden('uploader');
 
         this.list = element.querySelector('ul');
-        this.files = cfg.files ?? [];
+        this.files = cfg.files ?? []
         
-        this.limit = cfg.limit ?? 10;
-        if(this.limit == 1) this.element.classList.add('single');
+        this.limit = cfg.limit ?? 10
+        if(this.limit == 1) this.element.classList.add('single')
 
-        cfg.onInspect ??= (file) => inspectFile(file);
+        this.on('inspect', (file) => inspectFile(file))
 
         element.addEventListener('dragleave', e => {
             preventDefault(e);
@@ -68,16 +69,27 @@ class Uploader {
         element.addEventListener('drop', e => {
             preventDefault(e);
             const files = e.dataTransfer.files;
+            this.callEvent('append', files)
             this.addFiles([...files]);
             this.toggleHighlight(false);
         })
         
         element.querySelector('.attach').onclick = () =>
             attachFiles(files => {
+                this.callEvent('append', files)
                 this.addFiles(files);
             });
         
         this.update();
+    }
+
+    on(name, f) {
+        this.events[name] = f
+    }
+
+    callEvent(name, ...args) {
+        if(this.events[name])
+            this.events[name](...args)
     }
 
     toggleClass(classname, state) {
@@ -96,8 +108,9 @@ class Uploader {
     }
 
     removeFile(i) {
-        this.files.splice(i, 1);
-        this.update();
+        let file = this.files.splice(i, 1)[0]
+        this.callEvent('remove', file, i)
+        this.update()
     }
 
     isLimitReached() {
@@ -113,7 +126,7 @@ class Uploader {
             const filebtn = document.createElement('a');
             filebtn.setAttribute('class', 'clean finite file');
             filebtn.textContent = file.name;
-            filebtn.onclick = () => this.cfg.onInspect(file);
+            filebtn.onclick = () => this.callEvent('inspect', file);
             
             const removebtn = document.createElement('a');
             removebtn.setAttribute('class', 'remove button');
@@ -130,6 +143,11 @@ class Uploader {
             this.list.innerHTML = '<li>Нет прикрепленных файлов 🚫</li>';
         
         this.toggleDisabled(this.isLimitReached());
+    }
+
+    clear() {
+        this.files = []
+        this.update()
     }
 
     addFiles(arr) {
