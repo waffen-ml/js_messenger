@@ -4,8 +4,8 @@ self.addEventListener('push', e => {
     let data = e.data.json()
 
     e.waitUntil(
-        self.registration.showNotification('1552342346', {
-            body: data.body ?? 'HEY',
+        self.registration.showNotification(data.title ?? 'CoffeeTox', {
+            body: data.body ?? 'body',
             icon: data.icon ?? 'https://coffeetox.ru/public/coffee.png',
             tag: data.tag,
             silent: false,

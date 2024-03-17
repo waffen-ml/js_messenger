@@ -56,7 +56,6 @@ navigator.serviceWorker.addEventListener('message', (event) => {
     if (!event.data.action) {
         return
     }
-    alert(event.data)
   
     switch (event.data.action) {
         case 'navigate':
