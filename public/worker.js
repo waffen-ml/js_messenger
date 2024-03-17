@@ -4,12 +4,13 @@ self.addEventListener('push', e => {
     let data = e.data.json()
 
     e.waitUntil(
-        self.registration.showNotification('heyw', {
+        self.registration.showNotification('12312heyw', {
             body: data.body ?? 'HEY',
             icon: data.icon ?? 'https://coffeetox.ru/public/coffee.png',
             tag: data.tag,
             silent: false,
-            dir: 'ltr'
+            dir: 'ltr',
+            data: data
         })
     )
 })
@@ -18,7 +19,7 @@ self.addEventListener('notificationclick', function(event) {
     event.waitUntil(
         self.clients.matchAll({
             includeUncontrolled: true,
-            type:'window'
+            type: 'window'
         }).then((clientList) => {
             let cfxClient = null
 
@@ -31,13 +32,15 @@ self.addEventListener('notificationclick', function(event) {
                 return true
             })
 
-            event.notification.close()
+            const notif = event.notification;
+            notif.close()
 
-            if(cfxClient)
-                return cfxClient.navigate('https://coffeetox.ru').then(c => c.focus())
+            if(cfxClient) {
+                return cfxClient.navigate(notif.data.link)
+                .then(() => cfxClient.focus())
+            }
             else
-                return self.clients.openWindow('https://youtube.com')
-
+                return self.clients.openWindow(notif.data.link)
         })
     )
 })
