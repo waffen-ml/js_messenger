@@ -26,12 +26,51 @@ class ChatInterface {
         })
 
         this.setupStickersCW()
+        this.setupFileCW()
 
         this.scrollDown(false)
     }
 
     appendMessageEntry(text) {
         this.entry.value += text
+    }
+
+    repositionInputCW(cw, butt) {
+        let actual = cw.setPosition({
+            top:utils.bounds(butt).top - cw.window.clientHeight - 5,
+            left:utils.bounds(butt).left - cw.window.clientWidth / 2 + butt.clientWidth / 2
+        }, document.querySelector('main'))
+
+        cw.setAxis({
+            top:cw.window.clientHeight,
+            left:utils.bounds(butt).left - actual.left + butt.clientWidth / 2
+        })
+    }
+
+    setupFileCW() {
+        let fb = document.querySelector('.input-bar button#file')
+
+        let uploader = uplManager.createUploader({
+            files: this.attachedFiles,
+            onInspect: (file) => {
+                inspectFile(file, (inspect) => {
+
+                })
+            }
+        })
+
+        let cw = new ContextWindow({
+            destroyOnClose: false,
+            className: 'filescw'
+        })
+
+        cw.window.appendChild(uploader.element)
+
+        attachButtonToCW(() => {
+            this.repositionInputCW(cw, fb)
+            return cw
+        }, fb)
+
     }
 
     setupStickersCW() {
@@ -74,21 +113,10 @@ class ChatInterface {
 
 
             attachButtonToCW(() => {
-                
-                let actual = cw.setPosition({
-                    top:utils.bounds(sb).top - cw.window.clientHeight - 5,
-                    left:utils.bounds(sb).left - cw.window.clientWidth / 2 + sb.clientWidth / 2
-                }, document.querySelector('main'))
-
-                cw.setAxis({
-                    top:cw.window.clientHeight,
-                    left:utils.bounds(sb).left - actual.left + sb.clientWidth / 2
-                })
-
+                this.repositionInputCW(cw, sb)
                 return cw
-
             }, sb)
-            
+
         })
 
     
