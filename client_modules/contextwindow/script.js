@@ -143,12 +143,14 @@ class ContextWindow {
     setPosition(pos, borderElement, bottom=false, right=false) {
         let w = this.window.clientWidth
         let h = this.window.clientHeight
+        let screenW = window.innerWidth
+        let screenH = window.innerHeight
 
         let border = {
             top: borderElement? utils.bounds(borderElement).top : 0,
             left: borderElement? utils.bounds(borderElement).left : 0,
-            right: borderElement? utils.bounds(borderElement).left + borderElement.clientWidth : window.innerWidth,
-            bottom: borderElement? utils.bounds(borderElement).top + borderElement.clientHeight : window.innerHeight
+            right: borderElement? utils.bounds(borderElement).left + borderElement.clientWidth : screenW,
+            bottom: borderElement? utils.bounds(borderElement).top + borderElement.clientHeight : screenH
         }
 
         let actual = {
@@ -166,13 +168,18 @@ class ContextWindow {
         else if(actual.left + w > border.right)
             actual.left = border.right - w
 
+        this.window.style.top = ''
+        this.window.style.bottom = ''
+        this.window.style.right = ''
+        this.window.style.left = ''
+
         if (bottom)
-            this.window.style.bottom = actual.top + h + 'px'
+            this.window.style.bottom = screenH - (actual.top + h) + 'px'
         else
             this.window.style.top = actual.top + 'px'
     
         if (right)
-            this.window.style.right = actual.left + w + 'px'
+            this.window.style.right = screenW - (actual.left + w) + 'px'
         else
             this.window.style.left = actual.left + 'px'
 
