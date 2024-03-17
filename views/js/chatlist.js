@@ -16,8 +16,10 @@ fetch('/getchatlist')
         switch(view.lm_type) {
             case 'default':
                 view.lm_preview = (view.lm_content ?? '').substr(0, 100)
+                break
             case 'sticker':
                 view.lm_preview = 'Стикер'
+                break
         }
 
         if (view.lm_file_count > 0)

@@ -183,6 +183,8 @@ cfx.init({
     safePost: safePost
 })
 
+cfx.clientUtils = require('./client_modules/utils/script.js').utils
+
 safeRender('/settings', (user, req, res) => {
     return {
         render: 'settings',

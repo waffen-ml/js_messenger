@@ -190,6 +190,24 @@ class Utils {
         return element.getBoundingClientRect()
     }
 
+    getMessagePreview(message, maxContentLength=100, showNames=true) {
+        let preview = showNames && message.sender_name? message.sender_name + ': ' : ''
+
+        switch(message.type) {
+            case 'default':
+                preview = message.content.substr(0, maxContentLength)
+                break
+            case 'sticker':
+                preview = 'Стикер'
+                break
+        }
+
+        if(message.files.length > 0)
+            preview += ` [${message.files.length} ${this.nItemsLabel(message.files.length, 'файл', 'файла', 'файлов')}]`
+
+        return preview
+    }
+
 }
 
 const utils = new Utils();
