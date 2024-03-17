@@ -60,7 +60,7 @@ class Notifications {
 
         this.cfx.core.sessionStorage.all((err, sessions) => {
             let subs = Object.values(sessions)
-                .filter(s => s.userid && s.userid == userid)
+                .filter(s => s.userid === userid)
                 .filter(s => s.notificationSubscription)
                 .map(s => s.notificationSubscription)
 
