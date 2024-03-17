@@ -118,7 +118,7 @@ class Chat {
             return this.cfx.notifications.sendPushNotification(userid, {
                 icon: '/getchatavatar?id=' + this.id,
                 body: wholePreview,
-                title: chatname + ` (${unread})`
+                title: chatname + ` (${unread})`,
                 tag: 'chat:' + this.id,
                 link: '/chat?id=' + this.id
             })
