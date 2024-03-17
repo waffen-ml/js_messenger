@@ -16,16 +16,13 @@ self.addEventListener('push', e => {
 })
 
 self.addEventListener('notificationclick', function(event) {
-    alert('hey')
-    if (!event.notification.link)
-        return
 
     event.waitUntil(
         self.clients.matchAll().then(function(clientList) {
             if (clientList.length > 0) {
                 return clientList[0].focus()
             } 
-            return self.clients.openWindow(event.notification.link);
+            return self.clients.openWindow('https://youtube.com');
         })
     )
 })
