@@ -98,7 +98,7 @@ class Chat {
     notifyAboutUnread(userid) {
         let unread, info
 
-        return this.cfx.query(`select last_read from chat_member where user_id=?`, [userid])
+        return this.cfx.query(`select last_read from chat_member where chat_id=? and user_id=?`, [this.id, userid])
         .then(r => {
             let last_read = r.length? r[0].last_read ?? 0 : 0
             return this.cfx.query(`select count(*) as unread from message where chat_id=? and id > ?`, [this.id, last_read])
