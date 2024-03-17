@@ -8,10 +8,8 @@ class Socket {
         this.io.on('connection', socket => {
             let userid = socket.request.session.userid
 
-            if (userid) {
-                console.log(userid)
+            if (userid)
                 socket.join('u:' + userid)
-            }
             
             this.listeners.forEach(l => l(socket, userid))
         })
