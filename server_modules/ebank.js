@@ -109,7 +109,7 @@ class Ebank {
     }
 
     purchase(userid, amount, item) {
-        return this.makeTransaction(userid, this.cfx.bankAccountId, amount, item ?? 'Покупка')
+        return this.makeTransaction(userid, this.cfx.auth.bankAccountId, amount, item ?? 'Покупка')
     }
 }
 
