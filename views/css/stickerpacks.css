@@ -2,7 +2,7 @@
     display:grid;
     margin-top:15px;
     grid-auto-rows:max-content;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));
     gap:12px;
 }
 
@@ -42,28 +42,15 @@
 .inspect-stickerpack .stickers {
     display:grid;
     grid-auto-rows: max-content;
-    grid-template-columns:repeat(auto-fill, minmax(100px, 200px));
+    grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));
     gap:10px;
     overflow-y:auto;
     height:500px;
     width:500px;
+    max-width: 100%;
 }
 
 .inspect-stickerpack .sticker {
     width:100%;
     object-fit:contain;
-}
-
-
-
-@media(max-width:600px) {
-    .stickerpacks {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media(max-width:400px) {
-    .stickerpacks {
-        grid-template-columns: repeat(2, 1fr);
-    }
 }
