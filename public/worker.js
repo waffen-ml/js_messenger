@@ -12,7 +12,7 @@ self.addEventListener('push', e => {
     })
 
     notification.addEventListener('notificationclick', (event) => {
-        alert('HEY')
+        alert('hey')
         //if(data.link) {
         //    event.notification.close()
         //    clients.openWindow("https://youtu.be/PAvHeRGZ_lA")
