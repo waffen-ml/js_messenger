@@ -12,8 +12,10 @@ self.addEventListener('push', e => {
     })
 
     notification.onclick = (e) => {
-        if(data.link)
-            window.open(data.link, '_blank');
+        if(data.link) {
+            e.preventDefault();
+            window.open(data.link, "_blank");
+        }
     }
 
     self.registration.showNotification(notification)
