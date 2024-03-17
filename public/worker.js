@@ -3,7 +3,7 @@ console.log('Service worker loaded!')
 self.addEventListener('push', e => {
     let data = e.data.json()
     
-    let notification = new Notification(data.title ?? 'CoffeeTox', {
+    let notification = new Notification('CoffeeTox', {
         body: data.body ?? 'HEY',
         icon: data.icon ?? 'https://coffeetox.ru/public/coffee.png',
         tag: data.tag,
