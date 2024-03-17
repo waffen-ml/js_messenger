@@ -196,6 +196,8 @@ class Utils {
         switch(message.type) {
             case 'default':
                 preview = message.content.substr(0, maxContentLength)
+                if (message.content.length > maxContentLength)
+                    preview += '...'
                 break
             case 'sticker':
                 preview = 'Стикер'

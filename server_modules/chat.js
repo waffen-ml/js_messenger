@@ -124,7 +124,7 @@ class Chat {
                     return this.getMessages(-1, Math.min(unread, maxUnreadPreview))
                 })
                 .then(messages => {
-                    let lines = messages.reverse().map(msg => this.cfx.clientUtils.getMessagePreview(msg, 50, true))
+                    let lines = messages.reverse().map(msg => this.cfx.clientUtils.getMessagePreview(msg, 100, true))
                     let wholePreview = lines.join('\n')
                     let chatname = info.name === null? this.cfx.clientUtils.generateChatName(info.members, {id: userid}, 3) : info.name
             
