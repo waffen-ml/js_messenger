@@ -10,6 +10,7 @@ self.addEventListener('push', e => {
             tag: data.tag,
             silent: false,
             dir: 'ltr',
+            link: data.link
         })
     )
 })
