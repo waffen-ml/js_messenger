@@ -41,6 +41,8 @@ class ChatInterface {
         .then(r => r.json())
         .then(packs => {
 
+            console.log(packs)
+
             let cw = new ContextWindow({
                 html: templateManager.createHTML('stickerscw', {
                     packs: packs,
