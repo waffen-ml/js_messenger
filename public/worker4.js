@@ -25,7 +25,7 @@ self.addEventListener('notificationclick', function(event) {
 
             clientList.every(client => {
                 let url = new URL(client.url)
-                if (url.hostname == 'coffeetox.ru') {
+                if (url.hostname == 'coffeetox.ru' && 'navigate' in client) {
                     cfxClient = client
                     return false
                 }
