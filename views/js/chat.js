@@ -60,6 +60,11 @@ class ChatInterface {
                 navbutt.addEventListener('click', () => showGrid(navbutt.getAttribute('id')))
             })
 
+            cw.window.querySelector('.navigation button#buy').onclick = () => {
+                location.href = "stickerpacks"
+            }
+            
+
             cw.window.querySelectorAll('.grid#emoji button').forEach(emojiButton => {
                 emojiButton.addEventListener('click', () => this.appendMessageEntry(emojiButton.textContent))
             })

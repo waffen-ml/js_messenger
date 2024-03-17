@@ -60,9 +60,9 @@ block main
         <% }) %>
         hr
         .navigation
-            button.button#buy(onclick="location.replace('/stickerpacks')") +
             button.button#emoji 😀
             <% packs.forEach(pack => { %>
             button.button(id!="<%=pack.name%>")
                 img.preview(src!="/public/stickers/<%=pack.name%>/0.png")
             <% }) %>
+            button.button#buy +
