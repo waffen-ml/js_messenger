@@ -211,3 +211,5 @@ class Utils {
 }
 
 const utils = new Utils();
+
+exports.utils = utils
