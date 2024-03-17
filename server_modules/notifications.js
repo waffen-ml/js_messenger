@@ -48,7 +48,14 @@ class Notifications {
         })
     }
 
-    notify(userid, data) {
+    sendNotificationMessage(userid, text) {
+        return this.cfx.chats.getDirectChat(userid, this.cfx.auth.cfxAccountId)
+        .then(chat => {
+            return chat.addMessage('default', this.cfx.auth.cfxAccountId, text)
+        })
+    }
+
+    sendPushNotification(userid, data) {
         const payload = JSON.stringify(data)
 
         this.cfx.core.sessionStorage.all((err, sessions) => {
@@ -65,7 +72,6 @@ class Notifications {
                 })
             })
         })
-
     }
 }
 

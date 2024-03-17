@@ -41,6 +41,17 @@ class Ebank {
             return this.cfx.query('insert into ebank_transaction(from_id, to_id, amount, comment, datetime) values(?, ?, ?, ?, now())',
                 [from_id, to_id, amount, comment])
         })
+        .then(() => {
+            return this.cfx.auth.getUser(from_id)
+        })
+        .then(from_user => {
+            let message = `Пользователь ${from_user.name} (@${from_user.tag}) перечислил вам ${amount} EBL.`
+
+            if (comment)
+                message += `Он оставил комментарий: "${comment}"`
+
+            return this.cfx.notifications.sendNotificationMessage(to_id, message)
+        })
     }
     
     setBalance(userid, balance) {

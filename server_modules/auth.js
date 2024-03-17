@@ -1,9 +1,13 @@
 const bcrypt = require("bcrypt")
 const saltRounds = 8
+const cfxAccountId = 71
+const bankAccountId = 70
 
 class Auth {
     constructor(cfx) {
         this.cfx = cfx;
+        this.cfxAccountId = cfxAccountId
+        this.bankAccountId = bankAccountId
     }
 
     getUser(id, tag) {
