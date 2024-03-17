@@ -26,6 +26,10 @@ body {
     display:none;
 }
 
+.main-grid > * {
+    outline: solid 1px #3b2f2f;
+}
+
 @media(max-width:750px) {
     .main-grid nav {
         display:none;
@@ -44,10 +48,6 @@ body {
     .main-grid > * {
         outline:none;
     }
-}
-
-.main-grid > * {
-    outline: solid 1px #3b2f2f;
 }
 
 a.clean, a.button {
