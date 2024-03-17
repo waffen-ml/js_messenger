@@ -6,9 +6,9 @@ body {
 
 .global-wrapper {
     margin:auto;
-    max-width:99%;
+    max-width:100%;
     width:1000px;
-    height: 100vh;
+    height: 100dvh;
 }
 
 .main-grid {
