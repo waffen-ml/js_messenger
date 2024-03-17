@@ -4,7 +4,7 @@ self.addEventListener('push', e => {
     let data = e.data.json()
 
     e.waitUntil(
-        self.registration.showNotification('32123123', {
+        self.registration.showNotification('heyw', {
             body: data.body ?? 'HEY',
             icon: data.icon ?? 'https://coffeetox.ru/public/coffee.png',
             tag: data.tag,
@@ -17,7 +17,8 @@ self.addEventListener('push', e => {
 self.addEventListener('notificationclick', function(event) {
     event.waitUntil(
         self.clients.matchAll({
-            includeUncontrolled: true
+            includeUncontrolled: true,
+            type:'window'
         }).then((clientList) => {
             let cfxClient = null
 
@@ -33,7 +34,7 @@ self.addEventListener('notificationclick', function(event) {
             event.notification.close()
 
             if(cfxClient)
-                return cfxClient.focus().then(() => cfxClient.navigate('https://coffeetox.ru'))
+                return cfxClient.navigate('https://coffeetox.ru').then(c => c.focus())
             else
                 return self.clients.openWindow('https://youtube.com')
 
