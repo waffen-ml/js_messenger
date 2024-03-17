@@ -2,11 +2,16 @@ const publicVapidKey = 'BFz5DJhb3Fxpj5UB855BnYqXV6HCi2_UJyYGsgEFZRBAGCrm9XThi18-
 const avatarImg = document.querySelector('.avatar')
 
 async function send() {
-    const register = await navigator.serviceWorker.register('/public/worker.js')
-    const subscription = await register.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: utils.urlBase64ToUint8Array(publicVapidKey)
-    })
+    const register = await navigator.serviceWorker.register('/public/worker1.js')
+    let subscription = await register.pushManager.getSubscription()
+    
+    if (!subscription) {
+        subscription = await register.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: utils.urlBase64ToUint8Array(publicVapidKey)
+        })
+    }
+
     let fd = new FormData()
     fd.append('subscription', JSON.stringify(subscription))
 
