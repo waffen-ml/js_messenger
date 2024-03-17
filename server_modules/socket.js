@@ -9,8 +9,10 @@ class Socket {
             let user = socket.request.session.user
             let userid = user? user.id : null
 
-            if (userid)
-                socket.join('u:' + userid);
+            if (userid) {
+                console.log(userid)
+                socket.join('u:' + userid)
+            }
             
             this.listeners.forEach(l => l(socket, userid))
         })
