@@ -44,3 +44,5 @@ function updateStickerpacks() {
         })
     })
 }
+
+updateStickerpacks()
