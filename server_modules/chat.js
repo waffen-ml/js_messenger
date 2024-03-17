@@ -95,33 +95,49 @@ class Chat {
             ids: ids.join(','), chat_id: this.id})
     }
 
-    notifyAboutUnread(userid) {
-        let unread, info
-
+    getUnreadCount(userid) {
         return this.cfx.query(`select last_read from chat_member where chat_id=? and user_id=?`, [this.id, userid])
         .then(r => {
             let last_read = r.length? r[0].last_read ?? 0 : 0
             return this.cfx.query(`select count(*) as unread from message where chat_id=? and id > ?`, [this.id, last_read])
-        }).then(r => {
-            unread = r[0].unread ?? 0
-            return this.getInfo()
         })
-        .then(info_ => {
-            info = info_
-            return this.getMessages(-1, Math.min(unread, maxUnreadPreview))
+        .then(r => {
+            return r[0].unread ?? 0
         })
-        .then(messages => {
-            let lines = messages.map(msg => this.cfx.clientUtils.getMessagePreview(msg, 50, true))
-            let wholePreview = lines.join('\n')
-            let chatname = info.name === null? this.cfx.clientUtils.generateChatName(info.members, {id: userid}, 3) : info.name
+    }
 
-            return this.cfx.notifications.sendPushNotification(userid, {
-                icon: '/getchatavatar?id=' + this.id,
-                body: wholePreview,
-                title: chatname + ` (${unread})`,
-                tag: 'chat:' + this.id,
-                link: '/chat?id=' + this.id
+    notifyAboutUnread(userid) {
+
+        return new Promise(resolve => {
+            this.getUnreadCount(userid)
+            .then(unread => {
+                if (!unread) {
+                    resolve()
+                    return
+                }
+
+                let info;
+                
+                return this.getInfo()
+                .then(info_ => {
+                    info = info_
+                    return this.getMessages(-1, Math.min(unread, maxUnreadPreview))
+                })
+                .then(messages => {
+                    let lines = messages.reverse().map(msg => this.cfx.clientUtils.getMessagePreview(msg, 50, true))
+                    let wholePreview = lines.join('\n')
+                    let chatname = info.name === null? this.cfx.clientUtils.generateChatName(info.members, {id: userid}, 3) : info.name
+            
+                    return this.cfx.notifications.sendPushNotification(userid, {
+                        icon: '/getchatavatar?id=' + this.id,
+                        body: wholePreview,
+                        title: chatname + ` (${unread})`,
+                        tag: 'chat:' + this.id,
+                        link: '/chat?id=' + this.id
+                    })
+                })
             })
+            .then(() => resolve())
         })
         .then(() => {
             return this.cfx.notifications.sendSpecificUnread(userid, 'messages')
