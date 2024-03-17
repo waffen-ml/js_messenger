@@ -4,7 +4,7 @@ self.addEventListener('push', e => {
     let data = e.data.json()
 
     e.waitUntil(
-        self.registration.showNotification('CoffeeTox1', {
+        self.registration.showNotification('Coff12eeTox1', {
             body: data.body ?? 'HEY',
             icon: data.icon ?? 'https://coffeetox.ru/public/coffee.png',
             tag: data.tag,
@@ -28,10 +28,10 @@ self.addEventListener('notificationclick', function(event) {
                 return true
             })
 
-            if(!cfxClient)
-                return self.clients.openWindow('https://youtube.com')
-            else
-                cfxClient.focus()
+            cfxClient = cfxClient ?? self.clients.openWindow('https://youtube.com')
+
+            cfxClient.postMessage('hey')
+
         })
     )
 })
