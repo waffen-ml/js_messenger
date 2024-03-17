@@ -221,7 +221,7 @@ class ChatInterface {
 
     clearInput() {
         this.entry.value = ''
-        this.attachedFiles = []
+        this.fileUploader.clear()
     }
 
     setChatHeader(title, subtitle, avatarUrl, onclick) {
@@ -388,16 +388,15 @@ class Chat {
     }
 
     sendDefault() {
-        let attachedFiles = this.interface.attachedFiles
+        let attachedFiles = this.interface.getAttachedFiles()
         let content = this.interface.entry.value
 
         this.send('default', content, attachedFiles)
         .then(r => {
             if(r.success) {
                 this.interface.clearInput()
-                this.interface.updateFileCount();
             } else  
-                alert('Ошибка!')
+                alert('Ошибка: ' + r.error)
         })
     }
 
