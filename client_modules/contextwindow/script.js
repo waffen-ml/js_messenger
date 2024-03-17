@@ -168,10 +168,10 @@ class ContextWindow {
         else if(actual.left + w > border.right)
             actual.left = border.right - w
 
-        this.window.style.top = ''
-        this.window.style.bottom = ''
-        this.window.style.right = ''
-        this.window.style.left = ''
+        this.window.style.top = 'unset'
+        this.window.style.bottom = 'unset'
+        this.window.style.right = 'unset'
+        this.window.style.left = 'unset'
 
         if (bottom)
             this.window.style.bottom = screenH - (actual.top + h) + 'px'
