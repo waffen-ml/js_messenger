@@ -16,13 +16,22 @@ self.addEventListener('push', e => {
 })
 
 self.addEventListener('notificationclick', function(event) {
-
     event.waitUntil(
-        self.clients.matchAll().then(function(clientList) {
-            if (clientList.length > 0) {
-                return clientList[0].focus()
-            } 
-            return self.clients.openWindow('https://youtube.com');
+        self.clients.matchAll().then((clientList) => {
+            let cfxClient = null
+            clientList.every(client => {
+                let url = new URL(client.url)
+                if (url.hostname == 'coffeetox.ru') {
+                    cfxClient = client
+                    return false
+                }
+                return true
+            })
+
+            if(!cfxClient)
+                return self.clients.openWindow('https://youtube.com')
+            else
+                cfxClient.focus()
         })
     )
 })
