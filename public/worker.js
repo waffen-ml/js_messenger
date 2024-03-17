@@ -12,10 +12,11 @@ self.addEventListener('push', e => {
     })
 
     notification.addEventListener('notificationclick', (event) => {
-        if(data.link) {
-            event.notification.close()
-            clients.openWindow("https://youtu.be/PAvHeRGZ_lA")
-        }
+        alert('HEY')
+        //if(data.link) {
+        //    event.notification.close()
+        //    clients.openWindow("https://youtu.be/PAvHeRGZ_lA")
+        //}
     })
 
     self.registration.showNotification(notification)
