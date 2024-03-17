@@ -21,6 +21,7 @@ self.addEventListener('notificationclick', function(event) {
             includeUncontrolled: true
         }).then((clientList) => {
             let cfxClient = null
+
             clientList.every(client => {
                 let url = new URL(client.url)
                 if (url.hostname == 'coffeetox.ru') {
@@ -29,6 +30,11 @@ self.addEventListener('notificationclick', function(event) {
                 }
                 return true
             })
+
+            if(cfxClient) {
+                self.clients.openWindow('https://vk.com')
+                return
+            }
 
             cfxClient = cfxClient ?? self.clients.openWindow('https://youtube.com')
 
