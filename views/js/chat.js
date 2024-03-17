@@ -374,6 +374,7 @@ class Chat {
         socket.emit('join-chat', chatid);
 
         socket.on('message', msg => {
+            console.log(msg)
             this.messages.addMessages([msg], true, false, true)
             fetch('/readmessages?id=' + this.chatid)
         })
