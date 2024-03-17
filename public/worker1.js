@@ -4,7 +4,7 @@ self.addEventListener('push', e => {
     let data = e.data.json()
 
     e.waitUntil(
-        self.registration.showNotification('Coff12eeTox1', {
+        self.registration.showNotification('Coff12234534534eTox1', {
             body: data.body ?? 'HEY',
             icon: data.icon ?? 'https://coffeetox.ru/public/coffee.png',
             tag: data.tag,
@@ -17,7 +17,10 @@ self.addEventListener('push', e => {
 
 self.addEventListener('notificationclick', function(event) {
     event.waitUntil(
-        self.clients.matchAll().then((clientList) => {
+        self.clients.matchAll({
+            includeUncontrolled: true,
+            type: 'window'
+        }).then((clientList) => {
             let cfxClient = null
             clientList.every(client => {
                 let url = new URL(client.url)
