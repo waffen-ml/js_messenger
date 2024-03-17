@@ -32,7 +32,7 @@ class Chat {
             }
             this.cfx.files.createBundle(this.id, null)
             .then(bundleid => {
-                this.cfx.files.saveFiles(files, id)
+                this.cfx.files.saveFiles(files, bundleid)
                 resolve(bundleid)
             })
         })
