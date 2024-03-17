@@ -196,13 +196,39 @@ class Stickerpacks {
         })
     }
 
+    getStickerpack(spid) {
+        return this.cfx.query(`select * from stickerpack where id=?`, [spid])
+        .then(r => r[0])
+    }
+
+    addStickerpack(userid, spid) {
+        return this.hasStickerpack(userid, spid)
+        .then(w => {
+            if(w)
+                throw Error('User already has the stickerpack')
+            return this.cfx.query(`insert into stickerpack_ownership(user_id, stickerpack_id) values(?, ?)`, [userid, spid])
+        })
+    }
+
     buyStickerpack(userid, spid) {
         if(!userid)
             throw Error('User must be authorized')
         return this.hasStickerpack(userid)
         .then(w => {
             if(w)
-                throw Error('User already has the ')
+                throw Error('User already has the stickerpack')
+            return this.getStickerpack(spid)
+        })
+        .then(spack => {
+            if (!spack)
+                throw Error('Unknown stickerpack')
+            else if(spack.price == 0)
+                throw Error('The stickerpack is free')
+            return this.cfx.ebank.purchase(userid, spack.price, 'Стикерпак')
+        })
+        .then(() => {
+            // Success
+            return this.addStickerpack(userid, spid)
         })
     }
 
@@ -556,7 +582,10 @@ exports.init = (cfx) => {
     }, true)
 
     cfx.core.safeGet('/buystickerpack', (user, req, res) => {
-
+        return cfx.stickerpacks.buyStickerpack(user.id, req.query.id)
+        .then(() => {
+            return {success:1}
+        })
     }, true)
 
 }

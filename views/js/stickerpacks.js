@@ -10,7 +10,17 @@ function openStickerpack(spack) {
 
     if (!spack.available) {
         popup.addOption(`Купить (${spack.price} EBL)`, () => {
-            alert('buy!')
+            fetch('/buystickerpack?id=' + spack.id)
+            .then(r => r.json())
+            .then(r => {
+                if(!r.success) {
+                    alert('Ошибка: ' + r.error)
+                    return
+                }
+                alert('Успех!')
+                popup.close()
+                updateStickerpacks()
+            })
         })
     }
 
@@ -22,23 +32,15 @@ function openStickerpack(spack) {
     popup.open()
 }
 
-
-fetch('/getallstickerpacks')
-.then(r => r.json())
-.then(spacks => {
-    spacks.forEach(spack => {
-        let element = templateManager.createElement('stickerpack', spack)
-        element.addEventListener('click', () => openStickerpack(spack))
-        stickerpackHolder.appendChild(element)
+function updateStickerpacks() {
+    fetch('/getallstickerpacks')
+    .then(r => r.json())
+    .then(spacks => {
+        stickerpackHolder.innerHTML = ''
+        spacks.forEach(spack => {
+            let element = templateManager.createElement('stickerpack', spack)
+            element.addEventListener('click', () => openStickerpack(spack))
+            stickerpackHolder.appendChild(element)
+        })
     })
-    spacks.forEach(spack => {
-        let element = templateManager.createElement('stickerpack', spack)
-        element.addEventListener('click', () => openStickerpack(spack))
-        stickerpackHolder.appendChild(element)
-    })
-    spacks.forEach(spack => {
-        let element = templateManager.createElement('stickerpack', spack)
-        element.addEventListener('click', () => openStickerpack(spack))
-        stickerpackHolder.appendChild(element)
-    })
-})
+}

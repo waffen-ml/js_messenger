@@ -107,6 +107,10 @@ class Ebank {
     getCapitalLeaderboard() {
         return this.cfx.db.executeFile('capitallb', {})
     }
+
+    purchase(userid, amount, item) {
+        return this.makeTransaction(userid, this.cfx.bankAccountId, amount, item ?? 'Покупка')
+    }
 }
 
 exports.init = (cfx) => {
