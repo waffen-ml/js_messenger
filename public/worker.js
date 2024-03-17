@@ -6,12 +6,14 @@ self.addEventListener('push', e => {
     let notification = new Notification(data.title ?? 'CoffeeTox', {
         body: data.body ?? 'HEY',
         icon: data.icon ?? 'https://coffeetox.ru/public/coffee.png',
+        tag: data.tag,
         silent: false,
-        dir: 'ltr'
+        dir: 'ltr',
     })
 
-    notification.onclick = () => {
-        alert('hey')
+    notification.onclick = (e) => {
+        if(data.link)
+            window.open(data.link, '_blank');
     }
 
     self.registration.showNotification(notification)
