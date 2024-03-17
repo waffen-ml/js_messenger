@@ -20,10 +20,6 @@ class ChatInterface {
         if(chat.info.isdirect)
             this.holder.classList.add('direct')
 
-        document.querySelector('#file').addEventListener('click', () => {
-            this.openFilePopup()
-        })
-
         this.setupStickersCW()
         this.setupFileCW()
 
