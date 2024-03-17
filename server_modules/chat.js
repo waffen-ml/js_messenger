@@ -106,12 +106,14 @@ class Chat {
                 .then(data => {
                     let userids = data.map(d => d.user_id)
                     userids.forEach((userid) => {
-                        this.cfx.notifications.sendSpecificUnread(userid, 'messages')
-                        this.cfx.notifications.sendPushNotification(userid, {
-                            icon: '/getchatavatar?id=' + this.id,
-                            body: msg.content,
-                            title: 'Чат ' + this.id
-                        })
+                    
+                    this.cfx.notifications.sendSpecificUnread(userid, 'messages')
+                    this.cfx.notifications.sendPushNotification(userid, {
+                        icon: '/getchatavatar?id=' + this.id,
+                        body: msg.content,
+                        title: 'Чат ' + this.id
+                    })
+
                     })
                 })
 
