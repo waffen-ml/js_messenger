@@ -71,9 +71,9 @@ class ChatInterface {
             })
 
             packs.forEach(pack => {
-                cw.window.querySelectorAll(`.grid#${pack.name} button`).forEach(stickerButton => {
+                cw.window.querySelectorAll(`.grid#${pack.tag} button`).forEach(stickerButton => {
                     stickerButton.addEventListener('click', () => 
-                    this.chat.sendSticker(pack.name, parseInt(stickerButton.getAttribute('id'))))
+                    this.chat.sendSticker(pack.tag, parseInt(stickerButton.getAttribute('id'))))
                 })
             })
 
