@@ -57,12 +57,11 @@ class ChatInterface {
             }
 
             cw.window.querySelectorAll('.navigation button').forEach(navbutt => {
-                navbutt.addEventListener('click', () => showGrid(navbutt.getAttribute('id')))
+                if(navbutt.getAttribute('id') == 'buy')
+                    navbutt.addEventListener('click', () => {location.href = "stickerpacks"})
+                else
+                    navbutt.addEventListener('click', () => showGrid(navbutt.getAttribute('id')))
             })
-
-            cw.window.querySelector('.navigation button#buy').onclick = () => {
-                location.href = "stickerpacks"
-            }
             
 
             cw.window.querySelectorAll('.grid#emoji button').forEach(emojiButton => {
