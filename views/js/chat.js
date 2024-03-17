@@ -37,7 +37,7 @@ class ChatInterface {
     setupStickersCW() {
         let sb = document.querySelector('button#stickers')
 
-        fetch('/getstickerpacks')
+        fetch('/getavailablestickerpacks')
         .then(r => r.json())
         .then(packs => {
 
