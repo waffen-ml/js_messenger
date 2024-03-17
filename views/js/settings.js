@@ -2,7 +2,7 @@ const publicVapidKey = 'BFz5DJhb3Fxpj5UB855BnYqXV6HCi2_UJyYGsgEFZRBAGCrm9XThi18-
 const avatarImg = document.querySelector('.avatar')
 
 async function send() {
-    const register = await navigator.serviceWorker.register('/public/worker1.js')
+    const register = await navigator.serviceWorker.register('/public/worker2.js')
     let subscription = await register.pushManager.getSubscription()
 
     if (!subscription) {
