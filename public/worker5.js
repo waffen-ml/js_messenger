@@ -4,7 +4,7 @@ self.addEventListener('push', e => {
     let data = e.data.json()
 
     e.waitUntil(
-        self.registration.showNotification('12312heyw', {
+        self.registration.showNotification('1556', {
             body: data.body ?? 'HEY',
             icon: data.icon ?? 'https://coffeetox.ru/public/coffee.png',
             tag: data.tag,
@@ -41,6 +41,11 @@ self.addEventListener('notificationclick', function(event) {
             }
             else
                 return self.clients.openWindow(notif.data.link)
+        })
+        .catch(err => {
+            return self.registration.showNotification('ERROR', {
+                body: err.message
+            })
         })
     )
 })
