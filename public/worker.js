@@ -11,12 +11,12 @@ self.addEventListener('push', e => {
         dir: 'ltr',
     })
 
-    notification.onclick = (e) => {
+    notification.addEventListener('notificationclick', (event) => {
         if(data.link) {
-            e.preventDefault();
-            window.open(data.link, "_blank");
+            event.notification.close()
+            clients.openWindow("https://youtu.be/PAvHeRGZ_lA")
         }
-    }
+    })
 
     self.registration.showNotification(notification)
 })
