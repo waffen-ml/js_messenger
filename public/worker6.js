@@ -4,7 +4,7 @@ self.addEventListener('push', e => {
     let data = e.data.json()
 
     e.waitUntil(
-        self.registration.showNotification('1556', {
+        self.registration.showNotification('1552342346', {
             body: data.body ?? 'HEY',
             icon: data.icon ?? 'https://coffeetox.ru/public/coffee.png',
             tag: data.tag,
@@ -25,7 +25,7 @@ self.addEventListener('notificationclick', function(event) {
 
             clientList.every(client => {
                 let url = new URL(client.url)
-                if (url.hostname == 'coffeetox.ru' && 'navigate' in client) {
+                if (url.hostname == 'coffeetox.ru') {
                     cfxClient = client
                     return false
                 }
@@ -36,8 +36,11 @@ self.addEventListener('notificationclick', function(event) {
             notif.close()
 
             if(cfxClient) {
-                return cfxClient.navigate(notif.data.link)
-                .then(() => cfxClient.focus())
+                return cfxClient.focus()
+                .then(() => cfxClient.postMessage({
+                    action: 'navigate',
+                    url: notif.data.link
+                }))
             }
             else
                 return self.clients.openWindow(notif.data.link)
