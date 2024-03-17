@@ -37,20 +37,15 @@ class ChatInterface {
     setupStickersCW() {
         let sb = document.querySelector('button#stickers')
 
-        fetch('/getavailablestickerpacks')
-        .then(r => r.json())
+        this.chat.getAvailableStickers()
         .then(packs => {
-
-            console.log(packs)
-
             let cw = new ContextWindow({
                 html: templateManager.createHTML('stickerscw', {
                     packs: packs,
                     emojiList: emojiList
                 }),
                 destroyOnClose:false,
-                className: 'stickerscw',
-                ignoreClicks: sb
+                className: 'stickerscw'
             })
 
             function showGrid(id) {
@@ -77,26 +72,26 @@ class ChatInterface {
                 })
             })
 
-            sb.addEventListener('click', () => {
-                if(cw.isOpened()) {
-                    cw.close()
-                    return
-                }
 
+            attachButtonToCW(() => {
+                
                 let actual = cw.setPosition({
                     top:utils.bounds(sb).top - cw.window.clientHeight - 5,
                     left:utils.bounds(sb).left - cw.window.clientWidth / 2 + sb.clientWidth / 2
                 }, document.querySelector('main'))
-    
+
                 cw.setAxis({
                     top:cw.window.clientHeight,
                     left:utils.bounds(sb).left - actual.left + sb.clientWidth / 2
                 })
 
-                cw.open()
-            })
+                return cw
 
+            }, sb)
+            
         })
+
+    
     }
 
     openFilePopup() {
@@ -386,6 +381,11 @@ class Chat {
             this.messages.addMessages([msg], true, false, true)
             fetch('/readmessages?id=' + this.chatid)
         })
+    }
+
+    getAvailableStickers() {
+        return fetch('/getavailablestickerpacks')
+        .then(r => r.json())
     }
 
     sendSticker(name, i) {
