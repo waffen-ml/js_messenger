@@ -1,3 +1,6 @@
+let notifyTimeout = 750
+
+
 class Chat {
     constructor(cfx, id, name) {
         this.cfx = cfx;
@@ -43,7 +46,7 @@ class Chat {
             return this.getMessages(-1, 1)
         })
         .then(msgs => {
-            this.displayMessage(msgs[0])
+            return this.displayMessage(msgs[0])
         })
     }
 
@@ -92,23 +95,30 @@ class Chat {
     }
 
     displayMessage(msg) {
-        this.cfx.socket.io.in('c:' + this.id).emit('message', msg)
-
-        return this.cfx.socket.getSocketsInRoom('c:' + this.id)
-        .then((sockets) => {
-            let ids = sockets.map(s => (s.request.session.user ?? {}).id).filter(id => id)
-            return this.makeMessageRead(ids)
-        })
-        .then(() => {
-            return this.getInfo()
-        })
+        return this.getInfo()
         .then(info => {
-            return Promise.all(info.members.map(member => {
-                return this.cfx.notifications.sendSpecificUnread(member.id, 'messages')
-            }))
-        })
+            info.members.forEach(m => {
+                this.cfx.socket.io.in('u:' + m.id).emit('message', msg)
+            })
 
-        
+            setTimeout(() => {
+                this.cfx.query(`select * from chat_member where chat_id=? and last_read < ?`, [this.id, msg.id])
+                .then(data => {
+                    let userids = data.map(d => d.user_id)
+                    userids.forEach((userid) => {
+                        this.cfx.notifications.sendSpecificUnread(userid, 'messages')
+                        this.cfx.notifications.sendPushNotification(userid, {
+                            icon: '/getchatavatar?id=' + this.id,
+                            body: msg.content,
+                            title: 'Чат ' + this.id
+                        })
+                    })
+                })
+
+            }, notifyTimeout)
+
+        })
+    
     }
 
     getInfo() {
@@ -328,7 +338,7 @@ exports.init = (cfx) => {
             return chat.makeMessageRead([user.id])
         })
         .then(() => {
-            return {success:0}
+            return {success:1}
         })
     }, true)
 
