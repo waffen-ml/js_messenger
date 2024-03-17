@@ -121,9 +121,9 @@ exports.init = (cfx) => {
             {type: 'text', title: 'Получатель', name: 'usertag'},
             {type: 'text', title: 'Сумма', name: 'amount'},
             {type: "text", title: 'Комментарий', name: 'comment', optional:true}
-        ], (data, erf, cfx) => {
+        ], (data, erf, user) => {
 
-            let from_id = cfx.user().id
+            let from_id = user.id
             let to_tag = data.usertag
             let amount = parseInt(data.amount)
             let comment = data.comment
