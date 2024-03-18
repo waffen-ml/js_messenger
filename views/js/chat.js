@@ -146,7 +146,7 @@ class ChatInterface {
 
             let lineCount = this.entry.value.split('\n').length
 
-            this.entry.style.height = 38 * Math.max(lineCount, 4) + 'px'
+            this.entry.style.height = 38 * Math.min(lineCount, 4) + 'px'
 
         })
         
