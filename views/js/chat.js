@@ -138,7 +138,7 @@ class ChatInterface {
 
     initSendFunction(send) {
         this.entry.addEventListener('keydown', (e) => {
-            if (e.key != 'Enter') return
+            if (e.key != 'Enter' || window.isMobileOrTablet() || window.event.shiftKey) return
             e.preventDefault()
             this.chat.sendDefault()
         })
