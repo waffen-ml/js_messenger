@@ -37,7 +37,7 @@ class Chat {
             })
         })
         .then(bundle => {
-            content = this.cfx.utils.mysql_escape(content)
+            //content = this.cfx.utils.mysql_escape(content)
 
             return this.cfx.query(`insert into message
             (type, sender_id, chat_id, content, bundle_id, datetime)
