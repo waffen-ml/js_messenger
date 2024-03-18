@@ -29,11 +29,11 @@ function updateFriendshipButton(status) {
     } else if(status.outgoing_request) {
         fsButton.textContent = 'Отозвать заявку'
         fsButton.onclick = () => changedFriendshipStatus(
-            fetch('/cancel_friendship_request?id=' + user.id))
+            fetch('/cancel_friend_request?id=' + user.id))
     } else if (status.incoming_request) {
         fsButton.textContent = 'Принять заявку'
         fsButton.onclick = () => changedFriendshipStatus(
-            fetch('/answer_friendship_request?id=' + user.id))
+            fetch('/answer_friend_request?id=' + user.id))
     } else {
         fsButton.textContent = 'Добавить в друзья'
         fsButton.onclick = () => changedFriendshipStatus(
