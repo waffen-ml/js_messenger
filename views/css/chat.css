@@ -19,7 +19,12 @@ main {
 
 .entry {
     width: 100%;
-    height:40px;
+    height:auto;
+
+    min-height:50px;
+    max-height:200px;
+    max-width: unset;
+
     resize: none;
     transition:height .2s ease-in-out;
 }
