@@ -16,13 +16,17 @@ main {
     width: 100%;
 }
 
+.input-bar .button {
+    aspect-ratio:1;
+    height:38px;
+}
 
 .entry {
     width: 100%;
-    height:auto;
+    height:100%;
 
-    min-height:50px;
-    max-height:200px;
+    min-height:unset;
+    max-height:unset;
     max-width: unset;
 
     resize: none;
