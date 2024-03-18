@@ -24,6 +24,7 @@ class ChatInterface {
 
         this.setupStickersCW()
         this.setupFileCW()
+        this.setupDotsCW()
 
         this.scrollDown(false)
     }
@@ -52,7 +53,7 @@ class ChatInterface {
                 
             },
             'Выйти из чата': () => {
-                
+
             },
             'Начать звонок': () => {},
             'Подробнее': () => {}
