@@ -178,7 +178,7 @@ class ChatInterface {
             this.scrollDown(false);
         })
     }
-    
+
     addMessages(msgs, myid, before, scroll) {
         let elements = msgs.map(msg => {
             let element = templateManager.createElement('universal-message', {data: msg, myid: myid})
@@ -338,7 +338,7 @@ class Chat {
     init(info) {
         this.info = info
         this.interface = new ChatInterface(this)
-        this.messages = new ChatMessages(this.interface, me)
+        this.messages = new ChatMessages(this.interface, this.me)
 
         this.interface.initSendFunction(() => this.send())
         this.interface.initLoadMessagesFunction(() => this.loadMessageBatch())
