@@ -80,6 +80,8 @@ function loadFriends() {
         friendlistButton.textContent = friends.length?
             utils.nItemsLabel(friends.length, 'друг', 'друга', 'друзей') : 'нет друзей'
 
+        console.log(friends)
+
         let popup = new Popup({
             html: templateManager.createHTML('friends', {friends: friends}),
             closable: true,
