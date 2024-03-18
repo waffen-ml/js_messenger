@@ -355,10 +355,8 @@ class Chat {
             
             setTimeout(() => this.updateLastSeen(), updateLastSeenInterval * 1000)
         })
-
+        
     }
-
-
 
     loadChatInfo() {
         fetch('/getchatinfo?id='+this.chatid)
@@ -789,8 +787,8 @@ let chat = null
 
 fetch('/auth')
 .then((r) => r.json())
-.then(user_ => {
-    if(!user_) {
+.then(user => {
+    if(!user) {
         alert('Вы не вошли в аккаунт.')
         location.replace('/')
         return
