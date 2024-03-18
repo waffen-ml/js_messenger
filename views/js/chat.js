@@ -30,7 +30,7 @@ class ChatInterface {
     }
 
     appendMessageEntry(text) {
-        this.entry.value += text
+        this.entry.textContent += text
     }
 
     repositionInputCW(cw, butt) {
@@ -239,7 +239,7 @@ class ChatInterface {
     }
 
     clearInput() {
-        this.entry.value = ''
+        this.entry.textContent = ''
         this.fileUploader.clear()
     }
 
@@ -441,8 +441,7 @@ class Chat {
 
     sendDefault() {
         let attachedFiles = this.interface.getAttachedFiles()
-        let content = this.interface.entry.value
-
+        let content = this.interface.entry.textContent
         this.send('default', content, attachedFiles)
         .then(r => {
             if(r.success) {
