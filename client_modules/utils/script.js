@@ -150,7 +150,7 @@ class Utils {
         // b -- минуты (2, 3, 4, 24...)
         // c -- минут (5, 6, 7, ...)
 
-        if (10 <= b && b <= 20)
+        if (10 <= n && n <= 20)
             return c
         else if(n % 10 == 1)
             return a
