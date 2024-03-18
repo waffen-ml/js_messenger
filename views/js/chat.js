@@ -44,6 +44,22 @@ class ChatInterface {
         })
     }
 
+    setupDotsCW() {
+        let dots = document.querySelector('.chat-header .dots')
+
+        makeButtonsCW(dots, {
+            'Очистить историю': () => {
+                
+            },
+            'Выйти из чата': () => {
+                
+            },
+            'Начать звонок': () => {},
+            'Подробнее': () => {}
+        })
+
+    }
+
     setupFileCW() {
         let fb = document.querySelector('.input-bar button#file')
 
