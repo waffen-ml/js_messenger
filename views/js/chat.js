@@ -17,6 +17,8 @@ class ChatInterface {
         this.loadingMore = false
         this.chat = chat
 
+        console.log(chat.info)
+
         if(chat.info.isdirect)
             this.holder.classList.add('direct')
 
