@@ -178,7 +178,7 @@ class ChatInterface {
             this.scrollDown(false);
         })
     }
-
+    
     addMessages(msgs, myid, before, scroll) {
         let elements = msgs.map(msg => {
             let element = templateManager.createElement('universal-message', {data: msg, myid: myid})
@@ -245,6 +245,7 @@ class ChatInterface {
     setHeaderClickEvent(onclick) {
         document.querySelector('.chat-header .info').onclick = onclick
     }
+
 }
 
 class ChatMessages {
@@ -328,17 +329,39 @@ class Chat {
         this.chatid = chatid
         this.socket = socket
         this.me = me
+
+        fetch('/getchatinfo?id=' + chatid)
+        .then(r => r.json())
+        .then(info => this.init(info))
+    }
+
+    init(info) {
+        this.info = info
         this.interface = new ChatInterface(this)
         this.messages = new ChatMessages(this.interface, me)
 
         this.interface.initSendFunction(() => this.send())
         this.interface.initLoadMessagesFunction(() => this.loadMessageBatch())
         //this.interface.identifyMyMessages(null, me.id)
-        this.loadChatInfo()
+        //this.loadChatInfo()
         this.loadMessageBatch()
         this.setupSocket()
 
         this.updateLastSeen()
+        this.setupHeader()
+    }
+
+    setupHeader() {
+        let name = utils.getChatName(r, this.me)
+        let subtitle = r.is_direct? null : utils.nItemsLabel(r.members.length, 'участник', 'участника', 'участников')
+        let avatar_url = utils.getChatAvatarURL(r, this.me)
+        let onclick = r.is_direct? () => location.replace('/user?id=' + utils.getOtherMember(r, this.me).id)
+            : () => alert('hey!')
+        
+        this.interface.setChatAvatar(avatar_url)
+        this.interface.setChatTitle(name)
+        this.interface.setChatSubtitle(subtitle)
+        this.interface.setHeaderClickEvent(onclick)
     }
  
     updateLastSeen() {
@@ -356,25 +379,6 @@ class Chat {
             setTimeout(() => this.updateLastSeen(), updateLastSeenInterval * 1000)
         })
         
-    }
-
-    loadChatInfo() {
-        fetch('/getchatinfo?id='+this.chatid)
-        .then(r => r.json())
-        .then(info => {
-            this.info = info
-
-            let name = utils.getChatName(r, this.me)
-            let subtitle = r.is_direct? null : utils.nItemsLabel(r.members.length, 'участник', 'участника', 'участников')
-            let avatar_url = utils.getChatAvatarURL(r, this.me)
-            let onclick = r.is_direct? () => location.replace('/user?id=' + utils.getOtherMember(r, this.me).id)
-                : () => alert('hey!')
-            
-            this.interface.setChatAvatar(avatar_url)
-            this.interface.setChatTitle(name)
-            this.interface.setChatSubtitle(subtitle)
-            this.interface.setHeaderClickEvent(onclick)
-        })
     }
 
     loadMessageBatch() {
