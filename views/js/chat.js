@@ -146,10 +146,9 @@ class ChatInterface {
             let lineCount = this.entry.textContent.split('\n').length - 1
 
             if(lineCount > 1)
-                this.entry.classList.add('extended')
+                this.entry.classList.add('expanded')
             else
-                this.entry.classList.remove('extended')
-            console.log(lineCount)
+                this.entry.classList.remove('expanded')
 
         })
         
