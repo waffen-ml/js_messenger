@@ -352,10 +352,10 @@ class Chat {
     }
 
     setupHeader() {
-        let name = utils.getChatName(r, this.me)
-        let subtitle = r.is_direct? null : utils.nItemsLabel(r.members.length, 'участник', 'участника', 'участников')
-        let avatar_url = utils.getChatAvatarURL(r, this.me)
-        let onclick = r.is_direct? () => location.replace('/user?id=' + utils.getOtherMember(r, this.me).id)
+        let name = utils.getChatName(this.info, this.me)
+        let subtitle = this.info.is_direct? null : utils.nItemsLabel(this.info.members.length, 'участник', 'участника', 'участников')
+        let avatar_url = utils.getChatAvatarURL(this.info, this.me)
+        let onclick = this.info.is_direct? () => location.replace('/user?id=' + utils.getOtherMember(this.info, this.me).id)
             : () => alert('hey!')
         
         this.interface.setChatAvatar(avatar_url)
