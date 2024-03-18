@@ -173,6 +173,7 @@ ul.attached {
     display:flex;
     align-items: center;
     padding:5px;
+    padding-right:10px;
     height:60px;
     gap:10px;
     flex-shrink: 0;
