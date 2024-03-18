@@ -18,9 +18,9 @@ main {
 
 
 .entry {
-    width: 100% !important;
-    resize: none;
+    width: 100%;
     height:40px;
+    resize: none;
     transition:height .2s ease-in-out;
 }
 
