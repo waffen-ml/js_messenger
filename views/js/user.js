@@ -1,5 +1,6 @@
 let url = new URLSearchParams(window.location.search)
 let fsButton = document.querySelector('.button.add-friend')
+let transactionButton = document.querySelector('.button.ebank')
 let user = null
 
 function togglefsbutton(state) {
@@ -65,6 +66,10 @@ function loadFeed() {
     })
 }
 
+function setupTransactionButton() {
+    transactionButton.href = '/ebank?sendto=' + user.tag
+}
+
 
 utils.getUser(url.get('id'), url.get('tag'))
 .then(user_ => {
@@ -72,4 +77,5 @@ utils.getUser(url.get('id'), url.get('tag'))
     updateFriendshipStatus()
     loadLastSeen()
     loadFeed()
+    setupTransactionButton()
 })

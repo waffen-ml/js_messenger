@@ -1,8 +1,13 @@
+let url = new URLSearchParams(window.location.search)
+
 let form = new Form('ebank', null, () => {
     form.addSubmitButton('Перевести', () => {
-        window.location.reload();
+        window.location.reload()
     })
-});
+
+    if (url.get('sendto'))
+        form.form.querySelector('input[name="usertag"]').value = url.get('sendto')
+})
 
 function openTransactions() {
 
