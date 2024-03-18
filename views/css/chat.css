@@ -10,14 +10,22 @@ main {
 
 .input-bar {
     display:flex;
+    align-items:flex-end;
+
     gap:7px;
     width: 100%;
-    flex-shrink:0;
 }
 
 
 .entry {
-    width: 100%;
+    width: 100% !important;
+    resize: none;
+    height:40px;
+    transition:height .2s ease-in-out;
+}
+
+.entry.expanded {
+    height:200px;
 }
 
 .holder-wrapper {
