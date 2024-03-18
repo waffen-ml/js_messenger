@@ -17,11 +17,9 @@ block main
             img.avatar
             span.chat-name.finite
             span.subinfo.finite
-        .actions 
-            button.join-call Звонить
-            button.leave-call Отключиться
+        button.button.dots ...
 
-    .voice-chat.block
+    .voice-chat.block(style="display:none;")
         .preview
             span.list.finite В звонке:
             span.count (
