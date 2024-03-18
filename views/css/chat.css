@@ -19,6 +19,7 @@ main {
 .input-bar .button {
     aspect-ratio:1;
     height:38px;
+    flex-shrink: 0;
 }
 
 .entry {
