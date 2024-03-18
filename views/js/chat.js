@@ -144,7 +144,7 @@ class ChatInterface {
                 return
             }
 
-            let lineCount = this.entry.value.split('\n').length - 1
+            let lineCount = this.entry.value.split('\n').length
 
             console.log(this.entry.value)
             console.log(lineCount)
