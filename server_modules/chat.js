@@ -287,8 +287,10 @@ class ChatSystem {
             .then(() => {
 
                 return r.sort((a, b) => {
-                    return - (a.lm_datetime? a.lm_datetime.getTime() : 0)
-                        + (b.lm_datetime? b.lm_datetime.getTime() : 0)
+                    if (!a.lm_datetime || b.lm_datetime)
+                        return 0
+
+                    return - a.lm_datetime.getTime() + b.lm_datetime.getTime()
                 })
 
             })
