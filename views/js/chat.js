@@ -146,13 +146,7 @@ class ChatInterface {
 
             let lineCount = this.entry.value.split('\n').length
 
-            console.log(this.entry.value)
-            console.log(lineCount)
-
-            if(lineCount > 1)
-                this.entry.classList.add('expanded')
-            else
-                this.entry.classList.remove('expanded')
+            this.entry.style.height = 38 * Math.max(lineCount, 4) + 'px'
 
         })
         
