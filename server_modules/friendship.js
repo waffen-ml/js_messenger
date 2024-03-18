@@ -130,59 +130,56 @@ exports.init = (cfx) => {
         })
     }, true)
 
-    cfx.core.app.get('/answer_friend_request', (req, res) => {
-        cfx.core.plogin(req, res, true)
-        .then(user => {
-            return req.query.accept == 1?
-                cfx.friendship.acceptFriendRequest(user.id, req.query.id)
-                : cfx.friendship.declineFriendRequest(user.id, req.query.id)
-        })
+    cfx.core.safeGet('/answer_friend_request', (user, req, res) => {
+        return (req.query.accept == 1? cfx.friendship.acceptFriendRequest(user.id, req.query.id)
+            : cfx.friendship.declineFriendRequest(user.id, req.query.id))
         .then(() => {
-            res.send("ok")
+            return {success:1}
         })
-        .catch(() => {
-            res.send("error")
+    }, true)
+
+    cfx.core.safeGet('/cancel_friend_request', (user, req, res) => {
+        return cfx.friendship.deleteRequestsBetween(user.id, req.query.id)
+        .then(() => {
+            return {success:1}
         })
+    }, true)
+
+    cfx.core.safeGet('/send_friend_request', (user, req, res) => {
+
+        return cfx.friendship.sendFriendRequest(user.id, req.query.id)
+        .then(() => {
+            return {success:1}
+        })
+    }, true)
+
+    cfx.core.safeGet('/getfriendsofuser', (_, req, res) => {
+        return cfx.friendship.getFriends(req.query.id)
     })
 
-    cfx.core.app.get('/cancel_friend_request', (req, res) => {
-        cfx.core.plogin(req, res, true)
-        .then(user => {
-            return cfx.friendship.deleteRequestsBetween(user.id, req.query.id)
-        })
-        .then(() => {
-            res.send("ok")
-        })
-        .catch(() => {
-            res.send("error")
-        })
-    })
+    cfx.core.safeGet('/getfriendshipstatus', (user, req, res) => {
+        //doesFriendRequestExist, areFriends
 
-    cfx.core.app.get('/send_friend_request', (req, res) => {
-        cfx.core.plogin(req, res, true)
-        .then(user => {
-            return cfx.friendship.sendFriendRequest(user.id, req.query.id)
+        return Promise.all([
+            cfx.friendship.areFriends(user.id, req.query.id),
+            cfx.friendship.doesFriendRequestExist(user.id, req.query.id),
+            cfx.friendship.doesFriendRequestExist(req.query.id, user.id),
+        ]).then(r => {
+            return {
+                friends: r[0],
+                outgoing_request: r[1],
+                incoming_request: r[2]
+            }
         })
-        .then(() => {
-            res.send("ok")
-        })
-        .catch(() => {
-            res.send("error")
-        })
-    })
 
-    cfx.core.app.get('/remove_friend', (req, res) => {
-        cfx.core.plogin(req, res, true)
-        .then(user => {
-            return cfx.friendship.removeFriendship(user.id, req.query.id)
-        })
+    }, true)
+
+    cfx.core.safeGet('/remove_friend', (user, req, res) => {
+        return cfx.friendship.removeFriendship(user.id, req.query.id)
         .then(() => {
-            res.send("ok")
+            return {success:1}
         })
-        .catch(() => {
-            res.send("error")
-        })
-    })
+    }, true)
 
     cfx.forms.addForm(new Form(
         {name: 'addfriend'}, [
