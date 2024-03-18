@@ -138,15 +138,19 @@ class ChatInterface {
 
     initSendFunction(send) {
         this.entry.addEventListener('keydown', (e) => {
+            console.log(e.key)
             if(e.key == 'Enter' && !window.isMobileOrTablet() && !window.event.shiftKey) {
                 e.preventDefault()
                 this.chat.sendDefault()
                 return
             }
 
-            let lineCount = this.entry.value.split('\n').length
+            let lineCount = this.entry.value.split('\n').length 
 
-            this.entry.style.height = Math.min(lineCount, 4) + 'em'
+            if(lineCount > 1)
+                this.entry.classList.add('expanded')
+            else
+                this.entry.classList.remove('expanded')
 
         })
         
