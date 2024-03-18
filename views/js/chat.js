@@ -149,6 +149,7 @@ class ChatInterface {
                 this.entry.classList.add('extended')
             else
                 this.entry.classList.remove('extended')
+            console.log(lineCount)
 
         })
         
