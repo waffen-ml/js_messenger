@@ -138,9 +138,18 @@ class ChatInterface {
 
     initSendFunction(send) {
         this.entry.addEventListener('keydown', (e) => {
-            if (e.key != 'Enter' || window.isMobileOrTablet() || window.event.shiftKey) return
+            if (e.key != 'Enter' || window.isMobileOrTablet()
+                || window.event.shiftKey) return
             e.preventDefault()
             this.chat.sendDefault()
+
+            let lineCount = this.entry.textContent.split('\n').length - 1
+
+            if(lineCount > 1)
+                this.entry.classList.add('extended')
+            else
+                this.entry.classList.remove('extended')
+
         })
         
         document.querySelector('#send').onclick = () => this.chat.sendDefault();
