@@ -172,7 +172,7 @@ ul.attached {
 .chat-header {
     display:flex;
     align-items: center;
-    padding:4px;
+    padding:5px;
     height:60px;
     gap:10px;
     flex-shrink: 0;

@@ -1,11 +1,13 @@
 const chatid = new URLSearchParams(window.location.search).get('id')
 const loadWindow = 15
+const updateLastSeenInterval = 30 // seconds
 
 const emojiList = Array.from(`😀😃😄😁😆😅🤣😂🙂🙃😉😊😇🥰😍🤩😘😗
 😚😙😋😛😜🤪😝🤑🤗🤭🤫🤔🤐🤨😐😑😶😏😒🙄😬🤥😌😔😪🤤😴😷🤒🤕🤢
 🤮🤧🥵🥶🥴😵🤯🤠🥳😎🤓🧐😕😟🙁😮😯😲😳🥺😦😧😨😰😥😢😭😱😖😣😞😓😩😫🥱😤😡😠🤬
 ❤🧡💛💚💙💜🤎🖤🤍💔💯❗❌💘`)
 .filter(w => w != '\n')
+
 
 class ChatInterface {
     constructor(chat) {
@@ -224,15 +226,23 @@ class ChatInterface {
         this.fileUploader.clear()
     }
 
-    setChatHeader(title, subtitle, avatarUrl, onclick) {
-        document.querySelector('.chat-header .chat-name').textContent = title ?? ''
+    setChatAvatar(avatarUrl) {
+        document.querySelector('.chat-header .avatar').src = avatarUrl
+    }
 
-        if (subtitle) {
+    setChatTitle(title) {
+        document.querySelector('.chat-header .chat-name').textContent = title ?? ''
+    }
+
+    setChatSubtitle(subtitle) {
+        if(subtitle) {
             document.querySelector('.chat-header .subinfo').textContent = subtitle
             document.querySelector('.chat-header .info').classList.add('detailed')
-        }
+        } else 
+            document.querySelector('.chat-header .info').classList.remove('detailed')
+    }
 
-        document.querySelector('.chat-header .avatar').src = avatarUrl
+    setHeaderClickEvent(onclick) {
         document.querySelector('.chat-header .info').onclick = onclick
     }
 }
@@ -314,9 +324,8 @@ class ChatMessages {
 }
 
 class Chat {
-    constructor(me, info, socket) {
-        this.info = info
-        this.chatid = info.id
+    constructor(me, chatid, socket) {
+        this.chatid = chatid
         this.socket = socket
         this.me = me
         this.interface = new ChatInterface(this)
@@ -328,21 +337,45 @@ class Chat {
         this.loadChatInfo()
         this.loadMessageBatch()
         this.setupSocket()
+
+        this.updateLastSeen()
     }
+ 
+    updateLastSeen() {
+        if (!this.info.is_direct)
+            return
+
+        let target = this.info.members.find(m => m.id != this.me.id)
+
+        fetch('/getuser?id=' + target.id)
+        .then(r => r.json())
+        .then(r => {
+            let last_seen = new Date(r.last_seen)
+            this.interface.setChatSubtitle(utils.getLastSeenStatus(last_seen))
+            
+            setTimeout(() => this.updateLastSeen(), updateLastSeenInterval * 1000)
+        })
+
+    }
+
+
 
     loadChatInfo() {
         fetch('/getchatinfo?id='+this.chatid)
         .then(r => r.json())
-        .then(r => {
+        .then(info => {
+            this.info = info
 
             let name = utils.getChatName(r, this.me)
-            let subtitle = r.is_direct? null : r.members.length + ' участников'
+            let subtitle = r.is_direct? null : utils.nItemsLabel(r.members.length, 'участник', 'участника', 'участников')
             let avatar_url = utils.getChatAvatarURL(r, this.me)
             let onclick = r.is_direct? () => location.replace('/user?id=' + utils.getOtherMember(r, this.me).id)
                 : () => alert('hey!')
             
-            this.interface.setChatHeader(name, subtitle, avatar_url, onclick)
-
+            this.interface.setChatAvatar(avatar_url)
+            this.interface.setChatTitle(name)
+            this.interface.setChatSubtitle(subtitle)
+            this.interface.setHeaderClickEvent(onclick)
         })
     }
 
@@ -752,8 +785,7 @@ class Call {
 }
 
 let chat = null
-let call = null
-let user = null
+
 
 fetch('/auth')
 .then((r) => r.json())
@@ -763,16 +795,8 @@ fetch('/auth')
         location.replace('/')
         return
     }
-    user = user_
-    return fetch('/getchatinfo?id=' + chatid)
+    chat = new Chat(user, chatid, socket)
 })
-.then(r => r.json())
-.then(info => {
-    console.log(info)
-    chat = new Chat(user, info, socket)
-    call = new Call(user, info, socket)
-})
-
 
 
 
