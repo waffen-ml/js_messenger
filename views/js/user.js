@@ -70,6 +70,29 @@ function setupTransactionButton() {
     transactionButton.href = '/ebank?sendto=' + user.tag
 }
 
+function loadFriends() {
+    let friendlistButton = document.querySelector('.info .friends')
+
+    fetch('/getfriendsofuser?id=' + user.id)
+    .then(r => r.json())
+    .then(friends => {
+
+        friendlistButton.textContent = friends.length?
+            utils.nItemsLabel(friends.length, 'друг', 'друга', 'друзей') : 'нет друзей'
+
+        let popup = new Popup({
+            html: templateManager.createHTML('friends', {friends: friends}),
+            closable: true,
+            removeOnClose: false
+        })
+
+        friendlistButton.addEventListener('click', () => {
+            popup.open()
+        })
+
+    })
+}
+
 
 utils.getUser(url.get('id'), url.get('tag'))
 .then(user_ => {
@@ -78,4 +101,5 @@ utils.getUser(url.get('id'), url.get('tag'))
     loadLastSeen()
     loadFeed()
     setupTransactionButton()
+    loadFriends()
 })

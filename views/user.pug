@@ -30,3 +30,12 @@ block main
                 a.button.ebank(href="#") Перевести EBL...
 
     .feed(style="margin-top:20px;")
+
+    script(type="text/x-ejs-template", template="friends")
+        ul.styled-scroll(style="margin:0;overflow-y:auto;max-height:500px; width:max-content;list-style-type:none;padding:0;")
+            <% friends.forEach(r => { %>
+            li
+                a.button.light.user(href!="/user?id=<%=r.user_id%>", style="display:flex;gap:8px;align-items:center")
+                    img.avatar(src!="/getuseravatar?id=<%=r.user_id%>", style="height:40px;width:40px")
+                    span.name <%= r.user_name %>
+            <% }) %>
