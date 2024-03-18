@@ -276,6 +276,7 @@ class ChatSystem {
                     lm = lm[0]
                     if (lm)
                         Object.keys(lm).forEach(k => view['lm_' + k] = lm[k])
+                    view.lm_datetime = new Date(view.lm_datetime)
                     return this.cfx.query(`select count(*) as unread from message where chat_id=? and id > ?`, 
                     [view.chat_id, view.last_read ?? 0])
                 })
@@ -284,9 +285,16 @@ class ChatSystem {
                 })
             }))
             .then(() => {
-                return r
+
+                return r.sort((a, b) => {
+                    return (a.lm_datetime? a.lm_datetime.getTime() : 0)
+                        - (b.lm_datetime? b.lm_datetime.getTime() : 0)
+                })
+
             })
+
         })
+
     }
 
     getDirectChat(userid1, userid2) {

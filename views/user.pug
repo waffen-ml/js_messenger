@@ -20,7 +20,7 @@ block main
             span.tag= '@' + target.tag
             span.last-seen
             p.bio= target.bio
-            a.friends(href="#") 25 друзей...
+            a.friends(href="#")
         .actions
             if user && user.id == target.id
                 a.button.settings(href="/settings?id=" + target.id) Настроить профиль
