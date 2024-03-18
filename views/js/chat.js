@@ -145,17 +145,21 @@ class ChatInterface {
         })
 
         this.entry.addEventListener('input', (e) => {
-            let lineCount = this.entry.value.split('\n').length 
-
-            console.log(lineCount)
-
-            if(lineCount > 1)
-                this.entry.classList.add('expanded')
-            else
-                this.entry.classList.remove('expanded')
+            this.updateEntryHeight()
         })
         
         document.querySelector('#send').onclick = () => this.chat.sendDefault();
+    }
+
+    updateEntryHeight() {
+        let lineCount = this.entry.value.split('\n').length 
+
+        console.log(lineCount)
+
+        if(lineCount > 1)
+            this.entry.classList.add('expanded')
+        else
+            this.entry.classList.remove('expanded')
     }
 
     initLoadMessagesFunction(load) {
@@ -252,6 +256,8 @@ class ChatInterface {
 
     clearInput() {
         this.entry.value = ''
+        this.updateEntryHeight()
+        this.updateFileCount()
         this.fileUploader.clear()
     }
 
