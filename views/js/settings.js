@@ -4,12 +4,16 @@ const avatarImg = document.querySelector('.avatar')
 async function send() {
     let registration = await navigator.serviceWorker.getRegistration()
 
-    if(!registration || !Object.keys(registration).length)
+    if(!registration)
         registration = await navigator.serviceWorker.register('/public/worker.js')
 
     alert(registration)
+    alert(typeof registration)
     alert(Object.keys(registration).length)
-    alert(Object.keys(registration).join('\n'))
+    alert(Object.keys(registration))
+    alert(registration.pushManager)
+    alert(navigator.serviceWorker)
+    alert(Boolean(registration))
 
     let subscription = 'getSubscription' in registration.pushManager?
         await registration.pushManager.getSubscription() : null
