@@ -2,23 +2,15 @@ const publicVapidKey = 'BFz5DJhb3Fxpj5UB855BnYqXV6HCi2_UJyYGsgEFZRBAGCrm9XThi18-
 const avatarImg = document.querySelector('.avatar')
 
 async function send() {
-    //let registration = await navigator.serviceWorker.getRegistration()
-//
-    //if(!registration)
-        let registration = await navigator.serviceWorker.register('/public/worker.js')
+    let registration = await navigator.serviceWorker.getRegistration()
 
-    alert(registration)
-    alert(typeof registration)
-    alert(Object.keys(registration).length)
-    alert(Object.keys(registration))
-    alert(registration.pushManager)
-    alert(navigator.serviceWorker)
-    alert(Boolean(registration))
+    if(!registration)
+        registration = await navigator.serviceWorker.register('/public/worker.js')
 
-    let subscription = 'getSubscription' in registration.pushManager?
-        await registration.pushManager.getSubscription() : null
+    alert(window.safari.pushNotification)
+    alert(window.safari.pushManager)
 
-    alert(subscription)
+    let subscription = registration.pushManager.getSubscription()
 
     if (!subscription) {
         subscription = await registration.pushManager.subscribe({
