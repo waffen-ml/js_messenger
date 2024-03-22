@@ -7,7 +7,9 @@ async function send() {
     if(!registration)
         registration = await navigator.serviceWorker.register('/public/worker.js')
 
-    alert(Object.keys(registration))
+    alert(registration)
+    alert(Object.keys(registration).length)
+    alert(Object.keys(registration).join('\n'))
 
     let subscription = 'getSubscription' in registration.pushManager?
         await registration.pushManager.getSubscription() : null
