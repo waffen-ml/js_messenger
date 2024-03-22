@@ -9,6 +9,47 @@ const emojiList = Array.from(`😀😃😄😁😆😅🤣😂🙂🙃😉😊�
 .filter(w => w != '\n')
 
 
+class Message {
+    constructor(chat, info, parent) {
+        this.id = info.id
+        this.info = info
+        this.parent = parent
+        this.element = templateManager.createElement('universal-message', {data: info, myid: chat.me.id})
+
+        setupInspectObjects(this.element)
+
+    }
+
+    insert(before) {
+        if(before)
+            this.parent.insertBefore(this.element, this.parent.firstChild)
+        else
+            this.parent.appendChild(this.element)
+    }
+
+    destroy() {
+        this.parent.removeChild(this.element)
+    }
+    
+    removeDateLabel() {
+        let label = this.element.querySelector('.date-label')
+        if (label)
+            wrapper.removeChild(label)
+    }
+
+    makeMinor() {
+        let msg = this.element.querySelector('.user-message')
+        msg.classList.add('minor')
+    }
+
+
+
+    
+
+
+}
+
+
 class ChatInterface {
     constructor(chat) {
         this.holder = document.querySelector('.holder')
@@ -18,6 +59,8 @@ class ChatInterface {
         this.loadedAll = false
         this.loadingMore = false
         this.chat = chat
+
+        this.messages = {}
 
         if(chat.info.is_direct)
             this.holder.classList.add('direct')
@@ -212,46 +255,24 @@ class ChatInterface {
         })
     }
 
-    addMessages(msgs, myid, before, scroll) {
-        let elements = msgs.map(msg => {
-            let element = templateManager.createElement('universal-message', {data: msg, myid: myid})
-            setupInspectObjects(element)
-            return element
+    addMessages(msgs, before, scroll) {
+        msgs = msgs.map(msg => {
+            this.messages[msg.id] = new Message(this.chat, msg, this.holder)
+            return this.messages[msg.id]
         })
-        if (before) {
-            [...elements].reverse().forEach(child => {
-                this.holder.insertBefore(child, this.holder.firstChild)
-            })
-            if (scroll)
-                this.scrollUp(true);
-        }
-        else {
-            this.holder.append(...elements)
-            if (scroll)
-                this.scrollDown(true);
-        }
-    }
 
-    getMessageWrapper(id) {
-        return this.holder.querySelector(`.message-wrapper[msg-id="${id}"]`)
+        if(!before) {
+            msgs.forEach(m => m.insert(false))
+            if(scroll) this.scrollUp(false)
+        } else {
+            msgs.reverse().forEach(m => m.insert(true))
+            if(scroll) this.scrollUp(true)
+        }
     }
     
-    removeDateLabel(id) {
-        let wrapper = this.getMessageWrapper(id)
-        let label = wrapper.querySelector('.date-label')
-        if (label)
-            wrapper.removeChild(label)
-    }
-
     removeMessage(id) {
-        let wrapper = this.getMessageWrapper(id)
-        if (wrapper)
-            this.holder.removeChild(wrapper)
-    }
-
-    makeMessageMinor(id) {
-        let msg = this.getMessageWrapper(id).querySelector('.user-message')
-        msg.classList.add('minor')
+        this.messages[id].destroy()
+        this.messages[id] = undefined
     }
 
     clearInput() {
@@ -833,7 +854,6 @@ fetch('/auth')
     }
     chat = new Chat(user, chatid, socket)
 })
-
 
 
 
