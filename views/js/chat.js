@@ -263,7 +263,7 @@ class ChatInterface {
 
         if(!before) {
             msgs.forEach(m => m.insert(false))
-            if(scroll) this.scrollUp(false)
+            if(scroll) this.scrollDown(true)
         } else {
             msgs.reverse().forEach(m => m.insert(true))
             if(scroll) this.scrollUp(true)
