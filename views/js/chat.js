@@ -272,7 +272,11 @@ class ChatInterface {
     
     removeMessage(id) {
         this.messages[id].destroy()
-        this.messages[id] = undefined
+        delete this.messages[id]
+    }
+
+    getMessage(id) {
+        return this.messages[id]
     }
 
     clearInput() {
@@ -360,11 +364,11 @@ class ChatMessages {
 
         if (this.messages.length) {
             if (!this.requiresDateLabel(b, a)) {
-                this.interface.removeDateLabel(b.id)
+                this.interface.getMessage(b.id).removeDateLabel()
                 b.dateLabel = false
             }
             if (this.isMinor(b, a)) {
-                this.interface.makeMessageMinor(b.id)
+                this.interface.getMessage(b.id).makeMessageMinor()
                 b.minor = true
             }
         }
