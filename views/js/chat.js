@@ -369,6 +369,8 @@ class ChatMessages {
             }
         }
 
+        console.log(this.messages)
+
         this.messages.unshift(...batch)
     }
 
