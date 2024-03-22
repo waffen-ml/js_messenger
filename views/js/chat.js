@@ -363,8 +363,6 @@ class ChatMessages {
         let a = batch[batch.length - 1]
         let b = this.messages[0]
 
-        this.interface.addMessages(batch, true, scroll)
-
         console.log(a.id)
 
         if (this.messages.length) {
@@ -377,6 +375,8 @@ class ChatMessages {
                 b.minor = true
             }
         }
+
+        this.interface.addMessages(batch, true, scroll)
 
         console.log(this.messages)
 
