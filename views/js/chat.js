@@ -368,7 +368,7 @@ class ChatMessages {
                 b.dateLabel = false
             }
             if (this.isMinor(b, a)) {
-                this.interface.getMessage(b.id).makeMessageMinor()
+                this.interface.getMessage(b.id).makeMinor()
                 b.minor = true
             }
         }
