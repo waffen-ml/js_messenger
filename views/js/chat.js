@@ -357,10 +357,11 @@ class ChatMessages {
 
     addBefore(batch, scroll) {
         this.enhance(batch)
-        this.interface.addMessages(batch, true, scroll)
         
         let a = batch[batch.length - 1]
         let b = this.messages[0]
+
+        this.interface.addMessages(batch, true, scroll)
 
         console.log(a.id)
 
