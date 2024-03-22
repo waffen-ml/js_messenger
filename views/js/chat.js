@@ -362,6 +362,8 @@ class ChatMessages {
         let a = batch[batch.length - 1]
         let b = this.messages[0]
 
+        console.log(a.id)
+
         if (this.messages.length) {
             if (!this.requiresDateLabel(b, a)) {
                 this.interface.getMessage(b.id).removeDateLabel()
