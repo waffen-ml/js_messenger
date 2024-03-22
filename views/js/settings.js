@@ -2,10 +2,10 @@ const publicVapidKey = 'BFz5DJhb3Fxpj5UB855BnYqXV6HCi2_UJyYGsgEFZRBAGCrm9XThi18-
 const avatarImg = document.querySelector('.avatar')
 
 async function send() {
-    let registration = await navigator.serviceWorker.getRegistration()
-
-    if(!registration)
-        registration = await navigator.serviceWorker.register('/public/worker.js')
+    //let registration = await navigator.serviceWorker.getRegistration()
+//
+    //if(!registration)
+        let registration = await navigator.serviceWorker.register('/public/worker.js')
 
     alert(registration)
     alert(typeof registration)
