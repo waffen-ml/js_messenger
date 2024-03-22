@@ -358,6 +358,8 @@ class ChatMessages {
     addBefore(batch, scroll) {
         this.enhance(batch)
         
+        console.log(batch)
+
         let a = batch[batch.length - 1]
         let b = this.messages[0]
 
