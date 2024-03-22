@@ -7,9 +7,6 @@ async function send() {
     if(!registration)
         registration = await navigator.serviceWorker.register('/public/worker.js')
 
-    alert(window.safari.pushNotification)
-    alert(window.safari.pushManager)
-
     let subscription = registration.pushManager.getSubscription()
 
     if (!subscription) {
