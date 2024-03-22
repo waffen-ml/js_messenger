@@ -4,7 +4,7 @@ const avatarImg = document.querySelector('.avatar')
 async function send() {
     let registration = await navigator.serviceWorker.getRegistration()
 
-    if(!registration)
+    if(!registration || !Object.keys(registration).length)
         registration = await navigator.serviceWorker.register('/public/worker.js')
 
     alert(registration)
