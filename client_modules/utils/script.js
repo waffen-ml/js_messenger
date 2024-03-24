@@ -210,6 +210,9 @@ class Utils {
         return preview
     }
 
+    classAttr(d) {
+        return Object.keys(d).filter(k => d[k]).join(' ')
+    }
 }
 
 const utils = new Utils();

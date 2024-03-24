@@ -1,23 +1,24 @@
 // engine
-const express = require('express');
-const app = express();
-const fs = require('fs');
-const pug = require('pug');
+const express = require('express')
+const app = express()
+const fs = require('fs')
+const pug = require('pug')
+
+//const server = require('https').createServer({
+//    key: fs.readFileSync(__dirname + `/../sslcert/privkey.pem`),
+//    cert: fs.readFileSync(__dirname + `/../sslcert/cert.pem`)
+//}, app)
 const server = require('https').createServer({
-    key: fs.readFileSync(__dirname + `/../sslcert/privkey.pem`),
-    cert: fs.readFileSync(__dirname + `/../sslcert/cert.pem`)
-}, app);
+    key: fs.readFileSync(__dirname + '/cert/key.pem'),
+    cert: fs.readFileSync(__dirname + '/cert/cert.pem')
+}, app)
+
 const unsecureServer = require('http').createServer((req, res) => {
     res.writeHead(302, {
       'Location': 'https://coffeetox.ru' + req.url
     })
     res.end()
 })
-
-//const server = require('https').createServer({
-//    key: fs.readFileSync(__dirname + '/cert/key.pem'),
-//    cert: fs.readFileSync(__dirname + '/cert/cert.pem')
-//}, app);
 
 const SocketServer = require("socket.io").Server
 const io = new SocketServer(server)

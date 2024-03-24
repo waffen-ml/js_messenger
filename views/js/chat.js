@@ -1,6 +1,6 @@
 const chatid = new URLSearchParams(window.location.search).get('id')
 const loadWindow = 15
-const updateLastSeenInterval = 30 // seconds
+const updateLastSeenInterval = 20 // seconds
 
 const emojiList = Array.from(`😀😃😄😁😆😅🤣😂🙂🙃😉😊😇🥰😍🤩😘😗
 😚😙😋😛😜🤪😝🤑🤗🤭🤫🤔🤐🤨😐😑😶😏😒🙄😬🤥😌😔😪🤤😴😷🤒🤕🤢
@@ -9,46 +9,57 @@ const emojiList = Array.from(`😀😃😄😁😆😅🤣😂🙂🙃😉😊�
 .filter(w => w != '\n')
 
 
-class Message {
-    constructor(chat, info, parent) {
+
+class MessageElement {
+    constructor(chat, info) {
         this.id = info.id
+        this.chat = chat
         this.info = info
-        this.parent = parent
-        this.element = templateManager.createElement('universal-message', {data: info, myid: chat.me.id})
+        this.wrapper = templateManager.createElement('any-message', {data: info, myid: chat.me.id})
+        this.userMessage = this.wrapper.querySelector('.user-message')
+        this.systemMessage = this.wrapper.querySelector('.message-wrapper > .system-message')
 
-        setupInspectObjects(this.element)
-
+        setupInspectObjects(this.wrapper)
+        this.update()
     }
 
-    insert(before) {
-        if(before)
-            this.parent.insertBefore(this.element, this.parent.firstChild)
+    toggleDateLabel(state) {
+        if(state)
+            this.wrapper.classList.add('datechange')
         else
-            this.parent.appendChild(this.element)
+            this.wrapper.classList.remove('datechange')
     }
 
-    destroy() {
-        this.parent.removeChild(this.element)
+    setMinor(isMinor) {
+        if(!this.userMessage)
+            return
+
+        if(isMinor)
+            this.userMessage.classList.add('minor')
+        else
+            this.userMessage.classList.remove('minor')
+    } 
+
+    setReadStatus(status) {
+        if(!this.userMessage)
+            return
+
+        if(status)
+            this.userMessage.classList.add('read')
+        else
+            this.userMessage.classList.remove('read')
     }
-    
-    removeDateLabel() {
-        let label = this.element.querySelector('.date-label')
-        if (label)
-            wrapper.removeChild(label)
+
+    update() {
+        this.toggleDateLabel(this.info.dateLabel)
+        this.setMinor(this.info.minor)
+        this.setReadStatus(this.info.read)
+
+        if(this.chat.me.id == this.info.sender_id)
+            this.userMessage.classList.add('mine')
     }
-
-    makeMinor() {
-        let msg = this.element.querySelector('.user-message')
-        msg.classList.add('minor')
-    }
-
-
-
-    
-
 
 }
-
 
 class ChatInterface {
     constructor(chat) {
@@ -196,9 +207,6 @@ class ChatInterface {
 
     updateEntryHeight() {
         let lineCount = this.entry.value.split('\n').length 
-
-        console.log(lineCount)
-
         if(lineCount > 1)
             this.entry.classList.add('expanded')
         else
@@ -255,23 +263,24 @@ class ChatInterface {
         })
     }
 
-    addMessages(msgs, before, scroll) {
+    addMessages(msgs, before) {
         msgs = msgs.map(msg => {
-            this.messages[msg.id] = new Message(this.chat, msg, this.holder)
+            this.messages[msg.id] = new MessageElement(this.chat, msg)
             return this.messages[msg.id]
         })
 
         if(!before) {
-            msgs.forEach(m => m.insert(false))
-            if(scroll) this.scrollDown(true)
+            msgs.forEach(m => this.holder.appendChild(m.wrapper))
+            this.scrollDown(true)
         } else {
-            msgs.reverse().forEach(m => m.insert(true))
-            if(scroll) this.scrollUp(true)
+            msgs.reverse().forEach(m => this.holder.insertBefore(m.wrapper, this.holder.firstChild))
         }
     }
     
     removeMessage(id) {
-        this.messages[id].destroy()
+        if(!this.messages[id])
+            return
+        this.holder.removeChild(this.messages[id].element)
         delete this.messages[id]
     }
 
@@ -306,17 +315,34 @@ class ChatInterface {
         document.querySelector('.chat-header .info').onclick = onclick
     }
 
+    updateMessage(id) {
+        let msg = this.getMessage(id)
+        if(msg) msg.update()
+    }
+
 }
 
-class ChatMessages {
-    
+class MessageList {
     constructor(itf, me) {
         this.messages = []
         this.interface = itf
         this.me = me
     }
 
-    addMessages(msgs, prepare, before, scroll) {
+    getMessageById(id) {
+        for(let i = 0; i < this.messages.length; i++)
+            if(this.messages[i].id == id)
+                return this.messages[i]
+        return null
+    }
+
+    getMessageByIndex(index) {
+        return this.messages[index]
+    }
+
+    addMessages(msgs, prepare=true, before=false) {
+        //msgs: ascending
+
         if (!msgs.length)
             return
 
@@ -328,66 +354,53 @@ class ChatMessages {
             })
         }
         if (before)
-            this.addBefore(msgs, scroll)
+            this.addBefore(msgs)
         else
-            this.addAfter(msgs, scroll)
+            this.addAfter(msgs)
     }
 
     isMinor(curr, prev) {
         return curr.sender_id === prev.sender_id
-            // && utils.differenceInMinutes(curr.datetime, prev.datetime) < 5
+            && utils.differenceInMinutes(curr.datetime, prev.datetime) < 5
     }
 
     requiresDateLabel(curr, prev) {
         return !prev.datetime || !utils.areDatesEqual(curr.datetime, prev.datetime)
     }
 
-    _enhanceStep(curr, prev) {
+    enhance(curr, prev) {
         curr.minor = this.isMinor(curr, prev)
         curr.dateLabel = this.requiresDateLabel(curr, prev)
+        this.interface.updateMessage(curr.id)
         return curr
     }
 
-    enhance(msgs, prev) {
-        this._enhanceStep(msgs[0], prev ?? {})
+    enhanceAll(msgs, prev) {
+        this.enhance(msgs[0], prev ?? {})
         for (let i = 1; i < msgs.length; i++)
-            this._enhanceStep(msgs[i], msgs[i - 1])
+            this.enhance(msgs[i], msgs[i - 1])
         return msgs
     }
 
-    addBefore(batch, scroll) {
-        this.enhance(batch)
-        
-        console.log(batch)
-
+    addBefore(batch) {
+        this.enhanceAll(batch)
         let a = batch[batch.length - 1]
         let b = this.messages[0]
 
-        console.log(a.id)
-
-        if (this.messages.length) {
-            if (!this.requiresDateLabel(b, a)) {
-                this.interface.getMessage(b.id).removeDateLabel()
-                b.dateLabel = false
-            }
-            if (this.isMinor(b, a)) {
-                this.interface.getMessage(b.id).makeMinor()
-                b.minor = true
-            }
+        if(b) {
+            this.enhance(b, a) 
+            console.log(b)
         }
 
-        this.interface.addMessages(batch, true, scroll)
-
-        console.log(this.messages)
-
+        this.interface.addMessages(batch, true)
         this.messages.unshift(...batch)
     }
 
-    addAfter(batch, scroll) {
+    addAfter(batch) {
         let last = this.messages[this.messages.length - 1]
-        this.enhance(batch, last)
+        this.enhanceAll(batch, last)
         this.messages.push(...batch)
-        this.interface.addMessages(batch, false, scroll)
+        this.interface.addMessages(batch, false)
     }
 }
 
@@ -405,7 +418,7 @@ class Chat {
     init(info) {
         this.info = info
         this.interface = new ChatInterface(this)
-        this.messages = new ChatMessages(this.interface, this.me)
+        this.messageList = new MessageList(this.interface, this.me)
 
         this.interface.initSendFunction(() => this.send())
         this.interface.initLoadMessagesFunction(() => this.loadMessageBatch())
@@ -416,6 +429,7 @@ class Chat {
 
         this.updateLastSeen()
         this.setupHeader()
+        this.readMessages()
     }
 
     setupHeader() {
@@ -449,15 +463,13 @@ class Chat {
     }
 
     loadMessageBatch() {
-        let first = this.messages.messages[0]
-
-        let loadStart = first? first.id : -1
+        let first = this.messageList.getMessageByIndex(0)
+        let loadStart = first? first.id - 1 : -1
         
         return fetch(`/getmessages?chatid=${chatid}&count=${loadWindow}&start=${loadStart}`)
         .then(r => r.json())
         .then(msgs => {
-
-            this.messages.addMessages(msgs.reverse(), true, true, false)
+            this.messageList.addMessages(msgs, true, true, false)
 
             if (msgs.length < loadWindow) {
                 this.interface.disableLoadingMore()
@@ -475,9 +487,25 @@ class Chat {
             console.log(msg)
             if(msg.chat_id != this.chatid)
                 return
-            this.messages.addMessages([msg], true, false, true)
-            fetch('/readmessages?id=' + this.chatid)
+            this.messageList.addMessages([msg], true, false)
+            this.readMessages()
         })
+
+        socket.on('last_read', msg => {
+            console.log(msg.reader)
+            let idx = this.messageList.messages.findIndex(w => w.id == msg.id)
+            for(let i = 0; i <= idx; i++) {
+                let msg = this.messageList.messages[i]
+                if(msg.sender_id != this.me.id)
+                    continue
+                msg.read = true
+                this.interface.updateMessage(msg.id)
+            }
+        })
+    }
+
+    readMessages() {
+        return fetch('/readmessages?id=' + this.chatid)
     }
 
     getAvailableStickers() {

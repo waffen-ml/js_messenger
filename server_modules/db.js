@@ -69,14 +69,6 @@ class Database {
 }
 
 exports.init = (cfx) => {
-    //cfx.db = new Database({
-    //    host: 'localhost',
-    //    user: 'root',
-    //    database: 'coffetox',
-    //    password: 'admin',
-    //    charset : 'utf8mb4'
-    //}, cfx);
-
     cfx.db = new Database({
         host: 'ilyaspqx.beget.tech',
         user: 'ilyaspqx_db',

@@ -22,7 +22,6 @@ main {
     flex-shrink: 0;
 }
 
-
 .entry {
     width: 100%;
     height:36px;
@@ -72,17 +71,26 @@ main {
 }
 
 
+
+
+
 .message-wrapper {
 }
 
 .date-label {
     margin-top:20px;
     margin-bottom:20px;
+    display:none;
+}
+
+.message-wrapper.datechange .date-label {
+    display:block;
 }
 
 .date-label .system-message {
     margin:0;
 }
+
 
 .system-message {
     display:block;
@@ -130,6 +138,7 @@ main {
     display:none;
 }
 
+
 .content-block {
     margin:0;
     background: #e2ccb9d7;
@@ -160,20 +169,55 @@ main {
     word-break:break-word;
 }
 
-.user-message .time {
+.user-message .meta {
     display:inline;
     position:relative;
-    color:#454545;
-    font-size:0.7em;
     float:right;
     top:0.6em;
+    font-size:0.7em;
     margin-left:8px;
+    user-select: none;
+    pointer-events: none;
+}
+
+.user-message .meta .time {
+    color:#454545;
+}
+
+.user-message:not(.mine) .meta .status {
+    display:none;
+}
+
+.user-message .meta .status {
+    display:inline-block;
+    opacity: 0.6;
+    height:1em;
+    aspect-ratio: 1;
+    background-image:url('/public/messagestatus/delivered.png');
+    background-size:100%;
+    background-position: center;
+}
+
+.user-message.read .meta .status {
+    background-image:url('/public/messagestatus/read.png');
 }
 
 .user-message .text {
     display:inline;
     margin:0;
 }
+
+.user-message:not([type="default"]) .text {
+    display:none;
+}
+
+
+
+
+
+
+
+
 
 ul.attached {
     margin:0;

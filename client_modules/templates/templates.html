@@ -93,10 +93,8 @@
     <span class="system-message"><%= text %></span>
 </script>
 
-<script template="standard-message" type="text/x-ejs-template">
-    <% let cls = (data.minor? 'minor' : '') + ' ' + (myid == data.sender_id? 'mine' : '') %>
-
-    <div class="user-message <%= cls %>">
+<script template="user-message" type="text/x-ejs-template">
+    <div class="user-message" type="<%=data.type%>">
         <img class="avatar" src="/getuseravatar?id=<%= data.sender_id %>">
         <div class="block content-block">
             <a href="/user?tag=<%= data.sender_tag %>" class="finite clean name">
@@ -104,41 +102,37 @@
             </a>
             
             <% if (data.type == 'default') { %>
-            <%- templateManager.apply("visual", {files: data.files}) %>
-            <%- templateManager.apply("audio", {audio: data.files.audio}) %>
-            <%- templateManager.apply("other", {other: data.files.other}) %>
-            <div class="bottom" style="min-width:120px;">
+                <%- templateManager.apply("visual", {files: data.files}) %>
+                <%- templateManager.apply("audio", {audio: data.files.audio}) %>
+                <%- templateManager.apply("other", {other: data.files.other}) %>
+            <% } else if (data.type == 'sticker') { %>
+                <img src="<%=data.content%>" style="display:block;margin:0;height:130px">
+            <% } %>
+
+            <div class="bottom">
                 <p class="text">
                     <%- data.content.replace(/\n/g, '<br>') %>
                 </p>
-                <span class="time">
-                    <%= utils.formatTime(data.datetime) %>
-                </span>
-            </div>
-            <% } else if (data.type == 'sticker') { %>
-                <img src="<%=data.content%>" style="display:block;margin:0;height:110px">
-                <div class="bottom">
+                <div class="meta">
+                    <span class="status"></span>
                     <span class="time">
                         <%= utils.formatTime(data.datetime) %>
                     </span>
                 </div>
-            <% } %>
-
+            </div>
 
         </div>
     </div>
 </script>
 
-<script template="universal-message" type="text/x-ejs-template">
+<script template="any-message" type="text/x-ejs-template">
     <div class="message-wrapper" msg-id="<%= data.id %>">
-        <% if (data.dateLabel) { %>
-            <div class="date-label">
-                <%- templateManager.apply("system-message", {text: utils.getLocalizedDateLabel(data.datetime, true)}) %>
-            </div>
-        <% } %>
+        <div class="date-label">
+            <%- templateManager.apply("system-message", {text: utils.getLocalizedDateLabel(data.datetime, true)}) %>
+        </div>
 
-        <% if (data.sender_id !== null && data.sender_id !== undefined) { %>
-            <%- templateManager.apply("standard-message", {data: data, myid: myid}) %>
+        <% if (data.sender_id) { %>
+            <%- templateManager.apply("user-message", {data: data, myid: myid}) %>
         <% } else { %>
             <%- templateManager.apply("system-message", {text: data.text}) %>
         <% } %>

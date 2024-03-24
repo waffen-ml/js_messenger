@@ -1,7 +1,6 @@
 let notifyTimeout = 750
 let maxUnreadPreview = 8
 
-
 class Chat {
     constructor(cfx, id, name) {
         this.cfx = cfx;
@@ -61,7 +60,7 @@ class Chat {
         })
     }
 
-    getMessages(start, count) {
+    getMessages(start, count, myid) {
         return new Promise((resolve) => {
             if (start > -1)
                 resolve()
@@ -84,15 +83,36 @@ class Chat {
                     file_mimetype: 'mimetype',
                     file_name: 'name'
                 }, 'id', 'file_id')
-            return messages
+            
+            return new Promise((resolve) => {
+                if(!myid) {
+                    resolve(messages)
+                    return
+                }
+
+                this.cfx.query(`select max(last_read) as lr from chat_member where chat_id=? and user_id!=?`, [this.id, myid])
+                .then(r => r[0].lr ?? 0)
+                .then(lr => {
+                    for(let i = 0; i < messages.length; i++) {
+                        if(messages[i].sender_id != myid)
+                            continue
+                        messages[i].read = parseInt(messages[i].id) <= lr
+                    }
+                })
+                .then(() => resolve(messages))
+            })
+
         })
     }
 
-    makeMessageRead(ids) {
-        if (!ids.length)
-            return
-        return this.cfx.db.executeFile('readmessages', {
-            ids: ids.join(','), chat_id: this.id})
+    updateLastRead(userid) {
+        return this.cfx.query(`select * from message where chat_id=? order by id desc limit 1`, [this.id])
+        .then(r => r[0])
+        .then(lm => {
+            if(lm.sender_id && lm.sender_id != userid)
+                this.cfx.socket.io.in('u:' + lm.sender_id).emit('last_read', {id: lm.id, reader: userid})
+            return this.cfx.query(`update chat_member set last_read=? where user_id=? and chat_id=?`, [lm.id, userid, this.id])
+        })
     }
 
     getUnreadCount(userid) {
@@ -407,7 +427,7 @@ exports.init = (cfx) => {
     cfx.core.safeGet('/readmessages', (user, req, res) => {
         return cfx.chats.accessChat(user, req.query.id)
         .then(chat => {
-            return chat.makeMessageRead([user.id])
+            return chat.updateLastRead(user.id)
         })
         .then(() => {
             return {success:1}
@@ -485,7 +505,6 @@ exports.init = (cfx) => {
     cfx.core.safeRender('/chat', (user, req, res) => {
         return cfx.chats.accessChat(user, req.query.id)
         .then(chat => {
-            chat.makeMessageRead([user.id])
             return {
                 render: 'chat'
             }
@@ -504,7 +523,7 @@ exports.init = (cfx) => {
         .then(chat => {
             let start = parseInt(req.query.start)
             let count = parseInt(req.query.count)
-            return chat.getMessages(start, count)
+            return chat.getMessages(start, count, user.id)
         })
     }, true)
 
