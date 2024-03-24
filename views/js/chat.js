@@ -1,6 +1,7 @@
 const chatid = new URLSearchParams(window.location.search).get('id')
 const loadWindow = 15
 const updateLastSeenInterval = 20 // seconds
+const typingStatusInterval = 5 // seconds
 
 const emojiList = Array.from(`😀😃😄😁😆😅🤣😂🙂🙃😉😊😇🥰😍🤩😘😗
 😚😙😋😛😜🤪😝🤑🤗🤭🤫🤔🤐🤨😐😑😶😏😒🙄😬🤥😌😔😪🤤😴😷🤒🤕🤢
@@ -8,7 +9,71 @@ const emojiList = Array.from(`😀😃😄😁😆😅🤣😂🙂🙃😉😊�
 ❤🧡💛💚💙💜🤎🖤🤍💔💯❗❌💘`)
 .filter(w => w != '\n')
 
+class TypingListener {
 
+    constructor(timeoutSeconds, intervalSeconds, onstart, onupdate, onstop) {
+        this.intervalSeconds = intervalSeconds
+        this.timeoutSeconds = timeoutSeconds
+
+        this.timeoutId = -1
+        this.intervalId = -1
+
+        this.onstart = onstart ?? onupdate
+        this.onupdate = onupdate
+        this.onstop = onstop
+    }
+
+    isTyping() {
+        return this.timeoutId >= 0
+    }
+
+    stopInterval() {
+        if (this.intervalId >= 0) {
+            clearInterval(this.intervalId)
+            this.intervalId = -1
+        }
+    }
+
+    stopTimeout() {
+        if(this.timeoutId >= 0) {
+            clearTimeout(this.timeoutId)
+            this.timeoutId = -1
+        }
+    }
+
+    startTimeout() {
+        this.stopTimeout()
+        this.timeoutId = setTimeout(() => {
+            this.stop()
+        }, this.timeoutSeconds * 1000)
+    }
+
+    startInterval() {
+        if(this.intervalSeconds === null || 
+            this.intervalSeconds < 0 || !this.onupdate)
+            return
+        this.stopInterval()
+        this.intervalId = setInterval(() => {
+            this.onupdate()
+        }, this.intervalSeconds * 1000)
+    }
+
+    update() {
+        if (!this.isTyping()) {
+            this.startTimeout()
+            this.startInterval()
+            this.onstart()
+        } else {
+            this.startTimeout()
+        }
+    }
+
+    stop() {
+        this.stopInterval()
+        this.stopTimeout()
+        this.onstop()
+    }
+}
 
 class MessageElement {
     constructor(chat, info) {
@@ -79,6 +144,7 @@ class ChatInterface {
         this.setupStickersCW()
         this.setupFileCW()
         this.setupDotsCW()
+        this.setupEntry()
 
         this.scrollDown(false)
     }
@@ -190,7 +256,7 @@ class ChatInterface {
     
     }
 
-    initSendFunction(send) {
+    setupEntry() {
         this.entry.addEventListener('keydown', (e) => {
             if(e.key == 'Enter' && !window.isMobileOrTablet() && !window.event.shiftKey) {
                 e.preventDefault()
@@ -198,19 +264,39 @@ class ChatInterface {
             }
         })
 
+        document.querySelector('#send').onclick = () => this.chat.sendDefault()
+
+        const ctx = document.createElement('canvas').getContext('2d')
+        const entryStyle = getComputedStyle(this.entry)
+        ctx.font = entryStyle.font
+
+        this.typingListener = new TypingListener(
+            typingStatusInterval,
+            typingStatusInterval,
+            null,
+            () => this.chat.sendTypingStatus(true),
+            () => this.chat.sendTypingStatus(false))
+
         this.entry.addEventListener('input', (e) => {
-            this.updateEntryHeight()
+            let text = this.entry.value
+            let innerWidth = this.entry.clientWidth - 2 * parseInt(entryStyle.paddingLeft)
+            
+            if(text.match(/\n/) || ctx.measureText(text).width > innerWidth)
+                this.entry.classList.add('expanded')
+            else
+                this.entry.classList.remove('expanded')
+
+            if(text)
+                this.typingListener.update()
+            else if(!text && typingListener.isTyping())
+                this.typingListener.stop()
+        })
+
+        this.entry.addEventListener('clear', () => {
+            this.entry.classList.remove('expanded')
+            this.typingListener.stop()
         })
         
-        document.querySelector('#send').onclick = () => this.chat.sendDefault();
-    }
-
-    updateEntryHeight() {
-        let lineCount = this.entry.value.split('\n').length 
-        if(lineCount > 1)
-            this.entry.classList.add('expanded')
-        else
-            this.entry.classList.remove('expanded')
     }
 
     initLoadMessagesFunction(load) {
@@ -290,8 +376,8 @@ class ChatInterface {
 
     clearInput() {
         this.entry.value = ''
-        this.updateEntryHeight()
-        this.updateFileCount()
+        this.entry.classList.remove('expanded')
+        this.entry.dispatchEvent(new Event('clear'))
         this.fileUploader.clear()
     }
 
@@ -389,7 +475,6 @@ class MessageList {
 
         if(b) {
             this.enhance(b, a) 
-            console.log(b)
         }
 
         this.interface.addMessages(batch, true)
@@ -415,12 +500,46 @@ class Chat {
         .then(info => this.init(info))
     }
 
+    updateTypingMembers() {
+        let typingMembers = Object.values(this.members).filter(m => m.typingListener.isTyping())
+
+        if(typingMembers.length == 0) {
+            this.subtitleList[1] = null
+        }
+        else if (this.direct_to) {
+            this.subtitleList[1] = 'печатает...'
+        }
+        else {
+            this.subtitleList[1] = typingMembers.map(m => m.name).join(', ') + ' ' 
+            + (typingMembers.length > 1? 'печатают' : 'печатает') + '...'
+        }
+
+        this.updateSubtitle()
+    }
+
+    updateSubtitle() {
+        let subtitle = [...this.subtitleList].reverse().find(w => w)
+        this.interface.setChatSubtitle(subtitle)
+    }
+
     init(info) {
         this.info = info
         this.interface = new ChatInterface(this)
         this.messageList = new MessageList(this.interface, this.me)
+        this.members = {}
+        this.direct_to = info.is_direct? 
+            this.info.members.find(m => m.id != this.me.id) : null
 
-        this.interface.initSendFunction(() => this.send())
+        info.members.forEach(m => {
+            this.members[m.id] = m
+            m.typingListener = new TypingListener(
+                typingStatusInterval * 1.5, null, 
+                () => this.updateTypingMembers(),
+                null, () => this.updateTypingMembers())
+        })
+
+        this.subtitleList = Array(2)
+
         this.interface.initLoadMessagesFunction(() => this.loadMessageBatch())
         //this.interface.identifyMyMessages(null, me.id)
         //this.loadChatInfo()
@@ -432,31 +551,35 @@ class Chat {
         this.readMessages()
     }
 
+    sendTypingStatus(status) {
+        console.log('sending status: ' + status)
+        return fetch(`/settypingstatus?chatid=${this.chatid}&status=${status? 1 : 0}`)
+    }
+
     setupHeader() {
         let name = utils.getChatName(this.info, this.me)
-        let subtitle = this.info.is_direct? null : utils.nItemsLabel(this.info.members.length, 'участник', 'участника', 'участников')
         let avatar_url = utils.getChatAvatarURL(this.info, this.me)
         let onclick = this.info.is_direct? () => location.replace('/user?id=' + utils.getOtherMember(this.info, this.me).id)
             : () => alert('hey!')
+
+        this.subtitleList[0] = this.direct_to? null : utils.nItemsLabel(
+            this.info.members.length, 'участник', 'участника', 'участников') 
         
         this.interface.setChatAvatar(avatar_url)
         this.interface.setChatTitle(name)
-        this.interface.setChatSubtitle(subtitle)
         this.interface.setHeaderClickEvent(onclick)
+        this.updateSubtitle()
     }
  
     updateLastSeen() {
-        if (!this.info.is_direct)
+        if (!this.direct_to)
             return
 
-        let target = this.info.members.find(m => m.id != this.me.id)
-
-        fetch('/getuser?id=' + target.id)
+        fetch('/getuser?id=' + this.direct_to.id)
         .then(r => r.json())
         .then(r => {
-            let last_seen = new Date(r.last_seen)
-            this.interface.setChatSubtitle(utils.getLastSeenStatus(last_seen))
-            
+            this.subtitleList[0] = utils.getLastSeenStatus(new Date(r.last_seen))
+            this.updateSubtitle()
             setTimeout(() => this.updateLastSeen(), updateLastSeenInterval * 1000)
         })
         
@@ -484,6 +607,7 @@ class Chat {
         socket.emit('join-chat', chatid);
 
         socket.on('message', msg => {
+            console.log('message')
             console.log(msg)
             if(msg.chat_id != this.chatid)
                 return
@@ -491,8 +615,17 @@ class Chat {
             this.readMessages()
         })
 
+        socket.on('typing_status', msg => {
+            if(msg.id == this.me.id)
+                return
+            let member = this.members[msg.id]
+            if(msg.status == 1)
+                member.typingListener.update()
+            else
+                member.typingListener.stop()
+        })
+
         socket.on('last_read', msg => {
-            console.log(msg.reader)
             let idx = this.messageList.messages.findIndex(w => w.id == msg.id)
             for(let i = 0; i <= idx; i++) {
                 let msg = this.messageList.messages[i]

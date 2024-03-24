@@ -424,6 +424,17 @@ exports.init = (cfx) => {
         })
     })
 
+    cfx.core.safeGet('/settypingstatus', (user, req, res) => {
+        return cfx.chats.accessChat(user, req.query.chatid)
+        .then(chat => {
+            cfx.socket.io.in('c:' + chat.id).emit('typing_status', {
+                id: user.id, 
+                status: parseInt(req.query.status)
+            })
+            return {success:1}
+        })
+    }, true)
+
     cfx.core.safeGet('/readmessages', (user, req, res) => {
         return cfx.chats.accessChat(user, req.query.id)
         .then(chat => {

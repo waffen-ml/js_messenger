@@ -78,7 +78,11 @@ class Utils {
     }
 
     differenceInMinutes(d1, d2) {
-        return Math.abs(d1 - d2) / 1000 / 60
+        return this.differenceInSeconds(d1, d2) / 60
+    }
+
+    differenceInSeconds(d1, d2) {
+        return Math.abs(d1 - d2) / 1000
     }
 
     strweight(s) {
