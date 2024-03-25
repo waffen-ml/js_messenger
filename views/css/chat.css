@@ -70,11 +70,13 @@ main {
     font-size:18px;
 }
 
-
-
-
-
 .message-wrapper {
+    transition:background-color 0.2s ease-in-out;
+    -webkit-touch-callout: none;
+}
+
+.message-wrapper.selected {
+    background-color:#4545452f;
 }
 
 .date-label {
@@ -90,7 +92,6 @@ main {
 .date-label .system-message {
     margin:0;
 }
-
 
 .system-message {
     display:block;

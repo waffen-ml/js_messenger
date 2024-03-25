@@ -1,6 +1,16 @@
 const animlength = 300;
 let lastPopup = null
 
+
+function createUserListPopup(users, ...options) {
+    return new Popup({
+        html: templateManager.createHTML('user-list', {users: users}),
+        closable: true,
+        ...options
+    })
+}
+
+
 class Popup {
     // shown, hidden
 

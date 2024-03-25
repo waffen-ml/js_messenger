@@ -24,33 +24,37 @@ document.body.querySelector('main').addEventListener('scroll', e => {
         openedCW.close(true)
 })
 
-function buttonsCWCaller(caller, buttons, options) {
-    let cw = null
-    options ??= {}
+document.addEventListener('keydown', (e) => {
+    if (e.key == 'Escape' && openedCW) {
+        e.preventDefault();
+        openedCW.close()
+    }
+})
 
-    options.attachedTo = caller
-    options.transformOrigin ??= 'top right'
 
-    caller.addEventListener('click', () => {
-        if(cw && cw.isOpened()) {
-            cw.close()
-            cw = null
-            return
-        }
 
-        let brect = caller.getBoundingClientRect()
-
-        options.pos = {
-            right: document.body.clientWidth - brect.right,
-            top: brect.top + brect.height
-        }
-
-        cw = makeButtonsCW(buttons, options)
-        cw.open()
+function createOptionListCW(buttons, options) {
+    let cw = new ContextWindow({
+        html: templateManager.createHTML('buttons-cw', {
+            labels: Object.keys(buttons)
+        }),
+        className: 'cw-buttons',
+        ...options
     })
 
-}
+    let buttonElements = cw.window.querySelectorAll('.button')
 
+    Object.values(buttons).forEach((f, i) => {
+        buttonElements[i].addEventListener('click', () => {
+            f()
+            cw.close(options.closeInstantly ?? false)
+        })
+    })
+
+    cw.window.addEventListener('contextmenu', (e) => e.preventDefault())
+
+    return cw
+}
 
 function makeButtonsCW(caller, buttons, options) {
     attachButtonToCW(() => {
@@ -126,10 +130,21 @@ class ContextWindow {
         this.checkScroll.forEach(el => el.addEventListener('scroll', () => this.close(true)))
         this.window.style.visibility='hidden'
 
+        this.eventListeners = {}
+
         document.body.appendChild(this.window)
 
         this.setPosition(options.pos ?? {top:0, left:0})
 
+    }
+
+    fireEvent(event) {
+        if(this.eventListeners[event])
+            this.eventListeners[event]()
+    }
+
+    on(event, f) {
+        this.eventListeners[event] = f
     }
 
     isOpened() {
@@ -187,15 +202,21 @@ class ContextWindow {
     }
 
     open() {
-        if(openedCW)
-            openedCW.close(true)
-        openedCW = this
-        this.window.style.visibility='visible'
-        this.window.style.animation = ''
-        void this.window.offsetWidth;
-        this.window.style.animation = `cw-open ${this.animLength}ms ease-in-out`
-
-        return new Promise((r) => setTimeout(() => r(), this.animLength))
+        return Promise.resolve(openedCW? openedCW.close(true) : null)
+        .then(() => {
+            openedCW = this
+            this.window.style.visibility='visible'
+            this.window.style.animation = ''
+            void this.window.offsetWidth;
+            this.window.style.animation = `cw-open ${this.animLength}ms ease-in-out`
+    
+            this.fireEvent('open')
+    
+            return new Promise((r) => setTimeout(() => {
+                this.fireEvent('shown')
+                r()
+            }, this.animLength))
+        })
     }
 
     close(instantly) {
@@ -203,6 +224,8 @@ class ContextWindow {
             return Promise.resolve()
         
         openedCW = null
+
+        this.fireEvent('close')
 
         return new Promise((resolve) => {
             if (instantly) {
@@ -217,6 +240,8 @@ class ContextWindow {
             this.window.style.visibility='hidden'
             if (this.destroyOnClose)
                 document.body.removeChild(this.window)
+
+            this.fireEvent('hidden')
         })
     }
 

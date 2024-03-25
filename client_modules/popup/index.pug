@@ -13,3 +13,14 @@ append body
                     h1.title
                     .content <%- html %>
                     .buttons 
+        
+
+    script(type="text/x-ejs-template", template="user-list")
+        ul.styled-scroll(style="margin:0;overflow-y:auto;max-height:500px; width:max-content;list-style-type:none;padding:0;")
+            <% users.forEach(r => { %>
+            li
+                a.button.light.user(href!="/user?id=<%=r.id%>", style="display:flex;gap:8px;align-items:center")
+                    img.avatar(src!="/getuseravatar?id=<%=r.id%>", style="height:40px;width:40px")
+                    span.name <%= r.name %>
+            <% }) %>
+

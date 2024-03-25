@@ -1,116 +1,119 @@
-fetch('/getchatlist')
-.then(r => r.json())
-.then(views => {
-
-    console.log(views)
-
-    views.forEach(view => {
-        view.lm_datetime = view.lm_datetime? new Date(view.lm_datetime) : null
-        view.visible = view.lm_id && view.lm_id >= view.focus
-
-        if (!view.chat_name) {
-            let names = view.members.filter(m => m.id != view.owner_id).map(m => m.name)
-            view.chat_name = names.join(', ')
-        }
-
-        switch(view.lm_type) {
-            case 'default':
-                view.lm_preview = (view.lm_content ?? '').substr(0, 100)
-                break
-            case 'sticker':
-                view.lm_preview = 'Стикер'
-                break
-        }
-
-        if (view.lm_file_count > 0)
-            view.lm_preview += `[${view.lm_file_count} файлов]`
-
-        if(view.lm_sender_id == view.owner_id) {
-            view.lm_preview = 'Вы: ' + view.lm_preview
-        }
-        else if(!view.is_chat_direct) {
-            view.lm_preview = view.lm_sender_name + ': ' + view.lm_preview
-        }
-
-        view.datetime_label = view.lm_datetime && utils.getMessageDatetimeLabel(view.lm_datetime)
-
-    })
-
-    let main = document.querySelector('main')
-    let holder = document.querySelector('.chatlist')
-
-    views.forEach(view => {
-        let element = templateManager.createElement('chat-view', view)
-        let dots = element.querySelector('.dots')
-        holder.appendChild(element)
-
-        element.addEventListener('click', (e) => {
-            if (e.target.classList.contains('dots'))
-                return
-            window.location = '/chat?id=' + view.chat_id
-        })
-
-        let cw = null
-
-        dots.addEventListener('click', () => {
-            if (cw && cw.isOpened()) {
-                cw.close()
-                cw = null
-                return
-            }
-
-            let brect = dots.getBoundingClientRect()
-            
-            cw = makeButtonsCW({
-                'Очистить историю': () => {
-                    alert('hey')
-                },
-                'Выйти': () => {
-                    alert('hey1')
-                }
-            }, {
-                transformOrigin: 'top right',
-                pos: {
-                    right: document.body.clientWidth - brect.right,
-                    top: brect.top + brect.height
-                },
-                attachedTo: dots,
-                destroyOnClose: true,
-                parent: main
-            })
-            console.log(cw.window)
-            cw.open()
-        })
-
-    })
-
-
-
-})
-
-
-
-document.querySelectorAll('[chatid]').forEach(chat => {
-    chat.addEventListener('click', (e) => {
-        if (e.target.classList.contains('dots'))
-            return
-        window.location = '/chat?id=' + chat.getAttribute('chatid')
-    })
-})
-
-document.querySelectorAll('.dots').forEach(b => {
-    b.addEventListener('click', e => {
-        alert('hey')
-    })
-})
-
+const holder = document.querySelector('.chatlist')
+let chatViews = []
 let me = {}
+
+
+function renderViews() {
+    holder.innerHTML = ''
+    chatViews.forEach(cv => {
+        let element = templateManager.createElement('chat-view', {view: cv})
+        holder.appendChild(element)
+    })      
+    holder.querySelectorAll('[chatid]').forEach(chat => {
+        chat.addEventListener('click', (e) => {
+            window.location = '/chat?id=' + chat.getAttribute('chatid')
+        })
+    })
+}
+
+function sortViews() {
+    chatViews.sort((a, b) => {
+        if (!a.lm.datetime && !b.lm.datetime)
+            return 0
+        else if(!a.lm.datetime)
+            return 1
+        else if(!b.lm.datetime)
+            return -1
+        else
+            return - a.lm.datetime.getTime() + b.lm.datetime.getTime()
+    })
+}
+
+function isVisible(view) {
+    return view.lm && view.lm.id >= view.focus
+}
+
+function prepareView(view) {
+    if(!isVisible(view))
+        return
+
+    view.lm.mine = view.lm.sender_id == me.id
+    view.lm.datetime = new Date(view.lm.datetime)
+
+    switch(view.lm.type) {
+        case 'default':
+            view.lm.preview = (view.lm.content ?? '').substr(0, 100)
+            break
+        case 'sticker':
+            view.lm.preview = 'Стикер'
+            break
+    }
+
+    if (view.lm.files.length > 0)
+        view.lm.preview += `[${view.lm.files.length} файлов]`
+
+    if(view.lm.mine && !view.is_direct) {
+        view.lm.preview = view.lm.sender_name + ': ' + view.lm.preview
+    }
+
+    if(!view.name) {
+        let names = view.members.filter(m => m.id != me.id).slice(0, 4).map(m => m.name)
+        view.name = names.join(', ')
+    }
+
+}
+
+function updateView(chatid) {
+    return fetch('/getchatview?id=' + chatid)
+    .then(r => r.json())
+    .then(view => {
+        let index = chatViews.findIndex(v => v.id == chatid)
+
+        if(!isVisible(view) && index >= 0) {
+            chatViews.splice(index, 1)
+        } else if(isVisible(view)) {
+            prepareView(view)
+            if(index < 0)
+                chatViews.push(view)
+            else
+                chatViews[index] = view
+        }
+
+        sortViews()
+        renderViews()
+    })
+}
+
+
+socket.on('message', msg => {
+    updateView(msg.chat_id)
+})
+
+socket.on('delete_message', msg => {
+    updateView(msg.chatid)
+})
+
+socket.on('last_read', msg => {
+    updateView(msg.chatid)
+})
 
 fetch('/auth')
 .then((r) => r.json())
 .then(user => {
     me = user
+    return fetch('/getchatviews')
 })
+.then(r => r.json())
+.then(views => {
+    chatViews = views.filter(v => isVisible(v))
+    chatViews.forEach(view => prepareView(view))
+    console.log(chatViews)
+    sortViews()
+    renderViews()
+})
+
+
+
 
 document.querySelector('.create-chat').addEventListener('click', () => {
     if(!me) return

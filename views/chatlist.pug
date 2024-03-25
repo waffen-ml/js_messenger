@@ -15,16 +15,14 @@ block main
 
 append body
     script(template="chat-view", type="text/x-ejs-template")
-        <% let cls = (voice && 'voice') + ' ' + (unread && 'unread') %>
-        li.block.chat(chatid!="<%=chat_id%>", class!="<%=cls%>")
-            img.avatar(src!="/getchatavatar?id=<%=chat_id%>")
-            span.finite.title <%= chat_name %>
-            span.datetime <%= datetime_label %>
-            p.finite.last-msg-preview <%= lm_preview %>
-            a.button.light.dots ...
-            .event-icons
-                span.new-msg(text!="<%= unread %>")
-                span.call(text="📞")
+        li.block.chat(chatid!="<%=view.id%>", class!="<%=utils.classAttr({newmsg: view.unread > 0})%>")
+            img.avatar(src!="/getchatavatar?id=<%=view.id%>")
+            span.finite.title <%= view.name %>
+            span.datetime <%= utils.getMessageDatetimeLabel(view.lm.datetime) %>
+            .lm-preview(class!="<%=utils.classAttr({mine: view.lm.mine, read: view.lm.read})%>")
+                p.finite.content <%= view.lm.preview %>
+                span.status
+            span.newmsg <%= view.unread %>
 
     script(template="friend", type="text/x-ejs-template")
         li

@@ -2,6 +2,7 @@ const chatid = new URLSearchParams(window.location.search).get('id')
 const loadWindow = 15
 const updateLastSeenInterval = 20 // seconds
 const typingStatusInterval = 5 // seconds
+const messageLongPressMilliseconds = 400
 
 const emojiList = Array.from(`😀😃😄😁😆😅🤣😂🙂🙃😉😊😇🥰😍🤩😘😗
 😚😙😋😛😜🤪😝🤑🤗🤭🤫🤔🤐🤨😐😑😶😏😒🙄😬🤥😌😔😪🤤😴😷🤒🤕🤢
@@ -83,9 +84,55 @@ class MessageElement {
         this.wrapper = templateManager.createElement('any-message', {data: info, myid: chat.me.id})
         this.userMessage = this.wrapper.querySelector('.user-message')
         this.systemMessage = this.wrapper.querySelector('.message-wrapper > .system-message')
+        this.i = 0
 
         setupInspectObjects(this.wrapper)
         this.update()
+        this.setupCW()
+    }
+
+    toggleSelected(state) {
+        if(state)
+            this.wrapper.classList.add('selected')
+        else
+            this.wrapper.classList.remove('selected')
+    }
+
+    selectAndOpenCW(pos) {
+        this.chat.interface.unselectAll()
+
+        let cw = createOptionListCW({
+            'Ответить': () => alert('hey1'),
+            'Переслать': () => alert('hey2'),
+            'Удалить': () => this.chat.deleteMessage(this.id),
+            'Прочитавшие': () => this.chat.inspectReadersOfMessage(this.id)
+        }, {
+            transformOrigin: 'top left',
+            closeInstantly: true,
+            checkScroll: this.chat.interface.holderWrapper
+        })
+
+        let w = this.i
+
+        cw.setPosition(pos)
+
+        cw.on('hidden', () => this.toggleSelected(false))
+        cw.on('open', () => this.toggleSelected(true))
+
+        this.i++
+
+        cw.open()
+    }
+
+    setupCW() {     
+        this.wrapper.addEventListener('contextmenu', e => {
+            e.preventDefault()
+            this.selectAndOpenCW({
+                top: e.clientY,
+                left: e.clientX
+            })
+            document.getSelection().removeAllRanges()
+        })
     }
 
     toggleDateLabel(state) {
@@ -147,6 +194,10 @@ class ChatInterface {
         this.setupEntry()
 
         this.scrollDown(false)
+    }
+
+    unselectAll() {
+        Object.values(this.messages).forEach(m => m.toggleSelected(false))
     }
 
     appendMessageEntry(text) {
@@ -363,10 +414,10 @@ class ChatInterface {
         }
     }
     
-    removeMessage(id) {
+    deleteMessage(id) {
         if(!this.messages[id])
             return
-        this.holder.removeChild(this.messages[id].element)
+        this.holder.removeChild(this.messages[id].wrapper)
         delete this.messages[id]
     }
 
@@ -424,6 +475,16 @@ class MessageList {
 
     getMessageByIndex(index) {
         return this.messages[index]
+    }
+
+    deleteMessage(id) {
+        let index = this.messages.findIndex(w => w.id = id)
+        if(index < 0)
+            return
+        this.messages.splice(index, 1)
+        this.interface.deleteMessage(id)
+        if (index > 0 && index < this.messages.length)
+            this.enhance(this.messages[index], this.messages[index - 1])
     }
 
     addMessages(msgs, prepare=true, before=false) {
@@ -498,6 +559,26 @@ class Chat {
         fetch('/getchatinfo?id=' + chatid)
         .then(r => r.json())
         .then(info => this.init(info))
+    }
+
+    inspectReadersOfMessage(msgid) {
+        return fetch(`/getreadersofmessage?chatid=${this.chatid}&msgid=${msgid}`)
+        .then(r => r.json())
+        .then(users => {
+            let popup = createUserListPopup(users)
+            popup.open()
+        })
+    }
+
+    deleteMessage(msgid) {
+        return fetch(`/deletemessage?chatid=${this.chatid}&msgid=${msgid}`)
+        .then(r => r.json())
+        .then(r => {
+            if(r.error) {
+                alert('Ошибка: ' + r.error)
+                return
+            }
+        })
     }
 
     updateTypingMembers() {
@@ -615,6 +696,11 @@ class Chat {
             this.readMessages()
         })
 
+        socket.on('delete_message', w => {
+            if(w.chatid != this.chatid) return
+            this.messageList.deleteMessage(w.msgid)
+        })
+
         socket.on('typing_status', msg => {
             if(msg.id == this.me.id)
                 return
@@ -626,6 +712,8 @@ class Chat {
         })
 
         socket.on('last_read', msg => {
+            if(msg.chatid != this.chatid) return
+            
             let idx = this.messageList.messages.findIndex(w => w.id == msg.id)
             for(let i = 0; i <= idx; i++) {
                 let msg = this.messageList.messages[i]

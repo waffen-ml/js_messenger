@@ -105,13 +105,18 @@ class Chat {
         })
     }
 
+    
+
     updateLastRead(userid) {
         return this.cfx.query(`select * from message where chat_id=? order by id desc limit 1`, [this.id])
         .then(r => r[0])
         .then(lm => {
             if(lm.sender_id && lm.sender_id != userid)
-                this.cfx.socket.io.in('u:' + lm.sender_id).emit('last_read', {id: lm.id, reader: userid})
+                this.cfx.socket.io.in('u:' + lm.sender_id).emit('last_read', {id: lm.id, chatid:this.id, reader: userid})
             return this.cfx.query(`update chat_member set last_read=? where user_id=? and chat_id=?`, [lm.id, userid, this.id])
+        })
+        .then(() => {
+            return this.cfx.notifications.sendSpecificUnread(userid, 'messages')
         })
     }
 
@@ -127,7 +132,6 @@ class Chat {
     }
 
     notifyAboutUnread(userid) {
-
         return new Promise(resolve => {
             this.getUnreadCount(userid)
             .then(unread => {
@@ -189,6 +193,54 @@ class Chat {
             }, 'id')[0]
         })
     }
+
+    deleteMessage(msgid, userid) {
+        return this.cfx.query(`select * from message where id=?`, [msgid])
+        .then(r => r[0])
+        .then(msg => {
+            if(!msg)
+                throw Error('invalid id')
+            else if(msg.chat_id != this.id)
+                throw Error('That message does not belong to the chat')
+            else if(msg.sender_id != userid)
+                throw Error('Lacking permissions')
+            return this.cfx.query(`delete from message where id=?`, [msgid])
+        })
+        .then(() => {
+            return this.getInfo()
+        })
+        .then(info => {
+            info.members.forEach(m => {
+                this.cfx.socket.io.in('u:' + m.id).emit('delete_message', {
+                    chatid: this.id,
+                    msgid: msgid
+                })
+            })
+            setTimeout(() => {
+                info.members.forEach(m => this.notifyAboutUnread(m.id))
+            }, notifyTimeout)
+        })
+    }
+
+    getView(userid) {
+        return Promise.all([
+            this.getInfo(),
+            this.getMessages(-1, 1, userid),
+            this.getUnreadCount(userid),
+            this.cfx.query(`select * from chat_member where user_id=? and chat_id=?`, [userid, this.id])
+        ])
+        .then((data) => {
+            let info = data[0]
+            let member = data[3][0]
+            info.lm = data[1][0]
+            info.unread = data[2]
+            info.focus = member.focus
+            info.last_read = member.last_read
+
+            return info
+        })
+    }
+
 }
 
 class Stickerpacks {
@@ -277,46 +329,14 @@ class ChatSystem {
         return this.cfx.query(`delete from chat where id=${id}`);
     }
 
+    getChatsOfUser(userid) {
+        return this.cfx.query(`select c.id, c.name from chat_member cm join chat c on cm.chat_id=c.id where cm.user_id=?`, [userid])
+        .then(r => r.map(w => new Chat(this.cfx, w.id, w.name)))
+    }
+
     getChatViews(userid) {
-        return this.cfx.query(`select v.id, v.user_id as owner_id, v.chat_id,
-        v.focus, v.last_read, c.is_direct as is_chat_direct, c.voice
-        from chat_member v join chat c on v.chat_id=c.id where user_id=?`, [userid])
-        .then(r => {
-            return Promise.all(r.map(view => {
-                return this.cfx.query(`select u.id, u.name, u.tag from chat_member v join user u on v.user_id=u.id where v.chat_id=? limit ?`, [view.chat_id, 4])
-                .then(members => {
-                    view.members = members
-                    return this.cfx.query(`select m.id, m.type, m.content, m.datetime, m.sender_id, 
-                    u.name as sender_name, u.tag as sender_tag,
-                    (select count(*) from file f where f.bundle_id=m.bundle_id) as file_count
-                    from message m left join user u on m.sender_id=u.id 
-                    where chat_id=? order by id desc limit 1`, [view.chat_id])
-                })
-                .then(lm => {
-                    lm = lm[0]
-                    if (lm)
-                        Object.keys(lm).forEach(k => view['lm_' + k] = lm[k])
-                    view.lm_datetime = new Date(view.lm_datetime)
-                    return this.cfx.query(`select count(*) as unread from message where chat_id=? and id > ?`, 
-                    [view.chat_id, view.last_read ?? 0])
-                })
-                .then(c => {
-                    view.unread = c[0].unread
-                })
-            }))
-            .then(() => {
-
-                return r.sort((a, b) => {
-                    if (!a.lm_datetime || !b.lm_datetime)
-                        return 0
-
-                    return - a.lm_datetime.getTime() + b.lm_datetime.getTime()
-                })
-
-            })
-
-        })
-
+        return this.getChatsOfUser(userid)
+        .then(chats => Promise.all(chats.map(c => c.getView(userid))))
     }
 
     getDirectChat(userid1, userid2) {
@@ -424,6 +444,24 @@ exports.init = (cfx) => {
         })
     })
 
+    cfx.core.safeGet('/deletemessage', (user, req, res) => {
+        return cfx.chats.accessChat(user, req.query.chatid)
+        .then(chat => {
+            return chat.deleteMessage(parseInt(req.query.msgid), user.id)
+        })
+        .then(() => {
+            return {success:1}
+        })
+    }, true)
+
+    cfx.core.safeGet('/getreadersofmessage', (user, req, res) => {
+        return cfx.chats.accessChat(user, req.query.chatid)
+        .then((chat) => {
+            return cfx.query(`select u.id, u.tag, u.name from chat_member cm 
+            join user u on cm.user_id=u.id where cm.chat_id=? and cm.last_read >= ?`, [chat.id, parseInt(req.query.msgid)])
+        })
+    }, true)
+
     cfx.core.safeGet('/settypingstatus', (user, req, res) => {
         return cfx.chats.accessChat(user, req.query.chatid)
         .then(chat => {
@@ -501,11 +539,14 @@ exports.init = (cfx) => {
         })
     }, false)
 
-    cfx.core.safeGet('/getchatlist', (user, req, res) => {
-        if(!user)
-            return []
+    cfx.core.safeGet('/getchatviews', (user, req, res) => {
         return cfx.chats.getChatViews(user.id)
-    }, false)
+    }, true)
+
+    cfx.core.safeGet('/getchatview', (user, req, res) => {
+        return cfx.chats.accessChat(user, req.query.id)
+        .then(chat => chat.getView(user.id))
+    })
 
     cfx.core.safeRender('/chatlist', (user, req, res) => {
         return {
