@@ -1,4 +1,4 @@
-select p.id, p.author_id, p.text, p.html, p.title, p.datetime, u.name as author_name,
+select p.id, p.author_id, p.text, p.title, p.datetime, u.name as author_name,
 u.tag as author_tag, f.id as file_id, f.name as file_name, f.mimetype as file_mimetype,
 coalesce((select sum(r.type) from post_reaction r where r.post_id=p.id), 0) as like_count,
 coalesce((select sum(1 - r.type) from post_reaction r where r.post_id=p.id), 0) as dislike_count,

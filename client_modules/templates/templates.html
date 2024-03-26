@@ -1,13 +1,5 @@
 
 
-<script template="text" type="text/x-ejs-template">
-    <% if (text) { %>
-        <p class="text">
-            <%- text.replace(/\n/g, '<br>') %>
-        </p>
-    <% }; %>
-</script>
-
 <script template="visual" type="text/x-ejs-template">
     <% const c = (w, d) => '/file?' + (d? 'd=1&' : '') + 'id=' + w.id %>
     <% const total = files.image.length + files.video.length %>
@@ -79,11 +71,14 @@
 
 <script template="post-content" type="text/x-ejs-template">
     <div class="content">
-        <%- templateManager.apply("text", {text: text}) %>
+        <% if (text) { %>
+            <p class="text">
+                <%- contentCompiler.compile(text) %>
+            </p>
+        <% }; %>
         <%- templateManager.apply("audio", {audio: files.audio}) %>
         <%- templateManager.apply("visual", {files: files}) %>
         <%- templateManager.apply("other", {other: files.other}) %>
-        <%- templateManager.apply("html", {html: html}) %>
     </div>
 </script>
 

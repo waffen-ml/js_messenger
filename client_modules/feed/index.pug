@@ -15,7 +15,7 @@ append body
                     span.datetime <%=utils.getPostDatetimeLabel(data.datetime, true)%>
                 button.button.dots.light ...
             <% if (data.title) { %>
-                span.title <%=data.title%>
+                span.title <%=utils.escapeHTML(data.title)%>
             <% } %>
             <%- templateManager.createHTML("post-content", data) %>
             .actions 

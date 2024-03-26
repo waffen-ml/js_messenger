@@ -217,6 +217,15 @@ class Utils {
     classAttr(d) {
         return Object.keys(d).filter(k => d[k]).join(' ')
     }
+    
+    escapeHTML(unsafe) {
+        return unsafe
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;')
+    }
 }
 
 const utils = new Utils();

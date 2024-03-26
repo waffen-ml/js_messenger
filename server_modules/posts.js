@@ -6,7 +6,7 @@ class Posts {
         this.cfx = cfx;
     }
 
-    addPost(author_id, files, text, html, title) {
+    addPost(author_id, files, text, title) {
 
         return new Promise((resolve) => {
             if(!files || !files.length) {
@@ -20,10 +20,9 @@ class Posts {
             })
         })
         .then(bid => {
-            return this.cfx.query(`insert into post(author_id, text, html, title,
-            datetime, bundle_id) values(?, ?, ?, ?, now(), ?)`, [
-                author_id, text, 
-                utils.mysql_escape(html), utils.mysql_escape(title), bid])
+            return this.cfx.query(`insert into post(author_id, text, title,
+            datetime, bundle_id) values(?, ?, ?, now(), ?)`, [
+                author_id, text, title, bid])
         })
     }
 
@@ -152,8 +151,7 @@ exports.init = (cfx) => {
         [
             {type: 'text', title: 'Заголовок', name: 'title', optional: true, placeholder: 'Ваш заголовок'},
             {type: 'textarea', title: 'Текст поста', name: 'text', optional: true },
-            {type: 'file', title: 'Файлы', name: 'files', optional: true, limit: 10},
-            {type: 'custom', title: 'HTML-код', name: 'html', optional: true}
+            {type: 'file', title: 'Файлы', name: 'files', optional: true, limit: 10}
         ],
         (data, erf, user) => {
             if (!utils.strweight(data.text) && !utils.strweight(data.html) && !data.files)
@@ -161,7 +159,7 @@ exports.init = (cfx) => {
         },
         (data, user, vd) => {
             return cfx.posts.addPost(user.id, 
-                data.files, data.text, data.html, data.title);
+                data.files, data.text, data.title);
         }
     ))
 
@@ -176,7 +174,7 @@ exports.init = (cfx) => {
             .then(r => {
                 if (!r)
                     throw Error('Incorrect credentials')
-                return cfx.posts.addPost(user.id, null, data.text ?? '', data.html ?? '', data.title ?? '')
+                return cfx.posts.addPost(user.id, null, data.text ?? '', data.title ?? '')
             })
         })
 
