@@ -14,7 +14,11 @@ append body
 append main 
     h1.page-header
     form(name=form.meta.name)
-    hidden
-        .html-editor 
-            #editor
-            a.clean.preview(href="#") Предпросмотр
+
+    script(type="text/x-ejs-template", template="post-body-editor")
+        .text-unit
+            textarea.styled-scroll(placeholder="Ваша новость")
+            a.light.button.preview(href="#", style="display:block;margin-top:5px;width:max-content;") Предпросмотр
+
+    script(type="text/x-ejs-template", template="post-body-preview")
+        .post-body.block.styled-scroll <%- contentCompiler.compile(body) %>

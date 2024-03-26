@@ -150,7 +150,7 @@ exports.init = (cfx) => {
         {'name': 'create_post', 'title': 'Создать пост'},
         [
             {type: 'text', title: 'Заголовок', name: 'title', optional: true, placeholder: 'Ваш заголовок'},
-            {type: 'textarea', title: 'Текст поста', name: 'text', optional: true },
+            {type: 'custom', title: 'Текст поста', name: 'text', optional: true },
             {type: 'file', title: 'Файлы', name: 'files', optional: true, limit: 10}
         ],
         (data, erf, user) => {

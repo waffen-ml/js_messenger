@@ -179,6 +179,10 @@ input, .block, textarea {
     overflow:hidden;
 }
 
+textarea {
+    overflow-y:auto;
+}
+
 .button {
     display: block;
     font-size:17px;

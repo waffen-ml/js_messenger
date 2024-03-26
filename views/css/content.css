@@ -86,6 +86,7 @@
 
 .content .text {
     margin:0;
+    word-wrap:break-word
 }
 
 .content .html {
