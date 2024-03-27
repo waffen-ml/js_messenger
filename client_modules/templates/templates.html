@@ -70,16 +70,14 @@
 </script>
 
 <script template="post-content" type="text/x-ejs-template">
-    <div class="content">
+    <user-content>
         <% if (text) { %>
-            <p class="text">
-                <%- contentCompiler.compile(text) %>
-            </p>
+            <p class="text"></p>
         <% }; %>
         <%- templateManager.apply("audio", {audio: files.audio}) %>
         <%- templateManager.apply("visual", {files: files}) %>
         <%- templateManager.apply("other", {other: files.other}) %>
-    </div>
+    </user-content>
 </script>
 
 <!-- <%- templateManager.apply("html", {html: html}) %> -->
@@ -96,26 +94,27 @@
                 <%= data.sender_name %>
             </a>
             
-            <% if (data.type == 'default') { %>
-                <%- templateManager.apply("visual", {files: data.files}) %>
-                <%- templateManager.apply("audio", {audio: data.files.audio}) %>
-                <%- templateManager.apply("other", {other: data.files.other}) %>
-            <% } else if (data.type == 'sticker') { %>
-                <img src="<%=data.content%>" style="display:block;margin:0;height:130px">
-            <% } %>
+            <user-content>
 
-            <div class="bottom">
-                <p class="text">
-                    <%- data.content.replace(/\n/g, '<br>') %>
-                </p>
-                <div class="meta">
-                    <span class="status"></span>
-                    <span class="time">
-                        <%= utils.formatTime(data.datetime) %>
-                    </span>
+                <% if (data.type == 'default') { %>
+                    <%- templateManager.apply("visual", {files: data.files}) %>
+                    <%- templateManager.apply("audio", {audio: data.files.audio}) %>
+                    <%- templateManager.apply("other", {other: data.files.other}) %>
+                <% } else if (data.type == 'sticker') { %>
+                    <img src="<%=data.content%>" style="display:block;margin:0;height:130px">
+                <% } %>
+    
+                <div class="bottom">
+                    <p class="text"></p>
+                    <div class="meta">
+                        <span class="status"></span>
+                        <span class="time">
+                            <%= utils.formatTime(data.datetime) %>
+                        </span>
+                    </div>
                 </div>
-            </div>
 
+            </user-content>
         </div>
     </div>
 </script>
@@ -132,8 +131,4 @@
             <%- templateManager.apply("system-message", {text: data.text}) %>
         <% } %>
     </div>
-</script>
-
-<script template="html-srcdoc" type="text/x-ejs-template">
-    <html><body style="margin:0;padding:0;"><%- html %></body></html>
 </script>

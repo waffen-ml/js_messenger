@@ -1,29 +1,11 @@
 const linkRegex = /(([a-zA-Z]+:\/\/)?(([a-zA-Z0-9\-]+\.)+([a-zA-Z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel|local|internal))(:[0-9]{1,5})?(\/[a-zA-Z0-9_\-\.~]+)*(\/([a-zA-Z0-9_\-\.]*)(\?[a-zA-Z0-9+_\-\.%=&amp;]*)?)?(#[a-zA-Z0-9!$&'()*+.=-_~:@/?]*)?)(\s+|$)/
-const ytVideoRatio = 16 / 9
-const ytShortRatio = 9 / 16
-const ytVideoHeight = 300
-const ytShortHeight = 400
 
 class ContentCompiler {
     constructor() {
         this.funcs = {
             'yt': (s) => {
-                let args = this.splitByComma(s)
-                let yt = this.parseYoutubeLink(args[0])
-                let height = parseInt(args[1])
-                let width = parseInt(args[2])
-
-                if(!yt)
-                    return 'ERROR'
-                else if(yt.shorts) {
-                    height = height || ytShortHeight
-                    width = width || height * ytShortRatio
-                } else {
-                    height = height || ytVideoHeight
-                    width = width || height * ytVideoRatio
-                }
-
-                return this.makeEmbedYoutubeHTML(yt.id, height, width)
+                let yt = this.parseYoutubeLink(s)
+                return this.makeEmbedYoutubeHTML(yt.id, yt.shorts)
             }
         }
     }
@@ -73,22 +55,23 @@ class ContentCompiler {
         }
     }
 
-    makeEmbedYoutubeHTML(id, height=ytVideoHeight, width) {
-        if(width === undefined)
-            width = height * ytVideoRatio
+    makeEmbedYoutubeHTML(id, shorts) {
+        let cls = shorts? 'shorts' : ''
 
-        return `<iframe width="${width}" height="${height}" 
+        return `<div class="yt-wrapper block"><div class="yt-embed ${cls}"><div class="ratio-keeper"><iframe 
         src="https://www.youtube.com/embed/${id}"
         frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media;
         gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen></iframe>`
+        allowfullscreen></iframe></div></div></div>`
     }
 
     escapeHTML(s) {
         return utils.escapeHTML(s)
     }
 
-    compile(content) {
+    compile(content, options) {
+        options ??= {}
+
         content = this.escapeHTML(content)
         content = this.processTagWrapper(content, '**', 'b')
         content = this.processTagWrapper(content, '__', 'u')
@@ -120,15 +103,25 @@ class ContentCompiler {
 
         content = content.replace(/\[([^\]]+)\]:\[([^\]]+)\]/g, '<a target="_blank" href="$2">$1</a>')
         
-        links.forEach(link => {
-            let yt = this.parseYoutubeLink(link)
-            if(!yt)
-                return
-            else if (yt.shorts)
-                content += this.makeEmbedYoutubeHTML(yt.id, ytShortHeight, ytShortHeight * ytShortRatio)
-            else
-                content += this.makeEmbedYoutubeHTML(yt.id)
-        })
+        if(!options.disableYT) {
+
+            let videos = {
+                normal: '',
+                shorts: ''
+            }
+
+            links.forEach(link => {
+                let yt = this.parseYoutubeLink(link)
+                if(!yt)
+                    return
+                let html = this.makeEmbedYoutubeHTML(yt.id, yt.shorts)
+                if(yt.shorts) videos.shorts += html
+                else videos.normal += html
+            })
+
+            content += videos.normal? `<div class="yt-collection-wrapper">${videos.normal}</div>` : ''
+            content += videos.shorts? `<div class="yt-collection-wrapper shorts">${videos.shorts}</div>` : ''
+        }
 
         return content
     }

@@ -46,7 +46,7 @@ append body
             <% if (me && me.id == data.author_id) { %>
                 a.delete.button.light 🗑️
             <% } %>
-            p.text <%= data.text %>
+            p.text <%- contentCompiler.compile(data.text, {disableYT: true}) %>
 
     
     script(type="text/x-ejs-template", template="post-reactions")

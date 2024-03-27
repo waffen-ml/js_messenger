@@ -86,6 +86,12 @@ class MessageElement {
         this.systemMessage = this.wrapper.querySelector('.message-wrapper > .system-message')
         this.i = 0
 
+        if(this.userMessage && this.info.type == 'default') {
+            console.log(this.info.content)
+            console.log(contentCompiler.compile(this.info.content))
+            this.userMessage.querySelector('.text').innerHTML = contentCompiler.compile(this.info.content)
+        }
+
         setupInspectObjects(this.wrapper)
         this.update()
         this.setupCW()

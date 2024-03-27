@@ -10,8 +10,9 @@ class Post {
         this.feed = feed
         this.element = templateManager.createElement('post', {
             data: data,
-            me: feed.me
+            me: feed.me 
         })
+        this.element.querySelector('.text').innerHTML = contentCompiler.compile(data.text)
         this.commentHolder = this.element.querySelector('.comments')
         this.commentLoadStart = -1
 
