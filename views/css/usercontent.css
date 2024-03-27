@@ -104,7 +104,7 @@ user-content .text .yt-collection-wrapper {
     display:grid;
     gap:5px;
     grid-auto-rows:max-content;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: 1fr;
     justify-content: center;
 }
 
