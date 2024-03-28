@@ -484,13 +484,16 @@ class MessageList {
     }
 
     deleteMessage(id) {
-        let index = this.messages.findIndex(w => w.id = id)
+        let index = this.messages.findIndex(w => w.id == id)
         if(index < 0)
             return
+
+        if(index > 0 && index < this.messages.length - 1) {
+            this.enhance(this.messages[index + 1], this.messages[index - 1])
+        }
+
         this.messages.splice(index, 1)
         this.interface.deleteMessage(id)
-        if (index > 0 && index < this.messages.length)
-            this.enhance(this.messages[index], this.messages[index - 1])
     }
 
     addMessages(msgs, prepare=true, before=false) {
