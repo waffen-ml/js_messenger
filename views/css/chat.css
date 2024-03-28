@@ -517,11 +517,12 @@ ul.attached {
 
 .stickerscw .navigation {
     display:flex;
-    justify-content: center;
     gap:5px;
     overflow-x:auto;
     overflow-y:hidden;
     flex-shrink:0;
+    max-width: 100%;
+    margin:0 auto;
 }
 
 .stickerscw .navigation::-webkit-scrollbar {
@@ -533,6 +534,7 @@ ul.attached {
     font-size:19px;
     aspect-ratio: 1;
     height:40px;
+    flex-shrink: 0;
 }
 
 .stickerscw .navigation .preview {
