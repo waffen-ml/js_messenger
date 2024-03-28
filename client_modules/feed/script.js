@@ -12,7 +12,10 @@ class Post {
             data: data,
             me: feed.me 
         })
-        this.element.querySelector('.text').innerHTML = contentCompiler.compile(data.text)
+
+        if(data.text)
+            this.element.querySelector('.text').innerHTML = contentCompiler.compile(data.text)
+
         this.commentHolder = this.element.querySelector('.comments')
         this.commentLoadStart = -1
 

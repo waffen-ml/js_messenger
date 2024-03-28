@@ -105,33 +105,7 @@ class Chat {
         })
     }
 
-    
-
-    updateLastRead(userid) {
-        return this.cfx.query(`select * from message where chat_id=? order by id desc limit 1`, [this.id])
-        .then(r => r[0])
-        .then(lm => {
-            if(lm.sender_id && lm.sender_id != userid)
-                this.cfx.socket.io.in('u:' + lm.sender_id).emit('last_read', {id: lm.id, chatid:this.id, reader: userid})
-            return this.cfx.query(`update chat_member set last_read=? where user_id=? and chat_id=?`, [lm.id, userid, this.id])
-        })
-        .then(() => {
-            return this.cfx.notifications.sendSpecificUnread(userid, 'messages')
-        })
-    }
-
-    getUnreadCount(userid) {
-        return this.cfx.query(`select last_read from chat_member where chat_id=? and user_id=?`, [this.id, userid])
-        .then(r => {
-            let last_read = r.length? r[0].last_read ?? 0 : 0
-            return this.cfx.query(`select count(*) as unread from message where chat_id=? and id > ?`, [this.id, last_read])
-        })
-        .then(r => {
-            return r[0].unread ?? 0
-        })
-    }
-
-    notifyAboutUnread(userid) {
+    updatePushNotification(userid) {
         return new Promise(resolve => {
             this.getUnreadCount(userid)
             .then(unread => {
@@ -163,8 +137,36 @@ class Chat {
             })
             .then(() => resolve())
         })
+    }
+
+    updateAllNotifications(userid) {
+        return Promise.all([
+            this.cfx.chats.updateMenuNotification(userid),
+            this.updatePushNotification(userid)
+        ])
+    }
+
+    updateLastRead(userid) {
+        return this.cfx.query(`select * from message where chat_id=? order by id desc limit 1`, [this.id])
+        .then(r => r[0])
+        .then(lm => {
+            if(lm.sender_id && lm.sender_id != userid)
+                this.cfx.socket.io.in('u:' + lm.sender_id).emit('last_read', {id: lm.id, chatid:this.id, reader: userid})
+            return this.cfx.query(`update chat_member set last_read=? where user_id=? and chat_id=?`, [lm.id, userid, this.id])
+        })
         .then(() => {
-            return this.cfx.notifications.sendSpecificUnread(userid, 'messages')
+            return this.updateAllNotifications(userid)
+        })
+    }
+
+    getUnreadCount(userid) {
+        return this.cfx.query(`select last_read from chat_member where chat_id=? and user_id=?`, [this.id, userid])
+        .then(r => {
+            let last_read = r.length? r[0].last_read ?? 0 : 0
+            return this.cfx.query(`select count(*) as unread from message where chat_id=? and id > ?`, [this.id, last_read])
+        })
+        .then(r => {
+            return r[0].unread ?? 0
         })
     }
 
@@ -175,23 +177,10 @@ class Chat {
                 this.cfx.socket.io.in('u:' + m.id).emit('message', msg)
             })
             setTimeout(() => {
-                info.members.forEach(m => this.notifyAboutUnread(m.id))
+                info.members.forEach(m => this.updateAllNotifications(m.id))
             }, notifyTimeout)
         })
     
-    }
-
-    getInfo() {
-        return this.cfx.db.executeFile('getchatinfo', {chatid: this.id})
-        .then(info => {
-            return this.cfx.utils.parseArrayOutput(info, 'members', {
-                is_admin: null,
-                member_name: 'name',
-                member_tag: 'tag',
-                member_id: 'id',
-                member_avatar: 'avatar_id'
-            }, 'id')[0]
-        })
     }
 
     deleteMessage(msgid, userid) {
@@ -217,8 +206,21 @@ class Chat {
                 })
             })
             setTimeout(() => {
-                info.members.forEach(m => this.notifyAboutUnread(m.id))
+                info.members.forEach(m => this.updateAllNotifications(m.id))
             }, notifyTimeout)
+        })
+    }
+
+    getInfo() {
+        return this.cfx.db.executeFile('getchatinfo', {chatid: this.id})
+        .then(info => {
+            return this.cfx.utils.parseArrayOutput(info, 'members', {
+                is_admin: null,
+                member_name: 'name',
+                member_tag: 'tag',
+                member_id: 'id',
+                member_avatar: 'avatar_id'
+            }, 'id')[0]
         })
     }
 
@@ -382,6 +384,10 @@ class ChatSystem {
             })
         })
     }
+    
+    updateMenuNotification(userid) {
+        return this.cfx.notifications.sendSpecificUnread(userid, 'messages')
+    } 
 }
 
 class CallTemp {

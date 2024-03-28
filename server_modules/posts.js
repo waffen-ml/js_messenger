@@ -154,12 +154,12 @@ exports.init = (cfx) => {
             {type: 'file', title: 'Файлы', name: 'files', optional: true, limit: 10}
         ],
         (data, erf, user) => {
-            if (!utils.strweight(data.text) && !utils.strweight(data.html) && !data.files)
-                erf('text', 'Нет информации');
+            if (!utils.strweight(data.text) && !data.files)
+                erf('text', 'Нет информации')
         },
         (data, user, vd) => {
             return cfx.posts.addPost(user.id, 
-                data.files, data.text, data.title);
+                data.files, data.text, data.title)
         }
     ))
 
