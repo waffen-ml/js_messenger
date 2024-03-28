@@ -195,6 +195,9 @@ class Utils {
     }
 
     getMessagePreview(msg, myid, html=false, showName=true) {
+
+        console.log('HEYYY')
+
         let preview = showName && msg.sender_name?
             (myid == msg.sender_id? 'Вы' : msg.sender_name) + ': ' : ''
 
@@ -202,7 +205,6 @@ class Utils {
 
         let numFiles = 0;
         Object.values(msg.files).forEach(w => numFiles += w.length)
-
 
         console.log(msg.content + " " + numFiles)
 
