@@ -71,7 +71,7 @@ class Notifications {
                     console.log(err)
                 })
             })
-        })
+        }) 
     }
 }
 

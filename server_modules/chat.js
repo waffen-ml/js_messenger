@@ -126,8 +126,6 @@ class Chat {
                     let wholePreview = lines.join('\n')
                     let chatname = info.name === null? this.cfx.clientUtils.generateChatName(info.members, {id: userid}, 3) : info.name
                     
-                    console.log('sending to ' + userid)
-
                     return this.cfx.notifications.sendPushNotification(userid, {
                         icon: '/getchatavatar?id=' + this.id,
                         body: wholePreview,
