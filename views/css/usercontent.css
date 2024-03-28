@@ -1,7 +1,7 @@
 user-content {
     display:flex;
     flex-direction: column;
-    gap:10px;
+    gap:5px;
 }
 
 user-content .visual {
