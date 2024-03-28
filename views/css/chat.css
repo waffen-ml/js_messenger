@@ -248,7 +248,7 @@ main {
 .user-message .reply-wrapper {
     width: 100%;
     min-width:200px;
-    height:100px;
+    height:50px;
     position:relative;
 }
 
@@ -257,7 +257,6 @@ main {
     height:100%;
     width:100%;
 }
-
 
 
 ul.attached {
