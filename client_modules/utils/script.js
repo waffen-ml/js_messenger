@@ -200,9 +200,10 @@ class Utils {
 
         preview += ' ' + this.getMessageContentPreview(msg, html)
 
-        
         let numFiles = 0
         
+        console.log(msg.content + " " + numFiles)
+
         Object.values(msg.files).forEach(w => numFiles += w.length)
 
         if(numFiles > 0)
