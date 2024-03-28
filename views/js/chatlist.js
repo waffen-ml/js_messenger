@@ -2,7 +2,6 @@ const holder = document.querySelector('.chatlist')
 let chatViews = []
 let me = {}
 
-
 function renderViews() {
     holder.innerHTML = ''
     chatViews.forEach(cv => {
@@ -40,21 +39,7 @@ function prepareView(view) {
     view.lm.mine = view.lm.sender_id == me.id
     view.lm.datetime = new Date(view.lm.datetime)
 
-    switch(view.lm.type) {
-        case 'default':
-            view.lm.preview = (view.lm.content ?? '').substr(0, 100)
-            break
-        case 'sticker':
-            view.lm.preview = 'Стикер'
-            break
-    }
-
-    if (view.lm.files.length > 0)
-        view.lm.preview += `[${view.lm.files.length} файлов]`
-
-    if(view.lm.mine && !view.is_direct) {
-        view.lm.preview = view.lm.sender_name + ': ' + view.lm.preview
-    }
+    view.lm.preview = utils.getMessagePreview(view.lm, me.id, true, !view.lm.mine && !view.is_direct)
 
     if(!view.name) {
         let names = view.members.filter(m => m.id != me.id).slice(0, 4).map(m => m.name)

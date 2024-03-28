@@ -194,24 +194,47 @@ class Utils {
         return element.getBoundingClientRect()
     }
 
-    getMessagePreview(message, maxContentLength=100, showNames=true) {
-        let preview = showNames && message.sender_name? message.sender_name + ': ' : ''
+    getMessagePreview(msg, myid, html=false, showName=true) {
+        let preview = showName && msg.sender_name?
+            (myid == msg.sender_id? 'Вы' : msg.sender_name) + ': ' : ''
 
-        switch(message.type) {
-            case 'default':
-                preview = message.content.substr(0, maxContentLength)
-                if (message.content.length > maxContentLength)
-                    preview += '...'
-                break
+        preview += ' ' + this.getMessageContentPreview(msg, html)
+
+        
+        let numFiles = 0
+        
+        Object.values(msg.files).forEach(w => numFiles += w.length)
+
+        if(numFiles > 0)
+            preview += ` [${this.nItemsLabel(numFiles, 'файл', 'файла', 'файлов')}]`
+
+        return preview
+    }
+
+    getMessageContentPreview(msg, html=true) {
+        let content;
+
+        switch(msg.type) {
             case 'sticker':
-                preview = 'Стикер'
+                content = 'Стикер'
+                break
+            case 'default':
+                content = msg.content
                 break
         }
 
-        if(message.files.length > 0)
-            preview += ` [${message.files.length} ${this.nItemsLabel(message.files.length, 'файл', 'файла', 'файлов')}]`
+        content = contentCompiler.compile(content, {
+            disableYT: true,
+            disableLineBreaks: true
+        })
 
-        return preview
+        if(html)
+            return content
+        else {
+            let div = document.createElement('div')
+            div.innerHTML = content
+            return div.textContent
+        }
     }
 
     classAttr(d) {

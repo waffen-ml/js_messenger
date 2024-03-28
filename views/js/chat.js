@@ -10,6 +10,7 @@ const emojiList = Array.from(`😀😃😄😁😆😅🤣😂🙂🙃😉😊�
 ❤🧡💛💚💙💜🤎🖤🤍💔💯❗❌💘`)
 .filter(w => w != '\n')
 
+
 class TypingListener {
 
     constructor(timeoutSeconds, intervalSeconds, onstart, onupdate, onstop) {
@@ -84,6 +85,7 @@ class MessageElement {
         this.wrapper = templateManager.createElement('any-message', {data: info, myid: chat.me.id})
         this.userMessage = this.wrapper.querySelector('.user-message')
         this.systemMessage = this.wrapper.querySelector('.message-wrapper > .system-message')
+        this.replyTo = this.userMessage? this.userMessage.querySelector('.reply-to-msg') : null
         this.i = 0
 
         if(this.userMessage && this.info.type == 'default') {
@@ -108,7 +110,7 @@ class MessageElement {
         this.chat.interface.unselectAll()
 
         let cw = createOptionListCW({
-            'Ответить': () => alert('hey1'),
+            'Ответить': () => this.chat.interface.setMessageIdToReplyTo(this.id),
             'Переслать': () => alert('hey2'),
             'Удалить': () => this.chat.deleteMessage(this.id),
             'Прочитавшие': () => this.chat.inspectReadersOfMessage(this.id)
@@ -168,10 +170,38 @@ class MessageElement {
             this.userMessage.classList.remove('read')
     }
 
+    toggleReplyTo(state) {
+        if(!this.replyTo)
+            return
+        else if(state)
+            this.replyTo.style.display='flex'
+        else
+            this.replyTo.style.display='none'
+    }
+
+    async updateReplyTo() {
+        if(!this.replyTo || !this.info.reply_to)
+            return this.toggleReplyTo(false)
+
+        let msg = this.chat.messageList.getMessageById(this.info.reply_to)
+            || await this.chat.loadMessage(this.info.reply_to)
+
+        if(!msg)
+            return this.toggleReplyTo(false)
+
+        this.replyTo.querySelector('.user-name').textContent = msg.sender_name
+        this.replyTo.querySelector('.msg-text').innerHTML = utils.getMessagePreview(msg, this.chat.me.id, true, false)
+
+        this.replyTo.onclick = () => this.chat.interface.focusOnMessage(this.info.reply_to)
+
+        this.toggleReplyTo(true)
+    }
+
     update() {
         this.toggleDateLabel(this.info.dateLabel)
         this.setMinor(this.info.minor)
         this.setReadStatus(this.info.read)
+        this.updateReplyTo()
 
         if(this.chat.me.id == this.info.sender_id)
             this.userMessage.classList.add('mine')
@@ -185,19 +215,27 @@ class ChatInterface {
         this.holderWrapper = document.querySelector('.holder-wrapper')
         this.loadZone = document.querySelector('.load-zone')
         this.entry = document.querySelector('.entry')
+        this.replyBar = document.querySelector('.reply-bar')
         this.loadedAll = false
         this.loadingMore = false
         this.chat = chat
+        this.replyTo = -1
 
         this.messages = {}
 
         if(chat.info.is_direct)
             this.holder.classList.add('direct')
 
+        this.replyBar.querySelector('.discard').addEventListener('click', () => {
+            this.setMessageIdToReplyTo(-1)
+        })
+
         this.setupStickersCW()
         this.setupFileCW()
         this.setupDotsCW()
         this.setupEntry()
+
+        this.focusEntry()
 
         this.scrollDown(false)
     }
@@ -436,6 +474,7 @@ class ChatInterface {
         this.entry.classList.remove('expanded')
         this.entry.dispatchEvent(new Event('clear'))
         this.fileUploader.clear()
+        this.setMessageIdToReplyTo(-1)
     }
 
     setChatAvatar(avatarUrl) {
@@ -461,6 +500,46 @@ class ChatInterface {
     updateMessage(id) {
         let msg = this.getMessage(id)
         if(msg) msg.update()
+    }
+
+    async focusOnMessage(id) {
+        let msg = this.getMessage(id)
+
+        if(!msg && await this.chat.loadToReach(id))
+            msg = this.getMessage(id)
+        if(!msg)
+            return false
+
+        msg.wrapper.scrollIntoView()
+        msg.toggleSelected(true)
+        setTimeout(() => msg.toggleSelected(false), 500)
+        return true
+    }
+
+    setMessageIdToReplyTo(id) {
+        id = parseInt(id)
+
+        if(!isNaN(id) && id >= 0) {
+            this.replyTo = id
+            this.replyBar.style.display = 'flex'
+
+            let msg = this.chat.messageList.getMessageById(id)
+
+            if(!msg)
+                return this.setMessageIdToReplyTo(-1)
+
+            this.replyBar.querySelector('.user-name').textContent = msg.sender_name
+            this.replyBar.querySelector('.msg-text').innerHTML = utils.getMessagePreview(msg, this.chat.me.id, true, false)
+
+            this.focusEntry()
+        } else {
+            this.replyTo = -1
+            this.replyBar.style.display = 'none'
+        }
+    }
+
+    focusEntry() {
+        this.entry.focus()
     }
 
 }
@@ -675,22 +754,47 @@ class Chat {
         
     }
 
-    loadMessageBatch() {
+    async loadToReach(msgid) {
+        let least = parseInt(this.messageList.messages[0].id)
+        let target = parseInt(msgid)
+
+        if (target >= least)
+            return true
+
+        let response = await fetch(`/getdistancebetweenmsgs?chatid=${this.chatid}&id1=${least}&id2=${target}`)
+            .then(r => r.json())
+
+        let toLoad = response.distance + loadWindow
+
+        if (toLoad > 150)
+            return false
+
+        await this.loadMessageBatch(toLoad)
+
+        return true
+    }
+
+    loadMessageBatch(batchSize=loadWindow) {
         let first = this.messageList.getMessageByIndex(0)
         let loadStart = first? first.id - 1 : -1
         
-        return fetch(`/getmessages?chatid=${chatid}&count=${loadWindow}&start=${loadStart}`)
+        return fetch(`/getmessages?chatid=${chatid}&count=${batchSize}&start=${loadStart}`)
         .then(r => r.json())
         .then(msgs => {
             this.messageList.addMessages(msgs, true, true, false)
 
-            if (msgs.length < loadWindow) {
+            if (msgs.length < batchSize) {
                 this.interface.disableLoadingMore()
             }
 
             if (loadStart == -1)
                 this.interface.delayedScroll()
         })
+    }
+
+    loadMessage(id) {
+        return fetch(`/getmessage?msgid=${id}&chatid=${this.chatid}`)
+        .then(r => r.json())
     }
     
     setupSocket() {
@@ -752,10 +856,8 @@ class Chat {
         let content = this.interface.entry.value
         this.send('default', content, attachedFiles)
         .then(r => {
-            if(r.success) {
+            if(r.success)
                 this.interface.clearInput()
-            } else  
-                alert('Ошибка: ' + r.error)
         })
     }
 
@@ -765,9 +867,15 @@ class Chat {
         if (!utils.strweight(content) && !files.length)
             return Promise.resolve({success: 0})
     
-        let data = new FormData();
+        let data = new FormData()
         data.append('type', type)
-        data.append('content', content);
+        data.append('content', content)
+
+        let replyTo = this.interface.replyTo
+        if(replyTo >= 0) {
+            this.interface.setMessageIdToReplyTo(-1)
+            data.append('reply_to', replyTo)
+        }
         
         files.forEach(f => data.append('files', f));
 

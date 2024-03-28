@@ -78,7 +78,9 @@ class ContentCompiler {
         content = this.processTagWrapper(content, '~~', 's')
         content = this.processTagWrapper(content, '*', 'i')
         content = content.replace(/--/g, '—')
-        content = content.replace(/\n/g, '<br>')
+
+        if(!options.disableLineBreaks) 
+            content = content.replace(/\n/g, '<br>')
 
         let links = []
 

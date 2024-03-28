@@ -90,11 +90,15 @@
     <div class="user-message" type="<%=data.type%>">
         <img class="avatar" src="/getuseravatar?id=<%= data.sender_id %>">
         <div class="block content-block">
-            <a href="/user?tag=<%= data.sender_tag %>" class="finite clean name">
+            <a href="/user?tag=<%= data.sender_tag %>" class="finite clean sender-name">
                 <%= data.sender_name %>
             </a>
             
             <user-content>
+                <div class="reply-to-msg block" style="display:none">
+                    <span class="user-name finite"></span>
+                    <p class="msg-text finite"></p>
+                </div>
 
                 <% if (data.type == 'default') { %>
                     <%- templateManager.apply("visual", {files: data.files}) %>

@@ -23,7 +23,7 @@ class Chat {
         })
     }
 
-    addMessage(type, sender_id, content, files) {
+    addMessage(type, sender_id, content, files, reply_to) {
         return new Promise((resolve) => {
             if(!files || !files.length) {
                 resolve(null)
@@ -39,8 +39,8 @@ class Chat {
             //content = this.cfx.utils.mysql_escape(content)
 
             return this.cfx.query(`insert into message
-            (type, sender_id, chat_id, content, bundle_id, datetime)
-            values(?, ?, ?, ?, ?, now())`, [type, sender_id, this.id, content, bundle])
+            (type, sender_id, chat_id, content, bundle_id, datetime, reply_to)
+            values(?, ?, ?, ?, ?, now(), ?)`, [type, sender_id, this.id, content, bundle, reply_to ?? null])
         })
         .then(() => {
             return this.getMessages(-1, 1)
@@ -105,7 +105,18 @@ class Chat {
         })
     }
 
+    getMessage(id, myid) {
+        return this.getMessages(id, 1, myid)
+        .then(messages => {
+            let msg = messages[0]
+            if(!msg || msg.id != id || msg.chat_id != this.id)
+                return null
+            return msg
+        })
+    }
+
     async updatePushNotification(userid) {
+        return
         let unread = await this.getUnreadCount(userid)
 
         if(!unread) {
@@ -230,6 +241,21 @@ class Chat {
 
             return info
         })
+    }
+
+    async getDistanceBetweenMessages(id1, id2) {
+        // id1 exists, checking for id2
+        let r = await this.cfx.query('select * from message where id=?', [id2])
+        
+        if(!r.length)
+            return -1
+
+        let a = Math.min(parseInt(id1), parseInt(id2))
+        let b = Math.max(parseInt(id1), parseInt(id2))
+
+        r = await this.cfx.query('select count(*) as count from message where id > ? and id <= ? and chat_id=?', [a, b, this.id])
+
+        return r[0].count
     }
 
 }
@@ -483,7 +509,7 @@ exports.init = (cfx) => {
         .then(chat => {
             if(!chat)
                 throw Error('Invalid chat')
-            chat.addMessage(req.body.type, sender.id, req.body.content, req.files)
+            chat.addMessage(req.body.type, sender.id, req.body.content, req.files, req.body.reply_to)
             return {success: 1}
         })
     }, cfx.core.upload.array('files'), true)
@@ -564,6 +590,27 @@ exports.init = (cfx) => {
             return chat.getInfo()
         })
     }, false)
+
+    cfx.core.safeGet('/getmessage', (user, req, res) => {
+        return cfx.chats.accessChat(user, req.query.chatid)
+        .then(chat => {
+            return chat.getMessage(req.query.msgid, user.id)
+        })
+    }, true)
+
+    cfx.core.safeGet('/getdistancebetweenmsgs', (user, req, res) => {
+        return cfx.chats.accessChat(user, req.query.chatid)
+        .then(chat => {
+            return chat.getDistanceBetweenMessages(
+                parseInt(req.query.id1), 
+                parseInt(req.query.id2))
+        })
+        .then(d => {
+            return {
+                distance: d
+            }
+        })
+    }, true)
 
     cfx.core.safeGet('/getmessages', (user, req, res) => {
         return cfx.chats.accessChat(user, req.query.chatid)

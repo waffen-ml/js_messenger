@@ -20,7 +20,7 @@ append body
             span.finite.title <%= view.name %>
             span.datetime <%= utils.getMessageDatetimeLabel(view.lm.datetime) %>
             .lm-preview(class!="<%=utils.classAttr({mine: view.lm.mine, read: view.lm.read})%>")
-                p.finite.content <%= view.lm.preview %>
+                p.finite.content <%- view.lm.preview %>
                 span.status
             span.newmsg <%= view.unread %>
 
