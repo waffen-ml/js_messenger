@@ -198,13 +198,13 @@ class Utils {
         let preview = showName && msg.sender_name?
             (myid == msg.sender_id? 'Вы' : msg.sender_name) + ': ' : ''
 
-        preview += ' ' + this.getMessageContentPreview(msg, html)
+        preview += this.getMessageContentPreview(msg, html)
 
-        let numFiles = 0
-        
-        console.log(msg.content + " " + numFiles)
-
+        let numFiles = 0;
         Object.values(msg.files).forEach(w => numFiles += w.length)
+
+
+        console.log(msg.content + " " + numFiles)
 
         if(numFiles > 0)
             preview += ` [${this.nItemsLabel(numFiles, 'файл', 'файла', 'файлов')}]`
