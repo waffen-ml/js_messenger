@@ -195,18 +195,17 @@ class Utils {
     }
 
     getMessagePreview(msg, myid, html=false, showName=true) {
-
-        console.log('HEYYY')
-
         let preview = showName && msg.sender_name?
             (myid == msg.sender_id? 'Вы' : msg.sender_name) + ': ' : ''
 
         preview += this.getMessageContentPreview(msg, html)
 
         let numFiles = 0;
-        Object.values(msg.files).forEach(w => numFiles += w.length)
-
-        console.log(msg.content + " " + numFiles)
+        Object.values(msg.files).forEach(w => {
+            console.log('heyyyy')
+            console.log(w)
+            numFiles += w.length
+        })
 
         if(numFiles > 0)
             preview += ` [${this.nItemsLabel(numFiles, 'файл', 'файла', 'файлов')}]`
