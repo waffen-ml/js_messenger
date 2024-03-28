@@ -202,13 +202,10 @@ class Utils {
 
         let numFiles = 0;
 
-        console.log(msg.files)
-
-        Object.values(msg.files).forEach(w => {
-            console.log('heyyyy')
-            console.log(w)
-            numFiles += w.length
-        })
+        if(Array.isArray(msg.files))
+            numFiles = msg.files.length
+        else
+            Object.values(msg.files).forEach(w => numFiles += w.length)
 
         if(numFiles > 0)
             preview += ` [${this.nItemsLabel(numFiles, 'файл', 'файла', 'файлов')}]`
