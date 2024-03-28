@@ -201,6 +201,9 @@ class Utils {
         preview += this.getMessageContentPreview(msg, html)
 
         let numFiles = 0;
+
+        console.log(msg.files)
+
         Object.values(msg.files).forEach(w => {
             console.log('heyyyy')
             console.log(w)
