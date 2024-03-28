@@ -85,7 +85,7 @@ class MessageElement {
         this.wrapper = templateManager.createElement('any-message', {data: info, myid: chat.me.id})
         this.userMessage = this.wrapper.querySelector('.user-message')
         this.systemMessage = this.wrapper.querySelector('.message-wrapper > .system-message')
-        this.replyTo = this.userMessage? this.userMessage.querySelector('.reply-to-msg') : null
+        this.replyTo = this.userMessage? this.userMessage.querySelector('.reply-wrapper') : null
         this.i = 0
 
         if(this.userMessage && this.info.type == 'default') {

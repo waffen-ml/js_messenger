@@ -245,6 +245,19 @@ main {
     padding:4px;
 }
 
+.user-message .reply-wrapper {
+    width: 100%;
+    min-width:200px;
+    height:100px;
+    position:relative;
+}
+
+.user-message .reply-to-msg {
+    position:absolute;
+    height:100%;
+    width:100%;
+}
+
 
 
 ul.attached {
