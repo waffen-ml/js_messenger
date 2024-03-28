@@ -105,38 +105,27 @@ class Chat {
         })
     }
 
-    updatePushNotification(userid) {
-        return new Promise(resolve => {
-            this.getUnreadCount(userid)
-            .then(unread => {
-                if (!unread) {
-                    resolve()
-                    return
-                }
+    async updatePushNotification(userid) {
+        let unread = await this.getUnreadCount(userid)
 
-                let info;
-                
-                return this.getInfo()
-                .then(info_ => {
-                    info = info_
-                    return this.getMessages(-1, Math.min(unread, maxUnreadPreview))
-                })
-                .then(messages => {
-                    let lines = messages.reverse().map(msg => this.cfx.clientUtils.getMessagePreview(msg, 100, true))
-                    let wholePreview = lines.join('\n')
-                    let chatname = info.name === null? this.cfx.clientUtils.generateChatName(info.members, {id: userid}, 3) : info.name
-                    
-                    return this.cfx.notifications.sendPushNotification(userid, {
-                        icon: '/getchatavatar?id=' + this.id,
-                        body: wholePreview,
-                        title: chatname + ` (${unread})`,
-                        tag: 'chat:' + this.id,
-                        link: '/chat?id=' + this.id
-                    })
-                })
+        if(!unread) {
+            await this.cfx.notifications.deletePushNotification(userid, 'chat:' + this.id)
+        } else {
+            let info = await this.getInfo()
+            let messages = await this.getMessages(-1, Math.min(unread, maxUnreadPreview))
+
+            let lines = messages.map(msg => this.cfx.clientUtils.getMessagePreview(msg, 100, true))
+            let wholePreview = lines.join('\n')
+            let chatname = info.name === null? this.cfx.clientUtils.generateChatName(info.members, {id: userid}, 3) : info.name
+            
+            return this.cfx.notifications.sendPushNotification(userid, {
+                icon: '/getchatavatar?id=' + this.id,
+                body: wholePreview,
+                title: chatname + ` (${unread})`,
+                tag: 'chat:' + this.id,
+                link: '/chat?id=' + this.id
             })
-            .then(() => resolve())
-        })
+        }
     }
 
     updateAllNotifications(userid) {

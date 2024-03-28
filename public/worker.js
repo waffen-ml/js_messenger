@@ -1,18 +1,36 @@
 console.log('Service worker loaded!')
 
+
+function deleteNotification(tag) {
+    return self.registration.getNotifications()
+    .then(notifs => {
+        notifs.forEach(notif => {
+            if(notif.tag == tag)
+                notif.close()
+        })
+    })
+}
+
 self.addEventListener('push', e => {
     let data = e.data.json()
 
-    e.waitUntil(
-        self.registration.showNotification(data.title ?? 'CoffeeTox', {
-            body: data.body ?? 'body',
-            icon: data.icon ?? 'https://coffeetox.ru/public/coffee.png',
-            tag: data.tag,
-            silent: false,
-            dir: 'ltr',
-            data: data
-        })
-    )
+    if(data.action == 'delete_notification') {
+        e.waitUntil(
+            deleteNotification(data.tag)
+        )
+    }
+    else {
+        e.waitUntil(
+            self.registration.showNotification(data.title ?? 'CoffeeTox', {
+                body: data.body ?? 'body',
+                icon: data.icon ?? 'https://coffeetox.ru/public/coffee.png',
+                tag: data.tag,
+                silent: false,
+                dir: 'ltr',
+                data: data
+            })
+        )
+    }
 })
 
 self.addEventListener('notificationclick', function(event) {

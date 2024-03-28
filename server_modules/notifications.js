@@ -55,9 +55,7 @@ class Notifications {
         })
     }
 
-    sendPushNotification(userid, data) {
-        const payload = JSON.stringify(data)
-
+    forEverySubscriptionOf(userid, cb) {
         this.cfx.core.sessionStorage.all((err, sessions) => {
             let subs = Object.values(sessions)
                 .filter(s => s.userid === userid)
@@ -65,13 +63,28 @@ class Notifications {
                 .map(s => s.notificationSubscription)
 
             subs.forEach(sub => {
-                webpush.sendNotification(sub, payload)
-                .catch(err => {
-                    console.log('Error with sending a notification:')
-                    console.log(err)
-                })
+                cb(sub)
             })
         }) 
+    }
+
+    sendPushNotification(userid, data) {
+        const payload = JSON.stringify(data)
+
+        this.forEverySubscriptionOf(userid, (sub) => {
+            webpush.sendNotification(sub, payload)
+            .catch(err => {
+                console.log('Error with sending a notification:')
+                console.log(err)
+            })
+        })
+    }
+
+    deletePushNotification(userid, tag) {
+        this.sendPushNotification(userid, {
+            action: 'delete_notification',
+            tag: tag
+        })
     }
 }
 
