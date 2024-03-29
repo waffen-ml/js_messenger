@@ -988,7 +988,8 @@ class AudioRecorder {
 
     async start() {
         await this.initRecorder()
-        else if(this.isRecording())
+        
+        if(this.isRecording())
             throw Error('Recorder is busy')
 
         this.clear()
@@ -1016,7 +1017,7 @@ class AudioRecorder {
 
         this.audioStream.getTracks().forEach(function(track) {
             track.stop()
-        });
+        })
 
         if(!send)
             return
