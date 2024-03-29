@@ -737,8 +737,12 @@ class Chat {
 
         if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
             return navigator.mediaDevices.getUserMedia(options)
-            .catch((err) => null)
+            .catch((err) => {
+                alert(err)
+                return null
+            })
         else {
+            alert('navigator does not have necessary methods')
             return Promise.resolve(null)
         }
     }
