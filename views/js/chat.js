@@ -559,7 +559,7 @@ class ChatInterface {
         this.inputBar.querySelector('#record').addEventListener('click', () => {
             this.chat.audioRecorder.start()
             .catch(error => {
-                alert('Ошибка: ' + error)
+                alert(error)
             })
         })
         this.inputBar.querySelector('#discard-audio').addEventListener('click', () => this.chat.audioRecorder.stop(false))
@@ -730,11 +730,17 @@ class Chat {
     }
 
     getStream(options) {
+        navigator.getUserMedia  = navigator.getUserMedia
+            || navigator.webkitGetUserMedia 
+            || navigator.mozGetUserMedia 
+            || navigator.msGetUserMedia
+
         if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
             return navigator.mediaDevices.getUserMedia(options)
             .catch((err) => null)
-        else
+        else {
             return Promise.resolve(null)
+        }
     }
 
     inspectReadersOfMessage(msgid) {
