@@ -4,6 +4,8 @@ const updateLastSeenInterval = 20 // seconds
 const typingStatusInterval = 5 // seconds
 const messageLongPressMilliseconds = 400
 
+const maxAudioDurationSeconds = 60
+
 const emojiList = Array.from(`😀😃😄😁😆😅🤣😂🙂🙃😉😊😇🥰😍🤩😘😗
 😚😙😋😛😜🤪😝🤑🤗🤭🤫🤔🤐🤨😐😑😶😏😒🙄😬🤥😌😔😪🤤😴😷🤒🤕🤢
 🤮🤧🥵🥶🥴😵🤯🤠🥳😎🤓🧐😕😟🙁😮😯😲😳🥺😦😧😨😰😥😢😭😱😖😣😞😓😩😫🥱😤😡😠🤬
@@ -216,6 +218,7 @@ class ChatInterface {
         this.loadZone = document.querySelector('.load-zone')
         this.entry = document.querySelector('.entry')
         this.replyBar = document.querySelector('.reply-bar')
+        this.inputBar = document.querySelector('.input-bar')
         this.loadedAll = false
         this.loadingMore = false
         this.chat = chat
@@ -234,8 +237,10 @@ class ChatInterface {
         this.setupFileCW()
         this.setupDotsCW()
         this.setupEntry()
+        this.setupAudioRecording()
 
         this.focusEntry()
+        this.onInputChange()
 
         this.scrollDown(false)
     }
@@ -281,8 +286,8 @@ class ChatInterface {
 
         this.fileUploader = uplManager.createUploader({})
 
-        this.fileUploader.on('append', () => this.updateFileCount())
-        this.fileUploader.on('remove', () => this.updateFileCount())
+        this.fileUploader.on('append', () => this.onInputChange())
+        this.fileUploader.on('remove', () => this.onInputChange())
 
         let cw = new ContextWindow({
             destroyOnClose: false,
@@ -383,8 +388,10 @@ class ChatInterface {
 
             if(text)
                 this.typingListener.update()
-            else if(!text && typingListener.isTyping())
+            else if(!text && this.typingListener.isTyping())
                 this.typingListener.stop()
+        
+            this.onInputChange()
         })
 
         this.entry.addEventListener('clear', () => {
@@ -423,12 +430,6 @@ class ChatInterface {
 
     scrollUp(smooth) {
         this.holderWrapper.scrollTo({top:0, behavior: smooth? 'smooth' : 'instant'})
-    }
-
-    updateFileCount() {
-        const btn = document.querySelector('.input-bar #file')
-        const count = this.getAttachedFiles().length
-        btn.value = (count? count + ' ' : '') + '📁'
     }
 
     delayedScroll() {
@@ -475,6 +476,7 @@ class ChatInterface {
         this.entry.dispatchEvent(new Event('clear'))
         this.fileUploader.clear()
         this.setMessageIdToReplyTo(-1)
+        this.onInputChange()
     }
 
     setChatAvatar(avatarUrl) {
@@ -540,6 +542,54 @@ class ChatInterface {
 
     focusEntry() {
         this.entry.focus()
+    }
+
+    onInputChange() {
+        if(!utils.strweight(this.entry.value) && this.getAttachedFiles().length == 0)
+            this.setInputBarClass('audio-record-available')
+        else    
+            this.setInputBarClass()
+
+        let fileBtn = this.inputBar.querySelector('#file')
+        let count = this.getAttachedFiles().length
+        fileBtn.textContent = (count? count + ' ' : '') + '📁'
+    }
+
+    setupAudioRecording() {
+        this.inputBar.querySelector('#record').addEventListener('click', () => {
+            this.chat.audioRecorder.start()
+            .catch(error => {
+                alert('Ошибка: ' + error)
+            })
+        })
+        this.inputBar.querySelector('#discard-audio').addEventListener('click', () => this.chat.audioRecorder.stop(false))
+        this.inputBar.querySelector('#send-audio').addEventListener('click', () => this.chat.audioRecorder.stop(true))
+    }
+
+    startRecording() {
+        this.setInputBarClass('recording-audio')
+        let span = this.inputBar.querySelector('.audio-record-bar span')
+
+        let seconds = 0
+
+        span.textContent = '0 с'
+        this.recordingIntervalId = setInterval(() => {
+            span.textContent = (++seconds) + ' с'
+        }, 1000)
+    }
+    
+    stopRecording() {
+        if(this.recordingIntervalId && this.recordingIntervalId >= 0) {
+            clearInterval(this.recordingIntervalId)
+            this.recordingIntervalId = null
+        }
+        
+        this.setInputBarClass('')
+        this.onInputChange()
+    }
+
+    setInputBarClass(className='') {
+        this.inputBar.className = 'input-bar ' + className
     }
 
 }
@@ -649,6 +699,44 @@ class Chat {
         .then(info => this.init(info))
     }
 
+    init(info) {
+        this.info = info
+        this.interface = new ChatInterface(this)
+        this.messageList = new MessageList(this.interface, this.me)
+        this.members = {}
+        this.direct_to = info.is_direct? 
+            this.info.members.find(m => m.id != this.me.id) : null
+
+        info.members.forEach(m => {
+            this.members[m.id] = m
+            m.typingListener = new TypingListener(
+                typingStatusInterval * 1.5, null, 
+                () => this.updateTypingMembers(),
+                null, () => this.updateTypingMembers())
+        })
+
+        this.subtitleList = Array(2)
+        this.audioRecorder = new AudioRecorder(this)
+
+        this.interface.initLoadMessagesFunction(() => this.loadMessageBatch())
+        //this.interface.identifyMyMessages(null, me.id)
+        //this.loadChatInfo()
+        this.loadMessageBatch()
+        this.setupSocket()
+
+        this.updateLastSeen()
+        this.setupHeader()
+        this.readMessages()
+    }
+
+    getStream(options) {
+        if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
+            return navigator.mediaDevices.getUserMedia(options)
+            .catch((err) => null)
+        else
+            return Promise.resolve(null)
+    }
+
     inspectReadersOfMessage(msgid) {
         return fetch(`/getreadersofmessage?chatid=${this.chatid}&msgid=${msgid}`)
         .then(r => r.json())
@@ -689,35 +777,6 @@ class Chat {
     updateSubtitle() {
         let subtitle = [...this.subtitleList].reverse().find(w => w)
         this.interface.setChatSubtitle(subtitle)
-    }
-
-    init(info) {
-        this.info = info
-        this.interface = new ChatInterface(this)
-        this.messageList = new MessageList(this.interface, this.me)
-        this.members = {}
-        this.direct_to = info.is_direct? 
-            this.info.members.find(m => m.id != this.me.id) : null
-
-        info.members.forEach(m => {
-            this.members[m.id] = m
-            m.typingListener = new TypingListener(
-                typingStatusInterval * 1.5, null, 
-                () => this.updateTypingMembers(),
-                null, () => this.updateTypingMembers())
-        })
-
-        this.subtitleList = Array(2)
-
-        this.interface.initLoadMessagesFunction(() => this.loadMessageBatch())
-        //this.interface.identifyMyMessages(null, me.id)
-        //this.loadChatInfo()
-        this.loadMessageBatch()
-        this.setupSocket()
-
-        this.updateLastSeen()
-        this.setupHeader()
-        this.readMessages()
     }
 
     sendTypingStatus(status) {
@@ -891,6 +950,77 @@ class Chat {
 
     }
 }
+
+class AudioRecorder {
+    constructor(chat) {
+        this.chat = chat
+        this.interface = chat.interface
+        this.recordTimeoutId = -1
+        this.chunks = []
+    
+    }
+
+    async initRecorder() {
+        if(this.recorder)
+            return
+
+        this.audioStream = await this.chat.getStream({audio: true})
+            
+        if(!this.audioStream)   
+            throw Error('Audio is not available')
+    
+        this.recorder = new MediaRecorder(this.audioStream)
+        this.recorder.addEventListener('dataavailable', (e) => {
+            this.chunks.push(e.data)
+        })
+    }
+    
+    isRecording() {
+        return this.recorder.state == 'recording'
+    }
+
+    async start() {
+        if(!this.recorder)
+            await this.initRecorder()
+        else if(this.isRecording())
+            throw Error('Recorder is busy')
+
+        this.clear()
+
+        this.recordTimeoutId = setTimeout(() => {
+            this.recordTimeoutId = -1
+            this.stop(true)
+        }, maxAudioDurationSeconds * 1000)
+
+        this.recorder.start(50)
+
+        this.interface.startRecording()
+
+        console.log('started recording')
+    }
+
+    stop(send) {
+        if(this.recordTimeoutId >= 0) {
+            clearTimeout(this.recordTimeoutId)
+            this.recordTimeoutId = -1
+        }
+        this.recorder.stop()
+        this.interface.stopRecording()
+        console.log('stopped recording')
+
+        if(!send)
+            return
+
+        let blob = new Blob(this.chunks, {type: 'audio/ogg; codecs=opus'})
+        this.chat.send('default', '',  [blob])
+    }
+
+    clear() {
+        this.chunks = []
+    }
+
+}
+
 
 function toggleStream(stream, state) {
     stream.getAudioTracks().forEach(t => {
@@ -1219,7 +1349,6 @@ class Call {
 }
 
 let chat = null
-
 
 fetch('/auth')
 .then((r) => r.json())

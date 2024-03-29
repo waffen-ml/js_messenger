@@ -12,7 +12,7 @@ main {
     display:flex;
     align-items:flex-end;
 
-    gap:7px;
+    gap:4px;
     width: 100%;
 }
 
@@ -43,6 +43,46 @@ main {
 .entry.expanded {
     height:85px;
 }
+
+.input-bar .audio-record-bar {
+    height:100%;
+    padding: 0 10px;
+    display:none;
+    align-items: center;
+    width:100%;
+    gap:5px;
+}
+
+.input-bar #send-audio, 
+.input-bar #discard-audio, 
+.input-bar #record {
+    display:none;
+}
+
+
+.input-bar.audio-record-available #record {
+    display:block;
+}
+
+.input-bar.audio-record-available #send {
+    display:none;
+}
+
+.input-bar.recording-audio .audio-record-bar {
+    display:flex;
+}
+
+.input-bar.recording-audio #discard-audio,
+.input-bar.recording-audio #send-audio {
+    display:block;
+}
+
+.input-bar.recording-audio #send,
+.input-bar.recording-audio #file,
+.input-bar.recording-audio .entry {
+    display:none;
+}
+
 
 .holder-wrapper {
     width:100%;

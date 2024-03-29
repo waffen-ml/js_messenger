@@ -9,11 +9,6 @@ const server = require('https').createServer({
     cert: fs.readFileSync(__dirname + `/../sslcert/cert.pem`)
 }, app)
 
-//const server = require('https').createServer({
-//    key: fs.readFileSync(__dirname + '/cert/key.pem'),
-//    cert: fs.readFileSync(__dirname + '/cert/cert.pem')
-//}, app)
-
 const unsecureServer = require('http').createServer((req, res) => {
     res.writeHead(302, {
       'Location': 'https://coffeetox.ru' + req.url
