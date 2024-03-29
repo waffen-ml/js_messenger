@@ -158,7 +158,7 @@ class Utils {
             return c
         else if(n % 10 == 1)
             return a
-        else if(n % 10 <= 4)
+        else if(n % 10 <= 4 && n % 10 != 0)
             return b
         else
             return c
@@ -180,7 +180,7 @@ class Utils {
 
         console.log(minutesAgo)
         
-        if (minutesAgo < 3)
+        if (minutesAgo < 1)
             return 'Онлайн'
         else if(minutesAgo < 60)
             return `Был в сети ${this.nItemsLabel(minutesAgo, 'минуту', 'минуты', 'минут', true)} назад`

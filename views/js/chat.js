@@ -332,7 +332,14 @@ class ChatInterface {
                 else
                     navbutt.addEventListener('click', () => showGrid(navbutt.getAttribute('id')))
             })
+
+            let nav = cw.window.querySelector('.navigation')
             
+            nav.addEventListener('wheel', e => {
+                nav.scrollBy({
+                    left: e.deltaY < 0? -30 : 30
+                })
+            })
 
             cw.window.querySelectorAll('.grid#emoji button').forEach(emojiButton => {
                 emojiButton.addEventListener('click', () => this.appendMessageEntry(emojiButton.textContent))
@@ -717,6 +724,8 @@ class Chat {
 
         this.subtitleList = Array(2)
         this.audioRecorder = new AudioRecorder(this)
+        this.focusedEventCallbacks = {}
+        this.focusedEvents = []
 
         this.interface.initLoadMessagesFunction(() => this.loadMessageBatch())
         //this.interface.identifyMyMessages(null, me.id)
@@ -727,6 +736,10 @@ class Chat {
         this.updateLastSeen()
         this.setupHeader()
         this.readMessages()
+
+        addEventListener('focus', () => {
+            this.processFocusedEvents()
+        })
     }
 
     getStream(options) {
@@ -813,13 +826,17 @@ class Chat {
         if (!this.direct_to)
             return
 
-        fetch('/getuser?id=' + this.direct_to.id)
-        .then(r => r.json())
-        .then(r => {
-            this.subtitleList[0] = utils.getLastSeenStatus(new Date(r.last_seen))
-            this.updateSubtitle()
-            setTimeout(() => this.updateLastSeen(), updateLastSeenInterval * 1000)
-        })
+        setInterval(() => {
+            if(!document.hasFocus())
+                return
+
+            fetch('/getuser?id=' + this.direct_to.id)
+            .then(r => r.json())
+            .then(r => {
+                this.subtitleList[0] = utils.getLastSeenStatus(new Date(r.last_seen))
+                this.updateSubtitle()
+            })
+        }, updateLastSeenInterval * 1000)
         
     }
 
@@ -865,35 +882,43 @@ class Chat {
         return fetch(`/getmessage?msgid=${id}&chatid=${this.chatid}`)
         .then(r => r.json())
     }
+
+    setupFocusedEventType(type, cb) {
+        this.focusedEventCallbacks[type] = cb
+
+        socket.on(type, data => {
+            this.focusedEvents.push({type: type, data: data})
+
+            if(document.hasFocus())
+                this.processFocusedEvents()
+        })
+    }
+
+    processFocusedEvents() {
+        this.focusedEvents.forEach(event => {
+            this.focusedEventCallbacks[event.type](event.data)
+        })
+        this.focusedEvents = []
+    }
     
     setupSocket() {
-        socket.emit('join-chat', chatid);
+        socket.emit('join-chat', chatid)
 
-        socket.on('message', msg => {
+        this.setupFocusedEventType('message', msg => {
             console.log('message')
             console.log(msg)
             if(msg.chat_id != this.chatid)
                 return
             this.messageList.addMessages([msg], true, false)
-            this.readMessages()
+            this.readMessages()      
         })
 
-        socket.on('delete_message', w => {
+        this.setupFocusedEventType('delete_message', w => {
             if(w.chatid != this.chatid) return
             this.messageList.deleteMessage(w.msgid)
         })
 
-        socket.on('typing_status', msg => {
-            if(msg.id == this.me.id)
-                return
-            let member = this.members[msg.id]
-            if(msg.status == 1)
-                member.typingListener.update()
-            else
-                member.typingListener.stop()
-        })
-
-        socket.on('last_read', msg => {
+        this.setupFocusedEventType('last_read', msg => {
             if(msg.chatid != this.chatid) return
             
             let idx = this.messageList.messages.findIndex(w => w.id == msg.id)
@@ -904,6 +929,16 @@ class Chat {
                 msg.read = true
                 this.interface.updateMessage(msg.id)
             }
+        })
+
+        socket.on('typing_status', msg => {
+            if(msg.id == this.me.id)
+                return
+            let member = this.members[msg.id]
+            if(msg.status == 1)
+                member.typingListener.update()
+            else
+                member.typingListener.stop()
         })
     }
 
