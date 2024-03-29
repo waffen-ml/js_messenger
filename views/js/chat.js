@@ -971,9 +971,6 @@ class AudioRecorder {
     }
 
     async initRecorder() {
-        if(this.recorder)
-            return
-
         this.audioStream = await this.chat.getStream({audio: true})
             
         if(!this.audioStream)   
@@ -990,8 +987,7 @@ class AudioRecorder {
     }
 
     async start() {
-        if(!this.recorder)
-            await this.initRecorder()
+        await this.initRecorder()
         else if(this.isRecording())
             throw Error('Recorder is busy')
 
@@ -1017,6 +1013,10 @@ class AudioRecorder {
         this.recorder.stop()
         this.interface.stopRecording()
         console.log('stopped recording')
+
+        this.audioStream.getTracks().forEach(function(track) {
+            track.stop()
+        });
 
         if(!send)
             return
