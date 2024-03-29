@@ -826,16 +826,21 @@ class Chat {
         if (!this.direct_to)
             return
 
-        setInterval(() => {
-            if(!document.hasFocus())
-                return
-
-            fetch('/getuser?id=' + this.direct_to.id)
+        const update = () => {
+            return fetch('/getuser?id=' + this.direct_to.id)
             .then(r => r.json())
             .then(r => {
                 this.subtitleList[0] = utils.getLastSeenStatus(new Date(r.last_seen))
                 this.updateSubtitle()
             })
+        }
+
+        update()
+
+        setInterval(() => {
+            if(!document.hasFocus())
+                return
+            update()
         }, updateLastSeenInterval * 1000)
         
     }
