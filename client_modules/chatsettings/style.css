@@ -3,7 +3,7 @@
     width:400px;
     display:grid;
     grid-template-columns: auto 1fr;
-    grid-template-rows: repeat(4, auto);
+    grid-template-rows: repeat(3, auto);
     row-gap:5px;
     column-gap:20px;
 }
@@ -29,6 +29,7 @@
     display:flex;
     align-items: flex-start;
     gap:5px;
+    grid-column:2;
 }
 
 .chat-settings .ispublic > * {
