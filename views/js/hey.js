@@ -12,7 +12,16 @@ let attentionVideoIds = [
     'unyEMrXxUbE',
     '3mwYNgQvxxI',
     'bKlZbjzqIcM',
-    'l0h54CwVRsc'
+    'l0h54CwVRsc',
+    '5lFK6Aw-wy0',
+    '-n4wZoGS09A',
+    'c4FLM9f3h_0',
+    '6O1bSNc3zik',
+    '5lFK6Aw-wy0',
+    'qrQJAA1bsfQ',
+    'as_31DiJ0o',
+    '-dvZnZofv4o',
+    'NJag3VOo4es'
 ]
 
 function generateBannerInnerHTML(videoid) {
