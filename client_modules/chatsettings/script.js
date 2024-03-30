@@ -62,7 +62,7 @@ class ChatSettings {
 
         if(options.readOnly) {
             this.nameEntry.setAttribute('readonly', true)
-            this.isPublicCheckbox.setAttribute('readonly', true)
+            this.isPublicCheckbox.style.pointerEvents = 'none'
             this.toggleDeleteAvatarButton(false)
             this.avatarImg.style.cursor = 'default'
         }
