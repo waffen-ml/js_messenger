@@ -515,8 +515,8 @@ exports.init = (cfx) => {
     cfx.core.safePost('/setchatname', (user, req, res) => {
         return cfx.chats.accessChat(user, req.query.chatid, true)
         .then(chat => {
-            console.log(req.json)
-            return chat.setName(req.json.name)
+            console.log(req.body)
+            return chat.setName(req.body.name)
         })
         .then(() => {
             return {success: 1}
