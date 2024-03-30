@@ -60,12 +60,11 @@ class ChatSettings {
             this.onchange()
         })
 
-        console.log(options.readOnly)
-
         if(options.readOnly) {
-            this.nameEntry.readOnly = true
-            this.isPublicCheckbox.readOnly = true
+            this.nameEntry.setAttribute('readonly', true)
+            this.isPublicCheckbox.setAttribute('readonly', true)
             this.toggleDeleteAvatarButton(false)
+            this.avatarImg.style.cursor = 'default'
         }
     }
 
