@@ -795,6 +795,8 @@ class Chat {
         addEventListener('focus', () => {
             this.processFocusedEvents()
         })
+
+        console.log(this.info)
     }
 
     getStream(options) {
