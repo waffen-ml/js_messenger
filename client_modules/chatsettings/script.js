@@ -32,15 +32,17 @@ class ChatSettings {
             this.onchange()
         })
 
-        this.avatarImg.addEventListener('click', () => {
-            let amaker = new AvatarMaker((blob, src) => {
-                this.avatarImg.src = src
-                this.avatarBlob = blob
-                this.toggleDeleteAvatarButton(true)
-                this.onchange()
-            })
-            amaker.open()
-        })
+        if(!options.readOnly) {
+            this.avatarImg.addEventListener('click', () => {
+                let amaker = new AvatarMaker((blob, src) => {
+                    this.avatarImg.src = src
+                    this.avatarBlob = blob
+                    this.toggleDeleteAvatarButton(true)
+                    this.onchange()
+                })
+                amaker.open()
+            }) 
+        }
 
         this.nameEntry.addEventListener('input', () => {
             let s = this.nameEntry.value.trim()
@@ -58,7 +60,11 @@ class ChatSettings {
             this.onchange()
         })
 
-
+        if(options.readOnly) {
+            this.nameEntry.readOnly = true
+            this.isPublicCheckbox.readOnly = true
+            this.toggleDeleteAvatarButton(false)
+        }
     }
 
     toggleDeleteAvatarButton(state) {

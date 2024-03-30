@@ -22,7 +22,8 @@ class ChatInspector {
             chatId: chat.info.id,
             hasAvatar: chat.info.avatar_id !== null,
             isPublic: Boolean(chat.info.is_public),
-            defaultName: this.generateDefaultName()
+            defaultName: this.generateDefaultName(),
+            readOnly: !this.chat.me.is_admin
         })
 
         this.chatSettings.onchange = () => {
@@ -45,7 +46,6 @@ class ChatInspector {
                 return true
             })
             this.popup.addOption('Отмена', () => {
-                alert('fuck')
                 return true
             })
         }
@@ -771,6 +771,10 @@ class Chat {
             this.info.members.find(m => m.id != this.me.id) : null
 
         info.members.forEach(m => {
+
+            if(m.id == this.me.id && m.is_admin)
+                this.me.is_admin = true
+
             this.members[m.id] = m
             m.typingListener = new TypingListener(
                 typingStatusInterval * 1.5, null, 
