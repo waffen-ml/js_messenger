@@ -804,6 +804,28 @@ class Chat {
         console.log(this.info)
     }
 
+    applyInfoChanges(changes) {
+        if(changes.name === undefined)
+            return
+
+        return fetch(`/setchatname?chatid=${this.chatid}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: "same-origin",
+            body: `{name:"${changes.name}"}`
+        }).then(r => r.json())
+        .then(r => {
+            console.log('WEWQEW')
+            console.log(r)
+        })
+    }
+
+    updateInfo() {
+
+    }
+
     getStream(options) {
         navigator.getUserMedia  = navigator.getUserMedia
             || navigator.webkitGetUserMedia 

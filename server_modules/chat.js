@@ -23,6 +23,15 @@ class Chat {
         })
     }
 
+    containsAdmin(userid) {
+        return this.cfx.query(`select * from chat_member where user_id=? and chat_id=? and is_admin=1`, [userid, this.id])
+        .then(r => r.length > 0)
+    }
+
+    makeAdmin(userid) {
+        return this.cfx.query(`update chat_member set is_admin=1 where user_id=? and chat_id=?`, [userid, this.id])
+    }
+
     addMessage(type, sender_id, content, files, reply_to) {
         return new Promise((resolve) => {
             if(!files || !files.length) {
@@ -263,6 +272,22 @@ class Chat {
         return r[0].count
     }
 
+    setDescription(descr) {
+        return this.cfx.query(`update chat set description=? where id=?`, [descr, this.id])
+    }
+
+    setName(name) {
+        this.name = name
+        return this.cfx.query(`update chat set name=? where id=?`, [name ?? null, this.id])
+    }
+
+    setAvatarId(id) {
+        return this.cfx.query(`update chat set avatar_id=? where id=?`, [id, this.id])
+    }
+
+    setPublicStatus(status) {
+        return this.cfx.query(`update chat set is_public=? where id=?`, [status? 1 : 0, this.id])
+    }
 }
 
 class Stickerpacks {
@@ -392,7 +417,7 @@ class ChatSystem {
         })
     }
 
-    async accessChat(user, chatid) {
+    async accessChat(user, chatid, admin=false) {
         let chat = await this.getChat(chatid)
 
         if(!chat)
@@ -401,10 +426,17 @@ class ChatSystem {
         //let info = await chat.getInfo(false)
         //if(info.is_public)
         //    return chat
-        if(await chat.containsUser(user.id))
+
+        if(admin && await chat.containsAdmin(user.id))
+            return chat
+        else    
+            throw new Error('The user is not an admin in the chat')
+
+        if(await chat.containsAdmin(user.id))
             return chat
         else
             throw new Error('User is not in the chat')
+
     }
     
     updateMenuNotification(userid) {
@@ -477,6 +509,21 @@ exports.init = (cfx) => {
             return r.length? r[0].count ?? 0 : 0
         })
     })
+
+    // setters
+
+    cfx.core.safePost('/setchatname', (user, req, res) => {
+        return cfx.chats.accessChat(req.query.chatid, user, true)
+        .then(chat => {
+            return chat.setName(req.json.name)
+        })
+        .then(() => {
+            return {success: 1}
+        })
+    }, null, true)
+
+
+
 
     cfx.core.safeRender('/publicchatlist', (user, req, res) => {
         return cfx.chats.getPublicChats()
@@ -555,6 +602,7 @@ exports.init = (cfx) => {
             return cfx.chats.createGroupChat(req.body.name || null, parseInt(req.body.ispublic), avatarId, members)
         }).then(chat => {
             chat.addMessage('system', null, `@${creator.tag} создал этот чат`)
+            return chat.makeAdmin(creator.id)
         })
         .then(() => {
             return {success: 1}
