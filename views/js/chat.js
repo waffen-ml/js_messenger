@@ -807,8 +807,6 @@ class Chat {
     applyInfoChanges(changes) {
         let fd = new FormData()
 
-        console.log(changes)
-
         if(changes.name)
             fd.append('name', changes.name)
         if (changes.description)
@@ -817,7 +815,7 @@ class Chat {
             fd.append('deleteAvatar', 1)
         else if(changes.avatarBlob)
             fd.append('avatar', changes.avatarBlob)
-        if(changes.isPublic)
+        if(changes.isPublic !== undefined)
             fd.append('isPublic', changes.isPublic? 1 : 0)
 
         return fetch(`/changechatinfo?chatid=${this.chatid}`, {

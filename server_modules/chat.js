@@ -519,8 +519,6 @@ exports.init = (cfx) => {
             let avatarBlob = req.file
             let w = []
 
-            console.log(changes)
-
             if(changes.deleteAvatar)
                 w.push(chat.setAvatarId(null))
             else if (avatarBlob) {
