@@ -20,7 +20,7 @@ body {
 }
 
 .attention-banner#banner1 {
-    right:calc(50% - 500px - 30px);
+    right:calc(50% + 500px + 30px);
 }
 
 .attention-banner#banner2 {
