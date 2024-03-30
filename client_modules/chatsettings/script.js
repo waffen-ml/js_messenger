@@ -13,7 +13,7 @@ class ChatSettings {
         this.options = options
         this.defaultName = options.defaultName ?? ''
         this.name = null ?? options.name
-        this.avatarBlob = null
+        this.avatarBlob = undefined
         this.isPublic = Boolean(options.isPublic)
 
         if(options.chatId)
@@ -68,7 +68,7 @@ class ChatSettings {
     getChanges() {
         let changes = {}
 
-        if(this.avatarBlob)
+        if(this.avatarBlob || this.avatarBlob === null && this.options.hasAvatar)
             changes.avatarBlob = this.avatarBlob
         else if(this.options.name !== this.name)
             changes.name = this.name
