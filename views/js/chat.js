@@ -42,7 +42,7 @@ class ChatInspector {
 
         if(state) {
             this.popup.addOption('Сохранить', () => {
-                alert('save')
+                this.chat.applyInfoChanges(this.chatSettings.getChanges())
                 return true
             })
             this.popup.addOption('Отмена', () => {
