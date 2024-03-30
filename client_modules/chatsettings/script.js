@@ -38,6 +38,13 @@ class ChatSettings {
         let p = this.element.querySelector('.description p')
         p.style.display = readOnly? 'block' : 'none'
         p.innerHTML = contentCompiler.compile(this.description, {disableYT: true})
+
+        if(!p.innerHTML) {
+            p.style.fontStyle = 'italic'
+            p.textContent = 'Нет описания'
+        } else
+            p.style.fontStyle =''
+
         this.descrEntry.style.display = readOnly? 'none' : 'block'
         this.descrEntry.value = this.description
     }
