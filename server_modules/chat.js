@@ -432,7 +432,7 @@ class ChatSystem {
         else if (admin)
             throw new Error('The user is not an admin in the chat')
 
-        if(await chat.containsAdmin(user.id))
+        if(await chat.containsUser(user.id))
             return chat
         else
             throw new Error('User is not in the chat')
@@ -522,8 +522,6 @@ exports.init = (cfx) => {
             return {success: 1}
         })
     }, null, true)
-
-
 
 
     cfx.core.safeRender('/publicchatlist', (user, req, res) => {
