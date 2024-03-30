@@ -26,6 +26,7 @@ class ChatInspector {
 
         this.chatSettings.onchange = () => {
             let changes = this.chatSettings.getChanges()
+            console.log(changes)
             this.toggleUnsavedHandling(Object.keys(changes).length > 0)
         }
 
@@ -38,12 +39,12 @@ class ChatInspector {
         this.popup.removeOption('Сохранить')
 
         if(state) {
-            this.popup.addOption('Отмена', () => {
-                alert('fuck')
-                return true
-            })
             this.popup.addOption('Сохранить', () => {
                 alert('save')
+                return true
+            })
+            this.popup.addOption('Отмена', () => {
+                alert('fuck')
                 return true
             })
         }
