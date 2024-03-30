@@ -16,6 +16,9 @@ class ChatSettings {
         this.avatarBlob = undefined
         this.isPublic = Boolean(options.isPublic)
 
+        if(options.hasAvatar)
+            this.toggleDeleteAvatarButton(true)
+
         if(options.chatId)
             this.avatarImg.src = '/getchatavatar?id=' + options.chatId
         
@@ -25,7 +28,7 @@ class ChatSettings {
         this.deleteAvatarButton.addEventListener('click', () => {
             this.avatarBlob = null
             this.avatarImg.src = '/public/chatavatar/0.png'
-            this.deleteAvatarButton.style.display = 'none'
+            this.toggleDeleteAvatarButton(false)
             this.onchange()
         })
 
@@ -33,7 +36,7 @@ class ChatSettings {
             let amaker = new AvatarMaker((blob, src) => {
                 this.avatarImg.src = src
                 this.avatarBlob = blob
-                this.deleteAvatarButton.style.display = 'block'
+                this.toggleDeleteAvatarButton(true)
                 this.onchange()
             })
             amaker.open()
@@ -56,6 +59,10 @@ class ChatSettings {
         })
 
 
+    }
+
+    toggleDeleteAvatarButton(state) {
+        this.deleteAvatarButton.style.display = state? 'block' : 'none'
     }
 
     updateDefaultName(name) {
