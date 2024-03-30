@@ -518,6 +518,8 @@ exports.init = (cfx) => {
         let avatarBlob = req.file
         let changes = {}
 
+        console.log(chat)
+
         if(req.body.deleteAvatar)
             changes.avatarId = null
         else if (avatarBlob) {
@@ -531,6 +533,7 @@ exports.init = (cfx) => {
             undefined : parseInt(req.body.isPublic)
 
         await chat.changeInfo(changes)
+
         return {success: 1}
     }, cfx.core.upload.single('avatar'), true)
 
