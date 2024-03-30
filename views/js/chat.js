@@ -814,7 +814,7 @@ class Chat {
                 'Content-Type': 'application/json'
             },
             credentials: "same-origin",
-            body: `{name:"${changes.name}"}`
+            body: JSON.stringify({name: changes.name})
         }).then(r => r.json())
         .then(r => {
             console.log('WEWQEW')
