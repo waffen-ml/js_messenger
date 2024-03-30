@@ -834,6 +834,8 @@ class Chat {
         .then(r => r.json())
         .then(info => {
 
+            alert('hey')
+
             this.info.name = info.name
             this.info.description = info.description
             this.info.avatar_id = info.avatar_id

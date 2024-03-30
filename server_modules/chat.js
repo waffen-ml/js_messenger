@@ -286,7 +286,8 @@ class Chat {
         if(changes.isPublic) {
             return this.cfx.query(`update chat set is_public=? where id=?`, [changes.isPublic? 1 : 0, this.id])
         }
-        this.cfx.socket.io.to('c:' + this.id).emit('update_info')
+
+        this.cfx.socket.io.to('c:' + this.id).emit('update_info', {})
     }
 }
 
