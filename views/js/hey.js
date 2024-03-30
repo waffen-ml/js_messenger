@@ -1,5 +1,5 @@
-const maxWaitTime = 15
-const minWaitTime = 5
+const maxWaitTime = 20
+const minWaitTime = 10
 
 let attentionVideoIds = [
     'Cv19w_2-rMc',
@@ -25,7 +25,7 @@ let attentionVideoIds = [
 ]
 
 function generateBannerInnerHTML(videoid) {
-    return `<iframe width="464" height="825" src="https://www.youtube.com/embed/${videoid}?autoplay=1&mute=1&loop=1&controls=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>`
+    return `<iframe width="464" height="825" src="https://www.youtube.com/embed/${videoid}?autoplay=1&mute=1&loop=1&controls=0" frameborder="0" allow="accelerometer; loop; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>`
 }
 
 function putVideoToBanner(id, i) {
