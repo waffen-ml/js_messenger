@@ -429,7 +429,7 @@ class ChatSystem {
 
         if(admin && await chat.containsAdmin(user.id))
             return chat
-        else    
+        else if (admin)
             throw new Error('The user is not an admin in the chat')
 
         if(await chat.containsAdmin(user.id))
