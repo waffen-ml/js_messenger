@@ -58,6 +58,11 @@ class ChatSettings {
         this.element.querySelector('.description .preview').style.display = 'none'
     }
 
+    setDefaultAvatar() {
+        let avatarId = (parseInt(options.chatId) || 0) % 10
+        this.avatarImg.src = `/public/chatavatar/${avatarId}.png`
+    }
+
     setupEditing() {
         this.nameEntry.addEventListener('input', () => {
             let s = this.nameEntry.value.trim()
@@ -87,7 +92,7 @@ class ChatSettings {
 
         this.deleteAvatarButton.addEventListener('click', () => {
             this.avatarBlob = null
-            this.avatarImg.src = '/public/chatavatar/0.png'
+            setDefaultAvatar()
             this.toggleDeleteAvatarButton(false)
             this.onchange()
         })
