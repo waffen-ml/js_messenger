@@ -807,7 +807,7 @@ class Chat {
     applyInfoChanges(changes) {
         let fd = new FormData()
 
-        if(changes.name)
+        if(changes.name !== undefined)
             fd.append('name', changes.name)
         if (changes.description)
             fd.append('description', changes.description)
@@ -833,8 +833,6 @@ class Chat {
         return fetch(`/getchatinfo?id=${this.chatid}&members=0`)
         .then(r => r.json())
         .then(info => {
-
-            alert('hey')
 
             this.info.name = info.name
             this.info.description = info.description
