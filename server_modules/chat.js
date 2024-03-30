@@ -277,7 +277,7 @@ class Chat {
             this.name = changes.name
             await this.cfx.query(`update chat set name=? where id=?`, [changes.name, this.id])
         }
-        if (changes.avatarId) {
+        if (changes.avatarId !== undefined) {
             await this.cfx.query(`update chat set avatar_id=? where id=?`, [changes.avatarId, this.id])
         }
         if(changes.description) {
