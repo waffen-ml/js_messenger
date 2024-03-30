@@ -87,6 +87,11 @@ class ChatSettings {
         
         this.updateDescriptionEditing(false)
 
+        this.descrEntry.addEventListener('input', () => {
+            this.description = this.descrEntry.value.trim()
+            this.onchange()
+        })
+
         let readOnly = false
 
         this.element.querySelector('.description .preview').addEventListener('click', () => {
