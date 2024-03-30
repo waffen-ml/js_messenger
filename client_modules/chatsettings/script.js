@@ -60,6 +60,8 @@ class ChatSettings {
             this.onchange()
         })
 
+        console.log(options.readOnly)
+
         if(options.readOnly) {
             this.nameEntry.readOnly = true
             this.isPublicCheckbox.readOnly = true

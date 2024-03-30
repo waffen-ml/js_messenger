@@ -28,7 +28,6 @@ class ChatInspector {
 
         this.chatSettings.onchange = () => {
             let changes = this.chatSettings.getChanges()
-            console.log(changes)
             this.toggleUnsavedHandling(Object.keys(changes).length > 0)
         }
 
