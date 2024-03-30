@@ -16,13 +16,44 @@
     cursor:pointer;
 }
 
-.chat-settings input.name, input.descr {
+.chat-settings input.name, input#descr {
     align-self:center;
     width: 100%;
 }
 
 .chat-settings input.name {
     font-weight:bold;
+}
+
+.chat-settings .description {
+    word-wrap: break-word;
+    max-height:300px;
+    width:100%;
+    overflow-x:hidden;
+    overflow-y:auto;
+}
+
+.chat-settings .description::-webkit-scrollbar {
+    display: none;
+}
+
+.chat-settings .description p {
+    display: none;
+}
+
+.chat-settings .description textarea {
+    resize:vertical;
+    width:100%;
+    max-height:300px;
+
+}
+
+.chat-settings .description.readonly p {
+    display:block;
+}
+
+.chat-settings .description.readonly textarea {
+    display:none;
 }
 
 .chat-settings .ispublic {
