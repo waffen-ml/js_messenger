@@ -1,0 +1,40 @@
+
+.chat-settings {
+    width:400px;
+    display:grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto auto;
+    row-gap:5px;
+    column-gap:20px;
+}
+
+.chat-settings .avatar {
+    height:70px;
+    grid-row:1/3;
+    align-self:center;
+    justify-self:center;
+    cursor:pointer;
+}
+
+.chat-settings input.name {
+    align-self:center;
+    width: 100%;
+}
+
+.chat-settings .ispublic {
+    display:flex;
+    align-items: flex-start;
+    gap:5px;
+}
+
+.chat-settings .ispublic > * {
+    cursor:pointer;
+}
+
+.chat-settings .ispublic label {
+    user-select: none;
+}
+
+.chat-settings .delete-avatar {
+    display:none;
+}
