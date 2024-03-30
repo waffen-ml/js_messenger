@@ -913,13 +913,12 @@ class Chat {
 
     setupHeader() {
         let name = utils.getChatName(this.info, this.me)
-        let avatar_url = utils.getChatAvatarURL(this.info, this.me)
         let onclick = () => this.interface.inspectChat()
 
         this.subtitleList[0] = this.direct_to? null : utils.nItemsLabel(
             this.info.members.length, 'участник', 'участника', 'участников') 
         
-        this.interface.setChatAvatar(avatar_url)
+        this.interface.setChatAvatar(`/getchatavatar?id=${this.chatid}&t=` + Math.random())
         this.interface.setChatTitle(name)
         this.interface.setHeaderClickEvent(onclick)
         this.updateSubtitle()
