@@ -818,7 +818,7 @@ class Chat {
         if(changes.isPublic)
             fd.append('isPublic', changes.isPublic? 1 : 0)
 
-        return fetch(`/setchatname?chatid=${this.chatid}`, {
+        return fetch(`/changechatinfo?chatid=${this.chatid}`, {
             method: 'POST',
             credentials: "same-origin",
             body: fd
