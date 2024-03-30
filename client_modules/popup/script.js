@@ -84,6 +84,14 @@ class Popup {
         this.optionHolder.insertBefore(btn, this.optionHolder.firstChild)
     }
 
+    removeOption(text) {
+        this.optionHolder.querySelectorAll('button')
+        .forEach(butt => {
+            if(butt.textContent === text)
+                this.optionHolder.removeChild(butt)
+        })
+    }
+
     togglePointerEvents(state) {
         this.popup.style.pointerEvents = state? 'all' : 'none';
     }

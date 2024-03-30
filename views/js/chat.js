@@ -13,6 +13,53 @@ const emojiList = Array.from(`😀😃😄😁😆😅🤣😂🙂🙃😉😊�
 .filter(w => w != '\n')
 
 
+class ChatInspector {
+
+    constructor(chat) {
+        this.chat = chat
+        this.chatSettings = new ChatSettings({
+            name: chat.info.name,
+            chatId: chat.info.id,
+            isPublic: chat.info.is_public,
+            defaultName: this.generateDefaultName()
+        })
+
+        this.chatSettings.onchange = () => {
+            let changes = this.chatSettings.getChanges()
+            this.toggleUnsavedHandling(Object.keys(changes).length > 0)
+        }
+
+        this.popup = new Popup({closable: true})
+        this.popup.content.appendChild(this.chatSettings.element)
+    }
+
+    toggleUnsavedHandling(state) {
+        this.popup.removeOption('Отмена')
+        this.popup.removeOption('Сохранить')
+
+        if(state) {
+            this.popup.addOption('Отмена', () => {
+                alert('fuck')
+                return true
+            })
+            this.popup.addOption('Сохранить', () => {
+                alert('save')
+                return true
+            })
+        }
+    }
+
+    generateDefaultName() {
+        return utils.generateChatName(this.chat.info.members, this.chat.me, 5)
+    }
+
+    open() {
+        this.popup.open()
+    }
+
+}
+
+
 class TypingListener {
 
     constructor(timeoutSeconds, intervalSeconds, onstart, onupdate, onstop) {
@@ -246,17 +293,9 @@ class ChatInterface {
     }
 
     inspectChat() {
-        
-        let chatSettings = new ChatSettings({
-            name: this.chat.info.name,
-            chatId: this.chat.info.id,
-            isPublic: this.chat.info.is_public
-        })
 
-        let popup = new Popup({closable: true})
-        popup.content.appendChild(chatSettings.element)
-
-        popup.open()
+        let inspector = new ChatInspector(this.chat)
+        inspector.open()
 
     }
 
