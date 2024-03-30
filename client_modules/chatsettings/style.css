@@ -5,7 +5,7 @@
     grid-template-columns: auto 1fr;
     grid-template-rows: repeat(3, auto);
     row-gap:8px;
-    column-gap:20px;
+    column-gap:15px;
 }
 
 .chat-settings .avatar-wrapper {
