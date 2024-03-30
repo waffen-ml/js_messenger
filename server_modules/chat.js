@@ -630,10 +630,6 @@ exports.init = (cfx) => {
                 res.redirect(`/public/chatavatar/${capyGroupId}.png`)
             }
         })
-        .catch((err) => {
-            console.log(err)
-            console.log('LOX')
-        })
     }, false)
 
     cfx.core.safeGet('/getchatviews', (user, req, res) => {
