@@ -92,7 +92,7 @@ class ChatSettings {
 
         this.deleteAvatarButton.addEventListener('click', () => {
             this.avatarBlob = null
-            setDefaultAvatar()
+            this.setDefaultAvatar()
             this.toggleDeleteAvatarButton(false)
             this.onchange()
         })
