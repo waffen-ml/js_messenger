@@ -15,6 +15,7 @@ body {
     height:60%;
     aspect-ratio: 9/16;
     top:12.5%;
+    pointer-events: none;
 }
 
 .attention-banner iframe {
