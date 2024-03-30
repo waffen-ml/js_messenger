@@ -519,8 +519,6 @@ exports.init = (cfx) => {
             let avatarBlob = req.file
             let w = []
 
-            console.log(changes)
-
             if(changes.deleteAvatar)
                 w.push(chat.setAvatarId(null))
             else if (avatarBlob) {
@@ -533,7 +531,7 @@ exports.init = (cfx) => {
             if(changes.description)
                 w.push(chat.setDescription(changes.description))
             if(changes.isPublic !== undefined)
-                w.push(chat.setPublicStatus(changes.isPublic))
+                w.push(chat.setPublicStatus(parseInt(changes.isPublic)))
 
             return Promise.all(w)
         })
