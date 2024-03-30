@@ -273,7 +273,7 @@ class Chat {
     }
 
     async changeInfo(changes) {
-        if(changes.name) {
+        if(changes.name !== undefined) {
             this.name = changes.name
             await this.cfx.query(`update chat set name=? where id=?`, [changes.name, this.id])
         }
@@ -525,7 +525,7 @@ exports.init = (cfx) => {
                 .then(r => r[0])
         }
 
-        changes.name = req.body.name
+        changes.name = req.body.deleteName? null: req.body.name
         changes.description = req.body.description
         changes.isPublic = req.body.isPublic === undefined?
             undefined : parseInt(req.body.isPublic)
