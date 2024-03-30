@@ -20,7 +20,7 @@ function generateBannerInnerHTML(videoid) {
 }
 
 function putVideoToBanner(id, i) {
-    let banner = document.querySelector('.attention-banner#' + i)
+    let banner = document.querySelector('.attention-banner#banner' + i)
     banner.innerHTML = generateBannerInnerHTML(id)
 }
 
