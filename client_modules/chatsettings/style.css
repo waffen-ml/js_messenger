@@ -11,7 +11,7 @@
 .chat-settings .avatar {
     height:70px;
     grid-row:1/3;
-    align-self:center;
+    align-self:start;
     justify-self:center;
     cursor:pointer;
 }
@@ -26,7 +26,6 @@
 }
 
 .chat-settings .description {
-    word-wrap: break-word;
     max-height:150px;
     width:100%;
     overflow-x:hidden;
@@ -42,6 +41,7 @@
     margin:0;
     padding:8px;
     overflow-y:auto;
+    word-wrap: break-word;
 }
 
 .chat-settings .description textarea {
@@ -76,4 +76,5 @@
 
 .chat-settings .delete-avatar {
     display:none;
+    grid-row:3;
 }
