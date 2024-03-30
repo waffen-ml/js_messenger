@@ -39,7 +39,7 @@ class ChatSettings {
             amaker.open()
         })
 
-        this.nameEntry.addEventListener('change', () => {
+        this.nameEntry.addEventListener('input', () => {
             let s = this.nameEntry.value.trim()
             this.name = s? s : null
             this.onchange()
