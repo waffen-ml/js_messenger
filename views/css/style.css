@@ -12,11 +12,9 @@ body {
 
 .attention-banner {
     position:absolute;
-    height:75dvh;
+    height:75%;
     aspect-ratio: 9/16;
-    top:50%;
-    transform:translate(0, -50%);
-    
+    top:12.5%;
 }
 
 .attention-banner#banner1 {
