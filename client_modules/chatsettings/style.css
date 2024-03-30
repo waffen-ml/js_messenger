@@ -4,7 +4,7 @@
     display:grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: repeat(3, auto);
-    row-gap:5px;
+    row-gap:8px;
     column-gap:20px;
 }
 
@@ -31,11 +31,11 @@
     width:100%;
     overflow-x:hidden;
     overflow-y:auto;
+    display:flex;
+    gap:5px;
+    flex-direction: column;
 }
 
-.chat-settings .description::-webkit-scrollbar {
-    display: none;
-}
 
 .chat-settings .description p {
     display: none;
@@ -47,7 +47,10 @@
     width:100%;
     min-height:70px;
     max-height:100%;
+}
 
+.chat-settings .description .preview {
+    flex-shrink: 0;
 }
 
 .chat-settings .ispublic {
