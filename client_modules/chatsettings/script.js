@@ -77,6 +77,7 @@ class ChatSettings {
 
         this.isPublicCheckbox.addEventListener('change', () => {
             this.isPublic = this.isPublicCheckbox.checked
+            console.log('hey:' + this.isPublicCheckbox.checked)
             this.onchange()
         })
 
