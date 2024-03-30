@@ -19,6 +19,7 @@ class ChatInspector {
         this.chat = chat
         this.chatSettings = new ChatSettings({
             name: chat.info.name,
+            description: chat.info.description,
             chatId: chat.info.id,
             hasAvatar: chat.info.avatar_id !== null,
             isPublic: Boolean(chat.info.is_public),

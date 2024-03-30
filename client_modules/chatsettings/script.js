@@ -5,6 +5,7 @@ class ChatSettings {
     constructor(options) {
         this.element = templateManager.createElement('chat-settings')
         this.nameEntry = this.element.querySelector('.name')
+        this.descrEntry = this.element.querySelector('.description textarea')
         this.avatarImg = this.element.querySelector('.avatar')
         this.isPublicCheckbox = this.element.querySelector('#ispublic')
         this.deleteAvatarButton = this.element.querySelector('.button.delete-avatar')
@@ -15,6 +16,7 @@ class ChatSettings {
         this.name = null ?? options.name
         this.avatarBlob = undefined
         this.isPublic = Boolean(options.isPublic)
+        this.description = options.description
 
         if(options.hasAvatar)
             this.toggleDeleteAvatarButton(true)
@@ -24,6 +26,7 @@ class ChatSettings {
         
         this.isPublicCheckbox.checked = this.isPublic
         this.nameEntry.value = options.name ?? this.defaultName
+        this.descrEntry.value = this.description
 
         this.deleteAvatarButton.addEventListener('click', () => {
             this.avatarBlob = null
@@ -65,6 +68,7 @@ class ChatSettings {
             this.element.querySelector('.ispublic').style.pointerEvents = 'none'
             this.toggleDeleteAvatarButton(false)
             this.avatarImg.style.cursor = 'default'
+            this.element.querySelector('.description').classList.add('readonly')
         }
     }
 
@@ -84,10 +88,12 @@ class ChatSettings {
 
         if(this.avatarBlob || this.avatarBlob === null && this.options.hasAvatar)
             changes.avatarBlob = this.avatarBlob
-        else if(this.options.name !== this.name)
+        if(this.options.name !== this.name)
             changes.name = this.name
-        else if(this.options.isPublic !== this.isPublic)
+        if(this.options.isPublic !== this.isPublic)
             changes.isPublic = this.isPublic
+        if(this.options.description !== this.description)
+            changes.description = this.description
 
         return changes
     }
