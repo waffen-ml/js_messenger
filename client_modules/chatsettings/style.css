@@ -40,7 +40,8 @@
 .chat-settings .description p {
     display: none;
     margin:0;
-    padding:5px;
+    padding:8px;
+    overflow-y:auto;
 }
 
 .chat-settings .description textarea {
