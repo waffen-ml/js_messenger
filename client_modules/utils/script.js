@@ -1,5 +1,20 @@
 class Utils {
 
+    getRandomFloat(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    randomChoice(arr) {
+        let i = this.getRandomInt(0, arr.length - 1)
+        return arr[i]
+    }
+
     areDatesEqual(d1, d2) {
         return d1.getFullYear() == d2.getFullYear()
             && d1.getMonth() == d2.getMonth()
