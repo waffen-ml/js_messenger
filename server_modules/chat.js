@@ -512,16 +512,33 @@ exports.init = (cfx) => {
 
     // setters
 
-    cfx.core.safePost('/setchatname', (user, req, res) => {
+    cfx.core.safePost('/changechatinfo', (user, req, res) => {
         return cfx.chats.accessChat(user, req.query.chatid, true)
         .then(chat => {
-            console.log(req.body)
-            return chat.setName(req.body.name)
+            let changes = req.body
+            let avatarBlob = req.file
+            let w = []
+
+            if(changes.deleteAvatar)
+                w.push(chat.setAvatarId(null))
+            else if (avatarBlob) {
+                w.push(cfx.files.saveFiles([avatarBlob], null)
+                    .then(r => chat.setAvatarId(r[0])))
+            }
+
+            if(changes.name)
+                w.push(chat.setName(changes.name))
+            if(changes.description)
+                w.push(chat.setDescription(changes.description))
+            if(changes.isPublic)
+                w.push(chat.setPublicStatus(changes.isPublic))
+
+            return Promise.all(w)
         })
         .then(() => {
             return {success: 1}
         })
-    }, null, true)
+    }, cfx.core.upload.single('avatar'), true)
 
 
     cfx.core.safeRender('/publicchatlist', (user, req, res) => {

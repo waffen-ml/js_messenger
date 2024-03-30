@@ -805,16 +805,23 @@ class Chat {
     }
 
     applyInfoChanges(changes) {
-        if(changes.name === undefined)
-            return
+        let fd = new FormData()
+
+        if(changes.name)
+            fd.append('name', changes.name)
+        if (changes.description)
+            fd.append('description', changes.description)
+        if(changes.avatarBlob === null)
+            fd.append('deleteAvatar', 1)
+        else if(changes.avatarBlob)
+            fd.append('avatar', changes.avatarBlob)
+        if(changes.isPublic)
+            fd.append('isPublic', changes.isPublic? 1 : 0)
 
         return fetch(`/setchatname?chatid=${this.chatid}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
             credentials: "same-origin",
-            body: JSON.stringify({name: changes.name})
+            body: fd
         }).then(r => r.json())
         .then(r => {
             console.log('WEWQEW')
