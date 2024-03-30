@@ -807,6 +807,8 @@ class Chat {
     applyInfoChanges(changes) {
         let fd = new FormData()
 
+        console.log(changes)
+
         if(changes.name)
             fd.append('name', changes.name)
         if (changes.description)

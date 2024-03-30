@@ -532,7 +532,7 @@ exports.init = (cfx) => {
                 w.push(chat.setName(changes.name))
             if(changes.description)
                 w.push(chat.setDescription(changes.description))
-            if(changes.isPublic)
+            if(changes.isPublic !== undefined)
                 w.push(chat.setPublicStatus(changes.isPublic))
 
             return Promise.all(w)
