@@ -3,7 +3,7 @@
     width:400px;
     display:grid;
     grid-template-columns: auto 1fr;
-    grid-template-rows: repeat(3, auto);
+    grid-template-rows: repeat(4, auto);
     row-gap:5px;
     column-gap:20px;
 }
@@ -16,9 +16,13 @@
     cursor:pointer;
 }
 
-.chat-settings input.name {
+.chat-settings input.name, input.descr {
     align-self:center;
     width: 100%;
+}
+
+.chat-settings input.name {
+    font-weight:bold;
 }
 
 .chat-settings .ispublic {
