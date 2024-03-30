@@ -807,8 +807,6 @@ class Chat {
     applyInfoChanges(changes) {
         let fd = new FormData()
 
-        console.log(changes)
-
         if(changes.name)
             fd.append('name', changes.name)
         if (changes.description)
@@ -832,7 +830,18 @@ class Chat {
     }
 
     updateInfo() {
+        return fetch(`/getchatinfo?id=${this.chatid}&members=0`)
+        .then(r => r.json())
+        .then(info => {
 
+            this.info.name = info.name
+            this.info.description = info.description
+            this.info.avatar_id = info.avatar_id
+            this.info.is_public = info.is_public
+
+            this.setupHeader()
+            
+        })
     }
 
     getStream(options) {
@@ -1036,6 +1045,10 @@ class Chat {
                 member.typingListener.update()
             else
                 member.typingListener.stop()
+        })
+
+        socket.on('update_info', () => {
+            this.updateInfo()
         })
     }
 

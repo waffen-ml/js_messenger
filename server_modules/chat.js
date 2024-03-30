@@ -272,21 +272,21 @@ class Chat {
         return r[0].count
     }
 
-    setDescription(descr) {
-        return this.cfx.query(`update chat set description=? where id=?`, [descr, this.id])
-    }
-
-    setName(name) {
-        this.name = name
-        return this.cfx.query(`update chat set name=? where id=?`, [name ?? null, this.id])
-    }
-
-    setAvatarId(id) {
-        return this.cfx.query(`update chat set avatar_id=? where id=?`, [id, this.id])
-    }
-
-    setPublicStatus(status) {
-        return this.cfx.query(`update chat set is_public=? where id=?`, [status? 1 : 0, this.id])
+    async changeInfo(changes) {
+        if(changes.name) {
+            this.name = changes.name
+            await this.cfx.query(`update chat set name=? where id=?`, [changes.name, this.id])
+        }
+        if (changes.avatarId) {
+            await this.cfx.query(`update chat set avatar_id=? where id=?`, [changes.avatarId, this.id])
+        }
+        if(changes.description) {
+            await this.cfx.query(`update chat set description=? where id=?`, [changes.description, this.id])
+        }
+        if(changes.isPublic) {
+            return this.cfx.query(`update chat set is_public=? where id=?`, [changes.isPublic? 1 : 0, this.id])
+        }
+        this.cfx.socket.io.to('c:' + this.id).emit('update_info')
     }
 }
 
@@ -512,32 +512,25 @@ exports.init = (cfx) => {
 
     // setters
 
-    cfx.core.safePost('/changechatinfo', (user, req, res) => {
-        return cfx.chats.accessChat(user, req.query.chatid, true)
-        .then(chat => {
-            let changes = req.body
-            let avatarBlob = req.file
-            let w = []
+    cfx.core.safePost('/changechatinfo', async (user, req, res) => {
+        let chat = cfx.chats.accessChat(user, req.query.chatid, true)
+        let avatarBlob = req.file
+        let changes = {}
 
-            if(changes.deleteAvatar)
-                w.push(chat.setAvatarId(null))
-            else if (avatarBlob) {
-                w.push(cfx.files.saveFiles([avatarBlob], null)
-                    .then(r => chat.setAvatarId(r[0])))
-            }
+        if(req.body.deleteAvatar)
+            changes.avatarId = null
+        else if (avatarBlob) {
+            changes.avatarId = await cfx.files.saveFiles([avatarBlob], null)
+                .then(r => r[0])
+        }
 
-            if(changes.name)
-                w.push(chat.setName(changes.name))
-            if(changes.description)
-                w.push(chat.setDescription(changes.description))
-            if(changes.isPublic !== undefined)
-                w.push(chat.setPublicStatus(parseInt(changes.isPublic)))
+        changes.name = req.body.name
+        changes.description = req.body.description
+        changes.isPublic = req.body.isPublic === undefined?
+            undefined : parseInt(req.body.isPublic)
 
-            return Promise.all(w)
-        })
-        .then(() => {
-            return {success: 1}
-        })
+        await chat.changeInfo(changes)
+        return {success: 1}
     }, cfx.core.upload.single('avatar'), true)
 
 
@@ -674,7 +667,7 @@ exports.init = (cfx) => {
     cfx.core.safeGet('/getchatinfo', (user, req, res) => {
         return cfx.chats.accessChat(user, req.query.id)
         .then(chat => {
-            return chat.getInfo()
+            return chat.getInfo(req.query.members === '0'? false : true)
         })
     }, false)
 
