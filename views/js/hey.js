@@ -1,5 +1,5 @@
-const maxWaitTime = 20
-const minWaitTime = 10
+const maxWaitTime = 13
+const minWaitTime = 5
 
 let attentionVideoIds = [
     'Cv19w_2-rMc',
