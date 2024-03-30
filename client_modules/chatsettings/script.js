@@ -27,26 +27,31 @@ class ChatSettings {
         this.isPublicCheckbox.checked = this.isPublic
         this.nameEntry.value = options.name ?? this.defaultName
         this.descrEntry.value = this.description
+        
+        if(options.readOnly)
+            this.setupReading()
+        else
+            this.setupEditing()
+    }
 
-        this.deleteAvatarButton.addEventListener('click', () => {
-            this.avatarBlob = null
-            this.avatarImg.src = '/public/chatavatar/0.png'
-            this.toggleDeleteAvatarButton(false)
-            this.onchange()
-        })
+    updateDescriptionEditing(readOnly) {
+        let p = this.element.querySelector('.description p')
+        p.style.display = readOnly? 'block' : 'none'
+        p.innerHTML = contentCompiler.compile(this.description, {disableYT: true})
+        this.descrEntry.style.display = readOnly? 'none' : 'block'
+        this.descrEntry.value = this.description
+    }
 
-        if(!options.readOnly) {
-            this.avatarImg.addEventListener('click', () => {
-                let amaker = new AvatarMaker((blob, src) => {
-                    this.avatarImg.src = src
-                    this.avatarBlob = blob
-                    this.toggleDeleteAvatarButton(true)
-                    this.onchange()
-                })
-                amaker.open()
-            }) 
-        }
+    setupReading() {
+        this.nameEntry.setAttribute('readonly', true)
+        this.element.querySelector('.ispublic').style.pointerEvents = 'none'
+        this.toggleDeleteAvatarButton(false)
+        this.avatarImg.style.cursor = 'default'
+        this.updateDescriptionEditing(true)
+        this.element.querySelector('.description .preview').style.display = 'none'
+    }
 
+    setupEditing() {
         this.nameEntry.addEventListener('input', () => {
             let s = this.nameEntry.value.trim()
             this.name = s? s : null
@@ -63,13 +68,33 @@ class ChatSettings {
             this.onchange()
         })
 
-        if(options.readOnly) {
-            this.nameEntry.setAttribute('readonly', true)
-            this.element.querySelector('.ispublic').style.pointerEvents = 'none'
+        this.avatarImg.addEventListener('click', () => {
+            let amaker = new AvatarMaker((blob, src) => {
+                this.avatarImg.src = src
+                this.avatarBlob = blob
+                this.toggleDeleteAvatarButton(true)
+                this.onchange()
+            })
+            amaker.open()
+        }) 
+
+        this.deleteAvatarButton.addEventListener('click', () => {
+            this.avatarBlob = null
+            this.avatarImg.src = '/public/chatavatar/0.png'
             this.toggleDeleteAvatarButton(false)
-            this.avatarImg.style.cursor = 'default'
-            this.element.querySelector('.description').classList.add('readonly')
-        }
+            this.onchange()
+        })
+        
+        this.updateDescriptionEditing(false)
+
+        let readOnly = false
+
+        this.element.querySelector('.description .preview').addEventListener('click', () => {
+            readOnly = !readOnly
+            this.updateDescriptionEditing(readOnly)
+        })
+
+
     }
 
     toggleDeleteAvatarButton(state) {

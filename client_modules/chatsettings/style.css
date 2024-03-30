@@ -39,6 +39,7 @@
 
 .chat-settings .description p {
     display: none;
+    margin:0;
 }
 
 .chat-settings .description textarea {
@@ -47,14 +48,6 @@
     min-height:70px;
     max-height:100%;
 
-}
-
-.chat-settings .description.readonly p {
-    display:block;
-}
-
-.chat-settings .description.readonly textarea {
-    display:none;
 }
 
 .chat-settings .ispublic {
