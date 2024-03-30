@@ -246,8 +246,12 @@ class ChatInterface {
     }
 
     inspectChat() {
-
-        let chatSettings = new ChatSettings()
+        
+        let chatSettings = new ChatSettings({
+            name: this.chat.info.name,
+            chatId: this.chat.info.id,
+            isPublic: this.chat.info.is_public
+        })
 
         let popup = new Popup({closable: true})
         popup.content.appendChild(chatSettings.element)
