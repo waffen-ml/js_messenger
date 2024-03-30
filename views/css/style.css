@@ -4,7 +4,7 @@ body {
     color:#3b2f2f;
 }
 
-@media(min-width:500px) {
+@media(max-width:500px) {
     .attention-banner {
         display:none;
     }
@@ -12,9 +12,11 @@ body {
 
 .attention-banner {
     position:absolute;
-    height:90%;
+    left:0;
+    height:90dvh;
     aspect-ratio: 9/16;
-    margin: auto 0;
+    top:50%;
+    transform:translate(0, -50%);
     
 }
 
