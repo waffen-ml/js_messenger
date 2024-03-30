@@ -12,12 +12,19 @@ body {
 
 .attention-banner {
     position:absolute;
-    left:0;
-    height:90dvh;
+    height:75dvh;
     aspect-ratio: 9/16;
     top:50%;
     transform:translate(0, -50%);
     
+}
+
+.attention-banner#banner1 {
+    right:calc(50% - 500px - 30px);
+}
+
+.attention-banner#banner2 {
+    left:calc(50% + 500px + 30px);
 }
 
 .global-wrapper {
