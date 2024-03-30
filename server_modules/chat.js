@@ -514,11 +514,9 @@ exports.init = (cfx) => {
     // setters
 
     cfx.core.safePost('/changechatinfo', async (user, req, res) => {
-        let chat = cfx.chats.accessChat(user, req.query.chatid, true)
+        let chat = await cfx.chats.accessChat(user, req.query.chatid, true)
         let avatarBlob = req.file
         let changes = {}
-
-        console.log(chat)
 
         if(req.body.deleteAvatar)
             changes.avatarId = null
