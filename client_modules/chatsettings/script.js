@@ -59,7 +59,7 @@ class ChatSettings {
     }
 
     setDefaultAvatar() {
-        let avatarId = (parseInt(options.chatId) || 0) % 10
+        let avatarId = (parseInt(this.options.chatId) || 0) % 10
         this.avatarImg.src = `/public/chatavatar/${avatarId}.png`
     }
 
