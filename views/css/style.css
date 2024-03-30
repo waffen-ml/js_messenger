@@ -4,6 +4,20 @@ body {
     color:#3b2f2f;
 }
 
+@media(min-width:500px) {
+    .attention-banner {
+        display:none;
+    }
+}
+
+.attention-banner {
+    position:absolute;
+    height:90%;
+    aspect-ratio: 9/16;
+    margin: auto 0;
+    
+}
+
 .global-wrapper {
     margin:auto;
     max-width:100%;
