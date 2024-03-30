@@ -1,6 +1,7 @@
 
 .chat-settings {
     width:400px;
+    max-width:100%;
     display:grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: repeat(3, auto);
@@ -15,6 +16,7 @@
     display:flex;
     flex-direction: column;
     gap:5px;
+    align-items:flex-start;
 }
 
 .chat-settings .avatar {
