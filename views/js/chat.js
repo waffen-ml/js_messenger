@@ -24,7 +24,7 @@ class ChatInspector {
             hasAvatar: chat.info.avatar_id !== null,
             isPublic: Boolean(chat.info.is_public),
             defaultName: this.generateDefaultName(),
-            readOnly: !this.chat.me.is_admin
+            readOnly: true//!this.chat.me.is_admin
         })
 
         this.chatSettings.onchange = () => {
