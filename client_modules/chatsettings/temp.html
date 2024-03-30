@@ -1,6 +1,9 @@
 <script type="text/x-ejs-template" template="chat-settings">
     <div class="chat-settings">
-        <img class="avatar" src="/public/chatavatar/0.png">
+        <div class="avatar-wrapper">
+            <img class="avatar" src="/public/chatavatar/0.png">
+            <a class="button light delete-avatar">Удалить</a>
+        </div>
         <input type="text" class="name" placeholder="Название" id="name">
         <div class="description">
             <p class="block styled-scroll"></p>
@@ -11,6 +14,5 @@
             <input type="checkbox" id="ispublic">
             <label for="ispublic">Публичный</label> 
         </div>
-        <a class="button light delete-avatar">Удалить</a>
     </div>
 </script>

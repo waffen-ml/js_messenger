@@ -8,11 +8,17 @@
     column-gap:20px;
 }
 
-.chat-settings .avatar {
-    height:70px;
-    grid-row:1/3;
+.chat-settings .avatar-wrapper {
+    grid-row:1/4;
     align-self:start;
     justify-self:center;
+    display:flex;
+    flex-direction: column;
+    gap:5px;
+}
+
+.chat-settings .avatar {
+    height:70px;
     cursor:pointer;
 }
 
@@ -76,5 +82,4 @@
 
 .chat-settings .delete-avatar {
     display:none;
-    grid-row:3;
 }
