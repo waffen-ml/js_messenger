@@ -81,6 +81,8 @@ class ContentCompiler {
 
         if(!options.disableLineBreaks) 
             content = content.replace(/\n/g, '<br>')
+        else
+            content = content.replace(/\n/g, ' ')
 
         let links = []
 

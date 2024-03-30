@@ -220,6 +220,7 @@ class Utils {
             case 'sticker':
                 content = 'Стикер'
                 break
+            case 'system':
             case 'default':
                 content = msg.content
                 break

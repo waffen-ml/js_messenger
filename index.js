@@ -51,6 +51,7 @@ function render(req, res, page, params) {
         },
         cfx: cfx,
         utils: cfx.utils,
+        clientUtils: cfx.clientUtils,
         ...params
     });
 }

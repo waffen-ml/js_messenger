@@ -59,6 +59,7 @@ a.clean, a.button {
     text-decoration: none;
     color:inherit;
     cursor:pointer;
+    width:max-content;
 }
 
 a.clean:hover {
@@ -110,6 +111,7 @@ nav .button {
     display:flex;
     justify-content: space-between;
     align-items: center;
+    width:100%;
 }
 
 nav .button .label {

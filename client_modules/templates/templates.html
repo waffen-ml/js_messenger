@@ -83,7 +83,7 @@
 <!-- <%- templateManager.apply("html", {html: html}) %> -->
 
 <script template="system-message" type="text/x-ejs-template">
-    <span class="system-message"><%= text %></span>
+    <span class="system-message"><%- contentCompiler.compile(content, {disableLineBreaks: true, disableYT: true}) %></span>
 </script>
 
 <script template="user-message" type="text/x-ejs-template">
@@ -128,13 +128,13 @@
 <script template="any-message" type="text/x-ejs-template">
     <div class="message-wrapper" msg-id="<%= data.id %>">
         <div class="date-label">
-            <%- templateManager.apply("system-message", {text: utils.getLocalizedDateLabel(data.datetime, true)}) %>
+            <%- templateManager.apply("system-message", {content: utils.getLocalizedDateLabel(data.datetime, true)}) %>
         </div>
 
         <% if (data.sender_id) { %>
             <%- templateManager.apply("user-message", {data: data, myid: myid}) %>
         <% } else { %>
-            <%- templateManager.apply("system-message", {text: data.text}) %>
+            <%- templateManager.apply("system-message", {content: data.content}) %>
         <% } %>
     </div>
 </script>

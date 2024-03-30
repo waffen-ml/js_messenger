@@ -69,6 +69,18 @@ function updateView(chatid) {
     })
 }
 
+function updateAllViews() {
+    return fetch('/getchatviews')
+    .then(r => r.json())
+    .then(views => {
+        chatViews = views.filter(v => isVisible(v))
+        chatViews.forEach(view => prepareView(view))
+        console.log(chatViews)
+        sortViews()
+        renderViews()
+    })
+}
+
 
 socket.on('message', msg => {
     updateView(msg.chat_id)
@@ -86,42 +98,39 @@ fetch('/auth')
 .then((r) => r.json())
 .then(user => {
     me = user
-    return fetch('/getchatviews')
+    updateAllViews()
 })
-.then(r => r.json())
-.then(views => {
-    chatViews = views.filter(v => isVisible(v))
-    chatViews.forEach(view => prepareView(view))
-    console.log(chatViews)
-    sortViews()
-    renderViews()
-})
-
-
-
 
 document.querySelector('.create-chat').addEventListener('click', () => {
     if(!me) return
 
     let popup = new Popup({
-        closable: false,
+        closable: true,
         title: 'Создать чат',
-        html: templateManager.createHTML('create-chat')
+        html:   templateManager.createHTML('create-chat')
     })
     let members = []
     let friendlist = popup.content.querySelector('.friendlist')
     let namefield = popup.content.querySelector('input.name')
     let ispublic = popup.content.querySelector('input.is-public')
     let avatar = popup.content.querySelector('.avatar')
+    let deleteAvatarButton = popup.content.querySelector('.button.delete-avatar')
     let autoName = true
     let avatarBlob = null
 
-    popup.on('hidden', () => location.reload())
+    popup.on('hidden', () => updateAllViews())
 
+    deleteAvatarButton.addEventListener('click', () => {
+        avatarBlob = null
+        avatar.src = '/public/chatavatar/0.png'
+        deleteAvatarButton.style.display = 'none'
+    })
+    
     avatar.addEventListener('click', () => {
         let amaker = new AvatarMaker((blob, src) => {
             avatar.src = src
             avatarBlob = blob
+            deleteAvatarButton.style.display = 'block'
         })
         amaker.open()
     })
@@ -150,7 +159,6 @@ document.querySelector('.create-chat').addEventListener('click', () => {
             if (!r.success)
                 alert('Ошибка...')
             popup.close()
-            location.reload()
         })
     })
 
@@ -159,7 +167,7 @@ document.querySelector('.create-chat').addEventListener('click', () => {
     })
 
     fetch('/getfriends')
-    .then(friends => friends.json())
+    .then(r => r.json())
     .then(friends => {
         function updateMembers() {
             members = [me]

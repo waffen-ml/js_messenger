@@ -211,7 +211,12 @@ class Chat {
         })
     }
 
-    getInfo() {
+    getInfo(members=true) {
+        if(!members) {
+            return this.cfx.query(`select * from chat where id=?`, [this.id])
+            .then(r => r[0])
+        }
+
         return this.cfx.db.executeFile('getchatinfo', {chatid: this.id})
         .then(info => {
             return this.cfx.utils.parseArrayOutput(info, 'members', {
@@ -387,22 +392,30 @@ class ChatSystem {
         })
     }
 
-    accessChat(user, chatid) {
-        return this.getChat(chatid)
-        .then(chat => {
-            if (!chat)
-                throw new Error('Chat was not found')
-            return chat.containsUser(user.id)
-            .then(r => {
-                if (!r) throw new Error('User is not in the chat')
-                return chat
-            })
-        })
+    async accessChat(user, chatid) {
+        let chat = await this.getChat(chatid)
+
+        if(!chat)
+            throw new Error('Chat was not found')
+
+        //let info = await chat.getInfo(false)
+        //if(info.is_public)
+        //    return chat
+        if(await chat.containsUser(user.id))
+            return chat
+        else
+            throw new Error('User is not in the chat')
     }
     
     updateMenuNotification(userid) {
         return this.cfx.notifications.sendSpecificUnread(userid, 'messages')
-    } 
+    }
+
+    getPublicChats() {
+        return this.cfx.query(`select * from chat where is_public=1`)
+        .then(r => r.map(ri => new Chat(this.cfx, ri.id, ri.name)))
+    }
+
 }
 
 class CallTemp {
@@ -465,6 +478,20 @@ exports.init = (cfx) => {
         })
     })
 
+    cfx.core.safeRender('/publicchatlist', (user, req, res) => {
+        return cfx.chats.getPublicChats()
+        .then(chats => {
+            return Promise.all(chats.map(c => c.getInfo()))
+        })
+        .then(infoArr => {
+            return {
+                render: 'public_chat_list',
+                chats: infoArr,
+                observer: user
+            }
+        })
+    }, false)
+
     cfx.core.safeGet('/deletemessage', (user, req, res) => {
         return cfx.chats.accessChat(user, req.query.chatid)
         .then(chat => {
@@ -516,23 +543,21 @@ exports.init = (cfx) => {
 
     cfx.core.safePost('/createchat', (creator, req, res) => {
         return new Promise((resolve) => {
-            if (!req.avatar)
+            if (!req.file)
                 resolve(null)
             else {
                 cfx.files.saveFiles([req.file], null)
-                .then(r => resolve(r.ids[0]))
+                .then(r => resolve(r[0]))
             }
         }).then(avatarId => {
             req.body.members ??= []
             let members = Array.isArray(req.body.members)? req.body.members : [req.body.members]
             return cfx.chats.createGroupChat(req.body.name || null, parseInt(req.body.ispublic), avatarId, members)
         }).then(chat => {
-            //chat.addMessage('system', null, creator.name + ' создал этот чат', null)
+            chat.addMessage('system', null, `@${creator.tag} создал этот чат`)
         })
         .then(() => {
-            return {
-                success: 1
-            }
+            return {success: 1}
         })
     }, cfx.core.upload.single('avatar'), true)
 
@@ -551,7 +576,9 @@ exports.init = (cfx) => {
                 res.redirect('/file?id=' + info.avatar_id)
             }
             else {
-                res.redirect('/public/chatavatar.jpg')
+                let chatid = parseInt(req.query.id) || 0
+                let capyGroupId = chatid % 10
+                res.redirect(`/public/chatavatar/${capyGroupId}.png`)
             }
         })
         .catch((err) => {

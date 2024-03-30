@@ -98,12 +98,11 @@
     background-color:#5db3ff68;
 }
 
-
 .create-info {
     width:400px;
     display:grid;
     grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto auto auto;
     row-gap:5px;
     column-gap:20px;
 }
@@ -135,6 +134,10 @@
     user-select: none;
 }
 
+.create-info .delete-avatar {
+    display:none;
+}
+
 .friendlist {
     overflow-y:auto;
     max-height:300px;
@@ -155,8 +158,8 @@
     user-select: none;
 }
 
-.friendlist li:hover .name {
-    text-decoration: underline;
+.friendlist li:hover {
+    background:#0000000e !important;
 }
 
 .friendlist li:nth-child(2n) {
