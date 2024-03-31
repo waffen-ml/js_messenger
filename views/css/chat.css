@@ -654,5 +654,11 @@ ul.attached {
     row-gap:5px;
 }
 
+.chat-inspect .member .avatar {
+    grid-row:1/3;
+}
 
+.chat-inspect .member .delete-member {
+    grid-row:1/3;
+}
 
