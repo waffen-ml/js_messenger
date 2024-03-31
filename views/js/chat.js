@@ -1210,7 +1210,7 @@ class Chat {
     }
 
     getFilesWithMimetype(...mt) {
-        return fetch(`/getaudiofiles?chatid=${this.chatid}&mt=` + mt.join(','))
+        return fetch(`/getfilesmt?chatid=${this.chatid}&mt=` + mt.join(','))
         .then(r => r.json())
     }
 
