@@ -203,14 +203,18 @@ class ChatInspector {
 
         popup.content.appendChild(userChecklist.element)
 
-        popup.addOption('Добавить', () => {
+        popup.addOption('Добавить', async () => {
             let checked = userChecklist.getChecked()
-            let p = []
+            let usersToAdd = []
             potentialMembers.forEach((u, i) => {
                 if(checked[i])
-                    p.push(u.tag)
+                    usersToAdd.push(u)
             })
-            alert('add: ' + p.join())
+            //await this.chat.addMembers(usersToAdd.map(u => u.id))
+        
+            this.lazyLists['members'].items.push(...usersToAdd)
+            this.lazyLists['members'].lazyList.toggleLoading(true)
+
             return true
         })
 
