@@ -598,7 +598,6 @@ ul.attached {
 .chat-inspect .tab-view .tab {
     display:none;
     width:100%;
-    min-height:200px;
     max-height:400px;
 }
 
