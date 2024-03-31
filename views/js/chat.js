@@ -994,7 +994,7 @@ class Chat {
 
     applyInfoChanges(changes) {
         let fd = new FormData()
-        
+
         if(changes.name === null)
             fd.append('deleteName', 1)
         else if(changes.name)
@@ -1023,6 +1023,9 @@ class Chat {
         return fetch(`/getchatinfo?id=${this.chatid}&members=0`)
         .then(r => r.json())
         .then(info => {
+
+            console.log('WWWWWW')
+            console.log(info)
 
             this.info.name = info.name
             this.info.description = info.description
