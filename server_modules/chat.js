@@ -66,6 +66,8 @@ class Chat {
 
     async addMembers(userids, exec) {
 
+        console.log(userids)
+
         let lmid = await this.cfx.query('select max(id) as lmid from message where chat_id=?', [this.id])
             .then(r => r[0].lmid ?? 0)
 
