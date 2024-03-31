@@ -75,8 +75,8 @@ class Chat {
             if(existResponse.length > 0)
                 continue
 
-            await this.cfx.query(`insert into chat_member(chat_id, user_id, last_read, focus) 
-                values(?, ?, ?, ?)`, [this.id, uid.toString(), lmid, lmid + 1])
+            await this.cfx.query(`insert into chat_member(chat_id, user_id, last_read, focus) values (?, ${uid}, ?, ?)`,
+                [this.id, lmid, lmid + 1])
 
             let user = await this.cfx.auth.getUser(uid)
             user.is_admin = false
