@@ -212,10 +212,9 @@ class ChatInspector {
             })
 
             await Promise.all(usersToAdd.map(async (u) => {
-                u.last_seen = await utils.getUserLastSeenDate()
+                u.last_seen = await utils.getUserLastSeenDate(u.id)
             }))
 
-            console.log(usersToAdd)
         
             this.chat.info.members.push(...usersToAdd)
             this.lazyLists['members'].lazyList.toggleLoading(true)
