@@ -656,6 +656,6 @@ ul.attached {
     display:none;
 }
 
-.chat-inspect .audio-holder audio {
+.chat-inspect #audio audio {
     width:100%;
 }
