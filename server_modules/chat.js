@@ -226,23 +226,16 @@ class Chat {
         })
     }
 
-    getView(userid) {
-        return Promise.all([
-            this.getInfo(),
-            this.getMessages(-1, 1, userid),
-            this.getUnreadCount(userid),
-            this.cfx.query(`select * from chat_member where user_id=? and chat_id=?`, [userid, this.id])
-        ])
-        .then((data) => {
-            let info = data[0]
-            let member = data[3][0]
-            info.lm = data[1][0]
-            info.unread = data[2]
-            info.focus = member.focus
-            info.last_read = member.last_read
+    async getView(userid) {
+        let info = await this.getInfo()
+        let messages = await this.getMessages(-1, 1, userid, focus)
 
-            return info
-        })
+        info.lm = messages[0]
+        info.unread = await this.getUnreadCount(userid)
+        info.focus = memberDetails.focus
+        info.last_read = memberDetails.last_read
+
+        return info
     }
 
     forEveryMember(cb) {
@@ -302,6 +295,15 @@ class Chat {
     async clearHistory(userid) {
         let mxid = await this.cfx.query(`select max(id) as mxid from message where chat_id=?`, [this.id]).then(r => r[0].mxid)
         return this.cfx.query(`update chat_member set focus=? where chat_id=? and user_id=?`, [mxid + 1, this.id, userid])
+    }
+
+    getMemberDetails(userid) {
+        return this.cfx.query(`select * from chat_member where user_id=? and chat_id=?`, [user.id, chat.id])
+        .then(r => {
+            r.focus ??= 0
+            r.last_read ??= 0
+            return r
+        })
     }
 }
 
@@ -534,13 +536,10 @@ exports.init = (cfx) => {
     // setters
 
 
-    cfx.core.safeGet('/getfocus', (user, req, res) => {
+    cfx.core.safeGet('/getmemberdetails', (user, req, res) => {
         return cfx.chats.accessChat(user, req.query.chatid)
         .then(chat => {
-            return cfx.query(`select focus from chat_member where user_id=? and chat_id=?`, [user.id, chat.id])
-        })
-        .then(r => {
-            return {focus: r[0]? r[0].focus : null}
+            return chat.getMemberDetails(req.query.userid)
         })
     }, true)
 

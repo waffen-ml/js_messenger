@@ -987,9 +987,9 @@ class Chat {
     }
 
     loadMyFocus() {
-        return fetch('/getfocus?chatid=' + this.chatid)
+        return fetch(`/getmemberdetails?chatid=${this.chatid}&userid=${this.me.id}`)
         .then(r => r.json())
-        .then(r => this.me.focus = r.focus ?? 0)
+        .then(r => this.me.focus = r.focus)
     }
 
     applyInfoChanges(changes) {
