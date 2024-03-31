@@ -149,8 +149,7 @@ class ChatInspector {
                 (item) => {
                     console.log(item)
                     return templateManager.createElement('chat-audiolist-item', item)
-                }, 10
-            )
+                }, 10)
         })
     }
 
