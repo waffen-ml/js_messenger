@@ -995,6 +995,8 @@ class Chat {
     applyInfoChanges(changes) {
         let fd = new FormData()
 
+        console.log(changes)
+
         if(changes.name === null)
             fd.append('deleteName', 1)
         else if(changes.name)
