@@ -177,16 +177,13 @@ class ChatInspector {
                 }, 25)
         })
 
-
+        this.setupActions() 
     }
 
-    updateMembers() {
-
-    }
-
-    updateMembers() {
-
-
+    setupActions() {
+        this.popup.querySelector('.action .delete-chat').addEventListener('click', () => {
+            this.chat.delete()
+        })
     }
 
     showTab(id) {
@@ -1289,6 +1286,11 @@ class Chat {
             return r
         })
 
+    }
+
+    delete() {
+        return fetch('/deletechat?id=' + this.chatid)
+        .then(r => r.json)
     }
 }
 

@@ -558,14 +558,16 @@ exports.init = (cfx) => {
     }, cfx.core.upload.single('avatar'), true)
 
 
-    cfx.core.safeGet('/deletechat', (user, req, res) => {
-        return cfx.chats.accessChat(user, req.query.id, true)
-        .then(chat => {
-            return cfx.chats.deleteChat(chat.id)
-        })
-        .then(() => {
-            return {success: 1}
-        })
+    cfx.core.safeGet('/deletechat', async (user, req, res) => {
+        let chat = await cfx.chats.accessChat(user, req.query.id)
+        let info = await chat.getInfo()
+        let isAdmin = await chat.containsAdmin(user.id)
+
+        if (!info.is_direct && !isAdmin)
+            throw Error('The user cannot delete the chat')
+
+        await cfx.chats.deleteChat(chat.id)
+        return {success: 1}
     })
 
     cfx.core.safeGet('/getfilesmt', (user, req, res) => {
@@ -649,6 +651,7 @@ exports.init = (cfx) => {
             }
         }).then(avatarId => {
             req.body.members ??= []
+            console.log(req.body.members)
             let members = Array.isArray(req.body.members)? req.body.members : [req.body.members]
             return cfx.chats.createGroupChat(req.body.name || null, parseInt(req.body.ispublic), avatarId, members)
         }).then(chat => {
