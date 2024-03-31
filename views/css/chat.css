@@ -600,6 +600,7 @@ ul.attached {
     width:100%;
     height:160px;
     max-height:400px;
+    overflow-y:auto;
 }
 
 .chat-inspect .tab-view .active {
