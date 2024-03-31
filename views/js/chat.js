@@ -1203,6 +1203,10 @@ class Chat {
             }
         })
 
+        this.on('eject_the_fuck_out', () => {
+            location.replace('/')
+        })
+
         socket.on('typing_status', msg => {
             if(msg.id == this.me.id)
                 return

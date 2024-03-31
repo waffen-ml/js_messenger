@@ -155,6 +155,10 @@ class Chat {
         ])
     }
 
+    notifyAllMembers() {
+        return this.forEveryMember(m => this.updateAllNotifications(m.id))
+    }
+
     updateLastRead(userid) {
         return this.cfx.query(`select * from message where chat_id=? order by id desc limit 1`, [this.id])
         .then(r => r[0])
@@ -180,14 +184,9 @@ class Chat {
     }
 
     displayMessage(msg) {
-        return this.getInfo()
-        .then(info => {
-            info.members.forEach(m => {
-                this.cfx.socket.io.in('u:' + m.id).emit('message', msg)
-            })
-            setTimeout(() => {
-                info.members.forEach(m => this.updateAllNotifications(m.id))
-            }, notifyTimeout)
+        return this.forEveryMember(m => {
+            this.cfx.socket.io.in('u:' + m.id).emit('message', msg)
+            setTimeout(() => this.updateAllNotifications(m.id), notifyTimeout)
         })
     
     }
@@ -205,18 +204,13 @@ class Chat {
             return this.cfx.query(`delete from message where id=?`, [msgid])
         })
         .then(() => {
-            return this.getInfo()
-        })
-        .then(info => {
-            info.members.forEach(m => {
+            return this.forEveryMember(m => {
                 this.cfx.socket.io.in('u:' + m.id).emit('delete_message', {
                     chatid: this.id,
                     msgid: msgid
                 })
+                setTimeout(() => this.updateAllNotifications(m.id), notifyTimeout)
             })
-            setTimeout(() => {
-                info.members.forEach(m => this.updateAllNotifications(m.id))
-            }, notifyTimeout)
         })
     }
 
@@ -257,6 +251,13 @@ class Chat {
         })
     }
 
+    forEveryMember(cb) {
+        return this.getInfo()
+        .then(info => {
+            return Promise.all(info.members.map(cb))
+        })
+    }
+
     async getDistanceBetweenMessages(id1, id2) {
         // id1 exists, checking for id2
         let r = await this.cfx.query('select * from message where id=?', [id2])
@@ -294,6 +295,15 @@ class Chat {
         let k = mt.map(w => `"${w}"`).join(',')
         return this.cfx.query(`select f.id, f.name, f.mimetype from bundle b join file f on b.id=f.bundle_id
             where b.chat_id=? and f.mimetype in (${k})`, [this.id])
+    }
+
+    async prepareToDelete() {
+        await this.cfx.socket.io.to('c:' + this.id).emit('eject_the_fuck_out')
+
+        // removing all notifications by reading all remaining messages
+        await this.cfx.query(`update chat_member set last_read=(select max(id) from message) where chat_id=?`, [this.id])
+
+        await this.notifyAllMembers()
     }
 }
 
@@ -455,6 +465,12 @@ class ChatSystem {
         .then(r => r.map(ri => new Chat(this.cfx, ri.id, ri.name)))
     }
 
+    async deleteChat(id) {
+        let chat = this.getChat(id)
+        await chat.prepareToBeDeleted()
+        await this.cfx.query(`delete from chat where id=?`, chat.id)
+    }
+
 }
 
 class CallTemp {
@@ -541,6 +557,16 @@ exports.init = (cfx) => {
         return {success: 1}
     }, cfx.core.upload.single('avatar'), true)
 
+
+    cfx.core.safeGet('/deletechat', (user, req, res) => {
+        return cfx.chats.accessChat(user, req.query.id, true)
+        .then(chat => {
+            return cfx.chats.deleteChat(chat.id)
+        })
+        .then(() => {
+            return {success: 1}
+        })
+    })
 
     cfx.core.safeGet('/getfilesmt', (user, req, res) => {
         return cfx.chats.accessChat(user, req.query.chatid)
