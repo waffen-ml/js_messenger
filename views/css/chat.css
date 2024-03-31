@@ -588,7 +588,7 @@ ul.attached {
     min-height:150px;
 }
 
-.chat-inspect {
+.chat-inspect .window {
     max-width:400px;
 }
 
