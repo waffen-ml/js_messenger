@@ -102,5 +102,7 @@ block main
             button.button.delete-member 🗑️            
     
     script(type="text/x-ejs-template", template="chat-audiolist-item")
-        audio(controls)
-            source(src!="/file?id=<%=id%>")
+        .audiofile
+            span.filename <%=name%>
+            audio(controls)
+                source(src!="/file?id=<%=id%>")

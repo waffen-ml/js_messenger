@@ -656,6 +656,16 @@ ul.attached {
     display:none;
 }
 
-.chat-inspect #audio audio {
+.chat-inspect #audio .audiofile {
     width:100%;
+}
+
+.chat-inspect .audiofile audio {
+    margin-top:5px;
+    width:100%;
+}
+
+.chat-inspect .audiofile .filename {
+    display:block;
+    margin:0;
 }
