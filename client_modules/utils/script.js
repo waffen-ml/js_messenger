@@ -269,6 +269,12 @@ class Utils {
             .replaceAll('"', '&quot;')
             .replaceAll("'", '&#039;')
     }
+
+    getUserLastSeenDate(userid) {
+        return fetch('/getuserinfo?id=' + userid)
+        .then(r => r.json())
+        .then(r => r.last_seen? new Date(r.last_seen) : null)
+    }
 }
 
 const utils = new Utils();

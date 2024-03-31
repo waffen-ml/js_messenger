@@ -210,10 +210,15 @@ class ChatInspector {
                 if(checked[i])
                     usersToAdd.push(u)
             })
-            //await this.chat.addMembers(usersToAdd.map(u => u.id))
+
+            await Promise.all(usersToAdd.map(async (u) => {
+                u.last_seen = await utils.getUserLastSeenDate()
+            }))
         
-            this.lazyLists['members'].items.push(...usersToAdd)
+            this.chat.info.members.push(...usersToAdd)
             this.lazyLists['members'].lazyList.toggleLoading(true)
+
+            //await this.chat.addMembers(usersToAdd.map(u => u.id))
 
             return true
         })
