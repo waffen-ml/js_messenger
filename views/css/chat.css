@@ -615,7 +615,7 @@ ul.attached {
     width:100%;
     display:flex;
     gap:5px;
-
+    padding:7px;
 }
 
 .chat-inspect .tab-view .controls .chosen {
