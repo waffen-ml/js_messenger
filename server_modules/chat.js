@@ -291,7 +291,7 @@ class Chat {
     }
 
     getAudioFiles() {
-        return this.cfx.query(`select f.* from bundle b join file f on b.id=f.bundle_id
+        return this.cfx.query(`select f.id, f.name, f.mimetype from bundle b join file f on b.id=f.bundle_id
             where b.chat_id=? and f.mimetype="audio"`, [this.id])
     }
 }
