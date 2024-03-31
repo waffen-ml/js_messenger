@@ -126,7 +126,7 @@ class ChatInspector {
         this.chat.updateAllMembersLastSeenStatus()
         .then(() => {
             this.membersLazyList = new LazyShowingList(
-                members, this.popup.querySelector('.members-holder'),
+                this.chat.info.members, this.popup.querySelector('.members-holder'),
                 this.popup.querySelector('.tab#members'),
                 (item) => {
                     return templateManager.createElement('chat-memberlist-item', {
@@ -141,6 +141,7 @@ class ChatInspector {
 
         this.chat.getAudioFiles()
         .then(files => {
+            console.log('hey')
             console.log(files)
 
         })
