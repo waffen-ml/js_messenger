@@ -41,7 +41,8 @@ class TemplateManager {
     createElement(id, data) {
         let div = document.createElement('div')
         div.innerHTML = this.createHTML(id, data)
-        return div.querySelector('*')
+        let elements = div.querySelectorAll('*')
+        return elements.length > 1? elements : elements[0]
     }
 
     apply(id, data) {

@@ -22,17 +22,7 @@ block main
     .voice-chat.block(style="display:none;")
         .preview
             span.list.finite В звонке:
-            span.count (
-                b.num 0
-                | 
-                span участников
-                |)
-        .voice-controls
-            .personal
-                span Ваш микрофон
-                button.mute Включен
-            .wrapper.styled-scroll
-                ul.members
+            span.count 0 участников
 
     .holder-wrapper.block.styled-scroll
         .load-zone
@@ -75,3 +65,36 @@ block main
                 img.preview(src!="/public/stickers/<%=pack.tag%>/0.png")
             <% }) %>
             button.button#buy +
+    
+    script(type="text/x-ejs-template", template="chat-popup")
+        a(href!="https://coffeetox.ru/chat?id=<%=chatid%>") https://coffeetox.ru/chat?id=<%=chatid%>
+        .actions
+            <% if (admin || direct) { %>
+            a.button.delete-chat Удалить чат
+            <% }; %>
+            a.button.clear-history Очистить историю
+            <% if (!direct) { %>
+            a.button.leave-chat Выйти из чата
+            <% }; %>
+            <% if (admin && !direct) { %>
+            a.button.add-members Добавить участников
+            <% }; %>
+        .tab-view
+            .tabs
+                a.button#open-members Участники
+                a.button#open-media Медиа
+                a.button#open-audio Аудио
+                a.button#open-other Другое
+            .tab#members
+            .tab#media 
+            .tab#audio 
+            .tab#other 
+    
+    script(type="text/x-ejs-template", template="chat-memberlist-item")
+        a.button.light.member(href!="/user?id=<%=id%>", class!="<%= utils.classAttr({admin: admin, 'can-delete': canDelete}) %>") 
+            img.avatar(src!="/getuseravatar?id=<%=id%>")
+            .top-bar 
+                span.name <%=name%>
+                span.admin-label (админ)
+            span.last-seen <%= utils.getLastSeenStatus(lastSeen) %>
+            button.button.delete-member 🗑️            

@@ -13,6 +13,72 @@ const emojiList = Array.from(`😀😃😄😁😆😅🤣😂🙂🙃😉😊�
 .filter(w => w != '\n')
 
 
+class LazyLoadingList {
+    constructor(holder, scrollPage, load, convert, batchSize, startBatchSize, loadDistance=200) {
+        this.holder = holder
+        this.scrollPage = scrollPage ?? holder
+        this.isLoading = false
+        this.reachedEnd = false
+        this.batchSize = batchSize
+        this.startBatchSize = startBatchSize ?? batchSize
+        this.load = load
+        this.convert = convert
+        this.items = []
+        this.loadDistance = loadDistance
+
+        this.loadBatch(this.startBatchSize)
+
+        this.scrollPage.addEventListener('scroll', () => {
+            this.loadIfNeeded()
+        })
+    }
+
+    loadIfNeeded() {
+        let reminder = this.scrollPage.scrollHeight - 
+                this.scrollPage.scrollTop - this.scrollPage.clientWidth
+        if (reminder < this.loadDistance)
+            this.loadBatch(this.batchSize)
+    }
+
+    async loadBatch(size) {
+        if(this.isLoading || this.reachedEnd)
+            return
+
+        this.isLoading = true
+        
+        let newItems = await this.load(size)
+
+        if (newItems.length < size)
+            this.reachedEnd = true
+
+        this.items.push(...newItems)
+        newItems.forEach(item => {
+            this.holder.appendChild(this.convert(item))
+        })
+
+        this.isLoading = false
+
+        this.loadIfNeeded()
+    }
+}
+
+class LazyShowingList {
+    constructor(items, holder, scrollPage, convert, batchSize, startBatchSize, loadDistance) {
+        this.items = items
+        this.nextToLoad = 0
+        this.lazyList = new LazyLoadingList(holder, scrollPage, convert,
+            (count) => {
+                let start = this.nextToLoad
+                let end = Math.min(this.items.length - 1, start + count - 1)
+                this.nextToLoad = end + 1
+                return Promise.resolve(this.items.slice(start, end + 1))
+            },
+        batchSize, startBatchSize, loadDistance)
+    }
+}
+
+
+
 class ChatInspector {
 
     constructor(chat) {
@@ -34,6 +100,10 @@ class ChatInspector {
 
         this.popup = new Popup({closable: true})
         this.popup.content.appendChild(this.chatSettings.element)
+
+        this.popup.content.append(...templateManager.createElement('chat-popup',
+            {chatid: chat.chatid, direct: chat.info.is_direct, admin: chat.me.is_admin}))
+        
     }
 
     toggleUnsavedHandling(state) {
