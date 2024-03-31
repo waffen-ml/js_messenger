@@ -616,7 +616,7 @@ ul.attached {
     flex-shrink: 0;
 }
 
-.chat-inspect .members-holder .member {
+.chat-inspect #members .member {
     display:grid;
     grid-template-rows:auto auto;
     grid-template-columns: auto 1fr auto;
