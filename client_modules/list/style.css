@@ -1,0 +1,18 @@
+.user-checklist {
+    max-height:400px;
+    overflow-y:auto;
+    list-style-type: none;
+    display:flex;
+    flex-direction: column;
+    gap:6px;
+}
+
+.user-checklist li {
+    display:flex;
+    gap:6px;
+    align-items:center;
+} 
+
+.user-checklist input {
+    pointer-events: none;
+}
