@@ -32,6 +32,11 @@ class Chat {
         return this.cfx.query(`update chat_member set is_admin=1 where user_id=? and chat_id=?`, [userid, this.id])
     }
 
+    getMember(userid) {
+        return this.cfx.query('select * from chat_member where user_id=? and chat_id=?', [userid, this.id])
+        .then(r => r[0])
+    }
+
     addMessage(type, sender_id, content, files, reply_to) {
         return new Promise((resolve) => {
             if(!files || !files.length) {
@@ -69,53 +74,42 @@ class Chat {
         })
     }
 
-    getMessages(start, count, myid) {
-        return new Promise((resolve) => {
-            if (start > -1)
-                resolve()
-            this.cfx.query('select max(id) as mid from message where chat_id=?', [this.id])
-            .then(r => {
-                start = r[0].mid
-                resolve()
-            })
-        }).then(() => {
-            return this.cfx.db.executeFile('getmessages', {
-                start: start,
-                count: count,
-                chatid: this.id
-            })
+    async getMessages(start, count, myid, focus) {
+        if(start < 0) {
+            start = await this.cfx.query('select max(id) as mid from message where chat_id=?', [this.id])
+            .then(r => r[0].mid)
+        }
+
+        let messagesRaw = await this.cfx.db.executeFile('getmessages', {
+            start: start,
+            count: count,
+            chatid: this.id,
+            focus: focus ?? -1
         })
-        .then(arr => {
-            let messages = this.cfx.utils.parseArrayOutput(
-                arr, 'files', {
-                    file_id: 'id',
-                    file_mimetype: 'mimetype',
-                    file_name: 'name'
-                }, 'id', 'file_id')
+
+        let messages = this.cfx.utils.parseArrayOutput(
+            messagesRaw, 'files', {
+                file_id: 'id',
+                file_mimetype: 'mimetype',
+                file_name: 'name'
+            }, 'id', 'file_id')
+
+        if(myid) {
+            let maxlr = await this.cfx.query(`select max(last_read) as lr from chat_member 
+                where chat_id=? and user_id!=?`, [this.id, myid]).then(r => r[0].lr ?? 0)
             
-            return new Promise((resolve) => {
-                if(!myid) {
-                    resolve(messages)
-                    return
-                }
-
-                this.cfx.query(`select max(last_read) as lr from chat_member where chat_id=? and user_id!=?`, [this.id, myid])
-                .then(r => r[0].lr ?? 0)
-                .then(lr => {
-                    for(let i = 0; i < messages.length; i++) {
-                        if(messages[i].sender_id != myid)
-                            continue
-                        messages[i].read = parseInt(messages[i].id) <= lr
-                    }
-                })
-                .then(() => resolve(messages))
-            })
-
-        })
+            for(let i = 0; i < messages.length; i++) {
+                if(messages[i].sender_id != myid)
+                    continue
+                messages[i].read = parseInt(messages[i].id) <= lr
+            }
+        }
+        
+        return messages
     }
 
-    getMessage(id, myid) {
-        return this.getMessages(id, 1, myid)
+    getMessage(id, myid, focus) {
+        return this.getMessages(id, 1, myid, focus)
         .then(messages => {
             let msg = messages[0]
             if(!msg || msg.id != id || msg.chat_id != this.id)
@@ -303,6 +297,11 @@ class Chat {
         // removing all notifications by reading all remaining messages
         await this.cfx.query(`update chat_member set last_read=(select max(id) from message) where chat_id=?`, [this.id])
         await this.notifyAllMembers()
+    }
+
+    async clearHistory(userid) {
+        let mxid = await this.cfx.query(`select max(id) from message where chat_id=?`, [this.id])
+        return this.cfx.query(`update chat_member set focus=? where chat_id=? and user_id=?`, [mxid + 1, this.id, userid])
     }
 }
 
@@ -534,6 +533,17 @@ exports.init = (cfx) => {
 
     // setters
 
+
+    cfx.core.safeGet('/clearhistory', (user, req, res) => {
+        return cfx.chats.accessChat(user, req.query.chatid)
+        .then(chat => {
+            return chat.clearHistory(user.id)
+        })
+        .then(() => {
+            return {success: 1}
+        })
+    }, true)
+
     cfx.core.safePost('/changechatinfo', async (user, req, res) => {
         let chat = await cfx.chats.accessChat(user, req.query.chatid, true)
         let avatarBlob = req.file
@@ -736,13 +746,13 @@ exports.init = (cfx) => {
         })
     }, true)
 
-    cfx.core.safeGet('/getmessages', (user, req, res) => {
-        return cfx.chats.accessChat(user, req.query.chatid)
-        .then(chat => {
-            let start = parseInt(req.query.start)
-            let count = parseInt(req.query.count)
-            return chat.getMessages(start, count, user.id)
-        })
+    cfx.core.safeGet('/getmessages', async (user, req, res) => {
+        let chat = await cfx.chats.accessChat(user, req.query.chatid)
+        let member = await chat.getMember(user.id)
+        let start = parseInt(req.query.start)
+        let count = parseInt(req.query.count)
+
+        return chat.getMessages(start, count, user.id, member.focus)
     }, true)
 
     cfx.core.safeRender('/direct', (user, req, res) => {

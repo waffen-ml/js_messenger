@@ -69,7 +69,9 @@ class Utils {
     }
 
     getMessageDatetimeLabel(datetime) {
-        if (this.isToday(datetime))
+        if(!datetime)
+            return ''
+        else if (this.isToday(datetime))
             return this.formatTime(datetime)
         else if (this.isYesterday(datetime))
             return 'вчера'
@@ -118,7 +120,7 @@ class Utils {
         let out = w.map(k => k.name).join(', ')
         if (members.length - (exclude != null) > w.length)
             out += '...'
-        return out
+        return out || 'Безымянный чат'
     }
 
     getOtherMember(chat, member) {

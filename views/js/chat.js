@@ -185,6 +185,10 @@ class ChatInspector {
             if(confirm('Вы уверены?'))
                 this.chat.delete()
         })
+        this.popup.querySelector('.actions .clear-history').addEventListener('click', () => {
+            if(confirm('Вы уверены?'))
+                this.chat.clearHistory()
+        })
     }
 
     showTab(id) {
@@ -1291,7 +1295,18 @@ class Chat {
 
     delete() {
         return fetch('/deletechat?id=' + this.chatid)
-        .then(r => r.json)
+        .then(r => r.json())
+    }
+
+    clearHistory() {
+        return fetch('/clearhistory?chatid=' + this.chatid)
+        .then(r => r.json())
+        .then(r => {
+            if(r.success)
+                location.reload()
+            else
+                alert('Ошибка!')
+        })
     }
 }
 

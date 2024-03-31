@@ -29,22 +29,26 @@ function sortViews() {
 }
 
 function isVisible(view) {
-    return view.lm && view.lm.id >= view.focus
+    return !view.is_direct || view.lm && view.lm.id >= view.focus
 }
 
 function prepareView(view) {
     if(!isVisible(view))
         return
 
+    view.lm ??= {
+        type: 'system',
+        content: '*Нет сообщений*',
+        files: []
+    }
+
     view.lm.mine = view.lm.sender_id == me.id
-    view.lm.datetime = new Date(view.lm.datetime)
+    view.lm.datetime = view.lm.datetime? new Date(view.lm.datetime) : null
 
     view.lm.preview = utils.getMessagePreview(view.lm, me.id, true, !view.lm.mine && !view.is_direct)
 
-    if(!view.name) {
-        let names = view.members.filter(m => m.id != me.id).slice(0, 4).map(m => m.name)
-        view.name = names.join(', ')
-    }
+    if(!view.name)
+        view.name = utils.generateChatName(view.members, me, 5)
 
 }
 
