@@ -201,7 +201,7 @@ class ChatInspector {
 
         let userChecklist = new UserChecklist(potentialMembers)
 
-        popup.content.appendChild(userCheckList)
+        popup.content.appendChild(userChecklist)
 
         popup.addOption('Отмена', () => true)
         popup.addOption('Добавить', () => {
