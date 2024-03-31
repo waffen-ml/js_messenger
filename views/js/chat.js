@@ -105,7 +105,9 @@ class ChatInspector {
             {chatid: chat.chatid, direct: chat.info.is_direct, admin: chat.me.is_admin}))
 
         this.popup.content.querySelectorAll('.controls a')
-            .forEach(button => button.onclick = () => this.showTab(button.getAttribute('id').split('-')[1]))
+            .forEach(button => {
+                button.onclick = () => console.log(button.getAttribute('id').split('-')[1])
+            })
 
     }
 
