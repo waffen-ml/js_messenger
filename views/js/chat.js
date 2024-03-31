@@ -134,6 +134,8 @@ class ChatInspector {
                 this.chat.info.members, this.popup.querySelector('#members .flex-holder'),
                 this.popup.querySelector('.tab#members'),
                 (item) => {
+                    console.log('WEEEE')
+                    console.log(item)
                     return templateManager.createElement('chat-memberlist-item', {
                         admin: item.is_admin,
                         canDelete: this.chat.me.is_admin,
