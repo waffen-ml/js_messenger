@@ -458,41 +458,6 @@ ul.attached {
     overflow-y:auto
 }
 
-.members {
-    margin-top:10px;
-    padding:0;
-    list-style-type: none;
-}
-
-.member:nth-child(2n+1) {
-    background:#a2a2a287;
-}
-
-.member {
-    border-radius:10px;
-    padding:3px 4px;
-    display:grid;
-    grid-template-columns:auto 1fr auto auto auto;
-    column-gap:10px;
-    align-items: center;
-}
-
-.member .avatar {
-    width:44px;
-    aspect-ratio: 1;
-    border-radius: 50%;
-}
-
-.member .name {
-    font-size:17px;
-}
-
-.member .volume-range {
-    padding:0;
-}
-
-.member .volume-label {
-}
 
 .actions  {
     align-self:center;
@@ -652,6 +617,7 @@ ul.attached {
     grid-template-columns: auto 1fr auto;
     column-gap:10px;
     row-gap:5px;
+    width:100%;
 }
 
 .chat-inspect .member .avatar {
