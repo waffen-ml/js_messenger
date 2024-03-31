@@ -606,7 +606,8 @@ ul.attached {
     display: block;
 }
 
-.chat-inspect .members-holder {
+.chat-inspect .members-holder,
+.chat-inspect .audio-holder {
     display: flex;
     flex-direction: column;
     gap:4px;
@@ -649,4 +650,8 @@ ul.attached {
 
 .chat-inspect .member:not(.admin) .admin-label {
     display:none;
+}
+
+.chat-inspect .audio-holder audio {
+    width:100%;
 }

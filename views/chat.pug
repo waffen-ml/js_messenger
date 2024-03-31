@@ -89,6 +89,7 @@ block main
                 .members-holder
             .tab.styled-scroll#media 
             .tab.styled-scroll#audio 
+                .audio-holder
             .tab.styled-scroll#other 
     
     script(type="text/x-ejs-template", template="chat-memberlist-item")
@@ -99,3 +100,6 @@ block main
                 span.admin-label (админ)
             span.last-seen <%= utils.getLastSeenStatus(lastSeen) %>
             button.button.delete-member 🗑️            
+    
+    script(type="text/x-ejs-template", template="chat-audiolist-item")
+        audio(src!="/file?id=<%=id%>" contols)

@@ -136,14 +136,18 @@ class ChatInspector {
                         name: item.name,
                         lastSeen: item.last_seen
                     })
-                }, 10, null, null)    
+                }, 10)    
         })
 
         this.chat.getAudioFiles()
         .then(files => {
-            console.log('hey')
-            console.log(files)
-
+            this.audioLazyList = new LazyShowingList(
+                files, this.popup.querySelector('.audio-holder'),
+                this.popup.querySelector('.tab#audio'),
+                (item) => {
+                    return templateManager.createElement('chat-audiolist-item', item)
+                }, 10
+            )
         })
     }
 
