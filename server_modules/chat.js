@@ -273,7 +273,7 @@ class Chat {
         if(changes.description) {
             await this.cfx.query(`update chat set description=? where id=?`, [changes.description, this.id])
         }
-        if(changes.isPublic) {
+        if(changes.isPublic !== undefined) {
             return this.cfx.query(`update chat set is_public=? where id=?`, [changes.isPublic? 1 : 0, this.id])
         }
 
