@@ -70,13 +70,15 @@ class Chat {
             .then(r => r[0].lmid ?? 0)
 
         for(const uid of userids) {
+            console.log(uid)
             let existResponse = await this.cfx.query(`select * from chat_member where chat_id=? and user_id=?`, [this.id, uid])
 
             if(existResponse.length > 0)
                 continue
-
-            await this.cfx.query(`insert into chat_member(chat_id, user_id, last_read, focus) values (?, ${uid}, ?, ?)`,
-                [this.id, lmid, lmid + 1])
+            console.log(uid)
+            continue
+            await this.cfx.query(`insert into chat_member(chat_id, user_id, last_read, focus) values (?, ?, ?, ?)`,
+                [this.id, uid, lmid, lmid + 1])
 
             let user = await this.cfx.auth.getUser(uid)
             user.is_admin = false
