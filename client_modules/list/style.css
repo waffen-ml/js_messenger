@@ -10,11 +10,15 @@
 }
 
 .user-checklist li {
+    width:100%;
+} 
+
+.user-checklist li button {
     display:flex;
     gap:6px;
     align-items:center;
     width:100%;
-} 
+}
 
 .user-checklist li span {
     width:100%;
