@@ -126,8 +126,6 @@ class ChatInspector {
                 button.onclick = () => this.showTab(button.getAttribute('id').split('-')[1])
             })
 
-        this.showTab('members')
-
         this.lazyLists = {}
 
         this.chat.updateAllMembersLastSeenStatus()
@@ -144,6 +142,7 @@ class ChatInspector {
                         lastSeen: item.last_seen
                     })
                 }, 10)
+            this.showTab('members')
         })
 
         this.chat.getFilesWithMimetype('audio')
