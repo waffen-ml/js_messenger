@@ -691,11 +691,15 @@ ul.attached {
     height:100%;
 }
 
-.chat-inspect .visual-wrapper::before {
+.chat-inspect .visual-wrapper.video::before {
    content:'▶';
    position:absolute;
    top:50%;
    left:50%;
    transform:translate(-50%, -50%);
-   text-shadow:0px 0px 2px black;
+   background:white;
+   padding:6px;
+   border-radius:20px;
+   box-shadow:0 0 2px 0 black;
+   opacity:0.75;
 }
