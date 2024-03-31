@@ -297,7 +297,7 @@ class Chat {
             where b.chat_id=? and f.mimetype in (${k})`, [this.id])
     }
 
-    async prepareToDelete() {
+    async prepareToBeDeleted() {
         await this.cfx.socket.io.to('c:' + this.id).emit('eject_the_fuck_out')
 
         // removing all notifications by reading all remaining messages
