@@ -142,7 +142,7 @@ class ChatInspector {
         this.chat.getFilesWithMimetype('audio')
         .then(files => {
             this.audioLazyList = new LazyShowingList(
-                files.repeat(), this.popup.querySelector('#audio .flex-holder'),
+                files.reverse(), this.popup.querySelector('#audio .flex-holder'),
                 this.popup.querySelector('.tab#audio'),
                 (item) => {
                     return templateManager.createElement('chat-audiolist-item', item)
@@ -152,7 +152,7 @@ class ChatInspector {
         this.chat.getFilesWithMimetype('image', 'video')
         .then(files => {
             this.audioLazyList = new LazyShowingList(
-                files.repeat(), this.popup.querySelector('#media .grid-holder'),
+                files.reverse(), this.popup.querySelector('#media .grid-holder'),
                 this.popup.querySelector('.tab#media'),
                 (item) => {
                     return templateManager.createElement('chat-medialist-item', item)
