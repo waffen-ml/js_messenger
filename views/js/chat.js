@@ -112,10 +112,11 @@ class ChatInspector {
     }
 
     showTab(id) {
+        console.log(id)
         this.popup.content.querySelectorAll('.tab')
             .forEach(tab => tab.classList.remove('active'))
         this.popup.content.querySelectorAll('.tab#' + id).classList.add('active')
-        console.log('hey')
+        
         this.popup.content.querySelectorAll('.controls a')
             .forEach(a => a.classList.remove('chosen'))
         this.popup.content.querySelector('.controls #show-' + id).classList.add('chosen')
