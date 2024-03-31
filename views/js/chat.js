@@ -181,7 +181,7 @@ class ChatInspector {
     }
 
     setupActions() {
-        this.popup.querySelector('.action .delete-chat').addEventListener('click', () => {
+        this.popup.querySelector('.actions .delete-chat').addEventListener('click', () => {
             this.chat.delete()
         })
     }
