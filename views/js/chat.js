@@ -145,7 +145,7 @@ class ChatInspector {
             this.showTab('members')
         })
 
-        this.chat.getFilesWithMimetype('audio')
+        this.loadFilesFromMyHistory('audio')
         .then(files => {
             this.lazyLists['audio'] = new LazyShowingList(
                 files.reverse(), this.popup.querySelector('#audio .flex-holder'),
@@ -155,7 +155,7 @@ class ChatInspector {
                 }, 10)
         })
 
-        this.chat.getFilesWithMimetype('image', 'video')
+        this.loadFilesFromMyHistory('image', 'video')
         .then(files => {
             this.lazyLists['media'] = new LazyShowingList(
                 files.reverse(), this.popup.querySelector('#media .grid-holder'),
@@ -167,7 +167,7 @@ class ChatInspector {
                 this.popup.querySelector('#media'))
         })
 
-        this.chat.getFilesWithMimetype('other')
+        this.loadFilesFromMyHistory('other')
         .then(files => {
             this.lazyLists['other'] = new LazyShowingList(
                 files.reverse(), this.popup.querySelector('#other .flex-holder'),
@@ -194,6 +194,13 @@ class ChatInspector {
         this.popup.querySelector('.actions .clear-history').addEventListener('click', () => {
             if(confirm('Вы уверены?'))
                 this.chat.clearHistory()
+        })
+    }
+
+    loadFilesFromMyHistory(...mt) {
+        return this.chat.getFilesWithMimetype(...mt)
+        .then(files => {
+            return files.filter(f => f.message_id >= this.chat.me.focus)
         })
     }
 
@@ -970,11 +977,19 @@ class Chat {
         this.setupHeader()
         this.readMessages()
 
+        this.loadMyFocus()
+
         addEventListener('focus', () => {
             this.processFocusedEvents()
         })
 
         console.log(this.info)
+    }
+
+    loadMyFocus() {
+        return fetch('/getfocus?chatid=' + this.chatid)
+        .then(r => r.json())
+        .then(r => this.me.focus = r.focus ?? 0)
     }
 
     applyInfoChanges(changes) {

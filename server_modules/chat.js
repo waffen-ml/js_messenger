@@ -287,7 +287,7 @@ class Chat {
 
     getFilesWithMimetype(...mt) {
         let k = mt.map(w => `"${w}"`).join(',')
-        return this.cfx.query(`select f.id, f.name, f.mimetype from bundle b join file f on b.id=f.bundle_id
+        return this.cfx.query(`select f.id, f.name, f.mimetype, b.message_id from bundle b join file f on b.id=f.bundle_id
             where b.chat_id=? and f.mimetype in (${k})`, [this.id])
     }
 
@@ -533,6 +533,16 @@ exports.init = (cfx) => {
 
     // setters
 
+
+    cfx.core.safeGet('/getfocus', (user, req, res) => {
+        return cfx.chats.accessChat(user, req.query.chatid)
+        .then(chat => {
+            return cfx.query(`select focus from chat_member where user_id=? and chat_id=?`, [user.id, chat.id])
+        })
+        .then(r => {
+            return {focus: r[0]? r[0].focus : null}
+        })
+    }, true)
 
     cfx.core.safeGet('/clearhistory', (user, req, res) => {
         return cfx.chats.accessChat(user, req.query.chatid)
