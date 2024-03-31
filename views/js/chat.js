@@ -134,8 +134,6 @@ class ChatInspector {
                 this.chat.info.members, this.popup.querySelector('#members .flex-holder'),
                 this.popup.querySelector('.tab#members'),
                 (item) => {
-                    console.log('WEEEE')
-                    console.log(item)
                     return templateManager.createElement('chat-memberlist-item', {
                         admin: item.is_admin,
                         canDelete: this.chat.me.is_admin,
@@ -1252,7 +1250,7 @@ class Chat {
             member => fetch('/getuserinfo?id=' + member.id)
             .then(r => r.json())
             .then(r => {
-                member.last_seen = r.last_seen
+                member.last_seen = r.last_seen? new Date(r.last_seen) : null
                 return member
             })
         ))
