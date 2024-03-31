@@ -98,7 +98,7 @@ class ChatInspector {
             this.toggleUnsavedHandling(Object.keys(changes).length > 0)
         }
 
-        this.popup = new Popup({closable: true})
+        this.popup = new Popup({closable: true, className: 'chat-inspect'})
         this.popup.content.appendChild(this.chatSettings.element)
 
         this.popup.content.append(...templateManager.createElement('chat-popup',

@@ -587,3 +587,9 @@ ul.attached {
     width:220px;
     min-height:150px;
 }
+
+
+.chat-inspect .chat-link {
+    padding:7px;
+    width:100%;
+}
