@@ -289,6 +289,11 @@ class Chat {
 
         this.cfx.socket.io.to('c:' + this.id).emit('update_info', {})
     }
+
+    getAudioFiles() {
+        return this.cfx.query(`select f.* from bundle b join file f on b.id=f.bundle_id
+            where b.chat_id=? and f.mimetype="audio"`, [this.id])
+    }
 }
 
 class Stickerpacks {
@@ -535,6 +540,13 @@ exports.init = (cfx) => {
         return {success: 1}
     }, cfx.core.upload.single('avatar'), true)
 
+
+    cfx.core.safeGet('/getaudiofiles', (user, req, res) => {
+        return cfx.chats.accessChat(user, req.query.chatid)
+        .then(chat => {
+            return chat.getAudioFiles()
+        })
+    }, true)
 
     cfx.core.safeRender('/publicchatlist', (user, req, res) => {
         return cfx.chats.getPublicChats()

@@ -125,28 +125,29 @@ class ChatInspector {
 
         this.chat.updateAllMembersLastSeenStatus()
         .then(() => {
-            this.setupLazyLists(this.chat.info.members)
+            this.membersLazyList = new LazyShowingList(
+                members, this.popup.querySelector('.members-holder'),
+                this.popup.querySelector('.tab#members'),
+                (item) => {
+                    return templateManager.createElement('chat-memberlist-item', {
+                        admin: item.is_admin,
+                        canDelete: this.chat.me.is_admin,
+                        id: item.id,
+                        name: item.name,
+                        lastSeen: item.last_seen
+                    })
+                }, 10, null, null)    
+        })
+
+        this.chat.getAudioFiles()
+        .then(files => {
+            console.log(files)
+
         })
     }
 
     updateMembers() {
 
-    }
-
-    setupLazyLists(members) {
-        this.membersLazyList = new LazyShowingList(
-            members, this.popup.querySelector('.members-holder'),
-            this.popup.querySelector('.tab#members'),
-            (item) => {
-                return templateManager.createElement('chat-memberlist-item', {
-                    admin: item.is_admin,
-                    canDelete: this.chat.me.is_admin,
-                    id: item.id,
-                    name: item.name,
-                    lastSeen: item.last_seen
-                })
-            }, 10, null, null)
-        
     }
 
     updateMembers() {
@@ -1190,6 +1191,11 @@ class Chat {
                 return member
             })
         ))
+    }
+
+    getAudioFiles() {
+        return fetch('/getaudiofiles?chatid=' + this.chatid)
+        .then(r => r.json())
     }
 
     readMessages() {

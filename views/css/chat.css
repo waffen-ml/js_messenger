@@ -560,7 +560,7 @@ ul.attached {
 .chat-inspect .content {
     display:flex;
     flex-direction: column;
-    gap:6px;
+    gap:8px;
 }
 
 .chat-inspect .chat-settings {
@@ -598,7 +598,7 @@ ul.attached {
 .chat-inspect .tab-view .tab {
     display:none;
     width:100%;
-    height:200px;
+    height:160px;
     max-height:400px;
 }
 
