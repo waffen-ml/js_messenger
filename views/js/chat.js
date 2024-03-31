@@ -203,17 +203,18 @@ class ChatInspector {
 
         popup.content.appendChild(userChecklist.element)
 
-        popup.addOption('Отмена', () => true)
         popup.addOption('Добавить', () => {
             let checked = userChecklist.getChecked()
             let p = []
-            userChecklist.forEach((u, i) => {
+            potentialMembers.forEach((u, i) => {
                 if(checked[i])
                     p.push(u.tag)
             })
             alert('add: ' + p.join())
             return true
         })
+
+        popup.addOption('Отмена', () => true)
 
         popup.open()
 
