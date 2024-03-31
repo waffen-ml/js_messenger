@@ -25,6 +25,7 @@ class LazyLoadingList {
         this.convert = convert
         this.items = []
         this.loadDistance = loadDistance
+        this.onload = () => {}
 
         this.reload()
 
@@ -64,8 +65,9 @@ class LazyLoadingList {
             this.holder.appendChild(this.convert(item))
         })
 
-        this.isLoading = false
+        this.onload()
 
+        this.isLoading = false
         this.loadIfNeeded()
     }
 }
@@ -136,7 +138,7 @@ class ChatInspector {
                         name: item.name,
                         lastSeen: item.last_seen
                     })
-                }, 10)    
+                }, 20)
         })
 
         this.chat.getFilesWithMimetype('audio')
@@ -157,6 +159,8 @@ class ChatInspector {
                 (item) => {
                     return templateManager.createElement('chat-medialist-item', item)
                 }, 10)
+            this.audioLazyList.lazyList.onload = () => setupInspectGroup(
+                this.popup.querySelector('#media .grid-holder'))
         })
 
 
