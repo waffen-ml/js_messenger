@@ -103,7 +103,20 @@ class ChatInspector {
 
         this.popup.content.append(...templateManager.createElement('chat-popup',
             {chatid: chat.chatid, direct: chat.info.is_direct, admin: chat.me.is_admin}))
+
+        this.popup.content.querySelectorAll('.controls a')
+            .forEach(button => button.onclick = () => this.showTab(button.getAttribute('id')))
+
+    }
+
+    showTab(id) {
+        this.popup.content.querySelectorAll('.tab')
+            .forEach(tab => tab.classList.remove('active'))
+        this.popup.content.querySelectorAll('.tab#' + id).classList.add('active')
         
+        this.popup.content.querySelectorAll('.controls a')
+            .forEach(a => a.classList.remove('chosen'))
+        this.popup.content.querySelector('.controls a#' + id).classList.add('chosen')
     }
 
     toggleUnsavedHandling(state) {
