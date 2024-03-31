@@ -141,6 +141,7 @@ class ChatInspector {
 
         this.chat.getAudioFiles()
         .then(files => {
+            console.log('audio files')
             console.log(files)
             this.audioLazyList = new LazyShowingList(
                 files, this.popup.querySelector('.audio-holder'),
