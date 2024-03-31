@@ -609,7 +609,7 @@ ul.attached {
 .chat-inspect .members-holder {
     display: flex;
     flex-direction: column;
-    gap:6px;
+    gap:4px;
 }
 
 .chat-inspect .members-holder .member {
@@ -623,7 +623,7 @@ ul.attached {
 
 .chat-inspect .member .avatar {
     grid-row:1/3;
-    height:50px;
+    height:45px;
 }
 
 .chat-inspect .member .delete-member {
