@@ -74,14 +74,14 @@ class LazyShowingList {
     constructor(items, holder, scrollPage, convert, batchSize, startBatchSize, loadDistance) {
         this.items = items
         this.nextToLoad = 0
-        this.lazyList = new LazyLoadingList(holder, scrollPage, convert,
+        this.lazyList = new LazyLoadingList(holder, scrollPage,
             (count) => {
                 let start = this.nextToLoad
                 let end = Math.min(this.items.length - 1, start + count - 1)
                 this.nextToLoad = end + 1
                 return Promise.resolve(this.items.slice(start, end + 1))
             },
-        batchSize, startBatchSize, loadDistance)
+        convert, batchSize, startBatchSize, loadDistance)
     }
 
     restart(newItems) {
