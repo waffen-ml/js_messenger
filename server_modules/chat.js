@@ -287,8 +287,8 @@ class Chat {
 
     getFilesWithMimetype(...mt) {
         let k = mt.map(w => `"${w}"`).join(',')
-        return this.cfx.query(`select f.id, f.name, f.mimetype, b.message_id from bundle b join file f on b.id=f.bundle_id
-            where b.chat_id=? and f.mimetype in (${k})`, [this.id])
+        return this.cfx.query(`select f.id, f.name, f.mimetype, m.id as message_id from bundle b join file f on b.id=f.bundle_id
+            join message m on m.bundle_id=b.id where b.chat_id=? and f.mimetype in (${k})`, [this.id])
     }
 
     async prepareToBeDeleted() {
