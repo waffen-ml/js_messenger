@@ -671,6 +671,7 @@ ul.attached {
 }
 
 .chat-inspect .grid-holder {
+    width:100%;
     display:grid;
     grid-auto-rows:max-content;
     grid-template-columns: repeat(fit-content, minmax(100px, 1fr));
