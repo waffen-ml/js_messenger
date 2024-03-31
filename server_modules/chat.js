@@ -73,7 +73,7 @@ class Chat {
             let existResponse = await this.cfx.query(`select * from chat_member where chat_id=? and user_id=?`, [this.id, uid])
 
             if(existResponse.length > 0)
-                continue
+                return
 
             await this.cfx.query(`insert into chat_member(chat_id, user_id, last_read, focus) values (?, ?, ?, ?)`,
                 [this.id, uid, lmid, lmid + 1])
