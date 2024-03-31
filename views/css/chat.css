@@ -588,11 +588,18 @@ ul.attached {
     min-height:150px;
 }
 
+.chat-inspect {
+    max-width:400px;
+}
 
 .chat-inspect .content {
     display:flex;
     flex-direction: column;
     gap:6px;
+}
+
+.chat-inspect .chat-settings {
+    width:100%;
 }
 
 .chat-inspect .chat-link {
