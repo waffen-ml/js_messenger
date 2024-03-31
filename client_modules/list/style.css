@@ -13,7 +13,7 @@
     width:100%;
 } 
 
-.user-checklist li button {
+.user-checklist li .button {
     display:flex;
     gap:6px;
     align-items:center;
