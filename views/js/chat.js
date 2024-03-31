@@ -189,7 +189,7 @@ class ChatInspector {
             .forEach(a => a.classList.remove('chosen'))
         this.popup.content.querySelector('.controls #show-' + id).classList.add('chosen')
 
-        lazyLists[id].lazyList.toggleLoading(true)
+        this.lazyLists[id].lazyList.toggleLoading(true)
     }
 
     toggleUnsavedHandling(state) {
