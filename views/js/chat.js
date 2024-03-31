@@ -1182,14 +1182,14 @@ class Chat {
     }
 
     updateAllMembersLastSeenStatus() {
-        return this.info.members.forEach(
+        return Promise.all(this.info.members.map(
             member => fetch('/getuserinfo?id=' + member.id)
             .then(r => r.json())
             .then(r => {
                 member.last_seen = r.last_seen
                 return member
             })
-        )
+        ))
     }
 
     readMessages() {
