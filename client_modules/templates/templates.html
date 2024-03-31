@@ -19,7 +19,7 @@
                     <% if (isimg) { %>
                         <img src="<%= c(files.image[i]) %>">
                     <% } else { %>
-                        <video src="<%= c(files.video[i - imgc]) %>", preload="metacont">
+                        <video src="<%= c(files.video[i - imgc]) %>", preload="metadata">
                     <% }; i++; %>
 
                 </div>

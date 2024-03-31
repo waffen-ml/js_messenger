@@ -669,3 +669,19 @@ ul.attached {
     display:block;
     margin:0;
 }
+
+.chat-inspect .grid-holder {
+    display:grid;
+    grid-auto-rows:max-content;
+    grid-template-columns: repeat(fit-content, minmax(100px, 1fr));
+    gap:5px;
+}
+
+.chat-inspect .grid-holder img{
+    aspect-ratio: 1;
+    object-fit:cover;
+}
+
+.chat-inspect .grid-holder video {
+    aspect-ratio: 1;
+}

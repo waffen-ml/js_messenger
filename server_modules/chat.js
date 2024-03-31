@@ -290,9 +290,10 @@ class Chat {
         this.cfx.socket.io.to('c:' + this.id).emit('update_info', {})
     }
 
-    getAudioFiles() {
+    getFilesWithMimetype(...mt) {
+        let k = mt.map(w => `"${w}"`).join(',')
         return this.cfx.query(`select f.id, f.name, f.mimetype from bundle b join file f on b.id=f.bundle_id
-            where b.chat_id=? and f.mimetype="audio"`, [this.id])
+            where b.chat_id=? and f.mimetype in (${k})`, [this.id])
     }
 }
 
@@ -541,10 +542,11 @@ exports.init = (cfx) => {
     }, cfx.core.upload.single('avatar'), true)
 
 
-    cfx.core.safeGet('/getaudiofiles', (user, req, res) => {
+    cfx.core.safeGet('/getfilesmt', (user, req, res) => {
         return cfx.chats.accessChat(user, req.query.chatid)
         .then(chat => {
-            return chat.getAudioFiles()
+            let mt = req.query.mt.split(',')
+            return chat.getFilesWithMimetype(...mt)
         })
     }, true)
 

@@ -139,18 +139,27 @@ class ChatInspector {
                 }, 10)    
         })
 
-        this.chat.getAudioFiles()
+        this.chat.getFilesWithMimetype('audio')
         .then(files => {
-            console.log('audio files')
-            console.log(files)
             this.audioLazyList = new LazyShowingList(
                 files, this.popup.querySelector('#audio .flex-holder'),
                 this.popup.querySelector('.tab#audio'),
                 (item) => {
-                    console.log(item)
                     return templateManager.createElement('chat-audiolist-item', item)
                 }, 10)
         })
+
+        this.chat.getFilesWithMimetype('image', 'video')
+        .then(files => {
+            this.audioLazyList = new LazyShowingList(
+                files, this.popup.querySelector('#media .grid-holder'),
+                this.popup.querySelector('.tab#media'),
+                (item) => {
+                    return templateManager.createElement('chat-medialist-item', item)
+                }, 10)
+        })
+
+
     }
 
     updateMembers() {
@@ -1200,8 +1209,8 @@ class Chat {
         ))
     }
 
-    getAudioFiles() {
-        return fetch('/getaudiofiles?chatid=' + this.chatid)
+    getFilesWithMimetype(...mt) {
+        return fetch(`/getaudiofiles?chatid=${this.chatid}&mt=` + mt.join(','))
         .then(r => r.json())
     }
 

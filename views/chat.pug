@@ -106,3 +106,10 @@ block main
             span.filename <%=name%>
             audio(controls)
                 source(src!="/file?id=<%=id%>")
+
+    script(type="text/x-ejs-template", template="chat-medialist-item")
+        <% if (mimetype == 'image') { %>
+        img(src!="/file?id=<%=id%>")
+        <% } else { %>
+        video(src!="/file?id=<%=id%>", preload="metadata") 
+        <% }; %>
