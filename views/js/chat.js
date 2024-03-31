@@ -54,6 +54,8 @@ class LazyLoadingList {
         
         let newItems = await this.load(size)
 
+        console.log(newItems)
+
         if (newItems.length < size)
             this.reachedEnd = true
 
@@ -88,8 +90,6 @@ class LazyShowingList {
         this.nextToLoad = 0
     }
 }
-
-
 
 class ChatInspector {
 
