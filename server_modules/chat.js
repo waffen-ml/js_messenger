@@ -227,8 +227,9 @@ class Chat {
     }
 
     async getView(userid) {
+        let memberDetails = await this.getMemberDetails(userid)
         let info = await this.getInfo()
-        let messages = await this.getMessages(-1, 1, userid, focus)
+        let messages = await this.getMessages(-1, 1, userid, memberDetails.focus)
 
         info.lm = messages[0]
         info.unread = await this.getUnreadCount(userid)
