@@ -219,7 +219,7 @@ class ChatInspector {
             this.chat.info.members.push(...usersToAdd)
             this.lazyLists['members'].lazyList.toggleLoading(true)
 
-            //await this.chat.addMembers(usersToAdd.map(u => u.id))
+            await this.chat.addMembers(usersToAdd.map(u => u.id))
 
             return true
         })
@@ -1287,6 +1287,13 @@ class Chat {
             location.replace('/')
         })
 
+        socket.on('new_member', member => {
+            if(this.info.members.some(m => m.id == member.id))
+                return
+
+            this.info.members.push(member)
+        })
+
         socket.on('typing_status', msg => {
             if(msg.id == this.me.id)
                 return
@@ -1338,6 +1345,15 @@ class Chat {
         .then(r => {
             if(r.success)
                 this.interface.clearInput()
+        })
+    }
+
+    addMembers(ids) {
+        return fetch(`/addmembers?chatid=${this.chatid}&ids=` + ids.join(','))
+        .then(r => r.json())
+        .then(r => {
+            if(!r.success)
+                alert('Ошибка!')
         })
     }
 
