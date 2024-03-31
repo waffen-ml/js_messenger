@@ -63,9 +63,9 @@ class Chat {
         return this.cfx.query('select max(id) as lmid from message where chat_id=?', [this.id])
         .then((w) => {
             let lmid = w[0].lmid ?? 0
-            userIds.forEach(uid => this.cfx.query(
+            return Promise.all(userIds.map(uid => this.cfx.query(
                 `insert into chat_member(chat_id, user_id, last_read, focus) 
-                values(?, ?, ?, ?)`, [this.id, uid, lmid, lmid + 1]))
+                values(?, ?, ?, ?)`, [this.id, uid, lmid, lmid + 1])))
         })
     }
 
@@ -429,8 +429,8 @@ class ChatSystem {
         [name, isPublic, isDirect, avatarId])
         .then((r) => {
             let chat = new Chat(this.cfx, r.insertId, name)
-            chat.addMembers(members??[])
-            return chat
+            return chat.addMembers(members??[])
+            .then(() => chat)
         })
     }
 
