@@ -304,9 +304,10 @@ class Chat {
     getMemberDetails(userid) {
         return this.cfx.query(`select * from chat_member where user_id=? and chat_id=?`, [userid, this.id])
         .then(r => {
-            r.focus ??= 0
-            r.last_read ??= 0
-            return r
+            let d = r[0] ?? {}
+            d.focus ??= 0
+            d.last_read ??= 0
+            return d
         })
     }
 }
