@@ -101,7 +101,7 @@ class Chat {
             for(let i = 0; i < messages.length; i++) {
                 if(messages[i].sender_id != myid)
                     continue
-                messages[i].read = parseInt(messages[i].id) <= lr
+                messages[i].read = parseInt(messages[i].id) <= maxlr
             }
         }
         
