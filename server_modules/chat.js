@@ -69,11 +69,10 @@ class Chat {
         let lmid = await this.cfx.query('select max(id) as lmid from message where chat_id=?', [this.id])
             .then(r => r[0].lmid ?? 0)
 
-        console.log(userids)
-
-        await Promise.all([
-            async () => console.log(userids)
-        ])
+        await new Promise((resolve) => {
+            console.log(userids)
+            resolve(1)
+        })
     }
 
     async getMessages(start, count, myid, focus) {
