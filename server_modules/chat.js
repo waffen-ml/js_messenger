@@ -302,7 +302,6 @@ class Chat {
 
         // removing all notifications by reading all remaining messages
         await this.cfx.query(`update chat_member set last_read=(select max(id) from message) where chat_id=?`, [this.id])
-
         await this.notifyAllMembers()
     }
 }
@@ -466,7 +465,7 @@ class ChatSystem {
     }
 
     async deleteChat(id) {
-        let chat = this.getChat(id)
+        let chat = await this.getChat(id)
         await chat.prepareToBeDeleted()
         await this.cfx.query(`delete from chat where id=?`, chat.id)
     }
