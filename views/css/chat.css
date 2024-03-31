@@ -633,11 +633,25 @@ ul.attached {
     display:none;
     width:100%;
     min-height:200px;
-    max-height:
+    max-height:400px;
 }
 
 .chat-inspect .tab-view .active {
     display: block;
+}
+
+.chat-inspect .members-holder {
+    display: flex;
+    flex-direction: column;
+    gap:6px;
+}
+
+.chat-inspect .members-holder .member {
+    display:grid;
+    grid-template-rows:auto auto;
+    grid-template-columns: auto 1fr auto;
+    column-gap:10px;
+    row-gap:5px;
 }
 
 
