@@ -1022,7 +1022,7 @@ class Chat {
     updateInfo() {
         return fetch(`/getchatinfo?id=${this.chatid}&members=0`)
         .then(r => r.json())
-        .then(info => {w
+        .then(info => {
             this.info.name = info.name
             this.info.description = info.description
             this.info.avatar_id = info.avatar_id
