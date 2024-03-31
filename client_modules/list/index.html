@@ -1,0 +1,13 @@
+<script type="text/x-ejs-template" template="user-checklist">
+    <ul class="styled-scroll user-checklist">
+        <% users.forEach(user => {%>
+            <li>
+                <a class="button light">
+                    <img src="/getuseravatar?id=<%=user.id%>" alt="" class="avatar">
+                    <span class="finite name"><%= user.name %></span>
+                    <input type="checkbox" id="user<%=user.id%>">
+                </a>
+            </li>
+        <% } %>
+    </ul>
+</script>

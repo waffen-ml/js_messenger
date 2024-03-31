@@ -1,0 +1,22 @@
+class UserChecklist {
+    constructor(users) {
+        this.users = users
+        this.checked = new Array(users.length).fill(false)
+        this.element = templateManager.createElement('user-checklist', {users: users})
+        this.onchange = () => {}
+
+        this.element.querySelectorAll('a.button').forEach((button, i) => {
+            let checkbox = button.querySelector('input')
+
+            button.addEventListener('click', () => {
+                this.checked[i] = !this.checked[i]
+                checkbox.checked = this.checked[i]
+                this.onchange()
+            })
+        })
+    }
+
+    getChecked() {
+        return this.checked
+    }
+}

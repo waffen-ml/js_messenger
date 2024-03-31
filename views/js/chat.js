@@ -180,9 +180,48 @@ class ChatInspector {
         this.setupActions() 
     }
 
+    async openNewMembersPopup() {
+        let friends = await fetch('/getfriends')
+            .then(r => r.json())
+
+        let ignoreIds = new Set()
+        this.chat.info.members.forEach(m => ignoreIds.add(parseInt(m.id)))
+
+        let potentialMembers = friends.filter(f => !ignoreIds.has(parseInt(f.id)))
+
+        if(!potentialMembers.length) {
+            alert('У вас нет друзей, которых можно добавить сюда.')
+            return
+        }
+
+        let popup = new Popup({
+            closable:true,
+            title: 'Добавить друзей'
+        })
+
+        let userChecklist = new UserChecklist(potentialMembers)
+
+        popup.content.appendChild(userCheckList)
+
+        popup.addOption('Отмена', () => true)
+        popup.addOption('Добавить', () => {
+            let checked = userChecklist.getChecked()
+            let p = []
+            userChecklist.forEach((u, i) => {
+                if(checked[i])
+                    p.push(u.tag)
+            })
+            alert('add: ' + p.join())
+            return true
+        })
+
+
+    }
+
     setupActions() {
         let deleteChat = this.popup.querySelector('.actions .delete-chat')
         let clearHistory = this.popup.querySelector('.actions .clear-history')
+        let addMembers = this.popup.querySelector('.actions .add-members')
 
         if(deleteChat) {
             deleteChat.addEventListener('click', () => {
@@ -195,6 +234,14 @@ class ChatInspector {
             if(confirm('Вы уверены?'))
                 this.chat.clearHistory()
         })
+
+        if(addMembers) {
+            addMembers.addEventListener('click', () => {
+                this.openNewMembersPopup()
+            })
+        }
+
+
     }
 
     loadFilesFromMyHistory(...mt) {
@@ -1014,7 +1061,6 @@ class Chat {
             body: fd
         }).then(r => r.json())
         .then(r => {
-            console.log('WEWQEW')
             console.log(r)
         })
     }
