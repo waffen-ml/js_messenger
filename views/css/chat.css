@@ -606,11 +606,14 @@ ul.attached {
     display: block;
 }
 
-.chat-inspect .members-holder,
-.chat-inspect .audio-holder {
+.chat-inspect .flex-holder {
     display: flex;
     flex-direction: column;
     gap:4px;
+}
+
+.chat-inspect .flex-holder > * {
+    flex-shrink: 0;
 }
 
 .chat-inspect .members-holder .member {
