@@ -691,7 +691,7 @@ ul.attached {
     height:100%;
 }
 
-.chat-inspect .visual-wrapper video::before {
+.chat-inspect .visual-wrapper::before {
    content:'▶';
    position:absolute;
    top:50%;
