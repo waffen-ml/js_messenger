@@ -589,14 +589,49 @@ ul.attached {
 }
 
 
+.chat-inspect .content {
+    display:flex;
+    flex-direction: column;
+    gap:6px;
+}
+
 .chat-inspect .chat-link {
     padding:7px;
     width:100%;
-    margin-top:7px;
 }
 
 .chat-inspect .actions {
     display:flex;
     flex-wrap:wrap;
-    
+    gap:5px;
 }
+
+.chat-inspect .tab-view {
+    display:flex;
+    flex-direction:column
+}
+
+.chat-inspect .tab-view .controls {
+    width:100%;
+    display:flex;
+    gap:5px;
+
+}
+
+.chat-inspect .tab-view .controls .chosen {
+    outline:black 1px solid;
+}
+
+.chat-inspect .tab-view .tab {
+    display:none;
+    width:100%;
+    min-height:200px;
+    max-height:
+}
+
+.chat-inspect .tab-view .active {
+    display: block;
+}
+
+
+

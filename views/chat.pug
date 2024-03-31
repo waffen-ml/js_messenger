@@ -80,15 +80,15 @@ block main
             a.button.add-members Добавить участников
             <% }; %>
         .tab-view
-            .tabs
+            .controls
                 a.button#open-members Участники
                 a.button#open-media Медиа
                 a.button#open-audio Аудио
                 a.button#open-other Другое
-            .tab#members
-            .tab#media 
-            .tab#audio 
-            .tab#other 
+            .tab.styled-scroll#members
+            .tab.styled-scroll#media 
+            .tab.styled-scroll#audio 
+            .tab.styled-scroll#other 
     
     script(type="text/x-ejs-template", template="chat-memberlist-item")
         a.button.light.member(href!="/user?id=<%=id%>", class!="<%= utils.classAttr({admin: admin, 'can-delete': canDelete}) %>") 
