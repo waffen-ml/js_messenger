@@ -138,7 +138,7 @@ class ChatInspector {
                         name: item.name,
                         lastSeen: item.last_seen
                     })
-                }, 20)
+                }, 10)
         })
 
         this.chat.getFilesWithMimetype('audio')
@@ -158,7 +158,7 @@ class ChatInspector {
                 this.popup.querySelector('.tab#media'),
                 (item) => {
                     return templateManager.createElement('chat-medialist-item', item)
-                }, 10)
+                }, 5)
             this.audioLazyList.lazyList.onload = () => setupInspectObjects(
                 this.popup.querySelector('#media'))
         })
