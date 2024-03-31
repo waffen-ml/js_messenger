@@ -215,6 +215,7 @@ class ChatInspector {
             return true
         })
 
+        popup.open()
 
     }
 
