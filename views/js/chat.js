@@ -200,6 +200,8 @@ class ChatInspector {
     loadFilesFromMyHistory(...mt) {
         return this.chat.getFilesWithMimetype(...mt)
         .then(files => {
+            console.log('FILES')
+            console.log(files)
             return files.filter(f => f.message_id >= this.chat.me.focus)
         })
     }
