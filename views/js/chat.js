@@ -118,7 +118,7 @@ class ChatInspector {
         
         this.popup.content.querySelectorAll('.controls a')
             .forEach(a => a.classList.remove('chosen'))
-        this.popup.content.querySelector('.controls a#' + id).classList.add('chosen')
+        this.popup.content.querySelector('.controls a#show-' + id).classList.add('chosen')
     }
 
     toggleUnsavedHandling(state) {
