@@ -11,11 +11,12 @@
 
 .user-checklist li {
     width:100%;
+    overflow: hidden;
 } 
 
 .user-checklist li .button {
     display:flex;
-    gap:6px;
+    gap:8px;
     align-items:center;
     width:100%;
 }
@@ -24,6 +25,12 @@
     width:100%;
 }
 
+.user-checklist .avatar {
+    height:45px;
+}
+
 .user-checklist input {
     pointer-events: none;
+    aspect-ratio: 1;
+    width:20px;
 }
