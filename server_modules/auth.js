@@ -245,6 +245,13 @@ exports.init = (cfx) => {
         })
     })
 
+    cfx.core.safeGet('/getuserinfo', (_, req, res) => {
+        return cfx.auth.getUser(req.query.id, req.query.tag)
+        .then(data => {
+            return data ?? {}
+        })
+    })
+
     cfx.core.safeGet('/getuser', (_, req, res) => {
         return cfx.auth.getUser(req.query.id, req.query.tag)
         .then(data => {

@@ -26,11 +26,17 @@ class LazyLoadingList {
         this.items = []
         this.loadDistance = loadDistance
 
-        this.loadBatch(this.startBatchSize)
+        this.reload()
 
         this.scrollPage.addEventListener('scroll', () => {
             this.loadIfNeeded()
         })
+    }
+
+    reload() {
+        this.items = []
+        this.holder.innerHTML = ''
+        this.loadIfNeeded(this.startBatchSize)
     }
 
     loadIfNeeded() {
@@ -75,6 +81,12 @@ class LazyShowingList {
             },
         batchSize, startBatchSize, loadDistance)
     }
+
+    restart(newItems) {
+        this.lazyList.reload()
+        this.items = newItems ?? this.items
+        this.nextToLoad = 0
+    }
 }
 
 
@@ -108,6 +120,37 @@ class ChatInspector {
             .forEach(button => {
                 button.onclick = () => this.showTab(button.getAttribute('id').split('-')[1])
             })
+
+        this.showTab('members')
+
+        this.chat.updateAllMembersLastSeenStatus()
+        .then(() => {
+            this.setupLazyLists(this.chat.info.members)
+        })
+    }
+
+    updateMembers() {
+
+    }
+
+    setupLazyLists(members) {
+        this.membersLazyList = new LazyShowingList(
+            members, this.popup.querySelector('.members-holder'),
+            this.popup.querySelector('.tab#members'),
+            (item) => {
+                return templateManager.createElement('chat-memberlist-item', {
+                    admin: item.is_admin,
+                    canDelete: this.chat.me.is_admin,
+                    id: item.id,
+                    name: item.name,
+                    lastSeen: item.last_seen
+                })
+            }, 10, null, null)
+        
+    }
+
+    updateMembers() {
+
 
     }
 
@@ -1136,6 +1179,17 @@ class Chat {
         socket.on('update_info', () => {
             this.updateInfo()
         })
+    }
+
+    updateAllMembersLastSeenStatus() {
+        return this.info.members.forEach(
+            member => fetch('/getuserinfo?id=' + member.id)
+            .then(r => r.json())
+            .then(r => {
+                member.last_seen = r.last_seen
+                return member
+            })
+        )
     }
 
     readMessages() {
