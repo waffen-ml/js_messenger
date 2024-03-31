@@ -92,6 +92,7 @@ block main
             .tab.styled-scroll#audio 
                 .flex-holder
             .tab.styled-scroll#other 
+                .flex-holder
     
     script(type="text/x-ejs-template", template="chat-memberlist-item")
         a.button.light.member(href!="/user?id=<%=id%>", class!="<%= utils.classAttr({admin: admin, 'can-delete': canDelete}) %>") 
@@ -115,3 +116,6 @@ block main
             <% } else { %>
             video(src!="/file?id=<%=id%>", preload="metadata") 
             <% }; %>
+
+    script(type="text/x-ejs-template", template="chat-otherlist-item")
+        a(href!="/file?id=<%=id%>", download) <%=name%>

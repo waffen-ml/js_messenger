@@ -162,9 +162,19 @@ class ChatInspector {
                 this.popup.querySelector('.tab#media'),
                 (item) => {
                     return templateManager.createElement('chat-medialist-item', item)
-                }, 5)
+                }, 15)
             this.lazyLists['media'].lazyList.onload = () => setupInspectObjects(
                 this.popup.querySelector('#media'))
+        })
+
+        this.chat.getFilesWithMimetype('other')
+        .then(files => {
+            this.lazyLists['other'] = new LazyShowingList(
+                files.reverse(), this.popup.querySelector('#other .flex-holder'),
+                this.popup.querySelector('.tab#other'),
+                (item) => {
+                    return templateManager.createElement('chat-otherlist-item', item)
+                }, 25)
         })
 
 
