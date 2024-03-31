@@ -66,16 +66,16 @@ class Chat {
 
     async addMembers(userids, exec) {
 
-        console.log(userids)
-
         let lmid = await this.cfx.query('select max(id) as lmid from message where chat_id=?', [this.id])
             .then(r => r[0].lmid ?? 0)
 
         for(const uid of userids) {
+            console.log(uid)
+            continue
             let existResponse = await this.cfx.query(`select * from chat_member where chat_id=? and user_id=?`, [this.id, uid])
 
             if(existResponse.length > 0)
-                return
+                continue
 
             await this.cfx.query(
                 `insert into chat_member(chat_id, user_id, last_read, focus) 
