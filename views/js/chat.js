@@ -147,6 +147,7 @@ class ChatInspector {
                 files, this.popup.querySelector('.audio-holder'),
                 this.popup.querySelector('.tab#audio'),
                 (item) => {
+                    console.log(item)
                     return templateManager.createElement('chat-audiolist-item', item)
                 }, 10
             )
