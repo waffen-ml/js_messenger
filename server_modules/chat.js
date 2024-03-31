@@ -69,16 +69,16 @@ class Chat {
         let lmid = await this.cfx.query('select max(id) as lmid from message where chat_id=?', [this.id])
             .then(r => r[0].lmid ?? 0)
 
-        for(let i = 0; i < userids.length; i++) {
-            let existResponse = await this.cfx.query(`select * from chat_member where chat_id=? and user_id=?`, [this.id, userids[i]])
+        for(const uid of userids) {
+            let existResponse = await this.cfx.query(`select * from chat_member where chat_id=? and user_id=?`, [this.id, uid])
 
             if(existResponse.length > 0)
                 continue
 
             await this.cfx.query(`insert into chat_member(chat_id, user_id, last_read, focus) values (?, ?, ?, ?)`,
-                [this.id, userids[i], lmid, lmid + 1])
+                [this.id, uid, lmid, lmid + 1])
 
-            let user = await this.cfx.auth.getUser(userids[i])
+            let user = await this.cfx.auth.getUser(uid)
             user.is_admin = false
             user.is_owner = false
 
@@ -562,7 +562,8 @@ exports.init = (cfx) => {
     cfx.core.safeGet('/addmembers', (exec, req, res) => {
         return cfx.chats.accessChat(exec, req.query.chatid, true)
         .then(chat => {
-            let ids = req.query.ids.split(',').map(w => parseInt(w))
+            let ids = req.query.ids.split(',')//.map(w => parseInt(w))
+            console.log(ids)
             return chat.addMembers(ids, exec)
         })
         .then(() => {
