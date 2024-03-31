@@ -300,7 +300,7 @@ class Chat {
     }
 
     async clearHistory(userid) {
-        let mxid = await this.cfx.query(`select max(id) from message where chat_id=?`, [this.id])
+        let mxid = await this.cfx.query(`select max(id) as mxid from message where chat_id=?`, [this.id]).then(r => r[0].mxid)
         return this.cfx.query(`update chat_member set focus=? where chat_id=? and user_id=?`, [mxid + 1, this.id, userid])
     }
 }
