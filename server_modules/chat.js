@@ -70,7 +70,7 @@ class Chat {
             .then(r => r[0].lmid ?? 0)
 
         await new Promise((resolve) => {
-            console.log(typeof userids[0])
+            console.log(`${userids[0]}`)
             resolve(1)
         })
     }
