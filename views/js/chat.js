@@ -181,10 +181,16 @@ class ChatInspector {
     }
 
     setupActions() {
-        this.popup.querySelector('.actions .delete-chat').addEventListener('click', () => {
-            if(confirm('Вы уверены?'))
-                this.chat.delete()
-        })
+        let deleteChat = this.popup.querySelector('.actions .delete-chat')
+        let clearHistory = this.popup.querySelector('.actions .clear-history')
+
+        if(deleteChat) {
+            deleteChat.addEventListener('click', () => {
+                if(confirm('Вы уверены?'))
+                    this.chat.delete()
+            })
+        }
+
         this.popup.querySelector('.actions .clear-history').addEventListener('click', () => {
             if(confirm('Вы уверены?'))
                 this.chat.clearHistory()
