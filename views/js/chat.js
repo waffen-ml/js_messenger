@@ -43,6 +43,7 @@ class LazyLoadingList {
     loadIfNeeded() {
         let reminder = this.scrollPage.scrollHeight - 
                 this.scrollPage.scrollTop - this.scrollPage.clientWidth
+        console.log('REMINDER: ' + reminder)
         if (reminder < this.loadDistance)
             this.loadBatch(this.batchSize)
     }
