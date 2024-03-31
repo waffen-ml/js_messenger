@@ -11,6 +11,7 @@ body {
 }
 
 .attention-banner {
+    display:none;
     position:absolute;
     height:60%;
     aspect-ratio: 9/16;

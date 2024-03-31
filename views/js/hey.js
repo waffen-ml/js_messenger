@@ -44,5 +44,5 @@ function cycle(i) {
 
 }
 
-cycle(1)
-cycle(2)
+//cycle(1)
+//cycle(2)
