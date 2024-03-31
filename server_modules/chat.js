@@ -233,8 +233,6 @@ class Chat {
 
         info.lm = messages[0]
 
-        console.log(this.id + ' ' + info.lm.id + ' ' + memberDetails.focus)
-
         info.unread = await this.getUnreadCount(userid)
         info.focus = memberDetails.focus
         info.last_read = memberDetails.last_read
