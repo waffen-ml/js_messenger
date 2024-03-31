@@ -102,4 +102,5 @@ block main
             button.button.delete-member 🗑️            
     
     script(type="text/x-ejs-template", template="chat-audiolist-item")
-        audio(src!="/file?id=<%=id%>" contols)
+        audio(contols)
+            source (src!="/file?id=<%=id%>")
