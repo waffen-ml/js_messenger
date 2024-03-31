@@ -18,7 +18,7 @@ class LazyLoadingList {
         this.holder = holder
         this.scrollPage = scrollPage ?? holder
         this.isLoading = false
-        this.reachedEnd = false
+        this.allowLoading = false
         this.batchSize = batchSize
         this.startBatchSize = startBatchSize ?? batchSize
         this.load = load
@@ -34,6 +34,11 @@ class LazyLoadingList {
         })
     }
 
+    toggleLoading(state) {
+        this.allowLoading = state
+        this.loadIfNeeded()
+    }
+
     reload() {
         this.items = []
         this.holder.innerHTML = ''
@@ -44,24 +49,20 @@ class LazyLoadingList {
         let reminder = this.scrollPage.scrollHeight - 
                 this.scrollPage.scrollTop - this.scrollPage.clientHeight
         
-        console.log(this.scrollPage.scrollHeight + ' ' + this.scrollPage.clientHeight)
-
         if (reminder < this.loadDistance)
             this.loadBatch(this.batchSize)
     }
 
     async loadBatch(size) {
-        if(this.isLoading || this.reachedEnd)
+        if(this.isLoading || !this.allowLoading)
             return
 
         this.isLoading = true
         
         let newItems = await this.load(size)
 
-        console.log(newItems)
-
         if (newItems.length < size)
-            this.reachedEnd = true
+            this.toggleLoading(false)
 
         this.items.push(...newItems)
         newItems.forEach(item => {
@@ -127,9 +128,11 @@ class ChatInspector {
 
         this.showTab('members')
 
+        this.lazyLists = {}
+
         this.chat.updateAllMembersLastSeenStatus()
         .then(() => {
-            this.membersLazyList = new LazyShowingList(
+            this.lazyLists['members'] = new LazyShowingList(
                 this.chat.info.members, this.popup.querySelector('#members .flex-holder'),
                 this.popup.querySelector('.tab#members'),
                 (item) => {
@@ -145,7 +148,7 @@ class ChatInspector {
 
         this.chat.getFilesWithMimetype('audio')
         .then(files => {
-            this.audioLazyList = new LazyShowingList(
+            this.lazyLists['audio'] = new LazyShowingList(
                 files.reverse(), this.popup.querySelector('#audio .flex-holder'),
                 this.popup.querySelector('.tab#audio'),
                 (item) => {
@@ -155,13 +158,13 @@ class ChatInspector {
 
         this.chat.getFilesWithMimetype('image', 'video')
         .then(files => {
-            this.audioLazyList = new LazyShowingList(
+            this.lazyLists['media'] = new LazyShowingList(
                 files.reverse(), this.popup.querySelector('#media .grid-holder'),
                 this.popup.querySelector('.tab#media'),
                 (item) => {
                     return templateManager.createElement('chat-medialist-item', item)
                 }, 5)
-            this.audioLazyList.lazyList.onload = () => setupInspectObjects(
+            this.lazyLists['media'].lazyList.onload = () => setupInspectObjects(
                 this.popup.querySelector('#media'))
         })
 
@@ -185,6 +188,8 @@ class ChatInspector {
         this.popup.content.querySelectorAll('.controls a')
             .forEach(a => a.classList.remove('chosen'))
         this.popup.content.querySelector('.controls #show-' + id).classList.add('chosen')
+
+        lazyLists[id].lazyList.toggleLoading(true)
     }
 
     toggleUnsavedHandling(state) {
