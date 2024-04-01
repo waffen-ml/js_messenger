@@ -68,7 +68,7 @@ body {
     background:#50adff;
     content:attr(num);
     top:-3px;
-    right:-10px;
+    right:-5px;
     padding:4px;
     border-radius:10px;
     font-size:17px;
