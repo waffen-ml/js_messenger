@@ -60,7 +60,7 @@ body {
     background-repeat: no-repeat;
     background-size:80%;
     overflow:visible;
-    margin-right:5px;
+    margin-right:10px;
 }
 
 .main-grid header .burger[num]::after {
