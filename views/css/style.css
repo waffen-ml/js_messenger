@@ -58,7 +58,6 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size:90%;
-
 }
 
 .main-grid > * {
@@ -111,7 +110,7 @@ a.button {
 }
 
 a.button:hover {
-    background:#3b2f2f33;
+    background-color:#3b2f2f33;
 }
 
 header {
@@ -278,7 +277,7 @@ input.thin {
 }
 
 input:not([type="button"]):focus, textarea:focus, input[type=button]:hover, input[type=submit]:hover, .block.responsible:hover {
-    background:#3b2f2f30;
+    background-color:#3b2f2f30;
 }
 
 input[type=file] {
