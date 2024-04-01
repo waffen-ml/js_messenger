@@ -27,12 +27,13 @@ html
                 header 
                     .logo 
                         a.button.light(href="/") ☕tox
-                    .current 
-                        if user
-                            a.clean(href="/user?id=" + user.id)= user.name
-                            a.button.light(href="/logout", recurrent) 🚪
-                        else
-                            a.clean(href="/form?name=login", recurrent) Вход
+                    .right 
+                        .current 
+                            if user
+                                a.clean(href="/user?id=" + user.id)= user.name
+                                a.button.light(href="/logout", recurrent) 🚪
+                            else
+                                a.clean(href="/form?name=login", recurrent) Вход
                         a.burger.clean(href="javascript:callMenu()") МЕНЮ
                 +nav(nav, true)
                 main.styled-scroll
