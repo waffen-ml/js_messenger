@@ -151,7 +151,7 @@ class ChatInspector {
                     return
                 }
 
-                let i = this.chat.info.members.findIndex(w => w.id == member.id)
+                let i = this.lazyLists['members'].items.findIndex(w => w.id == member.id)
                 this.lazyLists['members'].deleteItem(i)
             }
         }
