@@ -6,6 +6,15 @@ mixin nav(n, light)
                 span.label= n[k].text
                 span.unread.zero
 
+mixin current(user, logout)
+    .current 
+        if user
+            a.clean(href="/user?id=" + user.id)= user.name
+            if logout
+                a.button.light(href="/logout", recurrent) 🚪
+        else
+            a.clean(href="/form?name=login", recurrent) Вход
+
 doctype html 
 html 
     head
@@ -28,12 +37,7 @@ html
                     .logo 
                         a.button.light(href="/") ☕tox
                     .right 
-                        .current 
-                            if user
-                                a.clean(href="/user?id=" + user.id)= user.name
-                                a.button.light(href="/logout", recurrent) 🚪
-                            else
-                                a.clean(href="/form?name=login", recurrent) Вход
+                        +current(user, true)
                         a.burger.clean(href="javascript:callMenu()") МЕНЮ
                 +nav(nav, true)
                 main.styled-scroll
@@ -41,7 +45,9 @@ html
         
         script(type="text/x-ejs-template", template="menu")
             .wrapper 
-                +nav(nav)
+                .menu-body
+                    +current(user, false)
+                    +nav(nav)
                 .menu-footer
                     img(src=`/public/stickers/capybara/${utils.getRandomInt(0, 47)}.png`, style="height:100px;")
                     span(style="display:block;margin-top:8px;") CoffeeTox 2024
