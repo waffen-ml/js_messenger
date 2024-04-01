@@ -98,47 +98,7 @@
     background-color:#5db3ff68;
 }
 
-.friendlist {
-    overflow-y:auto;
-    max-height:300px;
+.chat-settings .user-checklist {
+    max-height:400px;
     margin-top:10px;
-    padding:5px;
 }
-
-.friendlist li {
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding-bottom:5px;
-    cursor:pointer;
-}
-
-.friendlist li .name {
-    pointer-events: none;
-    user-select: none;
-}
-
-.friendlist li:hover {
-    background:#0000000e !important;
-}
-
-.friendlist li:nth-child(2n) {
-    background:#00000010;
-}
-
-.friendlist .avatar {
-    height:50px;
-}
-
-.friendlist a {
-    font-size:19px;
-}
-
-.friendlist .include-friend {
-    cursor:pointer;
-    margin-left:auto;
-    margin-right:10px;
-    width:20px;
-    height:20px;
-}
-

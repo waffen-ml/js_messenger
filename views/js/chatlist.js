@@ -111,6 +111,7 @@ document.querySelector('.create-chat').addEventListener('click', async () => {
     let popup = new Popup({
         closable: true,
         title: 'Создать чат',
+        className: 'create-chat',
         html:   templateManager.createHTML('create-chat')
     })
 
