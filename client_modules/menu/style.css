@@ -30,7 +30,12 @@
   align-items: center;
 }
 
+.popup.menu .menu-body {
+  width:100%;
+}
+
 .popup.menu nav {
+  margin-top:8px;
   gap:5px;
   padding:0;
   padding-right:10px;

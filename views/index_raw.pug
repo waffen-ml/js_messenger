@@ -49,7 +49,7 @@ html
                     if user
                         .current 
                             span Аккаунт:
-                            a.button.account.finite(href="/user?tag=" + user.tag)= '@' + user.tag
+                            a.button.light.account.finite(href="/user?tag=" + user.tag)= '@' + user.tag
                     +nav(nav, false, !Boolean(user), Boolean(user))
                 .menu-footer
                     img(src=`/public/stickers/capybara/${utils.getRandomInt(0, 47)}.png`, style="height:100px;")
