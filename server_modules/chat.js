@@ -612,7 +612,7 @@ exports.init = (cfx) => {
     cfx.core.safeGet('/leavechat', (exec, req, res) => {
         return cfx.chats.accessChat(exec, req.query.id)
         .then(chat => {
-            chat.removeMember(exec.id, exec)
+            return chat.removeMember(exec.id, exec)
         })
         .then(() => {
             return {success: 1}
