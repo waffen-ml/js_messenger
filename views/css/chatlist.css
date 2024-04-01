@@ -100,11 +100,10 @@
 
 
 .create-chat .list-wrapper {
-    padding:7px;
-    max-height:200px;
+    padding:5px;
     margin-top:10px;
 }
 
 .create-chat .user-checklist {
-    max-height:100%;
+    max-height:200px;
 }
