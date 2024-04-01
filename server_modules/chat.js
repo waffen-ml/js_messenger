@@ -608,7 +608,13 @@ exports.init = (cfx) => {
     // setters
 
     cfx.core.safeGet('/leavechat', (exec, req, res) => {
-
+        return this.accessChat(exec, req.query.id)
+        .then(chat => {
+            chat.removeMember(exec.id, exec)
+        })
+        .then(() => {
+            return {success: 1}
+        })
     })
 
     cfx.core.safeGet('/addmembers', (exec, req, res) => {
