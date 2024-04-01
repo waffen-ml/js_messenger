@@ -338,7 +338,7 @@ class Chat {
         //ownership transferring
 
         if(info.owner_id == userid) {
-            let otherAdmins = await this.cfx.query(`select * from chat_member where chat_id=? and user_id!=? and admin=1`, [this.id, userid])
+            let otherAdmins = await this.cfx.query(`select * from chat_member where chat_id=? and user_id!=? and is_admin=1`, [this.id, userid])
             
             if(!otherAdmins.length)
                 throw Error('no_possible_owner')
