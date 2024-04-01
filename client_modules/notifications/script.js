@@ -2,7 +2,20 @@ const notificationWindow = document.querySelector('.notification')
 const textHolder = notificationWindow.querySelector('.text')
 const imageHolder = notificationWindow.querySelector('.avatar')
 const titleHolder = notificationWindow.querySelector('.title')
+const burgerButton = document.querySelector('header .burger')
 let hideTimeout = null
+let unreadTable = {}
+
+function updateBurgerUnread() {
+    let c = 0
+
+    Object.values(unreadTable).forEach(v => c += v)
+
+    if(c == 0)
+        burgerButton.removeAttribute('num')
+    else
+        burgerButton.setAttribute('num', c)
+}
 
 function updateMenuUnread(unread, menu) {
     Object.keys(unread).forEach(name => {
@@ -20,7 +33,10 @@ function updateMenuUnread(unread, menu) {
 }
 
 function updateUnread(unread) {
-    console.log(unread)
+    Object.keys(unread).forEach(k => {
+        unreadTable[k] = unread[k]
+    })
+    updateBurgerUnread()
     document.querySelectorAll('nav').forEach(nav => {
         updateMenuUnread(unread, nav)
     })
