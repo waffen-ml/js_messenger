@@ -99,6 +99,7 @@
 }
 
 .create-chat .user-checklist {
-    max-height:400px;
+    max-height:200px;
     margin-top:10px;
+    outline:solid 1px black;
 }
