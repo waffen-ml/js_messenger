@@ -67,7 +67,7 @@ body {
     position:absolute;
     background:#50adff;
     content:attr(num);
-    top:0;
+    top:-3px;
     right:-10px;
     padding:4px;
     border-radius:10px;
