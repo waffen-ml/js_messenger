@@ -374,11 +374,10 @@ class Chat {
 
         // member deletion
 
-        await this.cfx.query(`delete from chat_member where chat_id=? and user_id=?`, [this.id, userid])
-            .then((a, b) => {
-                console.log(a)
-                console.log(b)
-            })
+        let r = await this.cfx.query(`delete from chat_member where chat_id=? and user_id=?`, [this.id, userid])
+        
+        if(r.affectedRows == 0)
+            throw Error('could_not_delete')
 
         let hasMembers = this.cfx.query(`select * from chat_member where chat_id=? and user_id=? limit 1`, [this.id, userid])
             .then(r => r.length > 0)
