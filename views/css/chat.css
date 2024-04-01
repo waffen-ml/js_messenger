@@ -576,7 +576,6 @@ ul.attached {
     display:flex;
     flex-wrap:wrap;
     gap:5px;
-    width:100%;
 }
 
 .chat-inspect .tab-view {
