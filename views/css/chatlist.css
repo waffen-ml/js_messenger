@@ -98,7 +98,13 @@
     background-color:#5db3ff68;
 }
 
-.create-chat .user-checklist {
+
+.create-chat .list-wrapper {
+    padding:7px;
     max-height:200px;
     margin-top:10px;
+}
+
+.create-chat .user-checklist {
+    max-height:100%;
 }
