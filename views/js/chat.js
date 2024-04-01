@@ -300,7 +300,6 @@ class ChatInspector {
 
 }
 
-
 class TypingListener {
 
     constructor(timeoutSeconds, intervalSeconds, onstart, onupdate, onstop) {
