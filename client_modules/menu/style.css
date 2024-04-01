@@ -19,6 +19,7 @@
   box-sizing: border-box;
   padding-top:10px;
   padding-bottom:10px;
+  align-items: start;
 }
 
 .popup.menu .current {
@@ -31,6 +32,9 @@
 
 .popup.menu nav {
   gap:5px;
+  padding:0;
+  padding-right:10px;
+  max-width:300px;
 }
 
 @keyframes menu-appear {
