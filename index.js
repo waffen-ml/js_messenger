@@ -32,6 +32,10 @@ app.use('/node_modules', express.static(__dirname + '/node_modules/'));
 function render(req, res, page, params) {
     res.render(page, {
         nav: {
+            'login': {
+                text: 'Войти',
+                link: '/form?name=login'
+            },
             'messages': {
                 text: 'Сообщения',
                 link: '/chatlist'
