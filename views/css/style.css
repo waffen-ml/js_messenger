@@ -69,7 +69,7 @@ body {
     content:attr(num);
     top:0;
     right:0;
-    transform:translate(50%, 0);
+    transform:translate(25%, 0);
     padding:4px;
     border-radius:10px;
     font-size:17px;
