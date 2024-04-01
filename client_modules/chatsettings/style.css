@@ -20,7 +20,7 @@
 }
 
 .chat-settings .avatar {
-    height:70px;
+    height:100px;
     cursor:pointer;
 }
 
@@ -41,6 +41,7 @@
     display:flex;
     gap:5px;
     flex-direction: column;
+    max-width:unset;
 }
 
 
