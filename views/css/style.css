@@ -122,10 +122,6 @@ header {
     font-family: 'Comic Sans MS'
 }
 
-header .right {
-    display:flex;
-}
-
 header .current {
     display:flex;
     gap:8px;

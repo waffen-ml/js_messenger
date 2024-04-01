@@ -14,11 +14,10 @@
 .popup.menu .wrapper {
   display:flex;
   flex-direction: column;
-  padding-top:30px;
   justify-content: space-between;
   height: 100%;
   box-sizing: border-box;
-  padding-top:20px;
+  padding-top:10px;
   padding-bottom:10px;
 }
 

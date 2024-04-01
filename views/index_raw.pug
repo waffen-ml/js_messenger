@@ -1,6 +1,6 @@
 
-mixin nav(n, light)
-    nav
+mixin nav(n, light, login, logout)
+    nav(class=(login&&'login') + (logout&&'logout'))
         each k in Object.keys(n)
             a.button(href=n[k].link, id='nav' + k, class=light&&"light")
                 span.label= n[k].text
@@ -39,15 +39,16 @@ html
                     .right 
                         +current(user, true)
                         a.burger.clean(href="javascript:callMenu()") МЕНЮ
-                +nav(nav, true)
+                +nav(nav, true, false, false)
                 main.styled-scroll
                     block main
         
         script(type="text/x-ejs-template", template="menu")
             .wrapper 
                 .menu-body
-                    +current(user, false)
-                    +nav(nav)
+                    if user
+                        a.button.account.finite(href="/user?id=" + user.id)= user.name
+                    +nav(nav, false, !user, true)
                 .menu-footer
                     img(src=`/public/stickers/capybara/${utils.getRandomInt(0, 47)}.png`, style="height:100px;")
                     span(style="display:block;margin-top:8px;") CoffeeTox 2024
