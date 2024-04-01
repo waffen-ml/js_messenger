@@ -20,7 +20,7 @@ class Chat {
         .then(r => r.length > 0)
     }
 
-    toggleAdmin(userid, state, exec) {
+    async toggleAdmin(userid, state, exec) {
         await this.cfx.query(`update chat_member set is_admin=? where user_id=? and chat_id=?`,
             [state? 1 : 0, userid, this.id])
 
