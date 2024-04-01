@@ -1,6 +1,6 @@
 
 mixin nav(n, light, login, logout)
-    nav(class=(login&&'login') + (logout&&'logout'))
+    nav(class=`${login&&'login'} ${logout&&'logout'}`)
         each k in Object.keys(n)
             a.button(href=n[k].link, id='nav' + k, class=light&&"light")
                 span.label= n[k].text
@@ -48,7 +48,7 @@ html
                 .menu-body
                     if user
                         a.button.account.finite(href="/user?id=" + user.id)= user.name
-                    +nav(nav, false, !user, true)
+                    +nav(nav, false, !Boolean(user), Boolean(user))
                 .menu-footer
                     img(src=`/public/stickers/capybara/${utils.getRandomInt(0, 47)}.png`, style="height:100px;")
                     span(style="display:block;margin-top:8px;") CoffeeTox 2024
