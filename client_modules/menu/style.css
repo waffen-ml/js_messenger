@@ -37,8 +37,8 @@
   margin-top:8px;
   gap:5px;
   padding:0;
-  padding-right:10px;
-  max-width:300px;
+  padding-right:5px;
+  max-width:250px;
 }
 
 @keyframes menu-appear {

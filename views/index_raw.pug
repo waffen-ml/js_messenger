@@ -38,7 +38,7 @@ html
                         a.button.light(href="/") ☕tox
                     .right 
                         +current(user, true)
-                        a.burger.clean(href="javascript:callMenu()") МЕНЮ
+                        a.burger.clean(href="javascript:callMenu()", num="5")
                 +nav(nav, true, false, false)
                 main.styled-scroll
                     block main
@@ -52,7 +52,7 @@ html
                             a.button.light.account.finite(href="/user?tag=" + user.tag)= '@' + user.tag
                     +nav(nav, false, !Boolean(user), Boolean(user))
                 .menu-footer
-                    img(src=`/public/stickers/capybara/${utils.getRandomInt(0, 47)}.png`, style="height:100px;")
+                    img(src=`/public/stickers/capybara/${utils.getRandomInt(0, 47)}.png`, style="height:150px;")
                     span(style="display:block;margin-top:8px;") CoffeeTox 2024
         
         script
