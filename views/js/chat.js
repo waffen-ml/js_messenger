@@ -234,6 +234,7 @@ class ChatInspector {
         let deleteChat = this.popup.querySelector('.actions .delete-chat')
         let clearHistory = this.popup.querySelector('.actions .clear-history')
         let addMembers = this.popup.querySelector('.actions .add-members')
+        let leaveChat = this.popup.querySelector('.actions .leave-chat')
 
         if(deleteChat) {
             deleteChat.addEventListener('click', () => {
@@ -253,7 +254,9 @@ class ChatInspector {
             })
         }
 
-
+        if(leaveChat) {
+            leaveChat.onclick = () => this.chat.leave()
+        }
     }
 
     loadFilesFromMyHistory(...mt) {
@@ -1400,6 +1403,20 @@ class Chat {
             else
                 alert('Ошибка!')
         })
+    }
+
+    leave() {
+        return fetch('/leavechat?id=' + this.chatid)
+        .then(r => r.json())
+        .then(r => {
+            if(r.success) {
+                location.replace('/')
+            } else if(r.error == 'no_possible_owner')
+                alert('Перед выходом вы должны назначить администратора для передачи права владения группой.')
+            else
+                alert('Ошибка!')
+        })
+
     }
 }
 

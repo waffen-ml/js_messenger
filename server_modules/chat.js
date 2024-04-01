@@ -8,11 +8,6 @@ class Chat {
         this.name = name;
     }
 
-
-    removeUser(id) {
-        return this.cfx.query(`delete from chat_member where user_id=? and chat_id=?`, [id, this.id]);
-    }
-
     containsUser(id) {
         return this.cfx.query(`select id from chat_member where user_id=? and chat_id=?`, [id, this.id])
         .then((r) => {
@@ -314,11 +309,7 @@ class Chat {
     async clearHistory(userid) {
         let mxid = await this.cfx.query(`select max(id) as mxid from message where chat_id=?`, [this.id]).then(r => r[0].mxid)
         await this.cfx.query(`update chat_member set focus=? where chat_id=? and user_id=?`, [mxid + 1, this.id, userid])
-
-        let earliestFocusedMsgId = await this.cfx.query(`select min(focus) as mf from chat_member where chat_id=?`, [this.id])
-            .then(r => r[0].mf ?? 0)
-        
-        await this.cfx.query(`delete from message where chat_id=? and id < ?`, [this.id, earliestFocusedMsgId])
+        return this.deleteUnreachableMessages()
     }
 
     getMemberDetails(userid) {
@@ -329,6 +320,55 @@ class Chat {
             d.last_read ??= 0
             return d
         })
+    }
+
+    async deleteUnreachableMessages() {
+        let earliestFocusedMsgId = await this.cfx.query(`select min(focus) as mf from chat_member where chat_id=?`, [this.id])
+            .then(r => r[0].mf ?? 0)
+        return this.cfx.query(`delete from message where chat_id=? and id < ?`, [this.id, earliestFocusedMsgId])
+    }
+
+    transferOwnership(userid) {
+        return this.cfx.query(`update chat set owner_id=? where id=?`, [userid, this.id])
+    }
+
+    async removeMember(userid, exec) {
+        let info = await this.getInfo(false)
+
+        //ownership transferring
+
+        if(info.owner_id == userid) {
+            let otherAdmins = await this.cfx.query(`select * from chat_member where chat_id=? and user_id!=? and admin=1`, [this.id, userid])
+            
+            if(!otherAdmins.length)
+                throw Error('no_possible_owner')
+            
+            await this.transferOwnership(otherAdmins[0].user_id)
+        }
+
+        // member deletion
+
+        await this.cfx.query(`delete from chat_member where chat_id=? and user_id=?`, [this.id, userid])
+
+        let hasMembers = this.cfx.query(`select * from chat_member where chat_id=? and user_id=? limit 1`, [this.id, userid])
+            .then(r => r.length > 0)
+
+        // chat deletion
+        if(!hasMembers) {
+            await this.cfx.chats.deleteChat(this.id)
+            return
+        }
+
+        // msg
+        if(exec && exec.id == userid) {
+            await this.addSystemMessage(`@${exec.tag} покинул чат`)
+        } else if(exec) {
+            let target = await this.cfx.auth.getUser(userid)
+            await this.addSystemMessage(`@${exec.tag} выгнал @${target.tag}`)
+        }
+
+        // msg deletion
+        await this.deleteUnreachableMessages()
     }
 }
 
@@ -502,6 +542,7 @@ class ChatSystem {
         await this.cfx.query(`delete from chat where id=?`, chat.id)
     }
 
+
 }
 
 class CallTemp {
@@ -565,6 +606,10 @@ exports.init = (cfx) => {
     })
 
     // setters
+
+    cfx.core.safeGet('/leavechat', (exec, req, res) => {
+
+    })
 
     cfx.core.safeGet('/addmembers', (exec, req, res) => {
         return cfx.chats.accessChat(exec, req.query.chatid, true)
