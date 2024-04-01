@@ -1427,6 +1427,21 @@ class Chat {
         })
 
     }
+
+    removeMember(userid) {
+        return fetch(`/removemember?chatid=${this.chatid}&userid=` + userid)
+        .then(r => r.json())
+    }
+
+    removeAdmin(userid) {
+        return fetch(`/removeadmin?chatid=${this.chatid}&userid=` + userid)
+        .then(r => r.json())
+    }
+
+    makeAdmin(userid) {
+        return fetch(`/makeadmin?chatid=${this.chatid}&userid=` + userid)
+        .then(r => r.json())
+    }
 }
 
 class AudioRecorder {
