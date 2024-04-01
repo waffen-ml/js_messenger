@@ -47,7 +47,9 @@ html
             .wrapper 
                 .menu-body
                     if user
-                        a.button.account.finite(href="/user?id=" + user.id)= user.name
+                        .current 
+                            span Аккаунт:
+                            a.button.account.finite(href="/user?tag=" + user.tag)= '@' + user.tag
                     +nav(nav, false, !Boolean(user), Boolean(user))
                 .menu-footer
                     img(src=`/public/stickers/capybara/${utils.getRandomInt(0, 47)}.png`, style="height:100px;")

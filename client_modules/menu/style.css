@@ -21,6 +21,14 @@
   padding-bottom:10px;
 }
 
+.popup.menu .current {
+  display:flex;
+  gap:6px;
+  max-width: 100%;
+  overflow:hidden;
+  align-items: center;
+}
+
 .popup.menu nav {
   gap:5px;
 }
