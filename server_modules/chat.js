@@ -353,6 +353,8 @@ class Chat {
         let hasMembers = this.cfx.query(`select * from chat_member where chat_id=? and user_id=? limit 1`, [this.id, userid])
             .then(r => r.length > 0)
 
+        this.cfx.socket.io.to('c:' + this.id).emit('member_left', {id: userid})
+
         // chat deletion
         if(!hasMembers) {
             await this.cfx.chats.deleteChat(this.id)

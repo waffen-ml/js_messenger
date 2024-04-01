@@ -1289,6 +1289,10 @@ class Chat {
             location.replace('/')
         })
 
+        socket.on('member_left', (m) => {
+            this.info.members = this.info.members.filter(w => w.id != m.id)
+        })
+
         socket.on('new_member', member => {
             if(this.info.members.some(m => m.id == member.id))
                 return
