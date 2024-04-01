@@ -34,7 +34,8 @@ function updateMenuUnread(unread, menu) {
 
 function updateUnread(unread) {
     Object.keys(unread).forEach(k => {
-        unreadTable[k] = unread[k]
+        if(k != 'error')
+            unreadTable[k] = unread[k]
     })
     updateBurgerUnread()
     document.querySelectorAll('nav').forEach(nav => {
