@@ -21,8 +21,11 @@ class Chat {
     }
 
     async toggleAdmin(userid, state, exec) {
-        await this.cfx.query(`update chat_member set is_admin=? where user_id=? and chat_id=?`,
+        let r = await this.cfx.query(`update chat_member set is_admin=? where user_id=? and chat_id=?`,
             [state? 1 : 0, userid, this.id])
+        
+        if(r.affectedRows == 0)
+            throw Error('could not toggle admin')
 
         this.cfx.socket.io.to('c:' + this.id).emit('update_member', {id: userid, is_admin: state? 1 : 0})
 
