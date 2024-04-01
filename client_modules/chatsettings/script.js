@@ -16,7 +16,7 @@ class ChatSettings {
         this.name = null ?? options.name
         this.avatarBlob = undefined
         this.isPublic = Boolean(options.isPublic)
-        this.description = options.description
+        this.description = options.description ?? ''
 
         if(options.hasAvatar)
             this.toggleDeleteAvatarButton(true)

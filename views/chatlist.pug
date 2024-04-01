@@ -24,20 +24,3 @@ append body
                 p.finite.content <%- view.lm.preview %>
                 span.status
             span.newmsg <%= view.unread %>
-
-    script(template="friend", type="text/x-ejs-template")
-        li
-            img.avatar(src!="/getuseravatar?id=<%=id%>")
-            a.clean.finite.name <%= name %>
-            input(type="checkbox", class="include-friend")
-    
-    script(template="create-chat", type="text/x-ejs-template")
-        .create-info
-            img.avatar(src="/public/chatavatar/0.png")
-            input(type="text", class="name", placeholder="Название", id="name")
-            .public 
-                input(type="checkbox", id="is-public", class="is-public")
-                label(for="is-public") Публичный
-            a.button.light.delete-avatar Удалить
-        ul.block.styled-scroll.friendlist
-        

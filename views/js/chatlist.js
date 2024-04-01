@@ -105,7 +105,7 @@ fetch('/auth')
     updateAllViews()
 })
 
-document.querySelector('.create-chat').addEventListener('click', () => {
+document.querySelector('.create-chat').addEventListener('click', async () => {
     if(!me) return
 
     let popup = new Popup({
@@ -113,104 +113,44 @@ document.querySelector('.create-chat').addEventListener('click', () => {
         title: 'Создать чат',
         html:   templateManager.createHTML('create-chat')
     })
-    let members = []
-    let friendlist = popup.content.querySelector('.friendlist')
-    let namefield = popup.content.querySelector('input.name')
-    let ispublic = popup.content.querySelector('input.is-public')
-    let avatar = popup.content.querySelector('.avatar')
-    let deleteAvatarButton = popup.content.querySelector('.button.delete-avatar')
-    let autoName = true
-    let avatarBlob = null
+
+    let friends = await fetch('/getfriends').then(r => r.json())
+
+    let chatSettings = new ChatSettings({})
+    let friendList = new UserChecklist(friends)
+    let friendsToAdd = []
+
+    popup.content.appendChild(chatSettings.element)
+    popup.content.appendChild(friendList.element)
 
     popup.on('hidden', () => updateAllViews())
 
-    deleteAvatarButton.addEventListener('click', () => {
-        avatarBlob = null
-        avatar.src = '/public/chatavatar/0.png'
-        deleteAvatarButton.style.display = 'none'
-    })
+    friendList.onchange = (checked) => {
+        friendsToAdd = friends.filter((f, i) => checked[i])
+        chatSettings.updateDefaultName(friendsToAdd.map(f => f.name).join(', '))
+    }
+
     
-    avatar.addEventListener('click', () => {
-        let amaker = new AvatarMaker((blob, src) => {
-            avatar.src = src
-            avatarBlob = blob
-            deleteAvatarButton.style.display = 'block'
-        })
-        amaker.open()
+
+    popup.open()
+})
+
+popup.addOption('OK', () => {
+    let fd = new FormData()
+    members.forEach(m => fd.append('members', m.id))
+    fd.append('name', autoName? '' : namefield.value)
+    fd.append('avatar', avatarBlob)
+    fd.append('ispublic', ispublic.checked? 1 : 0)
+
+    fetch('/createchat', {
+        method: 'POST',
+        credentials: 'same-origin',
+        body: fd
     })
-
-    namefield.addEventListener('change', () => {
-        if(!utils.strweight(namefield.value))
-            autoName = true
-        else
-            autoName = false
-    })
-
-    popup.addOption('OK', () => {
-        let fd = new FormData()
-        members.forEach(m => fd.append('members', m.id))
-        fd.append('name', autoName? '' : namefield.value)
-        fd.append('avatar', avatarBlob)
-        fd.append('ispublic', ispublic.checked? 1 : 0)
-
-        fetch('/createchat', {
-            method: 'POST',
-            credentials: 'same-origin',
-            body: fd
-        })
-        .then((r) => r.json())
-        .then((r) => {
-            if (!r.success)
-                alert('Ошибка...')
-            popup.close()
-        })
-    })
-
-    popup.addOption('Отмена', () => {
-        return true
-    })
-
-    fetch('/getfriends')
-    .then(r => r.json())
-    .then(friends => {
-        function updateMembers() {
-            members = [me]
-            friends.forEach(f => {
-                if (f.checked)
-                    members.push(f)
-            })
-        }
-
-        function updateAutoName() {
-            if(!autoName)
-                return
-            updateMembers()
-            namefield.value = members.slice(1, 11).map(m => m.name).join(', ')
-        }
-
-        namefield.addEventListener('focusout', () => {
-            updateAutoName()
-        })
-    
-        updateAutoName()
-    
-        friends.forEach((f, i) => {
-            let element = templateManager.createElement('friend', {name: f.name, id: f.id})
-            let checkbox = element.querySelector('input')
-            
-            element.addEventListener('click', () => {
-                checkbox.checked = !friends[i].checked
-                friends[i].checked = !friends[i].checked
-                if (friends[i].checked)
-                    element.classList.add('checked')
-                else
-                    element.classList.remove('checked')
-                updateAutoName()
-            })
-    
-            friendlist.appendChild(element)
-        })
-
-        popup.open()
+    .then((r) => r.json())
+    .then((r) => {
+        if (!r.success)
+            alert('Ошибка...')
+        popup.close()
     })
 })

@@ -11,7 +11,7 @@ class UserChecklist {
             button.addEventListener('click', () => {
                 this.checked[i] = !this.checked[i]
                 checkbox.checked = this.checked[i]
-                this.onchange()
+                this.onchange(this.checked)
             })
         })
     }

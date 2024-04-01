@@ -8,9 +8,6 @@ class Chat {
         this.name = name;
     }
 
-    addUser(id) {
-        return this.cfx.query(`insert into chat_member(user_id, chat_id) values (?, ?)`, [id, this.id]);
-    }
 
     removeUser(id) {
         return this.cfx.query(`delete from chat_member where user_id=? and chat_id=?`, [id, this.id]);
@@ -441,21 +438,25 @@ class ChatSystem {
     }
 
     createDirectChat(u1, u2) {
-        return this.createChat(null, false, true, null, [u1, u2])
+        return this.createChat(null, false, true, null, [u1, u2], null)
     }
 
-    createGroupChat(name, isPublic, avatarId, members) {
-        return this.createChat(name, isPublic, false, avatarId, members)
+    createGroupChat(name, isPublic, avatarId, members, exec) {
+        return this.createChat(name, isPublic, false, avatarId, members, exec)
     }
 
-    createChat(name, isPublic, isDirect, avatarId, members) {
-        return this.cfx.query('insert into chat(name, is_public, is_direct, avatar_id) values(?, ?, ?, ?)',
-        [name, isPublic, isDirect, avatarId])
-        .then((r) => {
-            let chat = new Chat(this.cfx, r.insertId, name)
-            return chat.addMembers(members??[])
-            .then(() => chat)
-        })
+    async createChat(name, isPublic, isDirect, avatarId, members, exec) {
+        let ownerId = exec && !isDirect? exec.id : null
+        let r = await this.cfx.query('insert into chat(name, is_public, is_direct, avatar_id, owner_id) values(?, ?, ?, ?, ?)',
+            [name, isPublic, isDirect, avatarId, ownerId])
+        
+        let chat = new Chat(this.cfx, r.insertId, name)
+        await chat.addMembers(members??[])
+        
+        if(exec && !isDirect)
+            await chat.makeAdmin(exec.id)
+
+        return chat
     }
 
     async accessChat(user, chatid, admin=false) {
