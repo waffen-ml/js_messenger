@@ -25,7 +25,7 @@ class Chat {
             [state? 1 : 0, userid, this.id])
         
         if(r.affectedRows == 0)
-            throw Error('could not toggle admin')
+            throw Error('could_not_toggle_admin')
 
         this.cfx.socket.io.to('c:' + this.id).emit('update_member', {id: userid, is_admin: state? 1 : 0})
 
