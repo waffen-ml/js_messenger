@@ -53,12 +53,12 @@ body {
 .main-grid header .burger {
     display:none;
     aspect-ratio: 1;
-    height:90%;
+    height:32px;
     background-image:url('/public/burger.png');
     background-position: center;
     background-repeat: no-repeat;
     background-size:90%;
-    
+
 }
 
 .main-grid > * {
