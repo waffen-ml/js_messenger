@@ -60,6 +60,10 @@ class Chat {
             return this.displayMessage(msgs[0])
         })
     }
+    
+    addSystemMessage(content) {
+        return this.addMessage('system', null, content, [], null)
+    }
 
     async addMembers(userids, exec) {
 
@@ -453,8 +457,10 @@ class ChatSystem {
         let chat = new Chat(this.cfx, r.insertId, name)
         await chat.addMembers(members??[])
         
-        if(exec && !isDirect)
+        if(exec && !isDirect) {
             await chat.makeAdmin(exec.id)
+            await chat.addSystemMessage(`@${exec.tag} создал этот чат`)
+        }
 
         return chat
     }
@@ -694,27 +700,18 @@ exports.init = (cfx) => {
         })
     }, cfx.core.upload.array('files'), true)
 
-    cfx.core.safePost('/createchat', (creator, req, res) => {
-        return new Promise((resolve) => {
-            if (!req.file)
-                resolve(null)
-            else {
-                cfx.files.saveFiles([req.file], null)
-                .then(r => resolve(r[0]))
-            }
-        }).then(avatarId => {
-            req.body.members ??= []
-            console.log(req.body.members)
-            let members = Array.isArray(req.body.members)? req.body.members : [req.body.members]
-            return cfx.chats.createGroupChat(req.body.name || null, parseInt(req.body.ispublic), avatarId, members)
-        }).then(chat => {
-            chat.addMessage('system', null, `@${creator.tag} создал этот чат`)
-            return chat.makeAdmin(creator.id)
-        })
-        .then(() => {
-            return {success: 1}
-        })
-    }, cfx.core.upload.single('avatar'), true)
+    cfx.core.safePost('/createchat', async (creator, req, res) => { 
+        let avatarId = req.file? await cfx.files.saveFiles([req.file], null).then(r => r[0]) : null
+        let members = Array.isArray(req.body.members)? req.body.members : [req.body.members]
+
+        let chat = await cfx.chats.createGroupChat(
+            req.body.nullName? null : req.body.name,
+            parseInt(req.body.isPublic),
+            avatarId, members, creator
+        )
+        return {success: 1}
+        
+    }, cfx.core.upload.single('avatarBlob'), true)
 
     cfx.core.safeGet('/getchatavatar', (observer, req, res) => {
         return cfx.chats.accessChat(observer, req.query.id)

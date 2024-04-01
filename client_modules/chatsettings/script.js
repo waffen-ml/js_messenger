@@ -139,4 +139,13 @@ class ChatSettings {
 
         return changes
     }
+
+    getState() {
+        return {
+            name: this.name,
+            description: this.description,
+            avatarBlob: this.avatarBlob ?? null,
+            isPublic: this.isPublic
+        }
+    }
 }
