@@ -1,8 +1,8 @@
 class UserChecklist {
-    constructor(users) {
+    constructor(users, block) {
         this.users = users
         this.checked = new Array(users.length).fill(false)
-        this.element = templateManager.createElement('user-checklist', {users: users})
+        this.element = templateManager.createElement('user-checklist', {users: users, block: block})
         this.onchange = () => {}
 
         this.element.querySelectorAll('a.button').forEach((button, i) => {
