@@ -131,7 +131,7 @@ nav {
     padding:10px 7px;
     display:flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 2px;
 }
 
 nav .button {

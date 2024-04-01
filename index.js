@@ -47,6 +47,10 @@ function render(req, res, page, params) {
             'friends': {
                 text: 'Друзья',
                 link: '/friends'
+            },
+            'logout': {
+                text: 'Выйти',
+                link: '/logout'
             }
         },
         cfx: cfx,

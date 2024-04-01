@@ -1,8 +1,8 @@
 
-mixin nav(n)
+mixin nav(n, light)
     nav
         each k in Object.keys(n)
-            a.button.light(href=n[k].link, id='nav' + k)
+            a.button(href=n[k].link, id='nav' + k, class=light&&"light")
                 span.label= n[k].text
                 span.unread.zero
 
