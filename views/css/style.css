@@ -145,11 +145,6 @@ nav .button {
     width:100%;
 }
 
-.main-grid nav #navlogout {
-    display:none;
-}
-
-
 nav .button .unread {
     color:black;
     background:#50adff8d;
@@ -161,6 +156,14 @@ nav .button .unread {
 }
 
 nav .button .unread.zero {
+    display:none;
+}
+
+nav:not(.login) #navlogin {
+    display:none;
+}
+
+nav:not(.logout) #navlogout {
     display:none;
 }
 
