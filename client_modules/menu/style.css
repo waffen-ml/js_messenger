@@ -22,6 +22,10 @@
   padding-bottom:10px;
 }
 
+.popup.menu nav {
+  gap:5px;
+}
+
 @keyframes menu-appear {
   from {
     transform:translate(100%, 0)

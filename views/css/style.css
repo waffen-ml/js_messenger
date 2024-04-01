@@ -149,9 +149,10 @@ nav .button {
     width:100%;
 }
 
-nav .button .label {
-
+.main-grid nav #navlogout {
+    display:none;
 }
+
 
 nav .button .unread {
     color:black;
