@@ -44,6 +44,7 @@ class LazyLoadingList {
     }
 
     deleteItem(i) {
+        console.log(this.elements[i])
         this.holder.removeChild(this.elements[i])
         this.items.splice(i, 1)
         this.elements.splice(i, 1)
