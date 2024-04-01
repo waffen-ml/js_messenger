@@ -65,7 +65,7 @@ body {
 
 .main-grid header .burger[num]::after {
     position:absolute;
-    background:#50adff8d;
+    background:#50adff;
     content:attr(num);
     top:0;
     right:0;
