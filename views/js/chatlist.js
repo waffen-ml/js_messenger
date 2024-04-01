@@ -150,8 +150,8 @@ document.querySelector('.create-chat').addEventListener('click', async () => {
             fd.append('nullName', 1)
         
         fd.append('avatarBlob', data.avatarBlob)
-        fd.append('isPublic', data.isPublic)
-        fd.append('description', data.description)
+        fd.append('isPublic', data.isPublic? 1 : 0)
+        fd.append('description', data.description ?? '')
         
         friendsToAdd.forEach(m => fd.append('members', m.id))
         fd.append('members', me.id)
@@ -169,6 +169,8 @@ document.querySelector('.create-chat').addEventListener('click', async () => {
                 popup.close()
         })
     })
+
+    popup.addOption('Отмена', () => true)
 
     popup.open()
 })

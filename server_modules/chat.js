@@ -442,17 +442,17 @@ class ChatSystem {
     }
 
     createDirectChat(u1, u2) {
-        return this.createChat(null, false, true, null, [u1, u2], null)
+        return this.createChat(null, '', false, true, null, [u1, u2], null)
     }
 
-    createGroupChat(name, isPublic, avatarId, members, exec) {
-        return this.createChat(name, isPublic, false, avatarId, members, exec)
+    createGroupChat(name, description, isPublic, avatarId, members, exec) {
+        return this.createChat(name, description, isPublic, false, avatarId, members, exec)
     }
 
-    async createChat(name, isPublic, isDirect, avatarId, members, exec) {
+    async createChat(name, description, isPublic, isDirect, avatarId, members, exec) {
         let ownerId = exec && !isDirect? exec.id : null
-        let r = await this.cfx.query('insert into chat(name, is_public, is_direct, avatar_id, owner_id) values(?, ?, ?, ?, ?)',
-            [name, isPublic, isDirect, avatarId, ownerId])
+        let r = await this.cfx.query('insert into chat(name, description, is_public, is_direct, avatar_id, owner_id) values(?, ?, ?, ?, ?, ?)',
+            [name, description, isPublic, isDirect, avatarId, ownerId])
         
         let chat = new Chat(this.cfx, r.insertId, name)
         await chat.addMembers(members??[])
@@ -706,11 +706,11 @@ exports.init = (cfx) => {
 
         let chat = await cfx.chats.createGroupChat(
             req.body.nullName? null : req.body.name,
+            req.body.description,
             parseInt(req.body.isPublic),
             avatarId, members, creator
         )
         return {success: 1}
-        
     }, cfx.core.upload.single('avatarBlob'), true)
 
     cfx.core.safeGet('/getchatavatar', (observer, req, res) => {
