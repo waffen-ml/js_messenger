@@ -41,9 +41,7 @@
     display:flex;
     gap:5px;
     flex-direction: column;
-    max-width:unset;
 }
-
 
 .chat-settings .description p {
     display: none;
@@ -58,6 +56,7 @@
     width:100%;
     min-height:70px;
     max-height:100%;
+    max-width:unset;
 }
 
 .chat-settings .description textarea::-webkit-scrollbar {
