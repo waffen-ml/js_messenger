@@ -118,7 +118,7 @@ document.querySelector('.create-chat').addEventListener('click', async () => {
     let friends = await fetch('/getfriends').then(r => r.json())
 
     let chatSettings = new ChatSettings({})
-    let friendList = new UserChecklist(friends)
+    let friendList = new UserChecklist(friends, true)
     let friendsToAdd = []
 
     popup.content.appendChild(chatSettings.element)
