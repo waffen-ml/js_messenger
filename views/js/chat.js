@@ -105,9 +105,9 @@ class ChatInspector {
             element.classList.remove('admin')
         
         if(this.chat.me.is_admin)
-            element.classList.add('can-delete')
+            element.classList.add('can-edit')
         else    
-            element.classList.remove('can-delete')
+            element.classList.remove('can-edit')
 
         let dots = element.querySelector('.dots')
         let actions = {
