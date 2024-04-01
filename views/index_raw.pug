@@ -43,8 +43,8 @@ html
             .wrapper 
                 +nav(nav)
                 .menu-footer
-                    img(src="/public/stickers/capybara/0.png", style="height:60px;")
-                    span CoffeeTox 2024
+                    img(src=`/public/stickers/capybara/${utils.getRandomInt(0, 47)}.png`, style="height:100px;")
+                    span(style="display:block;margin-top:8px;") CoffeeTox 2024
         
         script
             include js/script.js
