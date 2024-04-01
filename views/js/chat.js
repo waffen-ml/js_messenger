@@ -513,7 +513,6 @@ class ChatInterface {
 
         this.setupStickersCW()
         this.setupFileCW()
-        this.setupDotsCW()
         this.setupEntry()
         this.setupAudioRecording()
 
@@ -549,23 +548,7 @@ class ChatInterface {
             left:utils.bounds(butt).left - actual.left + butt.clientWidth / 2
         })
     }
-
-    setupDotsCW() {
-        let dots = document.querySelector('.chat-header .dots')
-
-        makeButtonsCW(dots, {
-            'Очистить историю': () => {
-                
-            },
-            'Выйти из чата': () => {
-
-            },
-            'Начать звонок': () => {},
-            'Подробнее': () => {}
-        })
-
-    }
-
+    
     setupFileCW() {
         let fb = document.querySelector('.input-bar button#file')
 
