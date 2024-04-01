@@ -13,7 +13,7 @@ class ChatSettings {
 
         this.options = options
         this.defaultName = options.defaultName ?? ''
-        this.name = null ?? options.name
+        this.name = options.name ?? null
         this.avatarBlob = undefined
         this.isPublic = Boolean(options.isPublic)
         this.description = options.description ?? ''
