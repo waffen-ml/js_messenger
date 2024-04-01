@@ -12,90 +12,6 @@ const emojiList = Array.from(`😀😃😄😁😆😅🤣😂🙂🙃😉😊�
 ❤🧡💛💚💙💜🤎🖤🤍💔💯❗❌💘`)
 .filter(w => w != '\n')
 
-
-class LazyLoadingList {
-    constructor(holder, scrollPage, load, convert, batchSize, startBatchSize, loadDistance=200) {
-        this.holder = holder
-        this.scrollPage = scrollPage ?? holder
-        this.isLoading = false
-        this.allowLoading = false
-        this.batchSize = batchSize
-        this.startBatchSize = startBatchSize ?? batchSize
-        this.load = load
-        this.convert = convert
-        this.items = []
-        this.loadDistance = loadDistance
-        this.onload = () => {}
-
-        this.reload()
-
-        this.scrollPage.addEventListener('scroll', () => {
-            this.loadIfNeeded()
-        })
-    }
-
-    toggleLoading(state) {
-        this.allowLoading = state
-        this.loadIfNeeded()
-    }
-
-    reload() {
-        this.items = []
-        this.holder.innerHTML = ''
-        this.loadIfNeeded(this.startBatchSize)
-    }
-
-    loadIfNeeded() {
-        let reminder = this.scrollPage.scrollHeight - 
-                this.scrollPage.scrollTop - this.scrollPage.clientHeight
-        
-        if (reminder < this.loadDistance)
-            this.loadBatch(this.batchSize)
-    }
-
-    async loadBatch(size) {
-        if(this.isLoading || !this.allowLoading)
-            return
-
-        this.isLoading = true
-        
-        let newItems = await this.load(size)
-
-        if (newItems.length < size)
-            this.toggleLoading(false)
-
-        this.items.push(...newItems)
-        newItems.forEach(item => {
-            this.holder.appendChild(this.convert(item))
-        })
-        this.isLoading = false
-
-        this.onload()
-        this.loadIfNeeded()
-    }
-}
-
-class LazyShowingList {
-    constructor(items, holder, scrollPage, convert, batchSize, startBatchSize, loadDistance) {
-        this.items = items
-        this.nextToLoad = 0
-        this.lazyList = new LazyLoadingList(holder, scrollPage,
-            (count) => {
-                let start = this.nextToLoad
-                let end = Math.min(this.items.length - 1, start + count - 1)
-                this.nextToLoad = end + 1
-                return Promise.resolve(this.items.slice(start, end + 1))
-            },
-        convert, batchSize, startBatchSize, loadDistance)
-    }
-
-    restart(newItems) {
-        this.lazyList.reload()
-        this.items = newItems ?? this.items
-        this.nextToLoad = 0
-    }
-}
-
 class ChatInspector {
 
     constructor(chat) {
@@ -107,7 +23,7 @@ class ChatInspector {
             hasAvatar: chat.info.avatar_id !== null,
             isPublic: Boolean(chat.info.is_public),
             defaultName: this.generateDefaultName(),
-            readOnly: false//!this.chat.me.is_admin
+            readOnly: !this.chat.me.is_admin
         })
 
         this.chatSettings.onchange = () => {
@@ -134,13 +50,15 @@ class ChatInspector {
                 this.chat.info.members, this.popup.querySelector('#members .flex-holder'),
                 this.popup.querySelector('.tab#members'),
                 (item) => {
-                    return templateManager.createElement('chat-memberlist-item', {
+                    let element = templateManager.createElement('chat-memberlist-item', {
                         admin: item.is_admin,
                         canDelete: this.chat.me.is_admin,
                         id: item.id,
                         name: item.name,
                         lastSeen: item.last_seen
                     })
+                    this.updateMemberElement(element, item)
+                    return element
                 }, 10)
             this.showTab('members')
         })
@@ -178,6 +96,42 @@ class ChatInspector {
         })
 
         this.setupActions() 
+    }
+
+    updateMemberElement(element, member) {
+        if(member.is_admin)
+            element.classList.add('admin')
+        else
+            element.classList.remove('admin')
+        
+        if(this.chat.me.is_admin)
+            element.classList.add('can-delete')
+        else    
+            element.classList.remove('can-delete')
+
+        let dots = element.querySelector('.dots')
+        let actions = {
+            'Сделать админом': () => {
+
+            },
+            'Отменить админство' : () => {
+                
+            },
+            'Удалить участника': () => {
+
+            }
+        }
+
+        if(member.is_admin)
+            delete actions['Сделать админом']
+        else
+            delete actions['Отменить админство']
+
+        makeButtonsCW(dots, actions, {
+            checkScroll: this.lazyLists['members'].lazyList.scrollPage
+        })
+
+
     }
 
     async openNewMembersPopup() {
@@ -229,6 +183,8 @@ class ChatInspector {
         popup.open()
 
     }
+
+    
 
     setupActions() {
         let deleteChat = this.popup.querySelector('.actions .delete-chat')

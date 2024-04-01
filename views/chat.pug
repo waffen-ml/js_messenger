@@ -95,7 +95,7 @@ block main
                 .flex-holder
     
     script(type="text/x-ejs-template", template="chat-memberlist-item")
-        div.member(class!="<%= utils.classAttr({admin: admin, 'can-delete': canDelete}) %>") 
+        div.member(id="member-uid<%=id%>") 
             a.profile.button.light(href!="/user?id=<%=id%>") 
                 img.avatar(src!="/getuseravatar?id=<%=id%>")
                 .top-bar 
@@ -103,8 +103,8 @@ block main
                     span.admin-label (админ)
                 span.last-seen <%= utils.getLastSeenStatus(lastSeen) %>
             .actions 
-                //button.button.more ...
-                button.button.delete-member 🗑️
+                button.button.dots ...
+            
     
     script(type="text/x-ejs-template", template="chat-audiolist-item")
         .audiofile

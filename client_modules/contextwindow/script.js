@@ -32,7 +32,6 @@ document.addEventListener('keydown', (e) => {
 })
 
 
-
 function createOptionListCW(buttons, options) {
     let cw = new ContextWindow({
         html: templateManager.createHTML('buttons-cw', {
