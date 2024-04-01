@@ -20,8 +20,29 @@ class Chat {
         .then(r => r.length > 0)
     }
 
-    makeAdmin(userid) {
-        return this.cfx.query(`update chat_member set is_admin=1 where user_id=? and chat_id=?`, [userid, this.id])
+    toggleAdmin(userid, state, exec) {
+        await this.cfx.query(`update chat_member set is_admin=? where user_id=? and chat_id=?`,
+            [state? 1 : 0, userid, this.id])
+
+        this.cfx.socket.io.to('c:' + this.id).emit('update_member', {id: userid, is_admin: state? 1 : 0})
+
+        if(!exec)
+            return  
+        
+        let user = await this.cfx.auth.getUser(userid)
+
+        if(state)
+            await this.addSystemMessage(`@${exec.tag} сделал @${user.tag} админом`)
+        else    
+            await this.addSystemMessage(`@${exec.tag} убрал у @${user.tag} права админа`)
+    }
+
+    makeAdmin(userid, exec) {
+        return this.toggleAdmin(userid, 1, exec)
+    }
+
+    removeAdmin(userid, exec) {
+        return this.toggleAdmin(userid, 0, exec)
     }
 
     getMember(userid) {
@@ -332,6 +353,11 @@ class Chat {
         return this.cfx.query(`update chat set owner_id=? where id=?`, [userid, this.id])
     }
 
+    async isOwner(userid) {
+        let info = await this.getInfo(false)
+        return userid == info.owner_id
+    }
+
     async removeMember(userid, exec) {
         let info = await this.getInfo(false)
 
@@ -372,6 +398,7 @@ class Chat {
         // msg deletion
         await this.deleteUnreachableMessages()
     }
+
 }
 
 class Stickerpacks {
@@ -607,7 +634,35 @@ exports.init = (cfx) => {
         })
     })
 
-    // setters
+    cfx.core.safeGet('/makeadmin', (exec, req, res) => {
+        return cfx.chats.accessChat(exec, req.query.chatid, true)
+        .then(chat => {
+            return chat.makeAdmin(req.query.userid, exec)
+        })
+        .then(() => {
+            return {success: 1}
+        })
+    })
+
+    cfx.core.safeGet('/removemember', async (exec, req, res) => {
+        let chat = await cfx.chats.accessChat(exec, req.query.chatid, true)
+
+        if(await chat.isOwner(req.query.userid))
+            throw Error('cannot_edit_owner')
+
+        await chat.removeMember(req.query.userid, exec)
+        return {success: 1}
+    }, true)
+
+    cfx.core.safeGet('/removeadmin', async (exec, req, res) => {
+        let chat = await cfx.chats.accessChat(exec, req.query.chatid, true)
+
+        if(await chat.isOwner(req.query.userid))
+            throw Error('cannot_edit_owner')
+
+        await chat.removeAdmin(req.query.userid, exec)
+        return {success: 1}
+    })
 
     cfx.core.safeGet('/leavechat', (exec, req, res) => {
         return cfx.chats.accessChat(exec, req.query.id)
@@ -617,7 +672,7 @@ exports.init = (cfx) => {
         .then(() => {
             return {success: 1}
         })
-    })
+    }, true)
 
     cfx.core.safeGet('/addmembers', (exec, req, res) => {
         return cfx.chats.accessChat(exec, req.query.chatid, true)

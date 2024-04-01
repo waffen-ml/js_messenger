@@ -104,21 +104,55 @@ class ChatInspector {
         else
             element.classList.remove('admin')
         
-        if(this.chat.me.is_admin)
+        if(this.chat.me.is_admin && this.chat.me.id != member.id)
             element.classList.add('can-edit')
         else    
             element.classList.remove('can-edit')
 
+        let updateItself = () => this.updateMemberElement(element, member)
+
         let dots = element.querySelector('.dots')
         let actions = {
-            'Сделать админом': () => {
+            'Сделать админом': async () => {
+                let r = await this.chat.makeAdmin(member.id)
 
-            },
-            'Отменить админство' : () => {
-                
-            },
-            'Удалить участника': () => {
+                if(r.error) {
+                    alert('Ошибка!')
+                    return
+                }
 
+                member.is_admin = true
+                updateItself()
+            },
+            'Отменить админство' : async () => {
+                let r = await this.chat.removeAdmin(member.id)
+
+                if(r.error == 'cannot_edit_owner') {
+                    alert('Невозможно забрать права администратора у владельца группы.')
+                    return
+                }
+                else if(r.error) {
+                    alert('Ошибка!')
+                    return
+                }
+
+                member.is_admin = false
+                updateItself()
+            },
+            'Удалить участника': async () => {
+                let r = await this.chat.removeMember(member.id)
+
+                if(r.error == 'cannot_edit_owner') {
+                    alert('Невозможно удалить из группы ее владельца.')
+                    return
+                }
+                else if(r.error) {
+                    alert('Ошибка')
+                    return
+                }
+
+                let i = this.chat.info.members.findIndex(w => w.id == member.id)
+                this.lazyLists['members'].deleteItem(i)
             }
         }
 
@@ -130,8 +164,6 @@ class ChatInspector {
         makeButtonsCW(dots, actions, {
             checkScroll: this.lazyLists['members'].lazyList.scrollPage
         })
-
-
     }
 
     async openNewMembersPopup() {
@@ -1210,6 +1242,13 @@ class Chat {
         })
         this.focusedEvents = []
     }
+
+    getMemberById(id) {
+        for (const member of this.info.members)
+            if(member.id == id)
+                return member
+        return null
+    }
     
     setupSocket() {
         socket.emit('join-chat', chatid)
@@ -1264,6 +1303,16 @@ class Chat {
                 member.typingListener.update()
             else
                 member.typingListener.stop()
+        })
+
+        socket.on('update_member', data => {
+            let member = this.getMemberById(data.id)
+            
+            if(!member)
+                return
+
+            if('is_admin' in data)
+                member.is_admin = data.is_admin
         })
 
         socket.on('update_info', () => {

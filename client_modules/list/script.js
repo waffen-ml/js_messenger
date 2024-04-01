@@ -43,6 +43,13 @@ class LazyLoadingList {
         })
     }
 
+    deleteItem(i) {
+        this.holder.removeChild(this.elements[i])
+        this.items.splice(i, 1)
+        this.elements.splice(i, 1)
+        this.loadIfNeeded()
+    }
+
     toggleLoading(state) {
         this.allowLoading = state
         this.loadIfNeeded()
@@ -88,7 +95,7 @@ class LazyLoadingList {
 
 class LazyShowingList {
     constructor(items, holder, scrollPage, convert, batchSize, startBatchSize, loadDistance) {
-        this.items = items
+        this.items = [...items]
         this.nextToLoad = 0
         this.lazyList = new LazyLoadingList(holder, scrollPage,
             (count) => {
@@ -98,6 +105,12 @@ class LazyShowingList {
                 return Promise.resolve(this.items.slice(start, end + 1))
             },
         convert, batchSize, startBatchSize, loadDistance)
+    }
+
+    deleteItem(i) {
+        this.items.splice(i, 1)
+        this.nextToLoad--
+        this.lazyList.deleteItem(i)
     }
 
     restart(newItems) {
