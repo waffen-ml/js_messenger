@@ -130,27 +130,27 @@ document.querySelector('.create-chat').addEventListener('click', async () => {
         chatSettings.updateDefaultName(friendsToAdd.map(f => f.name).join(', '))
     }
 
-    
+
 
     popup.open()
 })
 
-popup.addOption('OK', () => {
-    let fd = new FormData()
-    members.forEach(m => fd.append('members', m.id))
-    fd.append('name', autoName? '' : namefield.value)
-    fd.append('avatar', avatarBlob)
-    fd.append('ispublic', ispublic.checked? 1 : 0)
-
-    fetch('/createchat', {
-        method: 'POST',
-        credentials: 'same-origin',
-        body: fd
-    })
-    .then((r) => r.json())
-    .then((r) => {
-        if (!r.success)
-            alert('Ошибка...')
-        popup.close()
-    })
-})
+//popup.addOption('OK', () => {
+//    let fd = new FormData()
+//    members.forEach(m => fd.append('members', m.id))
+//    fd.append('name', autoName? '' : namefield.value)
+//    fd.append('avatar', avatarBlob)
+//    fd.append('ispublic', ispublic.checked? 1 : 0)
+//
+//    fetch('/createchat', {
+//        method: 'POST',
+//        credentials: 'same-origin',
+//        body: fd
+//    })
+//    .then((r) => r.json())
+//    .then((r) => {
+//        if (!r.success)
+//            alert('Ошибка...')
+//        popup.close()
+//    })
+//})
