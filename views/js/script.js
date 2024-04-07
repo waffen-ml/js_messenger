@@ -75,4 +75,4 @@ fetch('/auth')
     window.me = user
 })
 
-document.querySelector('body').click()
+alert(document.hasFocus())
