@@ -1,5 +1,5 @@
 const chatid = new URLSearchParams(window.location.search).get('id')
-const loadWindow = 15
+const loadWindow = 30
 const updateLastSeenInterval = 20 // seconds
 const typingStatusInterval = 5 // seconds
 const messageLongPressMilliseconds = 400
