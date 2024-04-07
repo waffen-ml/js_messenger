@@ -15,11 +15,13 @@ const Call {
     }
 
     toggleCompact(state) {
-        
+        if(state)
+            this.mainBar.classList.add('compact')
+        else
+            this.mainBar.classList.remove('compact')
     }
 
 
 }
 
-
-const call = new Call()
+let call = new Call();
