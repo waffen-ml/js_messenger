@@ -377,6 +377,10 @@ hidden {
     row-gap:1px;
 }
 
+.call-interface button {
+    flex-shrink:0;
+}
+
 .call-interface .chat-avatar {
     grid-row:1/3;
     height:45px;
