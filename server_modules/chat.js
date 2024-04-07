@@ -65,7 +65,10 @@ class Chat {
             (type, sender_id, chat_id, content, bundle_id, datetime, reply_to)
             values(?, ?, ?, ?, ?, now(), ?)`, [type, sender_id, this.id, content, bundleId, reply_to ?? null])
 
-        await this.displayMessage(await this.getMessage(-1))
+        let msg = await this.getMessage(-1)
+        console.log(msg)
+    
+        await this.displayMessage(msg)
     }
     
     addSystemMessage(content) {
