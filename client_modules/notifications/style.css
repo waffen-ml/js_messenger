@@ -1,0 +1,68 @@
+.focus-notification {
+    position:fixed;
+    bottom:10px;
+    right:10px;
+    min-height:10px;
+    min-width: 230px;
+    max-width:420px;
+    background:white;
+    box-shadow: 0 0 2px 0 black;
+    padding-top:12px;
+    padding-bottom:12px;
+    padding-left:10px;
+    padding-right:20px;
+    transform:translate(calc(100% + 10px), 0);
+}
+
+.focus-notification .inner {
+  display:flex;
+  gap:14px;
+  pointer-events:none;
+}
+
+.focus-notification .text-column {
+  padding-top:6px;
+  display:flex;
+  flex-direction: column;
+  gap:8px;
+}
+
+.focus-notification .inner * {
+  margin:0;
+}
+
+.focus-notification .title {
+  font-size:20px;
+}
+
+.focus-notification .avatar {
+  height:70px;
+}
+
+.focus-notification .text {
+  font-size:17px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; 
+          line-clamp: 2; 
+  -webkit-box-orient: vertical;
+}
+
+@keyframes notification-open {
+  from {
+    transform:translate(calc(100% + 10px), 0)
+  }
+  to {
+    transform:translate(0, 0)
+  }
+}
+
+@keyframes notification-close {
+  from {
+      transform:translate(0, 0)
+  }
+  to {
+    transform:translate(calc(100% + 10px), 0)
+  }
+}
