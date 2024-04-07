@@ -355,6 +355,7 @@ hidden {
     grid-template-rows: 1fr auto;
     box-sizing:border-box;
     padding:20px;
+    z-index:-1;
 }
 
 .global-controls .notification {
