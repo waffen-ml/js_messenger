@@ -6,7 +6,7 @@ class Call {
         this.members = {}
     }
 
-    async connectMember(userid, sessionid) {
+    async connectMember(userid, peerid, sessionid) {
         if(this.members[userid])
             throw Error('User is already in the call')
 
@@ -15,7 +15,8 @@ class Call {
             id: userid,
             name: info.name,
             tag: info.tag,
-            session: sessionid
+            session: sessionid,
+            peerid: peerid
         }
 
         this.cfx.socket.io.to('cl:' + this.id).emit('user_joined_call', this.members[userid])
@@ -39,10 +40,10 @@ class CallSystem {
         this.calls = {}
     }
 
-    getCall(id) {
-        if(!this.calls[id])
+    getCall(id, create=true) {
+        if(!this.calls[id] && create)
             this.calls[id] = new Call(cfx, id)
-        return this.calls[id]
+        return this.calls[id] ?? null
     }
 
     terminateCall(id) {
@@ -65,4 +66,41 @@ class CallSystem {
 
 exports.init = (cfx) => {
     cfx.calls = new CallSystem(cfx)
+
+
+    cfx.core.safeGet('/leavecall', (user, req, res) => {
+        let call = cfx.calls.getCall(req.query.id)
+        call.disconnectMember(user.id)
+        return {success: 1}
+    })
+
+    cfx.core.safeGet('/getcallmembers', async (user, req, res) => {
+        let call = await cfx.calls.accessCall(user.id, req.query.id)
+        return call.members
+    }, true)
+
+    cfx.core.safeGet('/joincall', async (user, req, res) => {
+        let call = await cfx.calls.accessCall(user.id, req.query.callid)
+        await call.connectMember(user.id, req.query.peerid, req.sessionID)
+        return {success: 1}
+    }, true)
+
+    cfx.socket.onSocket((socket, userid) => {
+        socket.on('join_call', (callid) => {
+            let call = cfx.calls.getCall(callid, false)
+
+            if(!call || !call.members[userid])
+                return
+
+            socket.join('cl:' + chatid)
+
+            socket.on('end_call', () => {
+                call.disconnectMember(userid)
+            })
+            socket.on('disconnect', () => {
+                call.disconnectMember(userid)
+            })
+
+        })
+    })
 }
