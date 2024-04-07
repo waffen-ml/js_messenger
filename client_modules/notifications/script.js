@@ -48,7 +48,7 @@ socket.on('update_unread', (unread) => {
 })
 
 socket.on('message', async (msg) => {
-    console.log(msg)
+    console.log(window.openedChatId)
     if(window.openedChatId == msg.chat_id)
         return
     if(!window.isMobileOrTablet() && document.hasFocus())
@@ -57,7 +57,7 @@ socket.on('message', async (msg) => {
     let chatInfo = await fetch('/getchatinfo?id=' + msg.chat_id).then(r => r.json())
 
     showFocusNotification({
-        text: contentCompiler.compile(msg.content, {disableYT: true, disableLineBreaks: true}),
+        text: utils.getMessageContentPreview(msg.content, true),
         title: chatInfo.name ?? utils.generateChatName(chatInfo.members, window.me),
         link: '/chat?id=' + msg.chat_id,
         imagesrc: '/getchatavatar?id=' + msg.chat_id
@@ -117,6 +117,6 @@ function showFocusNotification(options) {
     notificationWindow.style.animation = "notification-open 400ms ease-in-out"
 
     hideTimeout = setTimeout(() => {
-        hideNotification()
+        hideFocusNotification()
     }, 3000)
 }
