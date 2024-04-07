@@ -51,11 +51,14 @@ socket.on('message', async (msg) => {
     if(!window.me || window.me.id == msg.sender_id)
         return
 
+    if(window.openedChatId == msg.chat_id) {
+        if(!window.isMobileOrTablet() && !document.hasFocus())
+            playRandomNotificationSound()
+        return
+    }
+
     if(!window.isMobileOrTablet() || document.hasFocus())
         playRandomNotificationSound()
-
-    if(window.openedChatId == msg.chat_id)
-        return
 
     let chatInfo = await fetch('/getchatinfo?id=' + msg.chat_id).then(r => r.json())
 
