@@ -75,8 +75,8 @@ fetch('/getunread')
 function playRandomNotificationSound() {
     let id = utils.getRandomInt(0, 6)
     let audio = document.createElement('audio')
-    audio.autoplay = true
     audio.src = `/public/capybara_sfx/${id}.mp3`
+    audio.play()
     console.log('hey')
 }
 
