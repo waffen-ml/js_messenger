@@ -447,3 +447,7 @@ hidden {
     margin:0;
 }
 
+.call-interface .volume input {
+    width:100%;
+    padding:0;
+}
