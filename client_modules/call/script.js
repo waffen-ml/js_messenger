@@ -1,4 +1,4 @@
-const Call {
+const Hey {
     constructor() {
         this.callInterface = document.querySelector('.call-interface')
         this.mainBar = this.callInterface.querySelector('.main-bar')
@@ -24,4 +24,4 @@ const Call {
 
 }
 
-let call = new Call();
+let call = new Hey();
