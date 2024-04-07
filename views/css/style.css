@@ -400,4 +400,7 @@ hidden {
 
 .call-interface .member {
     display:grid;
+    grid-template-rows:auto auto;
+    grid-template-columns: auto 1fr auto;
+    
 }
