@@ -365,9 +365,11 @@ hidden {
 }
 
 .call-interface .chat-info {
-    display:flex;
-    flex-direction: column;
-    gap:3px;
+    display:grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows:auto auto;
+    column-gap:5px;
+    row-gap:3px;
 }
 
 .call-interface .chat-name {
