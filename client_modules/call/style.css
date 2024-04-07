@@ -1,6 +1,6 @@
 
 .call-interface {
-    width:400px;
+    max-width:400px;
     position:fixed;
     top:10px;
     right:10px;
