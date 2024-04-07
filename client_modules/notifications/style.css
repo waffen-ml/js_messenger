@@ -14,6 +14,13 @@
     display:none;
 }
 
+@media(max-width:400px) {
+
+  .focus-notification {
+    width:100%;
+  }
+}
+
 .focus-notification .inner {
   display:flex;
   gap:14px;
