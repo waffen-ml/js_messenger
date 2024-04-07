@@ -70,12 +70,23 @@ window.isMobileOrTablet = function() {
     return check;
 }
 
-document.querySelector('.global-controls').addEventListener('click', (e) => {
-    let notif = document.querySelector('.focus-notification')
-    let call = document.querySelector('.call-interface')
 
-    if(!call.contains(e.target) && !notif.contains(e.target))
-        return
+const globalControls = document.querySelector('.global-controls')
+const focusNotification = document.querySelector('.focus-notification')
+const callInterface = document.querySelector('.call-interface')
 
-    e.preventDefault()
+focusNotification.addEventListener('mouseover', () => {
+    globalControls.style.pointerEvents = 'auto'
+})
+
+focusNotification.addEventListener('mouseleave', () => {
+    globalControls.style.pointerEvents = 'none'
+})
+
+callInterface.addEventListener('mouseover', () => {
+    globalControls.style.pointerEvents = 'auto'
+})
+
+callInterface.addEventListener('mouseleave', () => {
+    globalControls.style.pointerEvents = 'none'
 })
