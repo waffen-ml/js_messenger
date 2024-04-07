@@ -86,6 +86,7 @@ focusNotification.addEventListener('mouseleave', () => {
 
 callInterface.addEventListener('mouseover', () => {
     globalControls.style.pointerEvents = 'auto'
+    console.log('over')
 })
 
 callInterface.addEventListener('mouseleave', () => {
