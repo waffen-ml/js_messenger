@@ -20,14 +20,18 @@ class Database {
         return new Promise((resolve, reject) => {
             this.conn.query(q, values, (err, result, field) => {
                 if (!err) 
-                    resolve(err, result, field)
+                    resolve(result, field);
+                else
+                    reject(err)
             })
         })
-        .then((err, result, field) => {
-            if(err)
-                throw err
-            return new Promise((w) => w(result, field))
+        .then((...args) => new Promise((r) => r(...args)),
+        (err) => {
+            throw err
         })
+        //.catch(err => {
+        //    throw Error('MySQL error')
+        //})
     }
 
     loadFile(queryName) {
