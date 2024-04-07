@@ -110,3 +110,12 @@
     padding:0;
     width:160px;
 }
+
+
+.call-interface.compact .main-bar > *:not(.toggle-interface) {
+    display:none;
+}
+
+.call-interface.compact .member-list {
+    display:none;
+}
