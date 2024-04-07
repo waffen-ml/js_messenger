@@ -1,4 +1,4 @@
-const notificationWindow = document.querySelector('.notification')
+const notificationWindow = document.querySelector('.focus-notification')
 const textHolder = notificationWindow.querySelector('.text')
 const imageHolder = notificationWindow.querySelector('.avatar')
 const titleHolder = notificationWindow.querySelector('.title')
@@ -47,6 +47,22 @@ socket.on('update_unread', (unread) => {
     updateUnread(unread)
 })
 
+socket.on('message', async (msg) => {
+    if(window.openedChatId == msg.chat_id)
+        return
+    if(!window.isMobileOrTablet() && document.hasFocus())
+        playRandomNotificationSound()
+
+    let chatInfo = await fetch('/getchatinfo?id=' + msg.chat_id).then(r => r.json())
+
+    showFocusNotification({
+        text: contentCompiler.compile(msg.content, {disableYT: true, disableLineBreaks: true}),
+        title: chatInfo.name ?? utils.generateChatName(chatInfo.members, window.me),
+        link: '/chat?id=' + msg.chat_id,
+        imagesrc: '/getchatavatar?id=' + msg.chat_id
+    })
+})
+
 fetch('/getunread')
 .then(r => r.json())
 .then(unread => {
@@ -62,20 +78,21 @@ function playRandomNotificationSound() {
 }
 
 
-function hideNotification() {
+function hideFocusNotification() {
     notificationWindow.style.animation = "notification-close 400ms ease-in-out forwards"
     hideTimeout = setTimeout(() => {
         notificationWindow.style.display = 'none'
     }, 400)
 }
 
-function showNotification(options) {
+function showFocusNotification(options) {
 
     if (hideTimeout) {
         clearTimeout(hideTimeout)
         hideTimeout = null
     }
-    textHolder.textContent = options.text
+
+    textHolder.innerHTML = options.text
     titleHolder.textContent = options.title ?? 'Уведомление'
 
     if (options.imagesrc) {

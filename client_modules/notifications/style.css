@@ -11,7 +11,7 @@
     padding-bottom:12px;
     padding-left:10px;
     padding-right:20px;
-    transform:translate(calc(100% + 10px), 0);
+    display:none;
 }
 
 .focus-notification .inner {

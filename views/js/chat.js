@@ -4,6 +4,8 @@ const updateLastSeenInterval = 20 // seconds
 const typingStatusInterval = 5 // seconds
 const messageLongPressMilliseconds = 400
 
+window.openedChatId = chatid
+
 const maxAudioDurationSeconds = 60
 
 const emojiList = Array.from(`😀😃😄😁😆😅🤣😂🙂🙃😉😊😇🥰😍🤩😘😗
