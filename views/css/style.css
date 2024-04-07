@@ -408,5 +408,9 @@ hidden {
     display:grid;
     grid-template-rows:auto auto;
     grid-template-columns: auto 1fr auto;
+    width:100%;
+}
 
+.call-interface .member .avatar {
+    grid-row:1/3;
 }
