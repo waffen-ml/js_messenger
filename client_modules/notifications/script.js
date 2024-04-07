@@ -48,7 +48,6 @@ socket.on('update_unread', (unread) => {
 })
 
 socket.on('message', async (msg) => {
-    console.log(window.openedChatId)
     if(window.openedChatId == msg.chat_id)
         return
     if(!window.isMobileOrTablet() && document.hasFocus())

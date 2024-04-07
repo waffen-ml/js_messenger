@@ -238,7 +238,7 @@ class Utils {
                 content = 'Стикер'
                 break
             case 'system':
-            case 'default':
+            default:
                 content = msg.content
                 break
         }
