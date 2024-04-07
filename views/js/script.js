@@ -74,5 +74,8 @@ document.querySelector('.global-controls').addEventListener('click', (e) => {
     let notif = document.querySelector('.focus-notification')
     let call = document.querySelector('.call-interface')
 
-    if(call.contains())
+    if(!call.contains(e.target) && !call.contains(e.target))
+        return
+
+    e.preventDefault()
 })
