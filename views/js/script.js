@@ -75,5 +75,4 @@ fetch('/auth')
     window.me = user
 })
 
-let a = document.createElement('a')
-a.click()
+document.querySelector('body').click()
