@@ -406,7 +406,7 @@ hidden {
     display:flex;
     flex-direction: column;
     gap:6px;
-    max-height:350px;
+    max-height:200px;
     width:100%;
     overflow-y:auto;
 }
