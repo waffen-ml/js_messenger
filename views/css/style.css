@@ -429,4 +429,5 @@ hidden {
 .call-interface .member .toggle-muted {
     grid-row:1/3;
     align-self:center;
+    grid-column:3;
 }
