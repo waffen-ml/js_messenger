@@ -74,3 +74,6 @@ fetch('/auth')
 .then(user => {
     window.me = user
 })
+
+let a = document.createElement('a')
+a.click()
