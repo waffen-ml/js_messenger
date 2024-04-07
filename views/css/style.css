@@ -386,7 +386,7 @@ hidden {
     align-self:end;
 }
 
-.chat-interface .member-count {
+.call-interface .member-count {
     margin:0;
     font-size:15px;
     color:#373737;
