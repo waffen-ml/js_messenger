@@ -51,7 +51,6 @@ socket.on('message', async (msg) => {
     if(window.openedChatId == msg.chat_id || !window.me || window.me.id == msg.sender_id)
         return
 
-    alert(document.hasFocus())
     if(!window.isMobileOrTablet() || document.hasFocus())
         playRandomNotificationSound()
 
