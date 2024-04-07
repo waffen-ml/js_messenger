@@ -348,7 +348,37 @@ hidden {
     position:fixed;
     top:20px;
     right:20px;
-    align-self:start;
-    justify-self: end;
+    display:flex;
+    flex-direction: column;
+    gap:5px;
 }
 
+.call-interface .main-bar,
+.call-interface .member-list {
+
+}
+
+.call-interface .main-bar {
+    display:flex;
+    gap:5px;
+
+}
+
+.call-interface .chat-info {
+    display:flex;
+    flex-direction: column;
+    gap:3px;
+}
+
+.call-interface .chat-name {
+
+}
+
+.chat-interface .member-count {
+    font-size:15px;
+    color:#373737;
+}
+
+.call-interface .member-list {
+
+}
