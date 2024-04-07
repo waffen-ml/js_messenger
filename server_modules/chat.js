@@ -53,31 +53,22 @@ class Chat {
         .then(r => r[0])
     }
 
-    addMessage(type, sender_id, content, files, reply_to) {
-        return new Promise((resolve) => {
-            if(!files || !files.length) {
-                resolve(null)
-                return
-            }
-            this.cfx.files.createBundle(this.id, null)
-            .then(bundleid => {
-                this.cfx.files.saveFiles(files, bundleid)
-                resolve(bundleid)
-            })
-        })
-        .then(bundle => {
-            //content = this.cfx.utils.mysql_escape(content)
+    async addMessage(type, sender_id, content, files, reply_to) {
+        if(!await this.containsUser(sender_id))
+            throw Error('The user is not in the chat')
 
-            return this.cfx.query(`insert into message
+        let bundleId = null
+
+        if(files && files.length) {
+            bundleId = await this.cfx.files.createBundle(this.id, null)
+            await this.cfx.files.saveFiles(files, bundleId)
+        }
+
+        await this.cfx.query(`insert into message
             (type, sender_id, chat_id, content, bundle_id, datetime, reply_to)
-            values(?, ?, ?, ?, ?, now(), ?)`, [type, sender_id, this.id, content, bundle, reply_to ?? null])
-        })
-        .then(() => {
-            return this.getMessages(-1, 1)
-        })
-        .then(msgs => {
-            return this.displayMessage(msgs[0])
-        })
+            values(?, ?, ?, ?, ?, now(), ?)`, [type, sender_id, this.id, content, bundleId, reply_to ?? null])
+
+        await this.displayMessage(await this.getMessage(-1))
     }
     
     addSystemMessage(content) {
