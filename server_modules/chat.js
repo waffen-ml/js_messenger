@@ -54,9 +54,6 @@ class Chat {
     }
 
     async addMessage(type, sender_id, content, files, reply_to) {
-        if(!await this.containsUser(sender_id))
-            throw Error('The user is not in the chat')
-
         let bundleId = null
 
         if(files && files.length) {
@@ -795,14 +792,15 @@ exports.init = (cfx) => {
         })
     }, true)
 
-    cfx.core.safePost('/sendmsg', (sender, req, res) => {
-        return cfx.chats.getChat(req.query.id)
-        .then(chat => {
-            if(!chat)
-                throw Error('Invalid chat')
-            chat.addMessage(req.body.type, sender.id, req.body.content, req.files, req.body.reply_to)
-            return {success: 1}
-        })
+    cfx.core.safePost('/sendmsg', async (sender, req, res) => {
+        let chat = cfx.chats.accessChat(sender, req.query.id)
+        
+        if(!chat)
+            throw Error('Invalid chat')
+
+        await chat.addMessage(req.body.type, sender.id, req.body.content, req.files, req.body.reply_to)
+
+        return {success: 1}
     }, cfx.core.upload.array('files'), true)
 
     cfx.core.safePost('/createchat', async (creator, req, res) => { 
