@@ -355,10 +355,9 @@ hidden {
     grid-template-rows: 1fr auto;
     box-sizing:border-box;
     padding:20px;
-    pointer-events: none;
 }
 
-.global-controls .notification {
+.focus-notification {
     align-self:end;
     justify-self:end;
     min-height:120px;
@@ -372,32 +371,32 @@ hidden {
     padding-right:20px;
 }
 
-.global-controls .notification .inner {
+.focus-notification .inner {
   display:flex;
   gap:14px;
   pointer-events:none;
 }
 
-.global-controls .notification .text-column {
+.focus-notification .text-column {
   padding-top:6px;
   display:flex;
   flex-direction: column;
   gap:8px;
 }
 
-.global-controls .notification .inner * {
+.focus-notification .inner * {
   margin:0;
 }
 
-.global-controls .notification .title {
+.focus-notification .title {
   font-size:20px;
 }
 
-.global-controls .notification .avatar {
+.focus-notification .avatar {
   height:70px;
 }
 
-.global-controls .notification .text {
+.focus-notification .text {
   font-size:17px;
   text-overflow: ellipsis;
   overflow: hidden;
