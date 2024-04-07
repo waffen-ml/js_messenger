@@ -123,7 +123,6 @@ function safePost(pattern, onpost, upl, reqlogin) {
     app.post(pattern, upl, (req, res) => {
         renderlessQuery(req, res, reqlogin, onpost)
     })
-
 }
 
 function safeGet(pattern, onget, reqlogin) {
@@ -241,14 +240,6 @@ app.get('/getform', (req, res) => {
         })
     })
 });
-
-app.get('/croptest', (req, res) => {
-    let user = login(req, res, true)
-    if(!user) return
-    render(req, res, 'croptest')
-})
-
-
 
 server.listen(443, () => {
   console.log('CFX is running');

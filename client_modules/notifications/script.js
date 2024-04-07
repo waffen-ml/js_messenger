@@ -53,6 +53,15 @@ fetch('/getunread')
     updateUnread(unread)
 })
 
+
+function playRandomNotificationSound() {
+    let id = utils.getRandomInt(0, 6)
+    let audio = document.createElement('audio')
+    audio.autoplay = true
+    audio.src = `/public/capybara_sfx/${id}.mp3`
+}
+
+
 function hideNotification() {
     notificationWindow.style.animation = "notification-close 400ms ease-in-out forwards"
     hideTimeout = setTimeout(() => {
