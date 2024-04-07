@@ -372,22 +372,24 @@ hidden {
     grid-template-columns: auto 1fr;
     grid-template-rows:auto auto;
     column-gap:5px;
-    row-gap:3px;
+    row-gap:1px;
 }
 
 .call-interface .chat-avatar {
     grid-row:1/3;
-    height:50px;
+    height:45px;
 }
 
 .call-interface .chat-name {
     margin:0;
+    font-size:16px;
+    align-self:end;
 }
 
 .chat-interface .member-count {
+    margin:0;
     font-size:15px;
     color:#373737;
-    margin:0;
 }
 
 .call-interface .member-list {
