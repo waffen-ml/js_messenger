@@ -43,6 +43,21 @@ html
                 main.styled-scroll
                     block main
         
+        .global-controls 
+            .call 
+                img.chat-avatar(src="/getchatavatar?id=55", alt="")
+                span.chat-name Lorem ipsum dolor sit amet.
+                span.member-count 5 участников
+                button.toggle-list L 
+                button.toggle-muted M 
+                button.leave L
+            .notification
+                .inner
+                img.avatar(src="/getuseravatar?id=1")
+                .text-column
+                    h3.title Нотификация
+                    p.text тест тест тест тест
+
         script(type="text/x-ejs-template", template="menu")
             .wrapper 
                 .menu-body
