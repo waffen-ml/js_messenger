@@ -78,6 +78,7 @@ function playRandomNotificationSound() {
     let audio = document.createElement('audio')
     audio.autoplay = true
     audio.src = `/public/capybara_sfx/${id}.mp3`
+    console.log('hey')
 }
 
 
