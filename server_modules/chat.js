@@ -793,7 +793,7 @@ exports.init = (cfx) => {
     }, true)
 
     cfx.core.safePost('/sendmsg', async (sender, req, res) => {
-        let chat = cfx.chats.accessChat(sender, req.query.id)
+        let chat = await cfx.chats.accessChat(sender, req.query.id)
         
         if(!chat)
             throw Error('Invalid chat')
