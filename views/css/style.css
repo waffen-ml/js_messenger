@@ -403,6 +403,9 @@ hidden {
 
 
 .call-interface .member-list {
+    display:flex;
+    flex-direction: column;
+    gap:6px;
     max-height:350px;
     width:100%;
     overflow-y:auto;
@@ -414,6 +417,7 @@ hidden {
     grid-template-columns: auto 1fr auto;
     width:100%;
     column-gap:5px;
+    flex-shrink: 0;
 }
 
 .call-interface .member .avatar-wrapper {
