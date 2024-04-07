@@ -74,5 +74,3 @@ fetch('/auth')
 .then(user => {
     window.me = user
 })
-
-window.focus()

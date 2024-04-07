@@ -48,8 +48,11 @@ socket.on('update_unread', (unread) => {
 })
 
 socket.on('message', async (msg) => {
-    if(window.openedChatId == msg.chat_id || window.me.id == msg.sender_id)
+    if(window.openedChatId == msg.chat_id || !window.me || window.me.id == msg.sender_id)
         return
+
+    console.log(window.isMobileOrTablet() + ' ' + document.hasFocus())
+
     if(!window.isMobileOrTablet() || document.hasFocus())
         playRandomNotificationSound()
 
