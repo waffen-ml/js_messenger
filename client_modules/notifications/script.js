@@ -50,7 +50,7 @@ socket.on('update_unread', (unread) => {
 socket.on('message', async (msg) => {
     if(window.openedChatId == msg.chat_id)
         return
-    if(!window.isMobileOrTablet() && document.hasFocus())
+    if(!window.isMobileOrTablet() || document.hasFocus())
         playRandomNotificationSound()
 
     let chatInfo = await fetch('/getchatinfo?id=' + msg.chat_id).then(r => r.json())
