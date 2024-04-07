@@ -163,6 +163,13 @@ exports.init = (cfx) => {
         }
     ))
 
+    cfx.core.safeGet('/getmaxpostid', (_, req, res) => {
+        return cfx.query(`select max(id) as m from post`)
+        .then(r => {
+            return {id: r[0].m}
+        })   
+    })
+
     cfx.core.safePost('/addpostapi', (_, req, res) => {
         let data = req.body
 
