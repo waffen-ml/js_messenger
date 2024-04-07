@@ -77,7 +77,7 @@ const callInterface = document.querySelector('.call-interface')
 
 focusNotification.addEventListener('mouseover', () => {
     globalControls.style.pointerEvents = 'auto'
-    console.log('over')
+    alert('over')
 })
 
 focusNotification.addEventListener('mouseleave', () => {
@@ -86,7 +86,7 @@ focusNotification.addEventListener('mouseleave', () => {
 
 callInterface.addEventListener('mouseover', () => {
     globalControls.style.pointerEvents = 'auto'
-    console.log('over')
+    alert('over')
 })
 
 callInterface.addEventListener('mouseleave', () => {
