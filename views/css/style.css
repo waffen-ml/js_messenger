@@ -413,6 +413,7 @@ hidden {
     grid-template-rows:auto auto;
     grid-template-columns: auto 1fr auto;
     width:100%;
+    column-gap:5px;
 }
 
 .call-interface .member .avatar-wrapper {
@@ -431,3 +432,18 @@ hidden {
     align-self:center;
     grid-column:3;
 }
+
+.call-interface .member-name {
+    width:100%;
+}
+
+.call-interface .volume {
+    display:flex;
+    gap:10px;
+    align-items: center;
+}
+
+.call-interface .volume > * {
+    margin:0;
+}
+
