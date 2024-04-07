@@ -356,7 +356,7 @@ hidden {
 
 .call-interface .main-bar,
 .call-interface .member-list {
-
+    background-color:#373737;
 }
 
 .call-interface .main-bar {
@@ -378,12 +378,13 @@ hidden {
 }
 
 .call-interface .chat-name {
-
+    margin:0;
 }
 
 .chat-interface .member-count {
     font-size:15px;
     color:#373737;
+    margin:0;
 }
 
 .call-interface .member-list {
