@@ -5,6 +5,7 @@ class Call {
         this.callInterface = document.querySelector('.call-interface')
         this.mainBar = this.callInterface.querySelector('.main-bar')
         this.memberList = this.callInterface.querySelector('.member-list')
+        this.members = {}
 
         await this.getMyStream()
         await this.getMembers()
@@ -35,17 +36,37 @@ class Call {
     }
 
     async getMembers() {
-        this.members = await fetch('/getcallmembers?id=' + this.id).then(r => r.json())
+        let members = await fetch('/getcallmembers?id=' + this.id).then(r => r.json())
 
-        if(this.members.error)
+        if(members.error)
             throw Error('CANNOT_GET_MEMBERS')
-        else if(myid in this.members)
+        else if(myid in members)
             throw Error('USER_IN_THE_CALL')
 
-        this.members.forEach(m => {
+        members.forEach(m => {
+            this.
             m.muted = false
             m.volume = 100
         })
+    }
+
+    getMemberByPeerId(peerid) {
+        return Object.values(this.members).find(m => m.peerid == peerid)
+    }
+
+    addMember(userid, tag, name) {
+        if(this.members[userid])
+            return
+        this.members[userid] = {
+            id: userid,
+            tag: tag,
+            name: name,
+            
+        }
+    }
+
+    setMemberStream(userid, stream) {
+
     }
 
     setupPeer() {
@@ -57,12 +78,12 @@ class Call {
 
         this.peer.on('open', peerid => {
             this.peer.peerid = peerid
-            fetch('/joincall?chatid=' + this.chatid + '&peerid=' + peerid)
+            fetch(`/joincall?callid=${this.id}&peerid=${peerid}`)
             .then(r => r.json())
             .then(r => {
                 if (!r.success) {
-                    alert('Не удалось подключиться.')
                     this.destroyPeer()
+                    throw Error('CANNOT_CONNECT')
                     return
                 }
                 this.interface.updateHeaderCallButtons(true)
@@ -71,7 +92,7 @@ class Call {
         })
     
         this.peer.on('call', call => {
-            call.answer(this.stream)
+            call.answer(this.myStream)
             call.on('stream', userStream => {
                 console.log('connected to me: ' + call.peer)
                 this.connectToMember(call, userStream)
