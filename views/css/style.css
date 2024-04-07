@@ -424,7 +424,7 @@ hidden {
   }
 }
 
-.global-controls .call {
+.call-interface {
     align-self:start;
     justify-self: end;
 }
