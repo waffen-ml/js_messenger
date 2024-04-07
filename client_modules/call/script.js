@@ -16,9 +16,9 @@ class Call {
 
     toggleCompact(state) {
         if(state)
-            this.mainBar.classList.add('compact')
+            this.callInterface.classList.add('compact')
         else
-            this.mainBar.classList.remove('compact')
+            this.callInterface.classList.remove('compact')
     }
 
 
