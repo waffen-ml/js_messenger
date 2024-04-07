@@ -17,7 +17,9 @@
 @media(max-width:400px) {
 
   .focus-notification {
-    width:100%;
+    right:5px;
+    bottom:5px;
+    width:calc(100% - 10px);
   }
 }
 
