@@ -63,7 +63,6 @@ class CallSystem {
 
 }
 
-
 exports.init = (cfx) => {
     cfx.calls = new CallSystem(cfx)
 

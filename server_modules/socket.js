@@ -38,6 +38,11 @@ class Socket {
         })
     }
 
+    disconnectWithError(socket, err) {
+        socket.emit('error', err)
+        socket.disconnect(0)
+    }
+
 }
 
 

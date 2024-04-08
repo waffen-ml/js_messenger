@@ -576,11 +576,16 @@ class ChatSystem {
     async updateBots(msg) {
         let chat = await this.getChat(msg.chat_id)
 
-        Object.keys(this.bots).forEach(botid => {
+        Object.keys(this.bots).forEach(async botid => {
             if(!await chat.containsUser(botid))
                 return
             this.bots[botid].emit('message', msg)
+            chat.updateLastRead(botid)
         })
+    }
+
+    removeBot(id) {
+        delete this.bots[id]
     }
 }
 
@@ -599,7 +604,28 @@ exports.init = (cfx) => {
         })
     })
 
-    
+    cfx.socket.onSocket(socket => {
+        socket.on('join-chat', chatid => {
+            socket.join('c:' + chatid)
+        })
+
+        socket.on('activate_bot_api', async (auth) => {
+
+            let user = await cfx.auth.getUser(null, auth.tag)
+            
+            if(!user || !await cfx.auth.comparePassword(user.id, auth.password)) {
+                cfx.socket.disconnectWithError(socket, 'Wrong credentials')
+                return
+            }
+
+            cfx.chats.addBot(user.id, socket)
+
+            socket.on('disconnect', () => {
+                cfx.chats.removeBot(user.id)
+            })
+        })
+    })
+
 
 
     cfx.core.safeGet('/makeadmin', (exec, req, res) => {
