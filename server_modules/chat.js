@@ -65,7 +65,10 @@ class Chat {
             (type, sender_id, chat_id, content, bundle_id, datetime, reply_to)
             values(?, ?, ?, ?, ?, now(), ?)`, [type, sender_id, this.id, content, bundleId, reply_to ?? null])
 
-        await this.displayMessage(await this.getMessage(-1))
+        let newMsg = await this.getMessage(-1)
+
+        this.cfx.chats.updateBots(newMsg)
+        await this.displayMessage(newMsg)
     }
     
     addSystemMessage(content) {
@@ -460,8 +463,9 @@ class Stickerpacks {
 
 class ChatSystem {
     constructor(cfx) {
-        this.cfx = cfx;
-        this.chats = {};
+        this.cfx = cfx
+        this.chats = {}
+        this.bots = {}
     }
 
     getChat(id) {
@@ -565,51 +569,18 @@ class ChatSystem {
         await this.cfx.query(`delete from chat where id=?`, chat.id)
     }
 
-
-}
-
-class CallTemp {
-    constructor(cfx) {
-        this.cfx = cfx
-        this.temp = {}
+    addBot(id, socket) {
+        this.bots[id] = socket
     }
+    
+    async updateBots(msg) {
+        let chat = await this.getChat(msg.chat_id)
 
-    add(chatid, user, peer) {
-        if (!this.temp[chatid])
-            this.temp[chatid] = {}
-        user.peer = peer
-        this.temp[chatid][peer] = user
-        return this.temp[chatid]
-    }
-
-    getTable(chatid) {
-        return this.temp[chatid] ?? {}
-    }
-
-    removeByPeer(chatid, peer) {
-        if (this.temp[chatid])
-            delete this.temp[chatid][peer]
-    }
-
-    removeById(chatid, userid) {
-        let conn = this.getById(chatid, userid)
-        this.removeByPeer(chatid, conn.peer)
-    }
-
-    getByPeer(chatid, peer) {
-        if (!this.temp[chatid])
-            return null
-        return null || this.temp[chatid][peer]
-    }
-
-    getById(chatid, userid) {
-        if(!this.temp[chatid])
-            return null
-        let members = Object.values(this.temp[chatid])
-        for (let i = 0; i < members.length; i++)
-            if(members[i].id == userid)
-                return members[i]
-        return null
+        Object.keys(this.bots).forEach(botid => {
+            if(!await chat.containsUser(botid))
+                return
+            this.bots[botid].emit('message', msg)
+        })
     }
 }
 
@@ -627,6 +598,9 @@ exports.init = (cfx) => {
             return r.length? r[0].count ?? 0 : 0
         })
     })
+
+    
+
 
     cfx.core.safeGet('/makeadmin', (exec, req, res) => {
         return cfx.chats.accessChat(exec, req.query.chatid, true)
@@ -717,7 +691,6 @@ exports.init = (cfx) => {
 
         return {success: 1}
     }, cfx.core.upload.single('avatar'), true)
-
 
     cfx.core.safeGet('/deletechat', async (user, req, res) => {
         let chat = await cfx.chats.accessChat(user, req.query.id)
@@ -905,68 +878,6 @@ exports.init = (cfx) => {
             res.redirect('/chat?id=' + chat.id)
         })
     }, true)
-
-    cfx.core.safeGet('/getcalltable', (user, req, res) => {
-        return {
-            table: temp.getTable(req.query.chatid)
-        }
-    }, true)
-
-    function setVCFlag(chatid, state) {
-        state = state? 1 : 0
-        return cfx.query(`update chat set voice=${state} where id=${chatid}`)
-    }
-
-    cfx.core.app.get('/joincall', (req, res) => {
-        let peerid = req.query.peerid
-        let chatid = req.query.chatid
-
-        cfx.core.plogin(req, res, false)
-        .then(user => {
-            if(!user)
-                throw Error('unauthorized user')
-
-            if (temp.getById(chatid, user.id)) {
-                res.send({success:false})
-                return
-            }
-
-            res.send({success: true})
-            let table = temp.add(chatid, user, peerid)
-
-            cfx.socket.io.to('c:' + chatid).emit('new-call-member', table[peerid])
-
-            if (Object.keys(table).length == 1)
-                return setVCFlag(chatid, 1)
-        })
-        .catch(err => {
-            console.log('Joincall err:' + err)
-        })
-    })
-
-    function vcDisconnect(socket, chatid, userid) {
-        let call = temp.getById(chatid, userid)
-        if (!call)
-            return
-        cfx.socket.io.to('c:' + chatid).emit('call-member-disconnected', call.peer)
-        temp.removeByPeer(chatid, call.peer)
-
-        if (!Object.keys(temp.getTable(chatid)).length)
-            setVCFlag(chatid, 0)
-    }
-
-    cfx.socket.onSocket((socket, userid) => {
-        socket.on('join-chat', chatid => {
-            socket.join('c:' + chatid)
-
-            socket.on('end-call', () => {
-                vcDisconnect(socket, chatid, userid)
-            })
-            socket.on('disconnect', () => {
-                vcDisconnect(socket, chatid, userid)
-            })
-        })
-    })
 
     cfx.core.safeGet('/getallstickerpacks', (user, req, res) => {
         return cfx.stickerpacks.getAllStickerpacks(user? user.id : null)
