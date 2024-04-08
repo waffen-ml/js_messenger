@@ -595,7 +595,6 @@ exports.init = (cfx) => {
 
     cfx.chats = new ChatSystem(cfx);
     cfx.stickerpacks = new Stickerpacks(cfx)
-    let temp = new CallTemp(cfx)
 
     cfx.notifications.addUnreadChecker('messages', userid => {
         return cfx.db.executeFile('unreadchats', {userid: userid})
