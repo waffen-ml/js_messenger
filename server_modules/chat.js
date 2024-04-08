@@ -577,7 +577,7 @@ class ChatSystem {
         let chat = await this.getChat(msg.chat_id)
 
         Object.keys(this.bots).forEach(async botid => {
-            if(!await chat.containsUser(botid))
+            if(botid == msg.sender_id || !await chat.containsUser(botid))
                 return
             this.bots[botid].emit('message', msg)
             chat.updateLastRead(botid)
