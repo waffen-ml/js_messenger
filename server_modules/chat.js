@@ -617,6 +617,8 @@ exports.init = (cfx) => {
                 return
             }
 
+            console.log('BOT CONNECTED: ' + user.tag)
+
             cfx.chats.addBot(user.id, socket)
 
             socket.on('disconnect', () => {
