@@ -627,6 +627,27 @@ exports.init = (cfx) => {
         })
     })
 
+    cfx.core.safePost('/sendmsgapi', async (_, req, res) => {
+        let user = await cfx.auth.getUser(null, req.body.tag)
+        if(!user && !await cfx.auth.comparePassword(user.id, req.body.password))
+            throw Error('Wrong credentials')
+        let chat = await cfx.chats.accessChat(user, req.body.chat_id)
+        if(!chat)
+            throw Error('Invalid chat')
+        await chat.addMessage(req.body.type ?? 'default', user.id, req.body.content, 
+            [], req.body.reply_to) 
+        return {success: 1}
+    })
+
+    cfx.core.safePost('/sendmsg', async (sender, req, res) => {
+        let chat = await cfx.chats.accessChat(sender, req.query.id)
+        if(!chat)
+            throw Error('Invalid chat')
+        await chat.addMessage(req.body.type, sender.id, req.body.content, 
+            req.files, req.body.reply_to)
+        return {success: 1}
+    }, cfx.core.upload.array('files'), true)
+
 
 
     cfx.core.safeGet('/makeadmin', (exec, req, res) => {
@@ -791,17 +812,6 @@ exports.init = (cfx) => {
             return {success:1}
         })
     }, true)
-
-    cfx.core.safePost('/sendmsg', async (sender, req, res) => {
-        let chat = await cfx.chats.accessChat(sender, req.query.id)
-        
-        if(!chat)
-            throw Error('Invalid chat')
-
-        await chat.addMessage(req.body.type, sender.id, req.body.content, req.files, req.body.reply_to)
-
-        return {success: 1}
-    }, cfx.core.upload.array('files'), true)
 
     cfx.core.safePost('/createchat', async (creator, req, res) => { 
         let avatarId = req.file? await cfx.files.saveFiles([req.file], null).then(r => r[0]) : null
