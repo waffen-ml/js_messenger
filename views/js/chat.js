@@ -218,8 +218,6 @@ class ChatInspector {
 
     }
 
-    
-
     setupActions() {
         let deleteChat = this.popup.querySelector('.actions .delete-chat')
         let clearHistory = this.popup.querySelector('.actions .clear-history')
@@ -537,6 +535,7 @@ class ChatInterface {
 
     appendMessageEntry(text) {
         this.entry.value += text
+        this.onInputChange()
     }
 
     repositionInputCW(cw, butt) {
