@@ -30,6 +30,7 @@ function generateBannerInnerHTML(videoid) {
 
 function putVideoToBanner(id, i) {
     let banner = document.querySelector('.attention-banner#banner' + i)
+    banner.style.display = 'block'
     banner.innerHTML = generateBannerInnerHTML(id)
 }
 
@@ -43,6 +44,5 @@ function cycle(i) {
     }, waitSeconds * 1000)
 
 }
-
-//cycle(1)
-//cycle(2)
+cycle(1)
+cycle(2)
