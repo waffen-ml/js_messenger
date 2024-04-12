@@ -8,6 +8,11 @@ class Chat {
         this.name = name;
     }
 
+    async isPublic() {
+        let info = await this.getInfo(false)
+        return info.is_public
+    }
+
     containsUser(id) {
         return this.cfx.query(`select id from chat_member where user_id=? and chat_id=?`, [id, this.id])
         .then((r) => {
@@ -73,6 +78,11 @@ class Chat {
     
     addSystemMessage(content) {
         return this.addMessage('system', null, content, [], null)
+    }
+
+    async addPrivateAlert(content) {
+        if(!await this.isPublic())
+            await this.addSystemMessage(content)
     }
 
     async addMembers(userids, exec) {
@@ -538,10 +548,6 @@ class ChatSystem {
         if(!chat)
             throw new Error('Chat was not found')
 
-        //let info = await chat.getInfo(false)
-        //if(info.is_public)
-        //    return chat
-
         if(admin && await chat.containsAdmin(user.id))
             return chat
         else if (admin)
@@ -549,6 +555,10 @@ class ChatSystem {
 
         if(await chat.containsUser(user.id))
             return chat
+        else if(await chat.isPublic()) {
+            await chat.addMembers([user.id])
+            return chat
+        }
         else
             throw new Error('User is not in the chat')
 
