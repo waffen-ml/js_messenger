@@ -44,5 +44,5 @@ function cycle(i) {
     }, waitSeconds * 1000)
 
 }
-cycle(1)
-cycle(2)
+//cycle(1)
+//cycle(2)
