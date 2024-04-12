@@ -542,7 +542,7 @@ class ChatSystem {
         return chat
     }
 
-    async accessChat(user, chatid, admin=false) {
+    async accessChat(user, chatid, admin=false, active=true) {
         let chat = await this.getChat(chatid)
 
         if(!chat)
@@ -556,12 +556,12 @@ class ChatSystem {
         if(await chat.containsUser(user.id))
             return chat
         else if(await chat.isPublic()) {
-            await chat.addMembers([user.id])
+            if(active)
+                await chat.addMembers([user.id])
             return chat
         }
         else
             throw new Error('User is not in the chat')
-
     }
     
     updateMenuNotification(userid) {
@@ -657,8 +657,6 @@ exports.init = (cfx) => {
             req.files, req.body.reply_to)
         return {success: 1}
     }, cfx.core.upload.array('files'), true)
-
-
 
     cfx.core.safeGet('/makeadmin', (exec, req, res) => {
         return cfx.chats.accessChat(exec, req.query.chatid, true)
@@ -837,7 +835,7 @@ exports.init = (cfx) => {
     }, cfx.core.upload.single('avatarBlob'), true)
 
     cfx.core.safeGet('/getchatavatar', (observer, req, res) => {
-        return cfx.chats.accessChat(observer, req.query.id)
+        return cfx.chats.accessChat(observer, req.query.id, false, false)
         .then(chat => {
             return chat.getInfo()
         })
