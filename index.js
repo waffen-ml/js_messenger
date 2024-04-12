@@ -36,6 +36,10 @@ function render(req, res, page, params) {
                 text: 'Войти',
                 link: '/form?name=login'
             },
+            'coffee_chat': {
+                text: 'Кофейный чат☕',
+                link: '/chat?id=318'
+            }
             'messages': {
                 text: 'Сообщения',
                 link: '/chatlist'
