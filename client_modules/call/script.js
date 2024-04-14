@@ -390,6 +390,7 @@ let call = null
 console.log(savedCall)
 
 if(savedCall) {
+    savedCall = JSON.parse(savedCall)
     let lastDatetime = new Date(savedCall.datetime)
 
     console.log(lastDatetime)
