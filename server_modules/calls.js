@@ -1,3 +1,5 @@
+const secondsToReconnect = 3
+
 
 class Call {
     constructor(cfx, id) {
@@ -7,8 +9,12 @@ class Call {
     }
 
     async connectMember(userid, peerid, sessionid) {
-        if(this.members[userid])
-            throw Error('User is already in the call')
+        let member = this.members[userid]
+
+        if(member && member.leaveTimeout) {
+            clearTimeout(member.leaveTimeout)
+            member.leaveTimeout = null
+        }
 
         let info = await this.cfx.auth.getUser(userid)
         this.members[userid] = {
@@ -81,6 +87,7 @@ exports.init = (cfx) => {
     cfx.core.safeGet('/joincall', async (user, req, res) => {
         let call = await cfx.calls.accessCall(user.id, req.query.callid)
         await call.connectMember(user.id, req.query.peerid, req.sessionID)
+
         return {success: 1}
     }, true)
 
@@ -97,7 +104,9 @@ exports.init = (cfx) => {
                 call.disconnectMember(userid)
             })
             socket.on('disconnect', () => {
-                call.disconnectMember(userid)
+                call.members[userid].leaveTimeout = setTimeout(() => {
+                    call.disconnectMember(userid)
+                }, secondsToReconnect * 1000)
             })
 
         })

@@ -10,6 +10,10 @@
     z-index:100;
 }
 
+.call-interface.hidden {
+    display:none;
+}
+
 .call-interface .main-bar,
 .call-interface .member-list {
     background-color:#e6e5e5;
@@ -59,6 +63,10 @@
 
 .call-interface.compact .member-list {
     display:none;
+}
+
+.call-interface .hide-member-list .member-list {
+    display: none;
 }
 
 

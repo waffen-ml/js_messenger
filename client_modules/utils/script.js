@@ -275,6 +275,13 @@ class Utils {
         .then(r => r.json())
         .then(r => r.last_seen? new Date(r.last_seen) : null)
     }
+
+    toggleClass(element, className, state) {
+        if(state)
+            element.classList.add(className)
+        else    
+            element.classList.remove(className)
+    }
 }
 
 const utils = new Utils();

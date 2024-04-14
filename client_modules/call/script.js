@@ -50,6 +50,37 @@ class CallInterface {
         this.mainBar = this.interface.querySelector('.main-bar')
         this.memberList = this.interface.querySelector('.member-list')
         this.memberControls = {}
+
+        this.isCompact = call.savedData? call.savedData.isCompact : false
+        this.areMembersShown = call.savedData? call.savedData.areMembersShown : false
+
+        this.toggleHidden(false)
+        this.toggleCompact(this.isCompact)
+        this.toggleMemberList(this.areMembersShown)
+        this.toggleMuted(call.savedData? call.savedData.isMuted : false)
+
+        this.mainBar.querySelector('.toggle-list').onclick = () => {
+            this.areMembersShown = !this.areMembersShown
+            this.toggleMemberList(this.areMembersShown)
+            this.call.save()
+        }
+
+        this.mainBar.querySelector('.toggle-muted').onclick = () => {
+            this.call.toggleMyStream(this.call.isMuted)
+            this.toggleMuted(this.call.isMuted)
+            this.call.save()
+        }
+
+        this.mainBar.querySelector('.toggle-interface').onclick = () => {
+            this.isCompact = !this.isCompact
+            this.toggleCompact(this.isCompact)
+            this.call.save()
+        }
+
+        this.mainBar.querySelector('.leave').onclick = () => {
+            this.chat.leave()
+        }
+
     }
 
     appendMember(member) {
@@ -66,11 +97,20 @@ class CallInterface {
         delete this.memberControls[userid]
     }
 
+    toggleHidden(state) {
+        utils.toggleClass(this.interface, 'hidden', state)
+    }
+
     toggleCompact(state) {
-        if(state)
-            this.interface.classList.add('compact')
-        else
-            this.interface.classList.remove('compact')
+        utils.toggleClass(this.interface, 'compact', state)
+    }
+
+    toggleMuted(state) {
+        utils.toggleClass(this.interface, 'muted', state)
+    }
+
+    toggleMemberList(state) {
+        utils.toggleClass(this.interface, 'hide-member-list', !state)
     }
 
 }
@@ -83,12 +123,10 @@ class Call {
         this.interface = new CallInterface(this)
         this.members = {}
         this.savedData = savedData
-
-        window.me.toggle = true
-        window.me.volue = 100
-
-        this.interface.appendMember(window.me)
-        //this.init()
+        this.init().catch(err => {
+            alert('Не удалось начать звонок: ' + err.message)
+            removeCurrentCall()
+        })
     }
 
     async init() {
@@ -96,18 +134,43 @@ class Call {
         await this.loadMembers()
 
         socket.emit('join_call', this.id)
+        this.toggleMyStream(this.savedData? !this.savedData.isMuted : true)
 
-        this.interface.appendMember(window.me)
+        this.peer = new Peer(undefined, {
+            host: '/',
+            port: '3001',
+            secure: true
+        })
 
+        this.peer.on('open', async peerid => {
+            this.peer.peerid = peerid
 
-        this.isCompact = true
+            let r = fetch(`/joincall?callid=${this.id}&peerid=${peerid}`).then(r => r.json())
 
-        this.toggleCompact(true)
+            if(!r.success) {
+                alert('Не удалось подключиться...')
+                this.leave()
+                return
+            }
 
-        this.mainBar.querySelector('.toggle-interface').onclick = () => {
-            this.isCompact = !this.isCompact
-            this.toggleCompact(this.isCompact)
-        }
+            this.interface.toggleHidden(false)
+        })
+    
+        this.peer.on('call', call => {
+            call.answer(this.myStream)
+            call.on('stream', userStream => {
+                let member = this.getMemberByPeerId(call.peer)
+                member.call = call
+                this.setMemberStream(member.id, userStream)
+                this.interface.appendMember(member)
+            })
+        })
+    }
+
+    toggleMyStream(state) {
+        this.isMuted = !state
+        toggleStream(this.myStream, state)
+        this.save()
     }
 
     async accessMyStream() {
@@ -123,9 +186,7 @@ class Call {
         if(members.error)
             throw Error('CANNOT_GET_MEMBERS')
 
-        members.forEach(m => {
-
-        })
+        members.forEach(m => this.addMember(m.id, m.tag, m.name, m.peerid))
     }
 
     addMember(userid, tag, name, peerid) {
@@ -136,7 +197,9 @@ class Call {
             tag: tag,
             name: name,
             peerid: peerid
-        }   
+        }
+        this.save()
+        return this.members[userid]
     }
 
     modifyMemberStream(userid, toggle, volume) {
@@ -151,6 +214,8 @@ class Call {
             member.audio.volume = 0
         else
             member.audio.volume = member.volume / 100
+
+        this.save()
     }
 
     setMemberStream(userid, stream) {
@@ -171,63 +236,74 @@ class Call {
     getMemberByPeerId(peerid) {
         return Object.values(this.members).find(m => m.peerid == peerid)
     }
-
-    setupPeer() {
-        this.peer = new Peer(undefined, {
-            host: '/',
-            port: '3001',
-            secure: true
-        })
-
-        this.peer.on('open', peerid => {
-            this.peer.peerid = peerid
-            fetch(`/joincall?callid=${this.id}&peerid=${peerid}`)
-            .then(r => r.json())
-            .then(r => {
-                if (!r.success) {
-                    this.destroyPeer()
-                    throw Error('CANNOT_CONNECT')
-                    return
-                }
-                this.interface.updateHeaderCallButtons(true)
-                this.interface.showControls()
-            })
-        })
     
-        this.peer.on('call', call => {
-            call.answer(this.myStream)
-            call.on('stream', userStream => {
-                console.log('connected to me: ' + call.peer)
-                this.connectToMember(call, userStream)
-            })
-        })
-    }
-
-
-    updateMemberStream(userid, toggle, volume) {
-
-    }
-
-    replaceMemberStream(userid, newStream) {
+    destroyPeer() {
 
     }
 
     setupSocket() {
         socket.on('user_joined_chat', user => {
+            if(user.id == this.myid)
+                return
 
+            let call = this.peer.call(user.peerid, this.myStream)
+        
+            call.on('stream', userStream => {
+                if (user.id in this.members) {
+                    this.members[user.id].peerid = user.peerid
+                    this.members[user.id].call = call
+                    this.setMemberStream(user.id, userStream)
+                    return
+                }
+                let member = this.addMember(user.id, user.tag, user.name, user.peerid)
+                member.call = call
+                this.setMemberStream(user.id, userStream)
+                this.interface.appendMember(member)
+            })
         })
 
-        socket.on('user_left_chat', user => {
-
+        socket.on('user_left_call', user => {
+            this.removeMember(user.id)
         })
     }
-
-    disconnectFromMember(userid) {
-
+    
+    removeMember(userid) {
+        if(!this.members[userid])
+            return
+        this.setMemberStream(userid, null)
+        delete this.members[userid]
+        this.save()
     }
 
     leave() {
+        Object.keys(this.members).forEach(mid => {
+            if(mid != this.myid)
+                this.removeMember(mid)
+        })
+        this.interface.toggleHidden(true)
+        socket.emit('end_call')
+        removeCurrentCall()
+    }
 
+    save() {
+        let membersToSave = {}
+
+        Object.values(this.members).forEach(m => {
+            membersToSave[m.id] = {
+                id: m.id, name: m.name, tag: m.tag,
+                volume: m.volume, toggle: m.toggle, peerid: m.peerid
+            }
+        })
+
+        this.savedData = {
+            id: this.id,
+            members: membersToSave,
+            isCompact: this.interface.isCompact,
+            areMembersShown: this.interface.areMembersShown,
+            isMuted: this.isMuted
+        }
+        
+        saveCall(this.savedData)
     }
 
 
@@ -239,16 +315,9 @@ function toggleStream(stream, state) {
     })
 }
 
-function saveCall(id, members, isCompact, areMembersShown, isMuted) {
-    let callObj = {
-        id: id, 
-        members: members, 
-        isCompact: isCompact, 
-        areMembersShown: areMembersShown, 
-        isMuted: isMuted
-    }
-
-    localStorage.setItem('currentCall', JSON.stringify(callObj))
+// id, members, isCompact, areMembersShown, isMuted
+function saveCall(data) {
+    localStorage.setItem('currentCall', JSON.stringify(data))
 }
 
 function removeCurrentCall() {
