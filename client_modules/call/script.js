@@ -406,7 +406,8 @@ if(savedCall) {
         removeCurrentCall()
     } else {
         authPromise.then(() => {
-            call = new Call(savedCall.id, window.me, savedCall)
+            if(window.me && window.me.id)
+                call = new Call(savedCall.id, window.me, savedCall)
         })
     }
 }
