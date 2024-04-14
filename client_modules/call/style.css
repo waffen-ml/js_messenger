@@ -65,7 +65,7 @@
     display:none;
 }
 
-.call-interface .hide-member-list .member-list {
+.call-interface.hide-member-list .member-list {
     display: none;
 }
 
@@ -126,7 +126,7 @@
     pointer-events: none;
 }
 
-.call-interface .toggle-muted {
+.call-interface .member .toggle-muted {
     position:relative;
     grid-row:1/3;
     align-self:center;
@@ -134,6 +134,7 @@
     transition: opacity .2s ease-in-out;
 }
 
+.call-interface.muted .toggle-muted,
 .call-interface .muted .toggle-muted {
     opacity: 0.75;
 }
@@ -153,6 +154,7 @@
     transition: opacity .2s ease-in-out;
 }
 
+.call-interface.muted .toggle-muted::after,
 .call-interface .muted .toggle-muted::after {
     opacity: 1;
 }
