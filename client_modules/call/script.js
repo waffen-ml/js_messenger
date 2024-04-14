@@ -7,7 +7,7 @@ class CallMemberControls {
         this.volumeLabel = this.element.querySelector('.volume .perc')
         this.volumeInput = this.element.querySelector('.volume input')
 
-        if(info.me) {
+        if(info.id == this.call.myid) {
             this.element.classList.add('me')
             return
         }
