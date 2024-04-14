@@ -152,12 +152,7 @@ class Call {
         this.interface = new CallInterface(this)
         this.members = []
 
-        this.members[this.myid] = {
-            id: this.myid,
-            me: true,
-            name: me.name,
-            tag: me.tag
-        }
+        this.updateMember(this.myid, me.tag, me.name, null)
 
         this.savedData = savedData
         this.init().catch(err => {
