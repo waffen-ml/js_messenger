@@ -511,6 +511,8 @@ class ChatInterface {
             this.setMessageIdToReplyTo(-1)
         })
 
+        document.querySelector('.chat-header .start-call').onclick = () => this.chat.startCall()
+
         this.setupStickersCW()
         this.setupFileCW()
         this.setupEntry()
@@ -1017,6 +1019,10 @@ class Chat {
         })
 
         console.log(this.info)
+    }
+
+    startCall() {
+        startCall(this.chatid)
     }
 
     loadMyFocus() {
