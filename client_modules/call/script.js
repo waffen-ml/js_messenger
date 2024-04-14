@@ -409,5 +409,3 @@ function startCall(id) {
     call = new Call(id, window.me)
     saveCall(id, {}, false, false, false)
 }
-
-console.log('HEY')
