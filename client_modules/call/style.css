@@ -115,7 +115,7 @@
 }
 
 .call-interface .member.muted .volume input {
-    opacity: 0.65;
+    opacity: 0.75;
     pointer-events: none;
 }
 
@@ -128,7 +128,7 @@
 }
 
 .call-interface .muted .toggle-muted {
-    opacity: 0.65;
+    opacity: 0.75;
 }
 
 .call-interface .toggle-muted::after {
