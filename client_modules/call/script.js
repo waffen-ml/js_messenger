@@ -29,16 +29,12 @@ class CallMemberControls {
         this.updateMuted()
     }
 
-
     updateVolumeLabel() {
         this.volumeLabel.textContent = (this.info.volume ?? 100) + '%'
     }
 
     updateMuted() {
-        if(!this.info.toggle)
-            this.element.classList.add('muted')
-        else
-            this.element.classList.remove('muted')
+        utils.toggleClass(this.element, 'muted', !this.info.toggle)
     }
 
     destroy() {
@@ -111,8 +107,6 @@ class CallInterface {
     updateMemberCount() {
 
     }
-
-    
 
     addMember(member) {
         //if(member.id == this.call.myid)
@@ -243,7 +237,9 @@ class Call {
                 id: userid,
                 tag: tag,
                 name: name,
-                peerid: peerid
+                peerid: peerid,
+                toggle: true,
+                volume: 100
             }
 
             let sm = this.getSavedMember(userid)
@@ -297,6 +293,7 @@ class Call {
             toggleStream(member.stream, false)
             member.audio.remove()
         }
+        console.log('STREAM: ' + userid)
         member.stream = stream
         member.audio = document.createElement('audio')
         member.audio.autoplay = true
@@ -310,7 +307,6 @@ class Call {
 
     setupSocket() {
         socket.on('user_joined_call', user => {
-            console.log(user.id + ' ' + this.myid)
             if(user.id == this.myid)
                 return
 
