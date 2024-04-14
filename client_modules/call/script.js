@@ -105,7 +105,9 @@ class CallInterface {
     }
 
     updateMemberCount() {
-
+        let mcount = Object.keys(this.call.members).length
+        this.interface.querySelector('.chat-info member-count').textContent 
+            = utils.nItems(mcount, 'участник', 'участника', 'участников')
     }
 
     addMember(member) {
@@ -131,7 +133,7 @@ class CallInterface {
     }
 
     toggleMuted(state) {
-        utils.toggleClass(this.interface, 'muted', state)
+        utils.toggleClass(this.mainBar, 'muted', state)
     }
 
     toggleMemberList(state) {
@@ -290,7 +292,6 @@ class Call {
             toggleStream(member.stream, false)
             member.audio.remove()
         }
-        console.log('STREAM: ' + userid)
         member.stream = stream
         member.audio = document.createElement('audio')
         member.audio.autoplay = true
@@ -304,8 +305,6 @@ class Call {
 
     setupSocket() {
         socket.on('user_joined_call', user => {
-            console.log('JOINED')
-            console.log(user)
             if(user.id == this.myid)
                 return
 
@@ -317,8 +316,6 @@ class Call {
         })
 
         socket.on('user_left_call', user => {
-            console.log('LEFT')
-            console.log(user)
             this.removeMember(user.id)
         })
     }
