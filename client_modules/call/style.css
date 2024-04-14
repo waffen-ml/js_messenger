@@ -133,6 +133,7 @@
 
 .call-interface .toggle-muted::after {
     position:absolute;
+    content:'';
     top:0;
     left:0;
     border-radius:5px;
