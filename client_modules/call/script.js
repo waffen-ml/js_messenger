@@ -176,7 +176,7 @@ class Call {
 
         this.peer = new Peer(undefined, {
             host: '/',
-            port: 3002,
+            port: 3003,
             secure: true
         })
 
