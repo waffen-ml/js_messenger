@@ -137,15 +137,17 @@
     top:3px;
     left:3px;
     border-radius:8px;
-    background-color: #ff0000d0;
+    background-color: #ff000098;
     width: 100%;
     height:3px;
     transform-origin: left bottom;
     transform: rotate(45deg);
+    opacity: 0;
+    transition: opacity .2s ease-in-out;
 }
 
 .call-interface .muted .toggle-muted::after {
-
+    opacity: 1;
 }
 
 
