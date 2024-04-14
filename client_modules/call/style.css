@@ -71,7 +71,6 @@
 
 
 
-
 .call-interface .member-list {
     display:flex;
     flex-direction: column;
@@ -156,6 +155,15 @@
 
 .call-interface .muted .toggle-muted::after {
     opacity: 1;
+}
+
+.call-interface .member.me .volume,
+.call-interface .member.me .volume {
+    display:none;
+}
+.call-interface .member.me .member-name {
+    grid-row:1/3;
+    grid-column:2/4;
 }
 
 
