@@ -102,8 +102,6 @@ class Call {
 
         if(members.error)
             throw Error('CANNOT_GET_MEMBERS')
-        else if(myid in members)
-            throw Error('USER_IN_THE_CALL')
 
         members.forEach(m => {
             this.
