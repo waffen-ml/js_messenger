@@ -101,7 +101,8 @@
 }
 
 .call-interface .member-name {
-    width:100%;
+    max-width:100%;
+    width:max-content;
 }
 
 .call-interface .volume {
