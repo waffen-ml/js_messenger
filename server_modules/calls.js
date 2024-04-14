@@ -12,6 +12,7 @@ class Call {
 
         console.log('HEYY')
         console.log(this.members[userid] !== undefined)
+        if(this.members[userid])
         console.log(this.members[userid].sessionid + ' ' + sessionid)
         console.log(this.leaveTimeouts[userid])
 
