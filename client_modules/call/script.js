@@ -390,7 +390,7 @@ let call = null
 console.log(savedCall)
 
 if(savedCall) {
-    let lastDatetime = Date.parse(savedCall.datetime)
+    let lastDatetime = new Date(savedCall.datetime)
 
     console.log(lastDatetime)
     console.log(utils.differenceInSeconds(lastDatetime, new Date()))
