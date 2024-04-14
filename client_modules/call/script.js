@@ -183,7 +183,7 @@ class Call {
         this.peer.on('open', async peerid => {
             this.peer.peerid = peerid
 
-            let r = fetch(`/joincall?callid=${this.id}&peerid=${peerid}`).then(r => r.json())
+            let r = await fetch(`/joincall?callid=${this.id}&peerid=${peerid}`).then(r => r.json())
 
             if(!r.success) {
                 alert('Не удалось подключиться...')
