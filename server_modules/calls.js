@@ -47,7 +47,7 @@ class CallSystem {
 
     getCall(id, create=true) {
         if(!this.calls[id] && create)
-            this.calls[id] = new Call(cfx, id)
+            this.calls[id] = new Call(this.cfx, id)
         return this.calls[id] ?? null
     }
 
