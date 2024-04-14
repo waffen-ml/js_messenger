@@ -81,9 +81,31 @@ class CallInterface {
             this.chat.leave()
         }
 
+        this.loadTitle().then(() => {
+            this.mainBar.querySelector('.chat-info .chat-name').textContent = this.title
+        })
+
+        this.mainBar.querySelector('.chat-info .chat-avatar').src = '/getchatavatar?id=' + this.call.id
+
     }
 
-    appendMember(member) {
+    async loadTitle() {
+        if(this.call.savedData) {
+            this.title = this.call.savedData.title
+            return
+        }
+
+        let chatInfo = await fetch('/getchatinfo?id=' + this.call.id).then(r => r.json())
+        this.title = utils.generateChatName(chatInfo.members, {id: this.chat.myid}, 5)
+    }
+
+    updateMemberCount() {
+
+    }
+
+    
+
+    addMember(member) {
         //if(member.id == this.call.myid)
         //    return
         
@@ -132,6 +154,7 @@ class Call {
     async init() {
         await this.accessMyStream()
         await this.loadMembers()
+        this.setupSocket()
 
         socket.emit('join_call', this.id)
         this.toggleMyStream(this.savedData? !this.savedData.isMuted : true)
@@ -160,11 +183,11 @@ class Call {
             call.answer(this.myStream)
             call.on('stream', userStream => {
                 let member = this.getMemberByPeerId(call.peer)
-                member.call = call
-                this.setMemberStream(member.id, userStream)
-                this.interface.appendMember(member)
+                this.fullyUpdateMember(member, userStream, call)
             })
         })
+
+        this.save()
     }
 
     toggleMyStream(state) {
@@ -186,36 +209,69 @@ class Call {
         if(members.error)
             throw Error('CANNOT_GET_MEMBERS')
 
-        members.forEach(m => this.addMember(m.id, m.tag, m.name, m.peerid))
+        members.forEach(m => {
+            this.updateMember(m.id, m.tag, m.name, m.peerid)
+        })
     }
 
-    addMember(userid, tag, name, peerid) {
-        if(this.members[userid])
-            return
-        this.members[userid] = {
-            id: userid,
-            tag: tag,
-            name: name,
-            peerid: peerid
+    getSavedMember(userid) {
+        if(this.savedData && this.savedData.members[userid])
+            return this.savedData.members[userid]
+    }
+
+    updateMember(userid, tag, name, peerid) {
+        if(this.members[userid]) {
+            this.members[userid].peerid = peerid
         }
+        else {
+            this.members[userid] = {
+                id: userid,
+                tag: tag,
+                name: name,
+                peerid: peerid
+            }
+
+            let sm = this.getSavedMember(userid)
+            
+            if(sm)
+                this.modifyMemberStream(userid, sm.toggle, sm.volume)
+            
+            this.interface.addMember(this.members[userid])
+        }
+        this.interface.updateMemberCount()
         this.save()
         return this.members[userid]
     }
 
+    fullyUpdateMember(member, stream, call) {
+        this.updateMember(member.id, member.tag, member.name, member.peerid)
+        this.setMemberCall(member.id, call)
+        this.setMemberStream(member.id, stream)
+    }
+
+    setMemberCall(userid, call) {
+        if(this.members[userid])
+            this.members[userid].call = call
+    }
+
     modifyMemberStream(userid, toggle, volume) {
         let member = this.members[userid]
-        if(!member || !member.stream)
+
+        if(!member)
             return
 
         member.volume = volume ?? member.volume
         member.toggle = toggle ?? member.toggle
 
+        this.save()
+
+        if(!member.stream)
+            return
+
         if(!member.toggle)
             member.audio.volume = 0
         else
             member.audio.volume = member.volume / 100
-
-        this.save()
     }
 
     setMemberStream(userid, stream) {
@@ -236,10 +292,6 @@ class Call {
     getMemberByPeerId(peerid) {
         return Object.values(this.members).find(m => m.peerid == peerid)
     }
-    
-    destroyPeer() {
-
-    }
 
     setupSocket() {
         socket.on('user_joined_chat', user => {
@@ -249,22 +301,17 @@ class Call {
             let call = this.peer.call(user.peerid, this.myStream)
         
             call.on('stream', userStream => {
-                if (user.id in this.members) {
-                    this.members[user.id].peerid = user.peerid
-                    this.members[user.id].call = call
-                    this.setMemberStream(user.id, userStream)
-                    return
-                }
-                let member = this.addMember(user.id, user.tag, user.name, user.peerid)
-                member.call = call
-                this.setMemberStream(user.id, userStream)
-                this.interface.appendMember(member)
+                this.fullyUpdateMember(user, userStream, call)
             })
         })
 
         socket.on('user_left_call', user => {
             this.removeMember(user.id)
         })
+    }
+
+    destroyPeer() {
+
     }
     
     removeMember(userid) {
@@ -290,8 +337,7 @@ class Call {
 
         Object.values(this.members).forEach(m => {
             membersToSave[m.id] = {
-                id: m.id, name: m.name, tag: m.tag,
-                volume: m.volume, toggle: m.toggle, peerid: m.peerid
+                id: m.id, volume: m.volume, toggle: m.toggle
             }
         })
 
@@ -300,7 +346,9 @@ class Call {
             members: membersToSave,
             isCompact: this.interface.isCompact,
             areMembersShown: this.interface.areMembersShown,
-            isMuted: this.isMuted
+            isMuted: this.isMuted,
+            title: this.interface.title,
+            datetime: new Date()
         }
         
         saveCall(this.savedData)
@@ -329,6 +377,13 @@ const savedCall = localStorage.getItem('currentCall')
 let call = null
 
 if(savedCall) {
+    let lastDatetime = Date.parse(savedCall.datetime)
+
+    if(utils.differenceInSeconds(lastDatetime, new Date()) > 30) {
+        removeCurrentCall()
+        return
+    }
+
     authPromise.then(() => {
         call = new Call(savedCall.id, window.me.id, savedCall)
     })

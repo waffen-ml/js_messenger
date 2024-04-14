@@ -1,6 +1,5 @@
 const secondsToReconnect = 3
 
-
 class Call {
     constructor(cfx, id) {
         this.id = id

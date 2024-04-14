@@ -359,3 +359,9 @@ userids.map(async uid => {
                 await this.addMembers('system', null, `@${exec.tag} добавил @${user.tag} в чат`)
             }
         })
+
+
+            if(this.savedData && this.savedData.members[m.id]) {
+                let sm = this.savedData.members[m.id]
+                this.modifyMemberStream(m.id, sm.toggle, sm.volume)
+            }
