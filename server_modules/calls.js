@@ -10,6 +10,9 @@ class Call {
 
     async connectMember(userid, peerid, sessionid) {
 
+        if(this.members[userid] && (this.members[userid].sessionid != sessionid || !this.leaveTimeouts[userid])) 
+            throw Error('unable to connect')
+
         if(this.leaveTimeouts[userid]) {
             clearTimeout(this.leaveTimeouts[userid])
             delete this.leaveTimeouts[userid]
