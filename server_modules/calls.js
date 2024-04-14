@@ -5,14 +5,14 @@ class Call {
         this.id = id
         this.cfx = cfx
         this.members = {}
+        this.leaveTimouts = {}
     }
 
     async connectMember(userid, peerid, sessionid) {
-        let member = this.members[userid]
 
-        if(member && member.leaveTimeout) {
-            clearTimeout(member.leaveTimeout)
-            member.leaveTimeout = null
+        if(this.leaveTimouts[userid]) {
+            clearTimeout(this.leaveTimouts[userid])
+            delete this.leaveTimouts[userid]
         }
 
         let info = await this.cfx.auth.getUser(userid)
@@ -95,13 +95,14 @@ exports.init = (cfx) => {
 
             if(!call || !call.members[userid])
                 return
+            
             socket.join('cl:' + callid)
 
             socket.on('end_call', () => {
                 call.disconnectMember(userid)
             })
             socket.on('disconnect', () => {
-                call.members[userid].leaveTimeout = setTimeout(() => {
+                call.leaveTimeouts[userid] = setTimeout(() => {
                     call.disconnectMember(userid)
                 }, secondsToReconnect * 1000)
             })
