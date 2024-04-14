@@ -395,13 +395,13 @@ if(savedCall) {
     console.log(lastDatetime)
     console.log(utils.differenceInSeconds(lastDatetime, new Date()))
 
-    if(!lastDatetime || utils.differenceInSeconds(lastDatetime, new Date()) > 30) {
-        removeCurrentCall()
-    } else {
-        authPromise.then(() => {
-            call = new Call(savedCall.id, window.me, savedCall)
-        })
-    }
+    //if(!lastDatetime || utils.differenceInSeconds(lastDatetime, new Date()) > 30) {
+    //    removeCurrentCall()
+    //} else {
+    //    authPromise.then(() => {
+    //        call = new Call(savedCall.id, window.me, savedCall)
+    //    })
+    //}
 }
 
 function startCall(id) {
