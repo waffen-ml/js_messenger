@@ -3,7 +3,7 @@ append header
         include style.css
 
 append body 
-    .call-interface(style="display:none")
+    .call-interface
         .main-bar.block
             a.button.light.chat-info
                 img.avatar.chat-avatar(src="/getchatavatar?id=239")
@@ -14,54 +14,16 @@ append body
             button.button.leave 🚪
             button.button.toggle-interface 📞
         .block.styled-scroll.member-list
-            .member
-                a.avatar-wrapper(href="#")
-                    img.avatar(src="/getuseravatar?id=70")
-                a.finite.button.light.member-name(href="#") Lorem ipsum dolor sit amet. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum, fugiat.
-                .volume
-                    input(type="range", min="0", max="100", value="100", step="1")
-                    span.perc 100%
-                button.button.light.toggle-muted 🔊
-            .member
-                a.avatar-wrapper(href="#")
-                    img.avatar(src="/getuseravatar?id=70")
-                a.finite.button.light.member-name(href="#") Lorem ipsum dolor sit amet. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum, fugiat.
-                .volume
-                    input(type="range", min="0", max="100", value="100", step="1")
-                    span.perc 100%
-                button.button.light.toggle-muted 🔊
-            .member
-                a.avatar-wrapper(href="#")
-                    img.avatar(src="/getuseravatar?id=70")
-                a.finite.button.light.member-name(href="#") Lorem ipsum dolor sit amet. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum, fugiat.
-                .volume
-                    input(type="range", min="0", max="100", value="100", step="1")
-                    span.perc 100%
-                button.button.light.toggle-muted 🔊
-            .member
-                a.avatar-wrapper(href="#")
-                    img.avatar(src="/getuseravatar?id=70")
-                a.finite.button.light.member-name(href="#") Lorem ipsum dolor sit amet. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum, fugiat.
-                .volume
-                    input(type="range", min="0", max="100", value="100", step="1")
-                    span.perc 100%
-                button.button.light.toggle-muted 🔊
-            .member
-                a.avatar-wrapper(href="#")
-                    img.avatar(src="/getuseravatar?id=70")
-                a.finite.button.light.member-name(href="#") Lorem ipsum dolor sit amet. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum, fugiat.
-                .volume
-                    input(type="range", min="0", max="100", value="100", step="1")
-                    span.perc 100%
-                button.button.light.toggle-muted 🔊
-            .member
-                a.avatar-wrapper(href="#")
-                    img.avatar(src="/getuseravatar?id=70")
-                a.finite.button.light.member-name(href="#") Lorem ipsum dolor sit amet. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum, fugiat.
-                .volume
-                    input(type="range", min="0", max="100", value="100", step="1")
-                    span.perc 100%
-                button.button.light.toggle-muted 🔊
 
+    script(type="text/x-ejs-template", template="call-member")
+        .member(id!="call-member-<%=id%>")
+            a.avatar-wrapper(href!="/user?id=<%=id%>")
+                img.avatar(src!="/getuseravatar?id=<%=id%>")
+            a.finite.button.light.member-name(href!="/user?id=<%=id%>") <%=name%>
+            .volume
+                input(type="range", min="0", max="100", value="100", step="1")
+                span.perc 100%
+            button.button.light.toggle-muted 🔊
+    
     script 
         include script.js

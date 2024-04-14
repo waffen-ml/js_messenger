@@ -1,20 +1,64 @@
+class CallMemberControls {
+    constructor(info) {
+        this.info = info
+        this.element = templateManager.createElement('call-member', info)
+
+    }
+
+
+    destroy() {
+        this.element.remove()
+    }
+}
+
+
+
+class CallInterface {
+    constructor(call) {
+        this.call = call
+        this.interface = document.querySelector('.call-interface')
+        this.mainBar = this.interface.querySelector('.main-bar')
+        this.memberList = this.interface.querySelector('.member-list')
+        this.memberControls = {}
+    }
+
+    appendMember(member) {
+        //if(member.id == this.call.myid)
+        //    return
+        
+        let controls = new CallMemberControls(member)
+        this.memberControls[member.id] = controls
+        this.memberList.appendChild(controls.element)
+    }
+
+    removeMember(userid) {
+        this.memberControls[userid].destroy()
+        delete this.memberControls[userid]
+    }
+
+    toggleCompact(state) {
+        if(state)
+            this.interface.classList.add('compact')
+        else
+            this.interface.classList.remove('compact')
+    }
+
+}
+
+
 class Call {
     async constructor(callid, myid) {
         this.id = callid
         this.myid = myid
-        this.callInterface = document.querySelector('.call-interface')
-        this.mainBar = this.callInterface.querySelector('.main-bar')
-        this.memberList = this.callInterface.querySelector('.member-list')
+        this.interface = new CallInterface(this)
         this.members = {}
 
-        await this.getMyStream()
-        await this.getMembers()
-
+        await this.accessMyStream()
+        await this.loadMembers()
 
         socket.emit('join_call', this.id)
 
-        
-
+        this.interface.appendMember(window.me)
 
 
         this.isCompact = true
@@ -28,14 +72,14 @@ class Call {
 
     }
 
-    async getMyStream() {
+    async accessMyStream() {
         this.myStream = await navigator.mediaDevices.getUserMedia({audio: true, video: false}).catch(() => null)
 
         if(!this.myStream)
             throw Error('CANNOT_GET_STREAM')
     }
 
-    async getMembers() {
+    async loadMembers() {
         let members = await fetch('/getcallmembers?id=' + this.id).then(r => r.json())
 
         if(members.error)
@@ -60,8 +104,7 @@ class Call {
         this.members[userid] = {
             id: userid,
             tag: tag,
-            name: name,
-            
+            name: name
         }
     }
 
@@ -124,14 +167,7 @@ class Call {
 
     }
 
-    toggleCompact(state) {
-        if(state)
-            this.callInterface.classList.add('compact')
-        else
-            this.callInterface.classList.remove('compact')
-    }
-
 
 }
 
-const call = new Call()
+const call = new Call(0, window.me.id)
