@@ -173,4 +173,6 @@ class Call {
 
 }
 
-const call = new Call(0, window.me.id)
+authPromise.then(user => {
+    const call = new Call(0, window.me.id)
+})

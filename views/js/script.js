@@ -69,10 +69,8 @@ window.isMobileOrTablet = function() {
     return check;
 }
 
-fetch('/auth')
+let authPromise = fetch('/auth')
 .then(r => r.json())
 .then(user => {
     window.me = user
 })
-
-
