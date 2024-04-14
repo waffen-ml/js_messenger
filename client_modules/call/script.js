@@ -64,6 +64,8 @@ class CallInterface {
         this.toggleMemberList(this.areMembersShown)
         this.toggleMuted(call.savedData? call.savedData.isMuted : false)
 
+        this.mainBar.querySelector('.chat-info').href = '/chat?id=' + this.call.id
+
         this.mainBar.querySelector('.toggle-list').onclick = () => {
             this.areMembersShown = !this.areMembersShown
             this.toggleMemberList(this.areMembersShown)
