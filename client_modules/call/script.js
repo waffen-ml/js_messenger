@@ -1,9 +1,3 @@
-function toggleStream(stream, state) {
-    stream.getAudioTracks().forEach(t => {
-        t.enabled = state
-    })
-}
-
 class CallMemberControls {
     constructor(info, call) {
         this.call = call
@@ -18,11 +12,13 @@ class CallMemberControls {
             this.updateMuted()
         })
 
-        this.volumeInput.addEventListener('change', () => {
-            console.log(this.volumeInput.value)
+        const onchange = () => {
             this.call.modifyMemberStream(this.info.id, undefined, this.volumeInput.value)
             this.updateVolumeLabel()
-        })
+        }
+
+        this.volumeInput.onchange = onchange
+        this.volumeInput.oninput = onchange
 
         this.updateVolumeLabel()
         this.updateMuted()
@@ -81,11 +77,12 @@ class CallInterface {
 
 
 class Call {
-    constructor(callid, myid) {
+    constructor(callid, myid, savedData) {
         this.id = callid
         this.myid = myid
         this.interface = new CallInterface(this)
         this.members = {}
+        this.savedData = savedData
 
         window.me.toggle = true
         window.me.volue = 100
@@ -235,6 +232,49 @@ class Call {
 
 
 }
+
+function toggleStream(stream, state) {
+    stream.getAudioTracks().forEach(t => {
+        t.enabled = state
+    })
+}
+
+function saveCall(id, members, isCompact, areMembersShown, isMuted) {
+    let callObj = {
+        id: id, 
+        members: members, 
+        isCompact: isCompact, 
+        areMembersShown: areMembersShown, 
+        isMuted: isMuted
+    }
+
+    localStorage.setItem('currentCall', JSON.stringify(callObj))
+}
+
+function removeCurrentCall() {
+    localStorage.removeItem('currentCall')
+    call = null
+}
+
+const savedCall = localStorage.getItem('currentCall')
+let call = null
+
+if(savedCall) {
+    authPromise.then(() => {
+        call = new Call(savedCall.id, window.me.id, savedCall)
+    })
+}
+
+function startCall() {
+    if(!window.me || call) {
+        alert('Невозможно начать звонок!')
+        return
+    }
+    
+
+    
+}
+
 
 authPromise.then(user => {
     const call = new Call(0, window.me.id)
