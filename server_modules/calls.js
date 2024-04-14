@@ -10,6 +10,7 @@ class Call {
 
     async connectMember(userid, peerid, sessionid) {
 
+        console.log('HEYY')
         console.log(this.members[userid] !== undefined)
         console.log(this.members[userid].sessionid + ' ' + sessionid)
         console.log(this.leaveTimeouts[userid])
