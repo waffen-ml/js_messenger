@@ -140,7 +140,7 @@
     background-color: red;
     width: 100%;
     height:5px;
-    transform-origin: left top;
+    transform-origin: left bottom;
     transform: rotate(45deg);
 }
 
