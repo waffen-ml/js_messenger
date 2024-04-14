@@ -95,6 +95,7 @@ class CallInterface {
 
         this.mainBar.querySelector('.chat-info .chat-avatar').src = '/getchatavatar?id=' + this.call.id
 
+        this.memberList.innerHTML = ''
     }
 
     async loadTitle() {
