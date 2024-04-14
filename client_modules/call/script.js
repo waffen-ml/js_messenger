@@ -83,7 +83,7 @@ class CallInterface {
         }
 
         this.mainBar.querySelector('.leave').onclick = () => {
-            this.chat.leave()
+            this.call.leave()
         }
 
         this.loadTitle().then(() => {
