@@ -161,10 +161,9 @@ class Call {
     async init() {
         await this.accessMyStream()
         await this.loadMembers()
+        this.setupSocket()
 
         socket.emit('join_call', this.id)
-
-        this.setupSocket()
         
         this.toggleMyStream(this.savedData? !this.savedData.isMuted : true)
 
