@@ -96,7 +96,7 @@ exports.init = (cfx) => {
 
             if(!call || !call.members[userid])
                 return
-
+            console.log(userid + ' hey hey')
             socket.join('cl:' + callid)
 
             socket.on('end_call', () => {
