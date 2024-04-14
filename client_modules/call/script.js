@@ -7,6 +7,11 @@ class CallMemberControls {
         this.volumeLabel = this.element.querySelector('.volume .perc')
         this.volumeInput = this.element.querySelector('.volume input')
 
+        if(info.me) {
+            this.element.classList.add('me')
+            return
+        }
+
         this.muteButton.addEventListener('click', () => {
             this.call.modifyMemberStream(this.info.id, !this.info.toggle)
             this.updateMuted()
@@ -139,11 +144,17 @@ class CallInterface {
 
 
 class Call {
-    constructor(callid, myid, savedData) {
+    constructor(callid, me, savedData) {
         this.id = callid
-        this.myid = myid
+        this.me = me
+        this.myid = me.id
         this.interface = new CallInterface(this)
-        this.members = {}
+        this.members = {
+            id: this.myid,
+            me: true,
+            name: me.name,
+            tag: me.tag
+        }
         this.savedData = savedData
         this.init().catch(err => {
             alert('Не удалось начать звонок: ' + err.message)
@@ -386,7 +397,7 @@ if(savedCall) {
     }
 
     authPromise.then(() => {
-        call = new Call(savedCall.id, window.me.id, savedCall)
+        call = new Call(savedCall.id, window.me, savedCall)
     })
 }
 
