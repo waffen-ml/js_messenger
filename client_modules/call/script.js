@@ -320,6 +320,7 @@ class Call {
         })
 
         socket.on('user_left_call', user => {
+            console.log(user)
             this.removeMember(user.id)
         })
     }
