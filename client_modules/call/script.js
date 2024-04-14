@@ -2,9 +2,23 @@ class CallMemberControls {
     constructor(info) {
         this.info = info
         this.element = templateManager.createElement('call-member', info)
+        this.muteButton = this.element.querySelector('.button.toggle-muted')
+
+        this.muteButton.addEventListener('click', () => {
+            this.info.muted = !this.info.muted
+            this.toggleMuted(this.info.muted)
+        })
+
 
     }
 
+
+    toggleMuted(state) {
+        if(state)
+            this.element.classList.add('muted')
+        else
+            this.element.classList.remove('muted')
+    }
 
     destroy() {
         this.element.remove()
@@ -148,8 +162,11 @@ class Call {
     }
 
 
-    updateMemberStream(toggle, volume) {
+    updateMemberStream(userid, toggle, volume) {
 
+    }
+
+    replaceMemberStream(userid, newStream) {
 
     }
 
