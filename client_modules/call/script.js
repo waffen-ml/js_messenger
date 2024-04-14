@@ -47,12 +47,16 @@ class CallInterface {
 
 
 class Call {
-    async constructor(callid, myid) {
+    constructor(callid, myid) {
         this.id = callid
         this.myid = myid
         this.interface = new CallInterface(this)
         this.members = {}
 
+        this.init()
+    }
+
+    async init() {
         await this.accessMyStream()
         await this.loadMembers()
 
@@ -69,7 +73,6 @@ class Call {
             this.isCompact = !this.isCompact
             this.toggleCompact(this.isCompact)
         }
-
     }
 
     async accessMyStream() {
