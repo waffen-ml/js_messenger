@@ -29,7 +29,7 @@ class Call {
 
     disconnectMember(userid) {
         if(!this.members[userid])
-            throw Error('There is no such user in the call')
+            return
         delete this.members[userid]
         this.cfx.socket.io.to('cl:' + this.id).emit('user_left_call', {id: userid})
     }
