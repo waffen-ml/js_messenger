@@ -391,14 +391,13 @@ let call = null
 if(savedCall) {
     let lastDatetime = Date.parse(savedCall.datetime)
 
-    if(utils.differenceInSeconds(lastDatetime, new Date()) > 30) {
+    if(!lastDatetime || utils.differenceInSeconds(lastDatetime, new Date()) > 30) {
         removeCurrentCall()
-        return
+    } else {
+        authPromise.then(() => {
+            call = new Call(savedCall.id, window.me, savedCall)
+        })
     }
-
-    authPromise.then(() => {
-        call = new Call(savedCall.id, window.me, savedCall)
-    })
 }
 
 function startCall(id) {
