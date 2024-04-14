@@ -384,7 +384,7 @@ function removeCurrentCall() {
     call = null
 }
 
-const savedCall = localStorage.getItem('currentCall')
+let savedCall = localStorage.getItem('currentCall')
 let call = null
 
 console.log(savedCall)
