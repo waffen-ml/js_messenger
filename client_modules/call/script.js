@@ -146,7 +146,6 @@ class CallInterface {
 
 }
 
-
 class Call {
     constructor(callid, me, savedData) {
         this.id = callid
@@ -308,7 +307,7 @@ class Call {
     }
 
     setupSocket() {
-        socket.on('user_joined_chat', user => {
+        socket.on('user_joined_call', user => {
             if(user.id == this.myid)
                 return
 
