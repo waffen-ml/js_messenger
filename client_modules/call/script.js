@@ -308,6 +308,7 @@ class Call {
 
     setupSocket() {
         socket.on('user_joined_call', user => {
+            console.log(user)
             if(user.id == this.myid)
                 return
 
