@@ -1,20 +1,40 @@
+function toggleStream(stream, state) {
+    stream.getAudioTracks().forEach(t => {
+        t.enabled = state
+    })
+}
+
 class CallMemberControls {
-    constructor(info) {
+    constructor(info, call) {
+        this.call = call
         this.info = info
         this.element = templateManager.createElement('call-member', info)
         this.muteButton = this.element.querySelector('.button.toggle-muted')
+        this.volumeLabel = this.element.querySelector('.volume .perc')
+        this.volumeInput = this.element.querySelector('.volume input')
 
         this.muteButton.addEventListener('click', () => {
-            this.info.muted = !this.info.muted
-            this.toggleMuted(this.info.muted)
+            this.call.modifyMemberStream(this.info.id, !this.info.toggle)
+            this.updateMuted()
+        })
+
+        this.volumeLabel.addEventListener('change', () => {
+            this.call.modifyMemberStream(this.info.id, undefined, this.volumeInput.value)
+            this.updateVolumeLabel()
         })
 
 
+        this.updateVolumeLabel()
+        this.updateMuted()
     }
 
 
-    toggleMuted(state) {
-        if(state)
+    updateVolumeLabel() {
+        this.volumeLabel.textContent = (this.info.volume ?? 100) + '%'
+    }
+
+    updateMuted() {
+        if(!this.info.toggle)
             this.element.classList.add('muted')
         else
             this.element.classList.remove('muted')
@@ -40,7 +60,7 @@ class CallInterface {
         //if(member.id == this.call.myid)
         //    return
         
-        let controls = new CallMemberControls(member)
+        let controls = new CallMemberControls(member, this.call)
         this.memberControls[member.id] = controls
         this.memberList.appendChild(controls.element)
     }
@@ -104,28 +124,52 @@ class Call {
             throw Error('CANNOT_GET_MEMBERS')
 
         members.forEach(m => {
-            this.
-            m.muted = false
-            m.volume = 100
+
         })
     }
 
-    getMemberByPeerId(peerid) {
-        return Object.values(this.members).find(m => m.peerid == peerid)
-    }
-
-    addMember(userid, tag, name) {
+    addMember(userid, tag, name, peerid) {
         if(this.members[userid])
             return
         this.members[userid] = {
             id: userid,
             tag: tag,
-            name: name
-        }
+            name: name,
+            peerid: peerid
+        }   
+    }
+
+    modifyMemberStream(userid, toggle, volume) {
+        let member = this.members[userid]
+        if(!member || !member.stream)
+            return
+
+        member.volume = volume ?? member.volume
+        member.toggle = toggle ?? member.toggle
+
+        if(!member.toggle)
+            member.audio.volume = 0
+        else
+            member.audio.volume = member.volume / 100
     }
 
     setMemberStream(userid, stream) {
+        let member = this.members[userid]
+        if(!member)
+            return
+        if(member.stream) {
+            toggleStream(member.stream, false)
+            member.audio.remove()
+        }
+        member.stream = stream
+        member.audio = document.createElement('audio')
+        member.audio.autoplay = true
+        member.audio.srcObject = stream
+        this.modifyMemberStream(userid, member.toggle ?? true, member.volume ?? 100)
+    }
 
+    getMemberByPeerId(peerid) {
+        return Object.values(this.members).find(m => m.peerid == peerid)
     }
 
     setupPeer() {
