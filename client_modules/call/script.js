@@ -71,6 +71,7 @@ class CallInterface {
         }
 
         this.mainBar.querySelector('.toggle-muted').onclick = () => {
+            console.log(this.call.isMuted)
             this.call.toggleMyStream(this.call.isMuted)
             this.toggleMuted(this.call.isMuted)
             this.call.save()
