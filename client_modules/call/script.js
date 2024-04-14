@@ -148,6 +148,7 @@ class Call {
         this.init().catch(err => {
             alert('Не удалось начать звонок: ' + err.message)
             removeCurrentCall()
+            this.leave()
         })
     }
 
