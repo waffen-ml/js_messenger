@@ -86,7 +86,6 @@ exports.init = (cfx) => {
     cfx.core.safeGet('/joincall', async (user, req, res) => {
         let call = await cfx.calls.accessCall(user.id, req.query.callid)
         await call.connectMember(user.id, req.query.peerid, req.sessionID)
-
         return {success: 1}
     }, true)
 
