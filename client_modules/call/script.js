@@ -162,8 +162,6 @@ class Call {
         await this.accessMyStream()
         await this.loadMembers()
         this.setupSocket()
-
-        socket.emit('join_call', this.id)
         
         this.toggleMyStream(this.savedData? !this.savedData.isMuted : true)
 
@@ -183,7 +181,7 @@ class Call {
                 this.leave()
                 return
             }
-
+            socket.emit('join_call', this.id)
             this.interface.toggleHidden(false)
         })
     
