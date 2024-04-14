@@ -53,7 +53,8 @@ class Call {
         this.interface = new CallInterface(this)
         this.members = {}
 
-        this.init()
+        this.interface.appendMember(window.me)
+        //this.init()
     }
 
     async init() {
