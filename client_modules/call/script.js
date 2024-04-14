@@ -170,7 +170,7 @@ class Call {
 
         this.peer = new Peer(undefined, {
             host: '/',
-            port: 3003,
+            port: 3004,
             secure: true
         })
 
@@ -243,7 +243,7 @@ class Call {
             }
 
             let sm = this.getSavedMember(userid)
-            
+
             if(sm)
                 this.modifyMemberStream(userid, sm.toggle, sm.volume)
             
