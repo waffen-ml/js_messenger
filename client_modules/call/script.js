@@ -265,17 +265,11 @@ if(savedCall) {
     })
 }
 
-function startCall() {
+function startCall(id) {
     if(!window.me || call) {
         alert('Невозможно начать звонок!')
         return
     }
-    
-
-    
+    call = new Call(id, window.me)
+    saveCall(id, {}, false, false, false)
 }
-
-
-authPromise.then(user => {
-    const call = new Call(0, window.me.id)
-})
