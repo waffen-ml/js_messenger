@@ -221,7 +221,7 @@ class Call {
         if(members.error)
             throw Error('CANNOT_GET_MEMBERS')
 
-        members.forEach(m => {
+        Object.values(members).forEach(m => {
             this.updateMember(m.id, m.tag, m.name, m.peerid)
         })
     }
