@@ -25,6 +25,8 @@ class CallMemberControls {
 
         this.updateVolumeLabel()
         this.updateMuted()
+
+        console.log(this.info)
     }
 
 
