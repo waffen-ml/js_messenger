@@ -107,7 +107,7 @@ class CallInterface {
     updateMemberCount() {
         let mcount = Object.keys(this.call.members).length
         this.interface.querySelector('.chat-info member-count').textContent 
-            = utils.nItems(mcount, 'участник', 'участника', 'участников')
+            = utils.nItemsLabel(mcount, 'участник', 'участника', 'участников')
     }
 
     addMember(member) {
