@@ -86,6 +86,9 @@ class Call {
         this.interface = new CallInterface(this)
         this.members = {}
 
+        window.me.toggle = true
+        window.me.volue = 100
+
         this.interface.appendMember(window.me)
         //this.init()
     }
