@@ -335,8 +335,9 @@ class Call {
         if(!this.members[userid])
             return
         this.setMemberStream(userid, null)
-        this.interface.removeMember(userid)
         delete this.members[userid]
+        this.interface.removeMember(userid)
+        this.interface.updateMemberCount()
         this.save()
     }
 
