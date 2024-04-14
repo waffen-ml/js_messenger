@@ -346,13 +346,19 @@ class Call {
             if(mid != this.myid)
                 this.removeMember(mid)
         })
-        this.toggleMyStream(false)
+        this.myStream.getTracks().forEach(track => {
+            track.stop()
+        })
         this.interface.toggleHidden(true)
         socket.emit('end_call')
         removeCurrentCall()
+        this.left = true
     }
 
     save() {
+        if(this.left)
+            return
+        
         let membersToSave = {}
 
         Object.values(this.members).forEach(m => {
