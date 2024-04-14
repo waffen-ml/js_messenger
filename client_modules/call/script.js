@@ -387,6 +387,8 @@ function removeCurrentCall() {
 const savedCall = localStorage.getItem('currentCall')
 let call = null
 
+console.log(savedCall)
+
 if(savedCall) {
     let lastDatetime = Date.parse(savedCall.datetime)
 
