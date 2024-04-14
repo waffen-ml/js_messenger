@@ -5,14 +5,14 @@ class Call {
         this.id = id
         this.cfx = cfx
         this.members = {}
-        this.leaveTimouts = {}
+        this.leaveTimeouts = {}
     }
 
     async connectMember(userid, peerid, sessionid) {
 
-        if(this.leaveTimouts[userid]) {
-            clearTimeout(this.leaveTimouts[userid])
-            delete this.leaveTimouts[userid]
+        if(this.leaveTimeouts[userid]) {
+            clearTimeout(this.leaveTimeouts[userid])
+            delete this.leaveTimeouts[userid]
         }
 
         let info = await this.cfx.auth.getUser(userid)
