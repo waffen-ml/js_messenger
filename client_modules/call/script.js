@@ -101,7 +101,7 @@ class CallInterface {
         }
 
         let chatInfo = await fetch('/getchatinfo?id=' + this.call.id).then(r => r.json())
-        this.title = utils.generateChatName(chatInfo.members, {id: this.chat.myid}, 5)
+        this.title = utils.generateChatName(chatInfo.members, {id: this.call.myid}, 5)
     }
 
     updateMemberCount() {
