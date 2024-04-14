@@ -392,6 +392,9 @@ console.log(savedCall)
 if(savedCall) {
     let lastDatetime = Date.parse(savedCall.datetime)
 
+    console.log(lastDatetime)
+    console.log(utils.differenceInSeconds(lastDatetime, new Date()))
+
     if(!lastDatetime || utils.differenceInSeconds(lastDatetime, new Date()) > 30) {
         removeCurrentCall()
     } else {
