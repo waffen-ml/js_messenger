@@ -163,7 +163,7 @@
 }
 
 .call-interface .member.me .volume,
-.call-interface .member.me .volume {
+.call-interface .member.me .toggle-muted {
     display:none;
 }
 .call-interface .member.me .member-name {
