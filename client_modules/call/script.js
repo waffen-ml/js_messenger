@@ -169,7 +169,7 @@ class Call {
         await this.loadMembers()
 
         socket.emit('join_call', this.id)
-        
+
         this.setupSocket()
         
         this.toggleMyStream(this.savedData? !this.savedData.isMuted : true)
@@ -310,7 +310,7 @@ class Call {
 
     setupSocket() {
         socket.on('user_joined_call', user => {
-            console.log(user)
+            console.log(user.id + ' ' + this.myid)
             if(user.id == this.myid)
                 return
 
