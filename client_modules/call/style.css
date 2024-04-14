@@ -172,5 +172,21 @@
     align-self:center;
 }
 
+@media(max-width:1650px) {
+    .call-interface {
+        top:100px;
+    }
+}
+
+@media (max-width:400px) {
+    .call-interface {
+        right:8px;
+        width:calc(100% - 16px);
+    }
+
+    .call-interface .main-bar button {
+        font-size:1.5em;
+    }
+}
 
 

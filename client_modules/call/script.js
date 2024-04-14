@@ -346,6 +346,7 @@ class Call {
             if(mid != this.myid)
                 this.removeMember(mid)
         })
+        this.toggleMyStream(false)
         this.interface.toggleHidden(true)
         socket.emit('end_call')
         removeCurrentCall()
