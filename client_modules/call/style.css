@@ -180,7 +180,7 @@
 }
 
 @media (max-width:400px) {
-    .call-interface {
+    .call-interface:not(.compact) {
         right:8px;
         width:calc(100% - 16px);
     }
