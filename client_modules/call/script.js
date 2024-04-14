@@ -19,14 +19,13 @@ class CallMemberControls {
         })
 
         this.volumeInput.addEventListener('change', () => {
+            console.log(this.volumeInput.value)
             this.call.modifyMemberStream(this.info.id, undefined, this.volumeInput.value)
             this.updateVolumeLabel()
         })
 
         this.updateVolumeLabel()
         this.updateMuted()
-
-        console.log(this.info)
     }
 
 
