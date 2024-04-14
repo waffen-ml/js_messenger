@@ -11,6 +11,8 @@ class CallMemberControls {
             this.element.classList.add('me')
             return
         }
+        if(info.volume !== undefined)
+            this.volumeInput.value = info.volume
 
         this.muteButton.addEventListener('click', () => {
             this.call.modifyMemberStream(this.info.id, !this.info.toggle)
@@ -69,7 +71,6 @@ class CallInterface {
         }
 
         this.mainBar.querySelector('.toggle-muted').onclick = () => {
-            console.log(this.call.isMuted)
             this.call.toggleMyStream(this.call.isMuted)
             this.toggleMuted(this.call.isMuted)
             this.call.save()
@@ -147,12 +148,12 @@ class Call {
         this.id = callid
         this.me = me
         this.myid = me.id
+        this.savedData = savedData
         this.interface = new CallInterface(this)
         this.members = []
 
         this.updateMember(this.myid, me.tag, me.name, null)
 
-        this.savedData = savedData
         this.init().catch(err => {
             alert('Не удалось начать звонок: ' + err.message)
             removeCurrentCall()
@@ -165,7 +166,13 @@ class Call {
         await this.loadMembers()
         this.setupSocket()
         
-        this.toggleMyStream(this.savedData? !this.savedData.isMuted : true)
+        this.isMuted = false
+
+        if(this.savedData && this.savedData.isMuted) {
+            this.isMuted = true
+            this.toggleMyStream(false)
+            this.interface.toggleMuted(true)
+        } 
 
         this.peer = new Peer(undefined, {
             host: '/',
