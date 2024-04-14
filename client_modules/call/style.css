@@ -140,7 +140,6 @@
     background-color: red;
     width: 100%;
     height:5px;
-    transform: rotate(45deg);
 }
 
 .call-interface .muted .toggle-muted::after {
