@@ -71,13 +71,6 @@ class CallSystem {
 exports.init = (cfx) => {
     cfx.calls = new CallSystem(cfx)
 
-
-    cfx.core.safeGet('/leavecall', (user, req, res) => {
-        let call = cfx.calls.getCall(req.query.id)
-        call.disconnectMember(user.id)
-        return {success: 1}
-    })
-
     cfx.core.safeGet('/getcallmembers', async (user, req, res) => {
         let call = await cfx.calls.accessCall(user.id, req.query.id)
         return call.members
@@ -95,7 +88,7 @@ exports.init = (cfx) => {
 
             if(!call || !call.members[userid])
                 return
-            
+
             socket.join('cl:' + callid)
 
             socket.on('end_call', () => {
