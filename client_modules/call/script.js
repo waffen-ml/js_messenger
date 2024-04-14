@@ -149,12 +149,15 @@ class Call {
         this.me = me
         this.myid = me.id
         this.interface = new CallInterface(this)
-        this.members = {
+        this.members = []
+
+        this.members[this.myid] = {
             id: this.myid,
             me: true,
             name: me.name,
             tag: me.tag
         }
+
         this.savedData = savedData
         this.init().catch(err => {
             alert('Не удалось начать звонок: ' + err.message)
