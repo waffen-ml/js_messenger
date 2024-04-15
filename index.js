@@ -9,6 +9,14 @@ const server = require('https').createServer({
     cert: fs.readFileSync(__dirname + `/../sslcert/cert.pem`)
 }, app)
 
+const peerServer = require('peer').PeerServer({
+  port: 3004,
+  ssl: {
+    key: fs.readFileSync(__dirname + `/../sslcert/privkey.pem`),
+    cert: fs.readFileSync(__dirname + `/../sslcert/cert.pem`)
+  }
+})
+
 const unsecureServer = require('http').createServer((req, res) => {
     res.writeHead(302, {
       'Location': 'https://coffeetox.ru' + req.url
