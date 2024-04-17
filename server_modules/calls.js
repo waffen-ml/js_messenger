@@ -6,16 +6,44 @@ class Call {
         this.cfx = cfx
         this.members = {}
         this.leaveTimeouts = {}
+        this.sockets = {}
     }
 
-    async connectMember(userid, peerid, sessionid) {
+    getMemberInfo(userid) {
+        if(!this.members[userid])
+            return null
+        return {  
+            id: this.members[userid].id,
+            name: this.members[userid].name,
+            tag: this.members[userid].tag,
+            peerid: this.members[userid].peerid
+        }
+    }
+    
+    getAllMembersInfo() {
+        let result = {}
+        Object.keys(this.members).forEach(mid => {
+            result[mid] = this.getMemberInfo(mid)
+        })
+        return result
+    }
 
-        if(this.members[userid] && (this.members[userid].sessionid != sessionid || !this.leaveTimeouts[userid])) 
-            throw Error('unable to connect')
+    setSocket(userid, socket) {
+        if(!this.members[userid])
 
-        if(this.leaveTimeouts[userid]) {
-            clearTimeout(this.leaveTimeouts[userid])
-            delete this.leaveTimeouts[userid]
+    }
+
+    async connectMember(userid, peerid, sessionid, socket) {
+        let member = this.members[userid]
+
+        if(member) {
+            if(member.sessionid != sessionid || !member.leaveTimeout) 
+                throw Error('unable to connect')
+
+            if(member.leaveTimeout) {
+                clearTimeout(member.leaveTimeout)
+                member.leaveTimeout = null
+            }
         }
 
         let info = await this.cfx.auth.getUser(userid)
@@ -23,18 +51,28 @@ class Call {
             id: userid,
             name: info.name,
             tag: info.tag,
-            session: sessionid,
-            peerid: peerid
+            peerid: peerid,
+            socket: socket,
+            leaveTimeout: null,
+            sessionid: sessionid
         }
 
-        this.cfx.socket.io.to('cl:' + this.id).emit('user_joined_call', this.members[userid])
+        this.cfx.socket.io.to('cl:' + this.id).emit('user_joined_call', {
+            id: userid,
+            name: info.name,
+            tag: info.tag,
+            peerid: peerid
+        })
     }
 
     disconnectMember(userid) {
-        if(!this.members[userid])
+        let member = this.members[userid]
+        if(!member)
             return
-        delete this.members[userid]
+        if(member.socket)
+            member.socket.leave('cl:' + this.id)
         this.cfx.socket.io.to('cl:' + this.id).emit('user_left_call', {id: userid})
+        delete member
     }
 
     end() {
@@ -76,7 +114,7 @@ exports.init = (cfx) => {
 
     cfx.core.safeGet('/getcallmembers', async (user, req, res) => {
         let call = await cfx.calls.accessCall(user.id, req.query.id)
-        return call.members
+        return call.getAllMembersInfo()
     }, true)
 
     cfx.core.safeGet('/joincall', async (user, req, res) => {
