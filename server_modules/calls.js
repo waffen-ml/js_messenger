@@ -10,12 +10,6 @@ class Call {
 
     async connectMember(userid, peerid, sessionid) {
 
-        console.log('HEYY')
-        console.log(this.members[userid] !== undefined)
-        if(this.members[userid])
-        console.log(this.members[userid].sessionid + ' ' + sessionid)
-        console.log(this.leaveTimeouts[userid])
-
         if(this.members[userid] && (this.members[userid].sessionid != sessionid || !this.leaveTimeouts[userid])) 
             throw Error('unable to connect')
 

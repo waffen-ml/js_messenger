@@ -44,8 +44,6 @@ class CallMemberControls {
     }
 }
 
-
-
 class CallInterface {
     constructor(call) {
         this.call = call
@@ -307,11 +305,12 @@ class Call {
     }
 
     getMemberByPeerId(peerid) {
-        return Object.values(this.members).find(m => m.peerid == peerid)
+        return Object.values(this.members).find(m => m.peerid == peerid) ?? null
     }
 
     setupSocket() {
         socket.on('user_joined_call', user => {
+            console.log('user joined call: ' + user.tag)
             if(user.id == this.myid)
                 return
 
@@ -323,6 +322,7 @@ class Call {
         })
 
         socket.on('user_left_call', user => {
+            console.log('user left call: ' + user.tag)
             this.removeMember(user.id)
         })
     }
