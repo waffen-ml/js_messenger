@@ -130,7 +130,7 @@ exports.init = (cfx) => {
                 call.disconnectMember(userid)
             })
             socket.on('disconnect', () => {
-                call.leaveTimeouts[userid] = setTimeout(() => {
+                call.members[userid].leaveTimeout = setTimeout(() => {
                     call.disconnectMember(userid)
                 }, secondsToReconnect * 1000)
             })
