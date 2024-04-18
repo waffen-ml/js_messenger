@@ -120,7 +120,7 @@ exports.init = (cfx) => {
         socket.on('join_call', (callid) => {
             let call = cfx.calls.getCall(callid, false)
 
-            if(!call || !call.members[userid])
+            if(!call || !call.members[userid] || call.members[userid].socket)
                 return
 
             call.setSocket(userid, socket)
