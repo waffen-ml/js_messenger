@@ -5,8 +5,6 @@ class Call {
         this.id = id
         this.cfx = cfx
         this.members = {}
-        this.leaveTimeouts = {}
-        this.sockets = {}
     }
 
     getMemberInfo(userid) {
@@ -30,7 +28,7 @@ class Call {
 
     setSocket(userid, socket) {
         if(!this.members[userid])
-
+            this.members[userid].socket = socket
     }
 
     async connectMember(userid, peerid, sessionid, socket) {
@@ -57,12 +55,7 @@ class Call {
             sessionid: sessionid
         }
 
-        this.cfx.socket.io.to('cl:' + this.id).emit('user_joined_call', {
-            id: userid,
-            name: info.name,
-            tag: info.tag,
-            peerid: peerid
-        })
+        this.cfx.socket.io.to('cl:' + this.id).emit('user_joined_call', this.getMemberInfo(userid))
     }
 
     disconnectMember(userid) {
@@ -130,6 +123,7 @@ exports.init = (cfx) => {
             if(!call || !call.members[userid])
                 return
 
+            call.setSocket(userid, socket)
             socket.join('cl:' + callid)
 
             socket.on('end_call', () => {
