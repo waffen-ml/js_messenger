@@ -193,10 +193,10 @@ class Call {
         })
     
         this.peer.on('call', call => {
-            console.log('theyre asking my stream!')
+            //console.log('theyre asking my stream!')
             call.answer(this.myStream)
             call.on('stream', userStream => {
-                console.log('UPDATING STREAM FOR PEER: ' + call.peer)
+                //console.log('UPDATING STREAM FOR PEER: ' + call.peer)
                 let member = this.getMemberByPeerId(call.peer)
                 this.fullyUpdateMember(member, userStream, call)
             })
@@ -323,7 +323,7 @@ class Call {
             let call = this.peer.call(user.peerid, this.myStream)
         
             call.on('stream', userStream => {
-                console.log('STREAM!')
+                //console.log('STREAM!')
                 this.fullyUpdateMember(user, userStream, call)
             })
         })
