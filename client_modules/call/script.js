@@ -310,6 +310,9 @@ class Call {
     }
 
     setupSocket() {
+        socket.off('user_joined_call')
+        socket.off('user_left_call')
+
         socket.on('user_joined_call', user => {
             console.log('user joined')
             console.log(user)
