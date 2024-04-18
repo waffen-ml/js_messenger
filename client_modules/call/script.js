@@ -195,6 +195,7 @@ class Call {
         this.peer.on('call', call => {
             call.answer(this.myStream)
             call.on('stream', userStream => {
+                console.log('UPDATING STREAM FOR PEER: ' + call.peer)
                 let member = this.getMemberByPeerId(call.peer)
                 this.fullyUpdateMember(member, userStream, call)
             })
@@ -310,7 +311,8 @@ class Call {
 
     setupSocket() {
         socket.on('user_joined_call', user => {
-            console.log('user joined call: ' + user.tag)
+            console.log('user joined')
+            console.log(user)
             if(user.id == this.myid)
                 return
 
@@ -322,7 +324,6 @@ class Call {
         })
 
         socket.on('user_left_call', user => {
-            console.log('user left call: ' + user.tag)
             this.removeMember(user.id)
         })
     }
