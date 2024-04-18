@@ -65,7 +65,7 @@ class Call {
         if(member.socket)
             member.socket.leave('cl:' + this.id)
         this.cfx.socket.io.to('cl:' + this.id).emit('user_left_call', {id: userid})
-        delete member
+        delete this.members[userid]
     }
 
     end() {
