@@ -54,7 +54,7 @@ class Call {
             leaveTimeout: null,
             sessionid: sessionid
         }
-
+        console.log('EMITTING ABOUT ' + this.members[userid].tag)
         this.cfx.socket.io.to('cl:' + this.id).emit('user_joined_call', this.getMemberInfo(userid))
     }
 
