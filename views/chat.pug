@@ -81,7 +81,9 @@ block main
             <% }; %>
         .tab-view
             .block.controls
+                <% if (!direct) { %>
                 a.button#show-members Участники
+                <% }; %>
                 a.button#show-media Медиа
                 a.button#show-audio Аудио
                 a.button#show-other Другое

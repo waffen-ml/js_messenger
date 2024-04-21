@@ -69,7 +69,6 @@ class ChatInspector {
                     this.updateMemberElement(element, item)
                     return element
                 }, 10)
-            this.showTab('members')
         })
 
         this.loadFilesFromMyHistory('audio')
@@ -103,6 +102,11 @@ class ChatInspector {
                     return templateManager.createElement('chat-otherlist-item', item)
                 }, 25)
         })
+
+        if(this.chat.direct_to)
+            this.showTab('members')
+        else
+            this.showTab('media')
 
         this.setupActions() 
     }
