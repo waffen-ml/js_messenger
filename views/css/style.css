@@ -356,7 +356,7 @@ hidden {
 
 .cfx-detailed-user .avatar {
     grid-row:1/3;
-    height:43px;
+    height:46px;
 }
 
 .cfx-detailed-user .name, .cfx-detailed-user .details {
@@ -364,6 +364,10 @@ hidden {
     max-width:100%;
     text-overflow: ellipsis;
     overflow:hidden;
+}
+
+.cfx-detailed-user .name {
+    align-self:center;
 }
 
 .cfx-detailed-user .details {
