@@ -67,7 +67,9 @@ block main
             button.button#buy +
     
     script(type="text/x-ejs-template", template="chat-popup")
+        <% if (!direct) { %>
         a.chat-link.block(href!="https://coffeetox.ru/chat?id=<%=chatid%>") Ссылка: https://coffeetox.ru/chat?id=<%=chatid%>
+        <% }; %>
         .actions
             <% if (admin || direct) { %>
             a.button.delete-chat Удалить чат

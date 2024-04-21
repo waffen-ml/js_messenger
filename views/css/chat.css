@@ -707,3 +707,7 @@ ul.attached {
    box-shadow:0 0 2px 0 black;
    opacity:0.75;
 }
+
+.chat-inspect .cfx-detailed-user {
+    width:100%;
+}
