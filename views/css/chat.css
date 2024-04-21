@@ -686,7 +686,7 @@ ul.attached {
     position:relative;
     width:100%;
     aspect-ratio: 1;
-    max-width: 100px;
+    max-width: 150px;
 }
 
 .chat-inspect .grid-holder img,
