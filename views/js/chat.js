@@ -842,7 +842,7 @@ class ChatInterface {
 
         let fileBtn = this.inputBar.querySelector('#file')
         let count = this.getAttachedFiles().length
-        fileBtn.textContent = (count? count : '') + '📁'
+        fileBtn.textContent = '📁' + (count? count : '')
     }
 
     setupAudioRecording() {
