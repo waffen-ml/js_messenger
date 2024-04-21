@@ -178,7 +178,6 @@
         bottom:10px;
     }
     .call-interface:not(.compact) {
-
         width:calc(100% - 20px);
     }
 
