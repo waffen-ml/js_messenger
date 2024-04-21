@@ -64,10 +64,10 @@
 
 @keyframes popup-appear {
     from {
-         background:transparent;
+        background:transparent;
     }
     to {
-         background:#00000040;
+        background:#00000040;
     }
 }
 

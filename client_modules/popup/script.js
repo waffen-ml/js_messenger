@@ -75,6 +75,7 @@ class Popup {
         this.optionHolder.style.display = 'flex'
         
         let btn = document.createElement('button')
+        btn.classList.add('button')
         btn.textContent = text
         btn.addEventListener('click', () => {
             if(onclick())
