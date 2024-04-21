@@ -569,7 +569,10 @@ class ChatInterface {
 
         this.fileUploader = uplManager.createUploader({})
 
-        this.fileUploader.on('append', () => this.onInputChange())
+        this.fileUploader.on('append', () => {
+            alert('hey')
+            this.onInputChange()
+        })
         this.fileUploader.on('remove', () => this.onInputChange())
 
         let cw = new ContextWindow({
@@ -1160,7 +1163,7 @@ class Chat {
         this.interface.setHeaderClickEvent(onclick)
         this.updateSubtitle()
     }
- 
+
     updateLastSeen() {
         if (!this.direct_to)
             return
