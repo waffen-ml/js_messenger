@@ -5,7 +5,6 @@ const typingStatusInterval = 5 // seconds
 const messageLongPressMilliseconds = 400
 
 window.openedChatId = chatid
-
 const maxAudioDurationSeconds = 60
 
 const emojiList = Array.from(`😀😃😄😁😆😅🤣😂🙂🙃😉😊😇🥰😍🤩😘😗
@@ -18,23 +17,31 @@ class ChatInspector {
 
     constructor(chat) {
         this.chat = chat
-        this.chatSettings = new ChatSettings({
-            name: chat.info.name,
-            description: chat.info.description,
-            chatId: chat.info.id,
-            hasAvatar: chat.info.avatar_id !== null,
-            isPublic: Boolean(chat.info.is_public),
-            defaultName: this.generateDefaultName(),
-            readOnly: !this.chat.me.is_admin
-        })
-
-        this.chatSettings.onchange = () => {
-            let changes = this.chatSettings.getChanges()
-            this.toggleUnsavedHandling(Object.keys(changes).length > 0)
-        }
-
         this.popup = new Popup({closable: true, className: 'chat-inspect'})
-        this.popup.content.appendChild(this.chatSettings.element)
+
+        if(chat.direct_to) {
+            this.popup.content.appendChild(templateManager.createElement('cfx-detailed-user', {
+                id: chat.direct_to.id,
+                name: chat.direct_to.name,
+                details: chat.direct_to.last_seen? utils.getLastSeenStatus(chat.direct_to.last_seen) : ''
+            }))
+        } else {
+            this.chatSettings = new ChatSettings({
+                name: chat.info.name,
+                description: chat.info.description,
+                chatId: chat.info.id,
+                hasAvatar: chat.info.avatar_id !== null,
+                isPublic: Boolean(chat.info.is_public),
+                defaultName: this.generateDefaultName(),
+                readOnly: !this.chat.me.is_admin
+            })
+    
+            this.chatSettings.onchange = () => {
+                let changes = this.chatSettings.getChanges()
+                this.toggleUnsavedHandling(Object.keys(changes).length > 0)
+            }
+            this.popup.content.appendChild(this.chatSettings.element)
+        }
 
         this.popup.content.append(...templateManager.createElement('chat-popup',
             {chatid: chat.chatid, direct: chat.info.is_direct, admin: chat.me.is_admin}))
@@ -1157,7 +1164,8 @@ class Chat {
             return fetch('/getuser?id=' + this.direct_to.id)
             .then(r => r.json())
             .then(r => {
-                this.subtitleList[0] = utils.getLastSeenStatus(new Date(r.last_seen))
+                this.direct_to.last_seen = new Date(r.last_seen)
+                this.subtitleList[0] = utils.getLastSeenStatus(this.direct_to.last_seen)
                 this.updateSubtitle()
             })
         }

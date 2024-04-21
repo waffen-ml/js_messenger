@@ -138,3 +138,12 @@
         <% } %>
     </div>
 </script>
+
+
+<script template="cfx-detailed-user" type="text/x-ejs-template">
+    <a href="/user?id=<%=id%>" class="button light cfx-detailed-user">
+        <img src="/getuseravatar?id=<%=id%>" alt="" class="avatar">
+        <span class="name"><%=name%></span>
+        <div class="details"><%=details%></div>
+    </a>
+</script>
