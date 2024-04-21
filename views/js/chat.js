@@ -69,6 +69,9 @@ class ChatInspector {
                     this.updateMemberElement(element, item)
                     return element
                 }, 10)
+
+            if(!this.chat.direct_to)
+                this.showTab('members')     
         })
 
         this.loadFilesFromMyHistory('audio')
@@ -91,6 +94,9 @@ class ChatInspector {
                 }, 15)
             this.lazyLists['media'].lazyList.onload = () => setupInspectObjects(
                 this.popup.querySelector('#media'))
+        
+            if(this.chat.direct_to)
+                this.showTab('media')
         })
 
         this.loadFilesFromMyHistory('other')
@@ -102,11 +108,6 @@ class ChatInspector {
                     return templateManager.createElement('chat-otherlist-item', item)
                 }, 25)
         })
-
-        if(this.chat.direct_to)
-            this.showTab('members')
-        else
-            this.showTab('media')
 
         this.setupActions() 
     }
