@@ -569,10 +569,7 @@ class ChatInterface {
 
         this.fileUploader = uplManager.createUploader({})
 
-        this.fileUploader.on('append', () => {
-            alert('hey')
-            this.onInputChange()
-        })
+        this.fileUploader.on('append', () => this.onInputChange())
         this.fileUploader.on('remove', () => this.onInputChange())
 
         let cw = new ContextWindow({
@@ -845,7 +842,7 @@ class ChatInterface {
 
         let fileBtn = this.inputBar.querySelector('#file')
         let count = this.getAttachedFiles().length
-        fileBtn.textContent = (count? count + ' ' : '') + '📁'
+        fileBtn.textContent = (count? count : '') + '📁'
     }
 
     setupAudioRecording() {

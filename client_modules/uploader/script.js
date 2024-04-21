@@ -68,16 +68,16 @@ class Uploader {
         
         element.addEventListener('drop', e => {
             preventDefault(e);
-            const files = e.dataTransfer.files;
+            const files = e.dataTransfer.files
+            this.addFiles([...files])
             this.callEvent('append', files)
-            this.addFiles([...files]);
             this.toggleHighlight(false);
         })
         
         element.querySelector('.attach').onclick = () =>
             attachFiles(files => {
+                this.addFiles(files)
                 this.callEvent('append', files)
-                this.addFiles(files);
             });
         
         this.update();
