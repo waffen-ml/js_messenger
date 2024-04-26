@@ -161,8 +161,7 @@ exports.init = (cfx) => {
             })
         }, (data, _, vd, info) => {
             info.req.session.userid = vd.id
-        }, {'Создать аккаунт': '/form?name=reg',
-            'Забыли пароль?': '#'}
+        }, {'Создать аккаунт': '/form?name=reg'}
     ))
 
     cfx.forms.addForm(new Form(
