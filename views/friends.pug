@@ -14,18 +14,20 @@ append main
         h3 Входящие запросы
         ol.incoming 
             each req in requests.incoming
-                li(style="display:flex;gap:5px")
-                    a.clean(href="/user?id="+req.author_id)= req.name + ` (${req.tag})`
-                    a.button(onclick=`acceptRequest(${req.author_id})`) Принять
-                    a.button(onclick=`declineRequest(${req.author_id})`) Отклонить
+                li
+                    .wrapper(style="display:flex;gap:5px")
+                        a.clean(href="/user?id="+req.author_id)= req.name + ` (${req.tag})`
+                        a.button.light(onclick=`acceptRequest(${req.author_id})`) Принять
+                        a.button.light(onclick=`declineRequest(${req.author_id})`) Отклонить
     
     if requests.outgoing.length > 0
         h3 Исходящие запросы
         ol.outgoing 
             each req in requests.outgoing 
-                li(style="display:flex;gap:5px")
-                    a.clean(href="/user?id="+req.to_id)= req.name + ` (${req.tag})`
-                    a.button(onclick=`cancelRequest(${req.to_id})`) Отозвать
+                li 
+                    .wrapper(style="display:flex;gap:5px")
+                        a.clean(href="/user?id="+req.to_id)= req.name + ` (${req.tag})`
+                        a.button.light(onclick=`cancelRequest(${req.to_id})`) Отозвать
 
     if (requests.outgoing.length + requests.incoming.length) > 0
         hr
@@ -37,9 +39,10 @@ append main
     else 
         ol.friends 
             each friend in friends 
-                li(style="display:flex;gap:5px")
-                    a.clean(href="/user?id="+friend.id)= friend.name + ` (${friend.tag})`
-                    a.button(onclick=`removeFriend(${friend.id})`) Удалить
+                li 
+                    .wrapper(style="display:flex;gap:5px")
+                        a.clean(href="/user?id="+friend.id)= friend.name + ` (${friend.tag})`
+                        a.button.light(onclick=`removeFriend(${friend.id})`) Удалить
 
 
 
