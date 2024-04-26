@@ -4,7 +4,7 @@ const app = express()
 const fs = require('fs')
 const pug = require('pug')
 
-const keyPath = __dirname + `/../sslcert/key.pem`
+const keyPath = __dirname + `/../sslcert/cert-key.pem`
 const certPath = __dirname + `/../sslcert/cert.pem`
 
 
