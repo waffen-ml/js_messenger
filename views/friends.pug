@@ -9,7 +9,6 @@ append header
 
 append main
     h1.page-header Друзья
-    button.add-friend Добавить друга
 
     if requests.incoming.length > 0
         h3 Входящие запросы
@@ -27,10 +26,14 @@ append main
                 li
                     a.clean(href="/user?id="+req.to_id)= req.name + ` (${req.tag})`
                     a.button.light(onclick=`cancelRequest(${req.to_id})`) Отозвать
-    
-    h2 Друзья
+
+    if (requests.outgoing.length + requests.incoming.length) > 0:
+        hr
+
+    a.button.add-friend Добавить друга
+
     if friends.length == 0
-        p Нет друзей :()
+        p Нет друзей :(
     else 
         ol.friends 
             each friend in friends 
