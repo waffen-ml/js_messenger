@@ -14,7 +14,7 @@ append main
         h3 Входящие запросы
         ol.incoming 
             each req in requests.incoming
-                li
+                li(style="display:flex;gap:5px")
                     a.clean(href="/user?id="+req.author_id)= req.name + ` (${req.tag})`
                     a.button.light(onclick=`acceptRequest(${req.author_id})`) Принять
                     a.button.light(onclick=`declineRequest(${req.author_id})`) Отклонить
@@ -23,7 +23,7 @@ append main
         h3 Исходящие запросы
         ol.outgoing 
             each req in requests.outgoing 
-                li
+                li(style="display:flex;gap:5px")
                     a.clean(href="/user?id="+req.to_id)= req.name + ` (${req.tag})`
                     a.button.light(onclick=`cancelRequest(${req.to_id})`) Отозвать
 
@@ -37,7 +37,7 @@ append main
     else 
         ol.friends 
             each friend in friends 
-                li
+                li(style="display:flex;gap:5px")
                     a.clean(href="/user?id="+friend.id)= friend.name + ` (${friend.tag})`
                     a.button.light(onclick=`removeFriend(${friend.id})`) Удалить
 
