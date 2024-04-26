@@ -206,6 +206,7 @@ cfx.init({
 
 cfx.clientUtils = require('./client_modules/utils/script.js').utils
 cfx.contentCompiler = require('./client_modules/utils/content_compiler.js').contentCompiler
+const { JSDOM } = require("jsdom")
 cfx.jsdom = (new JSDOM('<!DOCTYPE html>')).window.document
 
 cfx.clientUtils.getMessageContentPreview = (msg, html=true) =>  {
@@ -222,7 +223,6 @@ cfx.clientUtils.getMessageContentPreview = (msg, html=true) =>  {
         return div.textContent
     }
 }
-
 
 safeRender('/settings', (user, req, res) => {
     return {
