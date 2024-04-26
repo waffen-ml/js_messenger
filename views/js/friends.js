@@ -10,13 +10,13 @@ document.querySelector('.add-friend').addEventListener('click', () => {
 
     let form = new Form('addfriend', null)
 
-    popup.addOption('Отмена', () => true)
     popup.addOption('Добавить', () => {
         if (form)
             form.submit(() => {
                 popup.close()
             })
     })
+    popup.addOption('Отмена', () => true)
 
     popup.open()
 })

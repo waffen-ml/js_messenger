@@ -102,7 +102,7 @@ class Popup {
     }
 
     setTitle(title) {
-        let element = this.window.querySelector('.title')
+        let element = this.window.querySelector('.page-title')
         if(!title)
             element.style.display='none'
         else {
