@@ -156,7 +156,6 @@ class Chat {
     }
 
     async updatePushNotification(userid) {
-        return
         let unread = await this.getUnreadCount(userid)
 
         if(!unread) {
