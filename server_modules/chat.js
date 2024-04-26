@@ -164,7 +164,7 @@ class Chat {
             let info = await this.getInfo()
             let messages = await this.getMessages(-1, Math.min(unread, maxUnreadPreview))
 
-            let lines = messages.map(msg => this.cfx.clientUtils.getMessagePreview(msg, 100, true))
+            let lines = messages.map(msg => this.cfx.clientUtils.getMessagePreview(msg, userid, false, !info.is_direct))
             let wholePreview = lines.join('\n')
             let chatname = info.name === null? this.cfx.clientUtils.generateChatName(info.members, {id: userid}, 3) : info.name
             
