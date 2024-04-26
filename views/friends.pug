@@ -11,16 +11,14 @@ append main
     h1.page-header Друзья
     button.add-friend Добавить друга
 
-    a(href="/allusers") Все пользователи
-
     if requests.incoming.length > 0
         h3 Входящие запросы
         ol.incoming 
             each req in requests.incoming
                 li
                     a(href="/user?id="+req.author_id)= req.name + ` (${req.tag})`
-                    button(onclick=`acceptRequest(${req.author_id})`) Принять
-                    button(onclick=`declineRequest(${req.author_id})`) Отклонить
+                    a.button.light(onclick=`acceptRequest(${req.author_id})`) Принять
+                    a.button.light(onclick=`declineRequest(${req.author_id})`) Отклонить
     
     if requests.outgoing.length > 0
         h3 Исходящие запросы
@@ -28,7 +26,7 @@ append main
             each req in requests.outgoing 
                 li
                     a(href="/user?id="+req.to_id)= req.name + ` (${req.tag})`
-                    button(onclick=`cancelRequest(${req.to_id})`) Отозвать
+                    a.button.light(onclick=`cancelRequest(${req.to_id})`) Отозвать
     
     h2 Друзья
     if friends.length == 0
@@ -38,7 +36,7 @@ append main
             each friend in friends 
                 li
                     a(href="/user?id="+friend.id)= friend.name + ` (${friend.tag})`
-                    button(onclick=`removeFriend(${friend.id})`) Удалить
+                    a.button.light(onclick=`removeFriend(${friend.id})`) Удалить
 
 
 
