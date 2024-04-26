@@ -27,7 +27,7 @@ append main
                     a.clean(href="/user?id="+req.to_id)= req.name + ` (${req.tag})`
                     a.button.light(onclick=`cancelRequest(${req.to_id})`) Отозвать
 
-    if (requests.outgoing.length + requests.incoming.length) > 0:
+    if (requests.outgoing.length + requests.incoming.length) > 0
         hr
 
     a.button.add-friend Добавить друга
