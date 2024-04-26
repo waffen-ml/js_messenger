@@ -45,6 +45,12 @@ class Call {
         }
 
         let info = await this.cfx.auth.getUser(userid)
+
+        if(Object.keys(this.members).length == 0) {
+            let chat = await this.cfx.chats.accessChat({id: userid}, this.id)
+            chat.addSystemMessage(`@${info.tag} начал звонок`)
+        }
+
         this.members[userid] = {
             id: userid,
             name: info.name,
