@@ -12,7 +12,7 @@ append main
 
     if requests.incoming.length > 0
         h3 Входящие запросы
-        ol.incoming 
+        ul.incoming 
             each req in requests.incoming
                 li
                     .wrapper(style="display:flex;gap:5px")
@@ -22,7 +22,7 @@ append main
     
     if requests.outgoing.length > 0
         h3 Исходящие запросы
-        ol.outgoing 
+        ul.outgoing 
             each req in requests.outgoing 
                 li 
                     .wrapper(style="display:flex;gap:5px")
@@ -37,7 +37,7 @@ append main
     if friends.length == 0
         p Нет друзей :(
     else 
-        ol.friends 
+        ul.friends 
             each friend in friends 
                 li 
                     .wrapper(style="display:flex;gap:5px")
