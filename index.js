@@ -4,16 +4,20 @@ const app = express()
 const fs = require('fs')
 const pug = require('pug')
 
+const keyPath = __dirname + `/../sslcert/ca-key.pem`
+const certPath = __dirname + `/../sslcert/cert.pem`
+
+
 const server = require('https').createServer({
-    key: fs.readFileSync(__dirname + `/../sslcert/privkey.pem`),
-    cert: fs.readFileSync(__dirname + `/../sslcert/cert.pem`)
+    key: fs.readFileSync(keyPath),
+    cert: fs.readFileSync(certPath)
 }, app)
 
 const peerServer = require('peer').PeerServer({
   port: 3004,
   ssl: {
-    key: fs.readFileSync(__dirname + `/../sslcert/privkey.pem`),
-    cert: fs.readFileSync(__dirname + `/../sslcert/cert.pem`)
+    key: fs.readFileSync(keyPath),
+    cert: fs.readFileSync(certPath)
   }
 })
 
