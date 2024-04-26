@@ -66,7 +66,12 @@ class ContentCompiler {
     }
 
     escapeHTML(s) {
-        return utils.escapeHTML(s)
+        return s
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;')
     }
 
     compile(content, options) {
