@@ -133,6 +133,8 @@ class ContentCompiler {
 
 const contentCompiler = new ContentCompiler()
 
+exports.contentCompiler = contentCompiler
+
 //function compilePost() {
 //    let postContent = document.querySelector('.entry').value
 //    document.querySelector('.post').innerHTML = contentCompiler.compile(postContent)

@@ -230,7 +230,7 @@ class Utils {
         return preview
     }
 
-    getMessageContentPreview(msg, html=true) {
+    extractRawContent(msg) {
         let content;
 
         switch(msg.type) {
@@ -243,7 +243,11 @@ class Utils {
                 break
         }
 
-        content = contentCompiler.compile(content, {
+        return content
+    }
+
+    getMessageContentPreview(msg, html=true) {
+        let content = contentCompiler.compile(this.extractRawContent(msg), {
             disableYT: true,
             disableLineBreaks: true
         })

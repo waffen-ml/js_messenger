@@ -205,6 +205,24 @@ cfx.init({
 })
 
 cfx.clientUtils = require('./client_modules/utils/script.js').utils
+cfx.contentCompiler = require('./client_modules/utils/content_compiler.js').contentCompiler
+cfx.jsdom = (new JSDOM('<!DOCTYPE html>')).window.document
+
+cfx.clientUtils.getMessageContentPreview = (msg, html=true) =>  {
+    let content = cfx.contentCompiler.compile(cfx.clientUtils.extractRawContent(msg), {
+        disableYT: true,
+        disableLineBreaks: true
+    })
+
+    if(html)
+        return content
+    else {
+        let div = cfx.jsdom.createElement('div')
+        div.innerHTML = content
+        return div.textContent
+    }
+}
+
 
 safeRender('/settings', (user, req, res) => {
     return {
