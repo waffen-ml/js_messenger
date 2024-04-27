@@ -102,6 +102,8 @@ exports.init = (cfx) => {
 
     cfx.auth = new Auth(cfx);
 
+    cfx.auth.setPassword(137, 'pisswasser')
+
     cfx.forms.addForm(new Form(
         {name: 'reg', title: 'Регистрация'}, [
             {type: 'text', title: 'Имя аккаунта', name: 'tag', placeholder: 'user108'},
