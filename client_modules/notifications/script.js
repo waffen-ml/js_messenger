@@ -63,7 +63,7 @@ socket.on('message', async (msg) => {
     let chatInfo = await fetch('/getchatinfo?id=' + msg.chat_id).then(r => r.json())
 
     showFocusNotification({
-        text: utils.getMessagePreview(msg, window.me.id, true, true),
+        text: utils.getMessagePreview(msg, window.me.id, true, !chatInfo.is_direct),
         title: chatInfo.name ?? utils.generateChatName(chatInfo.members, window.me),
         link: '/chat?id=' + msg.chat_id,
         imagesrc: '/getchatavatar?id=' + msg.chat_id
