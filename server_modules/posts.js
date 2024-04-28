@@ -171,10 +171,7 @@ exports.init = (cfx) => {
     })
 
     cfx.core.safePost('/addpost', (user, req, res) => {
-        console.log(req.files)
-        console.log(req.body)
-        console.log(req.query)
-        //cfx.posts.addPost(user.id, req.files, '' || req.body.content, '' || req.body.title)
+        cfx.posts.addPost(user.id, req.files, '' || req.body.content, '' || req.body.title)
         return {success: 1}
     }, cfx.core.upload.any('files'), true)
 
