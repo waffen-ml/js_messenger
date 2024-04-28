@@ -71,7 +71,7 @@ class Chat {
             values(?, ?, ?, ?, ?, now(), ?)`, [type, sender_id, this.id, content, bundleId, reply_to ?? null])
 
         if (sender_id)
-            await updateLastRead(sender_id)
+            await this.updateLastRead(sender_id)
 
         let newMsg = await this.getMessage(-1)
 
