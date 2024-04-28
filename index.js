@@ -110,6 +110,9 @@ function updateUser(user) {
 
 function renderlessQuery(req, res, reqlogin, handler) {
     let userid = req.session.userid
+
+    console.log(userid)
+
     if(!userid && reqlogin) {
         res.send({
             error: 'User is not authorized'
