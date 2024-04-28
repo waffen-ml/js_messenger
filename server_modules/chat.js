@@ -70,6 +70,9 @@ class Chat {
             (type, sender_id, chat_id, content, bundle_id, datetime, reply_to)
             values(?, ?, ?, ?, ?, now(), ?)`, [type, sender_id, this.id, content, bundleId, reply_to ?? null])
 
+        if (sender_id)
+            await updateLastRead(sender_id)
+
         let newMsg = await this.getMessage(-1)
 
         this.cfx.chats.updateBots(newMsg)

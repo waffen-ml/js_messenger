@@ -173,7 +173,7 @@ exports.init = (cfx) => {
     cfx.core.safePost('/addpost', (user, req, res) => {
         cfx.posts.addPost(user.id, req.files, '' || req.body.content, '' || req.body.title)
         return {success: 1}
-    }, cfx.core.upload.any('files'), true)
+    }, cfx.core.upload.array('files'), true)
 
     cfx.core.safeGet('/getfeed', (user, req, res) => {
         let start = parseInt(req.query.start)
