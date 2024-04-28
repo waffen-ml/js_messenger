@@ -170,22 +170,10 @@ exports.init = (cfx) => {
         })   
     })
 
-    cfx.core.safePost('/addpostapi', (_, req, res) => {
-        let data = req.body
-
-        return cfx.auth.getUserByTag(data.author_tag)
-        .then(user => {
-            if(!user)
-                throw Error('Unknown user')
-            return cfx.auth.comparePassword(user.id, data.author_password)
-            .then(r => {
-                if (!r)
-                    throw Error('Incorrect credentials')
-                return cfx.posts.addPost(user.id, null, data.text ?? '', data.title ?? '')
-            })
-        })
-
-    }, cfx.core.upload.any(), false)
+    cfx.core.safePost('/addpost', (user, req, res) => {
+        console.log(req.files)
+        return cfx.posts.addPost(user.id, req.files, '' || data.content, '' || data.title)
+    }, cfx.core.upload.any('files'), true)
 
     cfx.core.safeGet('/getfeed', (user, req, res) => {
         let start = parseInt(req.query.start)
