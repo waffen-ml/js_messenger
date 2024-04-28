@@ -228,6 +228,7 @@ exports.init = (cfx) => {
     ));
 
     cfx.core.safePost('/apilogin', async (_, req, res) => {
+        console.log(req.session.usrid)
         console.log(req.body)
         let user = await cfx.auth.getUser(null, req.body.tag)
         if(!user || !await cfx.auth.comparePassword(user.id, req.body.password))
