@@ -231,8 +231,8 @@ exports.init = (cfx) => {
         let user = await cfx.auth.getUser(null, req.body.tag)
         if(!user || !await cfx.auth.comparePassword(user.id, req.body.password))
             throw Error('Wrong credentials')
-        else
-            req.session.userid = user.id
+        req.session.userid = user.id
+        return {success: 1}
     })
 
     cfx.core.safeGet('/auth', (user, req, res) => {
