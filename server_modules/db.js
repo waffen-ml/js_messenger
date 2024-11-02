@@ -70,10 +70,10 @@ class Database {
 
 exports.init = (cfx) => {
     cfx.db = new Database({
-        host: 'ilyaspqx.beget.tech',
-        user: 'ilyaspqx_db',
-        database: 'ilyaspqx_db',
-        password: 'Pig66666',
+        host: '185.189.13.82',
+        user: 'root',
+        database: 'coffeetox',
+        password: 'admin123',
         charset : 'utf8mb4'
     }, cfx, () => {
         keepConnection()
