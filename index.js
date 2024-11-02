@@ -4,8 +4,8 @@ const app = express()
 const fs = require('fs')
 const pug = require('pug')
 
-const keyPath = __dirname + `/../sslnew/privkey.pem`
-const certPath = __dirname + `/../sslnew/fullchain.pem`
+const keyPath = __dirname + `/../ssl/privkey.pem`
+const certPath = __dirname + `/../ssl/fullchain.pem`
 
 
 const server = require('https').createServer({
