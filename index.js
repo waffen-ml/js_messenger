@@ -23,7 +23,7 @@ const peerServer = require('peer').PeerServer({
 
 const unsecureServer = require('http').createServer((req, res) => {
     res.writeHead(302, {
-      'Location': 'https://coffeetox.ru' + req.url
+      'Location': 'https://old.coffeetox.ru' + req.url
     })
     res.end()
 })
